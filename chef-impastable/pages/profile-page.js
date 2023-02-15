@@ -4,16 +4,47 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 
 export default function ProfilePage() {
+
+    var user = {
+        displayName: 'Sarah Wagler',
+        username: 'sawagler',
+        profilePicture: "",
+    }
+
+    function imageExists(url) {
+        const img = new Image();
+        img.src = url;
+        if (img.complete) { return true; }
+        return false;
+    }
+
+    function getInitials(name) {
+        var words = name.split(' ');
+        var initials = "";
+        words.forEach(function(word) {
+            initials += word[0];
+        });
+        console.log(initials);
+        return initials;
+    }
+
     return (
         <>
             <div>
                 <Stack
                     direction="row"
                     justifyContent="flex-start"
-                    alignItems="baseline"
+                    alignItems="center"
                     spacing={3}
                 >
-                    <Avatar sx={{width: 85, height: 85}}>SW</Avatar>
+                    
+                    <Avatar 
+                        sx={{width: 85, height: 85}} 
+                        alt={user.displayName} 
+                        src={user.profilePicture} 
+                    >
+                        {getInitials(user.displayName)}
+                    </Avatar>
 
                     <Stack
                         direction="column"
@@ -22,10 +53,11 @@ export default function ProfilePage() {
                         spacing={0}
                     >
 
-                        <h1 className="h1">Sarah Wagler</h1>
-                        <h3 className="h3">sawagler</h3>
+                        <h1 className="h1">{user.displayName}</h1>
+                        <h3 className="h3">{user.username}</h3>
 
                     </Stack>
+                    
                 </Stack>
 
                 <style jsx>{`

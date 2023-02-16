@@ -5,6 +5,8 @@ import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { grey } from '@mui/material/colors';
+import { borderColor } from '@mui/system';
 
 export default function ProfilePage() {
 
@@ -20,7 +22,6 @@ export default function ProfilePage() {
         words.forEach(function(word) {
             initials += word[0];
         });
-        console.log(initials);
         return initials;
     }
 
@@ -59,7 +60,14 @@ export default function ProfilePage() {
                         </Stack>
                     </Grid>
                     <Grid xs={2}>
-                        <Button variant="outlined" startIcon={<SettingsIcon />}>
+                        <Button 
+                            variant="outlined" 
+                            startIcon={<SettingsIcon />} 
+                            sx={{color: 'black', borderColor: 'black'}}
+                            onClick={() => {
+                                window.location.href="/edit-profile";
+                            }}
+                        >
                             Edit Profile
                         </Button>
                     </Grid>

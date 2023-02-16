@@ -46,22 +46,127 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage() {
-
-    var user = {
-        displayName: 'Sarah Wagler',
-        username: 'sawagler',
-        profilePicture: "",
+class User {
+    constructor(displayName, username, profilePicture, friends, friendRequests) {
+        this.displayName = displayName;
+        this.username = username;
+        this.profilePicture = profilePicture;
+        this.friends = friends;
+        this.friendRequests = friendRequests;
     }
 
-    function getInitials(name) {
-        var words = name.split(' ');
+    getInitials() {
+        var words = this.displayName.split(' ');
         var initials = "";
         words.forEach(function(word) {
             initials += word[0];
         });
         return initials;
     }
+
+    displayLarge() {
+        return (
+            <>
+                {/* Stack to display user's profile picture, display name, and username */}
+                <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={3}
+                >
+                    {/* Profile Picture, if no url, displays user's initials */}
+                    <Avatar 
+                        sx={{width: 85, height: 85}} 
+                        alt={this.displayName} 
+                        src={this.profilePicture} 
+                    >
+                        {this.getInitials()}
+                    </Avatar>
+                    {/* Displays user's display name and username next to profile picture */}
+                    <Stack
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="stretch"
+                        spacing={0}
+                    >
+                        <h1 className="displayName">{this.displayName}</h1>
+                        <h3 className="username">{this.username}</h3>
+                    </Stack>
+
+                </Stack>
+
+                <style jsx>{`
+                    .displayName {
+                        margin: 0px;
+                    }
+                    .username {
+                        margin: 0px;
+                    }
+                `}</style>
+            </>
+
+        );
+    }
+
+    displaySmall() {
+        return (
+            <Box sx={{margin: 1, marginLeft: 0}}>
+                {/* Stack to display user's profile picture, display name, and username */}
+                <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={3}
+                >
+                    {/* Profile Picture, if no url, displays user's initials */}
+                    <Avatar 
+                        sx={{width: 40, height: 40}} 
+                        alt={this.displayName} 
+                        src={this.profilePicture} 
+                    >
+                        {this.getInitials()}
+                    </Avatar>
+                    {/* Displays user's display name and username next to profile picture */}
+                    <Stack
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="stretch"
+                        spacing={0}
+                    >
+                        <h3 className="displayName">{this.displayName}</h3>
+                        <h5 className="username">{this.username}</h5>
+                    </Stack>
+
+                </Stack>
+
+                <style jsx>{`
+                    .displayName {
+                        margin: 0px;
+                    }
+                    .username {
+                        margin: 0px;
+                    }
+                `}</style>
+            </Box>
+
+        );
+    }
+
+    displayFriends() {
+        for (let i = 0; i < this.friends.length; i++) {
+            this.friends[i].displaySmall();
+        }
+    }
+}
+
+
+export default function ProfilePage() {
+
+    var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
+    var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
+    var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
+    var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
+    var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
 
     const [value, setValue] = React.useState(0);
 
@@ -74,33 +179,8 @@ export default function ProfilePage() {
             <div>
                 <Grid container spacing={6}>
                     <Grid xs={10}>
-                        {/* Stack to display profile picture, display name, and username */}
-                        <Stack
-                            direction="row"
-                            justifyContent="flex-start"
-                            alignItems="center"
-                            spacing={3}
-                        >
-                            {/* Profile Picture, if no url, displays user's initials */}
-                            <Avatar 
-                                sx={{width: 85, height: 85}} 
-                                alt={user.displayName} 
-                                src={user.profilePicture} 
-                            >
-                                {getInitials(user.displayName)}
-                            </Avatar>
-                            {/* Displays user's display name and username next to profile picture */}
-                            <Stack
-                                direction="column"
-                                justifyContent="center"
-                                alignItems="stretch"
-                                spacing={0}
-                            >
-
-                                <h1 className="displayName">{user.displayName}</h1>
-                                <h3 className="username">{user.username}</h3>
-                            </Stack>
-                        </Stack>
+                        {/* Displaying user's profile picture, name, and username */}
+                        {user.displayLarge()}
                     </Grid>
                     <Grid xs={2}>
                         {/* Edit profile button */}
@@ -115,19 +195,35 @@ export default function ProfilePage() {
                             Edit Profile
                         </Button>
                     </Grid>
-
+                    {/* Displays user's friends */}
                     <Grid xs={4}>
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            <p>Here is where friends will go</p>
+                            {user.friends[0].displaySmall()}
+                            {user.friends[1].displaySmall()}
+                            {user.friends[2].displaySmall()}
                         </Box>
                     </Grid>
+                    {/* Displays user's friend requests */}
                     <Grid xs={4}>
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friend Requests</h3>
                             <Divider />
-                            <p>Here is where friend request will go</p>
+                            <Stack
+                               direction="row"
+                               justifyContent="space-between"
+                               alignItems="center"
+                               spacing={2}
+                            >
+                                {user.friendRequests[0].displaySmall()}
+                                <Button 
+                                    variant="outlined" 
+                                    sx={{color: 'green', borderColor: 'green'}}
+                                >
+                                    Accept
+                                </Button>
+                            </Stack>
                         </Box>
                     </Grid>
 

@@ -60,7 +60,7 @@ export default function Home({
         </p>
 
         <div className={styles.grid}>
-            Lets go to a <Link href="/second-post"> new page!</Link>
+            Sign up <Link href="/login"> here!</Link>
         </div>
       </main>
 

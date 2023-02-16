@@ -8,7 +8,8 @@ import Link from 'next/link';
 import Button from '@mui/material/Button';
 import { useState } from "react";
 
-export default function SignUp() {
+
+export default function Login() {
     const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
@@ -19,6 +20,7 @@ export default function SignUp() {
         //console.log(`Typed => ${e.target.value}`);
         setValuePass(e.target.value)
     }
+  
     return (
         <Container component="main" maxWidth="auto">
             <Box
@@ -57,10 +59,10 @@ export default function SignUp() {
            <Button 
               type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                               onClick={() => {
-                                console.log(usernameValue);
-                        alert('clicked');
+                                const res = LoginUser(usernameValue, passwordValue);
+                                console.log(JSON.stringify(res));
                     }}
-                >Sign Up
+                >Login
             </Button>
             <Grid container>
             <Grid item xs>
@@ -74,4 +76,19 @@ export default function SignUp() {
             </Box>
         </Container>
     );
+
+async function LoginUser(username, password) {
+    const res = await fetch('/api/loginapi', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+            username: username,
+            password: password,
+        })
+    })
+    return res;
+}
 }

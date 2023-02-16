@@ -11,6 +11,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
+import { Divider } from '@mui/material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -71,8 +72,8 @@ export default function ProfilePage() {
     return (
         <>
             <div>
-                <Grid container spacing={1}>
-                    <Grid xs>
+                <Grid container spacing={6}>
+                    <Grid xs={10}>
                         {/* Stack to display profile picture, display name, and username */}
                         <Stack
                             direction="row"
@@ -96,8 +97,8 @@ export default function ProfilePage() {
                                 spacing={0}
                             >
 
-                                <h1 className="h1">{user.displayName}</h1>
-                                <h3 className="h3">{user.username}</h3>
+                                <h1 className="displayName">{user.displayName}</h1>
+                                <h3 className="username">{user.username}</h3>
                             </Stack>
                         </Stack>
                     </Grid>
@@ -114,7 +115,25 @@ export default function ProfilePage() {
                             Edit Profile
                         </Button>
                     </Grid>
+
+                    <Grid xs={4}>
+                        <Box sx={{width: '100%', marginBottom: 4}}>
+                            <h3 className="h3">Friends</h3>
+                            <Divider />
+                            <p>Here is where friends will go</p>
+                        </Box>
+                    </Grid>
+                    <Grid xs={4}>
+                        <Box sx={{width: '100%', marginBottom: 4}}>
+                            <h3 className="h3">Friend Requests</h3>
+                            <Divider />
+                            <p>Here is where friend request will go</p>
+                        </Box>
+                    </Grid>
+
                 </Grid>
+
+
 
                 <Box sx={{ width: '100%' }}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -136,11 +155,14 @@ export default function ProfilePage() {
                 </Box>
 
                 <style jsx>{`
-                    .h1 {
+                    .displayName {
+                        margin: 0px;
+                    }
+                    .username {
                         margin: 0px;
                     }
                     .h3 {
-                        margin: 0px;
+                        margin-bottom: 2px;
                     }
                 `}</style>
 

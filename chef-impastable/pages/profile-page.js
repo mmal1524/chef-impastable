@@ -1,12 +1,49 @@
+import * as React from 'react';
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { grey } from '@mui/material/colors';
-import { borderColor } from '@mui/system';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import PropTypes from 'prop-types';
+import Typography from '@mui/material/Typography';
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+};
+  
+function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+}
 
 export default function ProfilePage() {
 
@@ -25,10 +62,15 @@ export default function ProfilePage() {
         return initials;
     }
 
+    const [value, setValue] = React.useState(0);
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (
         <>
             <div>
-
                 <Grid container spacing={1}>
                     <Grid xs>
                         {/* Stack to display profile picture, display name, and username */}
@@ -60,6 +102,7 @@ export default function ProfilePage() {
                         </Stack>
                     </Grid>
                     <Grid xs={2}>
+                        {/* Edit profile button */}
                         <Button 
                             variant="outlined" 
                             startIcon={<SettingsIcon />} 
@@ -72,6 +115,25 @@ export default function ProfilePage() {
                         </Button>
                     </Grid>
                 </Grid>
+
+                <Box sx={{ width: '100%' }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChange}>
+                            <Tab label="Created Recipes" {...a11yProps(0)} />
+                            <Tab label="Saved Recipes" {...a11yProps(1)} />
+                            <Tab label="Reviewed Recipes" {...a11yProps(2)} />
+                        </Tabs>
+                    </Box>
+                    <TabPanel value={value} index={0}>
+                        Here is where created recipes will go
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        Here is where saved recipes will go
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        Here is where reviewed recipes will go
+                    </TabPanel>
+                </Box>
 
                 <style jsx>{`
                     .h1 {

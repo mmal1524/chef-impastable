@@ -4,13 +4,15 @@ import TextField from '@mui/material/TextField';
 import { Grid, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Image from 'next/image';
+import Button from '@mui/material/Button';
+import Link from 'next/link';
 
 export default function SignUp() {
     return (
         <Container component="main" maxWidth="auto">
             <Box
                 sx={{
-                    marginTop: 8,
+                    //marginTop: 2,
                     //width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
@@ -18,9 +20,7 @@ export default function SignUp() {
                 }}
             > 
                 <Image src={"/chef-impastable-logo.jpg"} width={500} height={300} />
-                <Typography component="h1" variant="h5">
-                    Sign Up!
-                </Typography>
+                <Typography component="h1" variant="h5" sx={{ my: 1 }}>Sign Up!</Typography>
                 <Grid>
                     <Box
                         component="form"
@@ -51,8 +51,25 @@ export default function SignUp() {
                         <TextField sx={{ width: 400 }} id="confirm-password" label="Confirm Password" variant="outlined"/>
                     </Box>
                 </Grid>
+                <Button 
+                    type="submit" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                    onClick={() => {
+                        alert('clicked');
+                    }}
+                >
+                    Sign Up
+                </Button>
+                <Grid container>
+                    <Grid item xs>
+                    </Grid>
+                    <Grid item xs>
+                        <Link href="/" variant="body2">
+                            {"Already have an account? Log in"}
+                        </Link>
+                    </Grid>
+                </Grid>
             </Box>
         </Container>
- 
+
     );
 }

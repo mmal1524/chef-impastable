@@ -39,17 +39,16 @@ export default function Home({
       </Head>
 
       <main>
-        <h1 className="title">
+        <h3 className="subtitle">
           Welcome to <a href="https://nextjs.org">Next.js with MongoDB!</a>
-        </h1>
-
+        </h3>
         {isConnected ? (
-          <h2 className="subtitle">You are connected to MongoDB</h2>
+          <h3 className="subtitle">You are connected to MongoDB</h3>
         ) : (
-          <h2 className="subtitle">
+          <h3 className="subtitle">
             You are NOT connected to MongoDB. Check the <code>README.md</code>{' '}
             for instructions.
-          </h2>
+          </h3>
         )}
         <h1 className={styles.title}>
           Welcome to Chef Impastable!
@@ -58,10 +57,11 @@ export default function Home({
         <p className={styles.description}>
           Get started by editing <code>pages/index.js</code>
         </p>
-
-
         <div className={styles.grid}>
             <Link href="/sign-up">Sign UP</Link>
+        </div>
+        <div className={styles.grid}>
+            <Link href="/home">Home</Link>
         </div>
       </main>
 

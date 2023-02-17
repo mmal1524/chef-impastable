@@ -59,8 +59,9 @@ export default function Home({
           Get started by editing <code>pages/index.js</code>
         </p>
 
+
         <div className={styles.grid}>
-            Lets go to a <Link href="/second-post"> new page!</Link>
+            <Link href="/sign-up">Sign UP</Link>
         </div>
       </main>
 

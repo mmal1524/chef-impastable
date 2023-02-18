@@ -8,9 +8,9 @@ def get_database():
 dbname = get_database()
 collection_name = dbname["recipes"]
 
-fake_recipe = {
-    "title" : "waffle",
-    "servings" : 2
-}
-
-collection_name.insert_one(fake_recipe)
+# fake_recipe = {
+#     "title" : "waffle",
+#     "servings" : 2
+# }
+#
+# collection_name.insert_one(fake_recipe)

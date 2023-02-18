@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\mmalh\Desktop\chef-impastable\webscraping\env
+set VIRTUAL_ENV=C:\Users\frueh\PycharmProjects\cs307\chef-impastable\webscraping\env
 
 if not defined PROMPT set PROMPT=$P$G
 

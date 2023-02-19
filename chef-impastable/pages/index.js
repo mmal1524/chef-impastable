@@ -5,18 +5,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Grid, Typography } from '@mui/material';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
 
 
 export async function getServerSideProps(context) {
@@ -59,6 +62,13 @@ export default function Home({
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleShowPassword = () => setShowPassword(!showPassword);
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -67,6 +77,7 @@ export default function Home({
     const handleClose = () => {
         setOpen(false);
     };
+
     return (
         <Container component="main" maxWidth="auto">
             <Box
@@ -93,21 +104,34 @@ export default function Home({
                     </Box>
                 </Grid>
                 <Grid>
-                    <Box
-                        component="form"
-                        sx={{ mt: 2 }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField sx={{ width: 400 }} input type = "password" value={passwordValue} id="password" label="Password" variant="outlined" onChange={handleChangePass} />
-                    </Box>
+                <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                            <OutlinedInput
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Password"
+                                onChange={handleChangePass}
+                            />
+                </FormControl>
                 </Grid>
                 <Button
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success) {
-                            router.push("/");
+                            router.push("sign-up");
                         } else {
                             handleClickOpen();
                         }

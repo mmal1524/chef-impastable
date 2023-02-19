@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@mui/material/Button';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/router'
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
@@ -18,8 +18,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { Validator } from 'react';
-
 
 export default function SignUp() {
 

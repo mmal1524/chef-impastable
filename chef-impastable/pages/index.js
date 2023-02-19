@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import clientPromise from '../lib/mongodb'
-import { InferGetServerSidePropsType } from 'next'
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';

@@ -4,6 +4,7 @@ import User from '../../model/schema'
 export default async function handler(req, res) {
     let mongoose = require('mongoose')
     mongoose.set('strictQuery', false);
+    
     connect()
     
     try {

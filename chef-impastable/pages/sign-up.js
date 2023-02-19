@@ -18,6 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { Validator } from 'react';
 
 
 export default function SignUp() {
@@ -26,7 +27,8 @@ export default function SignUp() {
     const [passwordValue, setValuePass] = useState("");
     const [passwordValueC, setValuePassC] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [openU, setOpenU] = useState(false);
+    const [openP, setOpenP] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const router = useRouter();
@@ -44,13 +46,20 @@ export default function SignUp() {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleClickOpenU = () => {
+        setOpenU(true);
+    };
+    const handleClickOpenP = () => {
+        setOpenP(true);
+    };
+    const handleCloseU = () => {
+        setOpenU(false);
+    };
+    const handleCloseP = () => {
+        setOpenP(false);
     };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
 
     return (
         <Container component="main" maxWidth="auto">
@@ -134,15 +143,15 @@ export default function SignUp() {
                             variant="contained" 
                             sx={{ my: 2, width: 400 }}
                             onClick={async () => {
-                                if (passwordValue == passwordValueC) {
+                                if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue)) {
                                     var data = await RegUser(usernameValue, passwordValue);
                                     if (data.success) {
                                         router.push('/home');
                                     } else {
-                                        handleClickOpen();
+                                        handleClickOpenU();
                                     }
                                 } else {
-                                    handleClickOpen();
+                                    handleClickOpenP();
                                 }
                             }}
                         >
@@ -150,20 +159,42 @@ export default function SignUp() {
                         </Button>
                         <Dialog
                             fullScreen={fullScreen}
-                            open={open}
-                            onClose={handleClose}
+                            open={openU}
+                            onClose={handleCloseU}
                             aria-labelledby="responsive-dialog-title"
                         >
                             <DialogTitle id="responsive-dialog-title">
-                                {"Incorrect User Credentials"}
+                                {"Username Taken"}
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Your username is taken or your inputted passwords do not match. Please try again.
+                                    Your username is taken. Or some other error. Please try again.
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} autoFocus>
+                                <Button onClick={handleCloseU} autoFocus>
+                                OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openP}
+                            onClose={handleCloseP}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Incorrect Password"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Your inputted passwords do not match or your passwords do not meet security requirements. 
+                                    Your password must have at least 8 characters long, a lowercase letter, an uppercase letter, a symbol, and a number.
+                                    Please try again.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseP} autoFocus>
                                 OK
                                 </Button>
                             </DialogActions>
@@ -198,6 +229,20 @@ export default function SignUp() {
         const data = await res.json();
         return data;
     }
+/*
+    async function checkPass(password) {
+        var passed = false;
+        if (validator.isStrongPassword(password, {
+            minLength: 8, minLowercase: 1,
+            minUppercase: 1, minNumbers: 1, minSymbols: 1
+        })) {
+            passed = true;
+        } else {
+            passed = false;
+        }
+        return passed;
+    }
+    */
 }
 
 

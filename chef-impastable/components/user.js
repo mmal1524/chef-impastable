@@ -2,6 +2,8 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 
+const currUser = "63efbd6587c0903e01a19bc6";
+
 export default class User {
     constructor(displayName, username, profilePicture, friends, friendRequests) {
         this.displayName = displayName;

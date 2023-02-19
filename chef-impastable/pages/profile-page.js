@@ -1,5 +1,6 @@
 import * as React from 'react';
 import User from '../components/user';
+import { currUser } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -11,6 +12,7 @@ import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;

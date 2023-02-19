@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Navbar from './navbar.js'
 import clientPromise from '../lib/mongodb'
 import { InferGetServerSidePropsType } from 'next'
 import styles from '../styles/Home.module.css';
@@ -33,6 +34,10 @@ export default function Home({
 }) {
   return (
     <div className="container">
+      <div className="App">
+        <Navbar />
+      </div>
+
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -76,6 +81,12 @@ export default function Home({
       </footer>
 
       <style jsx>{`
+
+        * {
+          margin: 0;
+          padding: 0;
+        }
+
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;

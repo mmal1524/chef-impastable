@@ -27,6 +27,7 @@ export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const [openU, setOpenU] = useState(false);
     const [openP, setOpenP] = useState(false);
+    const [openE, setOpenE] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const router = useRouter();
@@ -50,11 +51,17 @@ export default function SignUp() {
     const handleClickOpenP = () => {
         setOpenP(true);
     };
+    const handleClickOpenE = () => {
+        setOpenE(true);
+    };
     const handleCloseU = () => {
         setOpenU(false);
     };
     const handleCloseP = () => {
         setOpenP(false);
+    };
+    const handleCloseE = () => {
+        setOpenE(false);
     };
 
     let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
@@ -146,7 +153,7 @@ export default function SignUp() {
                                     if (data.success) {
                                         router.push('/home');
                                     } else {
-                                        handleClickOpenU();
+                                        handleClickOpenE();
                                     }
                                 } else {
                                     handleClickOpenP();
@@ -171,7 +178,7 @@ export default function SignUp() {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleCloseU} autoFocus>
-                                OK
+                                    OK
                                 </Button>
                             </DialogActions>
                         </Dialog>
@@ -193,7 +200,27 @@ export default function SignUp() {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleCloseP} autoFocus>
-                                OK
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openE}
+                            onClose={handleCloseE}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Incorrect Password"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Error. User not created.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseE} autoFocus>
+                                    OK
                                 </Button>
                             </DialogActions>
                         </Dialog>

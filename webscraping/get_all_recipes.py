@@ -1,4 +1,7 @@
+from urllib import request
+
 import urllib3
+from recipe_scrapers import scrape_me
 from bs4 import BeautifulSoup
 import urllib.request
 
@@ -28,9 +31,27 @@ for link in links_from_a_z:
             # print(recipe)
             # print(recipe["href"])
             # add the link to a list of all recipes at that point
-            recipes.append(recipe["href"])
+            if recipe["href"] not in recipes:
+                recipes.append(recipe["href"])
             # TODO - check the list of links for duplicates before webscraping
             #      - webscrape each link and add to database
+                print(recipe["href"])
+
+                recipe_page = request.urlopen(recipe["href"])
+                recipe_soup = BeautifulSoup(recipe_page, 'html.parser')
+                #print(recipe_soup.prettify())
+
+                ingredient_list = recipe_soup.find_all("li", class_= "mntl-structured-ingredients__list-item")
+                for ingredient in ingredient_list:
+                    idk = ingredient.find_all_next("span", attrs = {"data-ingredient-quantity"})
+                    #print(idk)
+                    #print(ingredient)
+
+
+                recipe_scrape = scrape_me(recipe["href"])
+                print(recipe_scrape.title())
+            break
+
         break
         # print(recipes)
         # print(len(recipes))

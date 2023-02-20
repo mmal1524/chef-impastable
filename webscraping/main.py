@@ -43,4 +43,4 @@ from python_database_connection import get_database
 dbname = get_database()
 collection_name = dbname["recipes"]
 
-#collection_name.insert_one(scraper0.to_json())
+collection_name.insert_many([scraper1.to_json(), scraper2.to_json(), scraper3.to_json(), scraper4.to_json(), scraper5.to_json(), scraper6.to_json(), scraper7.to_json(), scraper8.to_json(), scraper9.to_json(), scraper10.to_json()])

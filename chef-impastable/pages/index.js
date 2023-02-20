@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Navbar from './navbar.js'
 import * as React from 'react';
 import clientPromise from '../lib/mongodb'
 import Link from 'next/link';
@@ -133,7 +134,7 @@ export default function Home({
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success) {
-                            router.push("sign-up");
+                            router.push("profile-page");
                         } else {
                             handleClickOpen();
                         }

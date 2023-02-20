@@ -1,4 +1,5 @@
-import mongoose from 'mongoose';
+import { modalUnstyledClasses } from "@mui/material";
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -7,9 +8,10 @@ const userSchema = new mongoose.Schema({
         unique:true
     },
     password:{
-        type:String,
+        type:String, 
         required:true
     }
 });
 
-module.exports = mongoose.models.User || mongoose.model('User', userSchema)
+module.exports = mongoose.models.User || mongoose.model('User', userSchema);
+

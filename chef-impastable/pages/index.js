@@ -1,8 +1,26 @@
 import Head from 'next/head'
+import * as React from 'react';
 import clientPromise from '../lib/mongodb'
-import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import { useState } from "react";
+import { useRouter } from "next/router";
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
+
 
 export async function getServerSideProps(context) {
   try {
@@ -30,200 +48,145 @@ export async function getServerSideProps(context) {
 export default function Home({
   isConnected,
 }) {
-  return (
-    <div className="container">
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  const [usernameValue, setValueUser] = useState("");
+    const [passwordValue, setValuePass] = useState("");
+    const handleChangeUser = e => {
+        //console.log(`Typed => ${e.target.value}`);
+        setValueUser(e.target.value)
+    }
+    const handleChangePass = e => {
+        //console.log(`Typed => ${e.target.value}`);
+        setValuePass(e.target.value)
+    }
+    const router = useRouter();
+    const [open, setOpen] = React.useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [showPassword, setShowPassword] = useState(false);
 
-      <main>
-        <h3 className="subtitle">
-          Welcome to <a href="https://nextjs.org">Next.js with MongoDB!</a>
-        </h3>
-        {isConnected ? (
-          <h3 className="subtitle">You are connected to MongoDB</h3>
-        ) : (
-          <h3 className="subtitle">
-            You are NOT connected to MongoDB. Check the <code>README.md</code>{' '}
-            for instructions.
-          </h3>
-        )}
-        <h1 className={styles.title}>
-          Welcome to Chef Impastable!
-        </h1>
-        <Image src={"/chef-impastable-logo.jpg"} width={300} height={150} />
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-        <div className={styles.grid}>
-            <Link href="/sign-up">Sign UP</Link>
-        </div>
-        <div className={styles.grid}>
-            <Link href="/home">Home</Link>
-        </div>
-      </main>
 
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
-      </footer>
+    const handleShowPassword = () => setShowPassword(!showPassword);
 
-      <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
 
-        footer img {
-          margin-left: 0.5rem;
-        }
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+    return (
+        <Container component="main" maxWidth="auto">
+            <Box
+                sx={{
+                    marginTop: 8,
+                    //width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Image src={"/chef-impastable-logo.jpg"} width={500} height={300} />
+                <Typography component="h1" variant="h5">
+                    Login
+                </Typography>
+                <Grid>
+                    <Box
+                        component="form"
+                        sx={{ mt: 2 }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField sx={{ width: 400 }} value={usernameValue} id="username" label="Username" variant="outlined" onChange={handleChangeUser} />
+                    </Box>
+                </Grid>
+                <Grid>
+                <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
+                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                            <OutlinedInput
+                                id="password"
+                                type={showPassword ? "text" : "password"}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Password"
+                                onChange={handleChangePass}
+                            />
+                </FormControl>
+                </Grid>
+                <Button
+                    type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                    onClick={async () => {
+                        var data = await LoginUser(usernameValue, passwordValue);
+                        if (data.success) {
+                            router.push("sign-up");
+                        } else {
+                            handleClickOpen();
+                        }
+                    }}
+                >Login
+                </Button>
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Incorrect User Credentials"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Your username and/or password is incorrect. Please try again.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                
+            <Grid container>
+                    <Grid item xs>
+                    </Grid>
+                    <Grid item xs>
+                        <Link href="/sign-up" variant="body2">
+                            {"Don't have an account? Sign Up"}
+                        </Link>
+                    </Grid>
+                </Grid>
+            </Box>
+        </Container >
+    );
 
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .subtitle {
-          font-size: 2rem;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  )
+    async function LoginUser(username, password) {
+        const res = await fetch('/api/loginapi', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
 }

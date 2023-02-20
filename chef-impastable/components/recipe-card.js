@@ -11,7 +11,9 @@ function RecipeCard(props) {
     return (
         <Card sx={{height:300, width:200}} variant="outlined">
             <CardActionArea>
-                <CardHeader title={props.recipe.title}/>
+                <Typography variant="body2">
+                    {props.recipe.title}
+                </Typography>
                 <Image src={"/chef-impastable-logo.jpg"} width={100} height={50} />            
                 <CardContent sx={{overflow: "auto", height: 100}}>
                     {props.recipe.description}  

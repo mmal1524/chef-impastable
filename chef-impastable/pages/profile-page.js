@@ -12,6 +12,7 @@ import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
+import Navbar from './navbar.js'
 
 
 function TabPanel(props) {
@@ -64,6 +65,10 @@ export default function ProfilePage() {
     return (
         <>
             <div>
+                <div className="App">
+                    <Navbar />
+                </div>
+                <p></p>
                 <Grid container spacing={6}>
                     <Grid xs={10}>
                         {/* Displaying user's profile picture, name, and username */}

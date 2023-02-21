@@ -148,10 +148,15 @@ export default function SignUp() {
                             variant="contained" 
                             sx={{ my: 2, width: 400 }}
                             onClick={async () => {
+                                var data1 = await CheckName(usernameValue);
+                                if (!data1.success) {
+                                    handleClickOpenU();
+                                }
+
                                 if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue)) {
-                                    var data = await RegUser(usernameValue, passwordValue);
-                                    if (data.success) {
-                                        router.push('/home');
+                                    var data2 = await RegUser(usernameValue, passwordValue);
+                                    if (data2.success) {
+                                        router.push('/profile-page');
                                     } else {
                                         handleClickOpenE();
                                     }
@@ -173,7 +178,7 @@ export default function SignUp() {
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Your username is taken. Or some other error. Please try again.
+                                    Your username is taken. Please try again.
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
@@ -249,25 +254,27 @@ export default function SignUp() {
             body: JSON.stringify({
                 username: username,
                 password: password,
+                displayName: username,
             })
         })
         const data = await res.json();
         return data;
     }
-/*
-    async function checkPass(password) {
-        var passed = false;
-        if (validator.isStrongPassword(password, {
-            minLength: 8, minLowercase: 1,
-            minUppercase: 1, minNumbers: 1, minSymbols: 1
-        })) {
-            passed = true;
-        } else {
-            passed = false;
-        }
-        return passed;
+
+    async function CheckName(username) {
+        const res = await fetch('/api/find-username', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
+        const data = await res.json();
+        return data;
     }
-    */
 }
 
 

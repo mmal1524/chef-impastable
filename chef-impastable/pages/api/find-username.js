@@ -10,10 +10,11 @@ export default async function handler(req,res){
         const {username}=req.body
         const name = await User.findOne({username})
         if(!name){
-            return res.json({success : true});
+            //username not found, username not taken, return false
+            return res.json({success : false});
         }
         else {
-            return res.json({success: false});
+            return res.json({success: true});
         }
     } catch (error) {
         res.status(400).json({status:'User was not found'})

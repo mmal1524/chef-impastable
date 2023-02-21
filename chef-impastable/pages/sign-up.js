@@ -28,6 +28,7 @@ export default function SignUp() {
     const [openU, setOpenU] = useState(false);
     const [openP, setOpenP] = useState(false);
     const [openE, setOpenE] = useState(false);
+    const [openS, setOpenS] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const router = useRouter();
@@ -54,6 +55,9 @@ export default function SignUp() {
     const handleClickOpenE = () => {
         setOpenE(true);
     };
+    const handleClickOpenS = () => {
+        setOpenS(true);
+    };
     const handleCloseU = () => {
         setOpenU(false);
     };
@@ -63,8 +67,13 @@ export default function SignUp() {
     const handleCloseE = () => {
         setOpenE(false);
     };
+    const handleCloseS = () => {
+        setOpenS(false);
+    };
 
-    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})')
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])(?=.{8,})')
+    let whiteSpace = new RegExp("/^\s+$/");
+    const userNameRegex = /^[a-zA-Z0-9_.]+$/
 
     return (
         <Container component="main" maxWidth="auto">
@@ -148,20 +157,24 @@ export default function SignUp() {
                             variant="contained" 
                             sx={{ my: 2, width: 400 }}
                             onClick={async () => {
-                                var data1 = await CheckName(usernameValue);
-                                if (!data1.success) {
-                                    handleClickOpenU();
-                                }
-
-                                if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue)) {
-                                    var data2 = await RegUser(usernameValue, passwordValue);
-                                    if (data2.success) {
-                                        router.push('/profile-page');
+                                if (userNameRegex.test(usernameValue)) {
+                                    var foundUser = await CheckName(usernameValue);
+                                    if (foundUser.success) {
+                                        handleClickOpenU();
                                     } else {
-                                        handleClickOpenE();
+                                        if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue) && (whiteSpace.test(passwordValue))) {
+                                            var data = await RegUser(usernameValue, passwordValue);
+                                            if (data.success) {
+                                            router.push('/profile-page');
+                                            } else {
+                                                handleClickOpenE();
+                                            }
+                                        } else {
+                                            handleClickOpenP();
+                                        }
                                     }
                                 } else {
-                                    handleClickOpenP();
+                                    handleClickOpenS();
                                 }
                             }}
                         >
@@ -198,8 +211,8 @@ export default function SignUp() {
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Your inputted passwords do not match or your passwords do not meet security requirements. 
-                                    Your password must have at least 8 characters long, a lowercase letter, an uppercase letter, a symbol, and a number.
+                                    Your inputted passwords do not match or your password does not meet security requirements. 
+                                    Your password must have at least 8 characters long, a lowercase, an uppercase letter, a symbol, and a number with no white space.
                                     Please try again.
                                 </DialogContentText>
                             </DialogContent>
@@ -225,6 +238,26 @@ export default function SignUp() {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleCloseE} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openS}
+                            onClose={handleCloseS}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Incorrect Input"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Error. Failed to input. Username must only have letters, numbers, underscores, and periods.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseS} autoFocus>
                                     OK
                                 </Button>
                             </DialogActions>

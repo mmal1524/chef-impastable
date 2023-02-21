@@ -4,6 +4,7 @@ import urllib3
 from recipe_scrapers import scrape_me
 from bs4 import BeautifulSoup
 import urllib.request
+from lxml import etree
 
 opened = urllib.request.urlopen("https://www.allrecipes.com/recipes-a-z-6735880")
 soup = BeautifulSoup(opened, 'html.parser')
@@ -12,6 +13,7 @@ soup = BeautifulSoup(opened, 'html.parser')
 links_from_a_z = soup.find_all("a", class_ ="link-list__link")
 print(len(links_from_a_z))
 recipes = []
+recipes_ingredients = []
 
 # loop through links from a-z list that are categories of food (i.e. airfryer recipes, pasta, etc.)
 for link in links_from_a_z:
@@ -35,31 +37,44 @@ for link in links_from_a_z:
                 recipes.append(recipe["href"])
             # TODO - check the list of links for duplicates before webscraping
             #      - webscrape each link and add to database
-                print(recipe["href"])
 
                 recipe_page = request.urlopen(recipe["href"])
                 recipe_soup = BeautifulSoup(recipe_page, 'html.parser')
-                #print(recipe_soup.prettify())
 
                 ingredient_list = recipe_soup.find_all("li", class_= "mntl-structured-ingredients__list-item")
+
+                all_ingredients = []
+
                 for ingredient in ingredient_list:
-                    idk = ingredient.find_all_next("span", attrs = {"data-ingredient-quantity"})
-                    #print(idk)
-                    #print(ingredient)
+                    ingredient_split = []
 
+                    for element in ingredient:
+                        for span in element:
+                            for thing in span:
+                                ingredient_split.append(thing)
 
+                    all_ingredients.append(ingredient_split[1::2])
+
+                    for ingredients in all_ingredients:
+                        if len(ingredients) == 2:
+                            ingredients.insert(0, " ")
+
+                print(all_ingredients)
+                recipes_ingredients.append(all_ingredients)
                 recipe_scrape = scrape_me(recipe["href"])
-                print(recipe_scrape.title())
-            break
+                print(recipe_scrape.to_json())
+                print(recipe["href"])
+            #break
 
         break
         # print(recipes)
         # print(len(recipes))
     break
 
-print(recipes)
-print(len(recipes))
+#print(recipes)
+#print(len(recipes))
 #print(links)
 
 #print(soup.prettify())
+print(recipes_ingredients)
 

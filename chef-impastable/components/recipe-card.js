@@ -14,7 +14,7 @@ function RecipeCard(props) {
                 <Typography variant="body2">
                     {props.recipe.title}
                 </Typography>
-                <Image src={"/chef-impastable-logo.jpg"} width={100} height={50} />            
+                <Image src={"/chef-impastable-logo.jpg"} alt="image of {props.recipe.title}" width={100} height={50} />            
                 <CardContent sx={{overflow: "auto", height: 100}}>
                     {props.recipe.description}  
                 </CardContent>

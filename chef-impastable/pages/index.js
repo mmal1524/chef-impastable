@@ -65,6 +65,7 @@ export default function Home({
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showPassword, setShowPassword] = useState(false);
 
+
     const handleShowPassword = () => setShowPassword(!showPassword);
 
     const handleMouseDownPassword = (event) => {
@@ -74,6 +75,7 @@ export default function Home({
     const handleClickOpen = () => {
         setOpen(true);
     };
+
 
     const handleClose = () => {
         setOpen(false);
@@ -106,7 +108,7 @@ export default function Home({
                 </Grid>
                 <Grid>
                 <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
                                 id="password"
                                 type={showPassword ? "text" : "password"}
@@ -129,7 +131,7 @@ export default function Home({
                 </Grid>
                 <Button
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
-                    onClick={async () => {
+                    onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success) {
                             router.push("profile-page");

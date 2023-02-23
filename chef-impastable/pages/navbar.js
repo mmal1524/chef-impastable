@@ -6,11 +6,11 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from "next/router";
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Dialog } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
@@ -19,12 +19,19 @@ const Navbar = () => {
     var user = new User('Sarah Wagler', 'sawagler', "", [], []);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
+    const openNav = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
+    };
+    const [openPopup, setOpen] = React.useState(false);
+    const handleClickOpenPopup = () => {
+        setOpen(true);
+    };
+    const handleClosePopup = () => {
+        setOpen(false);
     };
 
     const theme = useTheme();
@@ -43,9 +50,9 @@ const Navbar = () => {
                 <Button
                     variant="text"
                     sx={{ color: 'black' }}
-                    aria-controls={open ? 'navbar' : undefined}
+                    aria-controls={openNav ? 'navbar' : undefined}
                     aria-haspopup="true"
-                    aria-expanded={open ? 'true' : undefined}
+                    aria-expanded={openNav ? 'true' : undefined}
                     onClick={handleClick}
                 >
                     <Avatar
@@ -59,7 +66,7 @@ const Navbar = () => {
                 <Menu
                     aria-labelledby="navbar"
                     anchorEl={anchorEl}
-                    open={open}
+                    open={openNav}
                     onClose={handleClose}
                     anchorOrigin={{
                         vertical: 'top',
@@ -78,7 +85,9 @@ const Navbar = () => {
                         Profile
                     </MenuItem>
                     <MenuItem
-                        onClick={(handleClickOpen) => {
+                        onClick={() => {
+                            handleClickOpenPopup();
+                            handleClose();
                         }}
                     >
                         Logout
@@ -87,28 +96,28 @@ const Navbar = () => {
                 </Menu>
             </Grid>
             <Dialog
-                fullScreen={fullScreen}
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Logout Confirmation"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Are you sure you want to log out?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={logout} autoFocus>
-                        Yes
-                    </Button>
-                    <Button onClick={handleClose} autoFocus>
-                        No
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    fullScreen={fullScreen}
+                    open={openPopup}
+                    onClose={handleClosePopup}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Logout Confirmation"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to log out?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={logout} autoFocus>
+                            Yes
+                        </Button>
+                        <Button onClick={handleClosePopup} autoFocus>
+                            No
+                        </Button>
+                    </DialogActions>
+                </Dialog>
         </Grid>
     );
 }

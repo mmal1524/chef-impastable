@@ -16,16 +16,17 @@ import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import clientPromise from "../lib/mongodb";
+import { useState, useEffect } from 'react'
 
-async function getServerSideProps() {
+export async function getServerSideProps() {
     try {
         const client = await clientPromise;
         const db = client.db("test");
 
         const users = await db.collection("users").find({}).toArray();
-        console.log(users);
+        //console.log(users);
         return {
-            props: {users: JSON.parse(JSON.stringify(users))},
+            props: { users: JSON.parse(JSON.stringify(users)) },
         };
     }
     catch (e) {
@@ -51,6 +52,13 @@ export default function DietaryRestrictions() {
 
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
+    /*const [users, setUsers] = useState({})
+    React.useEffect(() => {
+        fetch('/api/diet-restrictionapi')
+        //.then(response => response.json())
+        .then(users => setUsers(users))
+        console.log(users)
+    }, [])*/
     return (
         <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
             <FormGroup row>
@@ -78,30 +86,30 @@ export default function DietaryRestrictions() {
                     <Typography sx={{ mt: 4, mb: 2 }} variant="h6" component="div">
                         Avatar with text and icon
                     </Typography>
-                    <Demo>
-                        <List dense={dense}>
-                            {generate(
-                                <ListItem
-                                    secondaryAction={
-                                        <IconButton edge="end" aria-label="delete" onClick={() => { getServerSideProps() }}>
 
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    }
-                                >
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <FolderIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary="Single-line item"
-                                        secondary={secondary ? 'Secondary text' : null}
-                                    />
-                                </ListItem>,
-                            )}
-                        </List>
-                    </Demo>
+                    <List dense={dense}>
+                        {generate(
+                            <ListItem
+                                secondaryAction={
+                                    <IconButton edge="end" aria-label="delete" onClick={() => { getServerSideProps() }}>
+
+                                        <DeleteIcon />
+                                    </IconButton>
+                                }
+                            >
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <FolderIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary="Single-line item"
+                                    secondary={secondary ? 'Secondary text' : null}
+                                />
+                            </ListItem>,
+                        )}
+                    </List>
+
                 </Grid>
             </Grid>
         </Box>

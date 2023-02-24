@@ -15,11 +15,14 @@ print(len(links_from_a_z))
 recipes = []
 recipes_ingredients = []
 
+# open file
+f = open("recipeUrlList.txt", "a")
+
 # loop through links from a-z list that are categories of food (i.e. airfryer recipes, pasta, etc.)
 for link in links_from_a_z:
     opened_a_z_link = urllib.request.urlopen(link["href"])
     a_z_soup = BeautifulSoup(opened_a_z_link, 'html.parser')
-    #print(a_z_soup.prettify())
+    #print(a_z_soup.prettify()
 
     # loop through the categories to get their further subcategories (i.e. main-dish, snacks, etc.)
     subgroup_links = a_z_soup.find_all("a", class_ = "taxonomy-nodes__link")
@@ -62,7 +65,7 @@ for link in links_from_a_z:
                 print(all_ingredients)
                 recipes_ingredients.append(all_ingredients)
                 recipe_scrape = scrape_me(recipe["href"])
-                print(recipe_scrape.to_json())
+                #print(recipe_scrape.to_json())
                 print(recipe["href"])
             #break
 

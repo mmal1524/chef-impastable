@@ -33,7 +33,23 @@ export default function SignUp() {
     const handleCloseO = () => {
         setOpenO(false);
     };
+    const handleClickOpenP = () => {
+        setOpenP(true);
+    };
+    const handleClickOpenO = () => {
+        setOpenO(true);
+    };
 
+    const thisUser = JSON.parse(localStorage.getItem('user'));
+    Object.defineProperties(thisUser, {
+        getPass: {
+            get() {
+                return this.password
+            },
+        }, 
+    });
+    console.log(thisUser);
+    console.log(thisUser.getPass);
 
     let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])(?=.{8,})')
     let whiteSpace = new RegExp("/^\s+$/");
@@ -141,10 +157,17 @@ export default function SignUp() {
                             variant="contained" 
                             sx={{ my: 1, width: 400 }}
                             onClick={async () => {
-                                if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (whiteSpace.test(newPassValue))) {
-
+                                console.log("button clicked")
+                                if (thisUser.getPass === oldPassValue) {
+                                    console.log(thisUser.getPass)
+                                    if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (whiteSpace.test(newPassValue))) {
+                                        // reset
+                                        console.log("change now")
+                                    } else {
+                                        handleClickOpenP();
+                                    }
                                 } else {
-                                    handleCloseP();
+                                    handleClickOpenO();
                                 }
                             }}
                         >

@@ -13,6 +13,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { IconButton } from '@mui/material';
+import { MenuSharp } from '@mui/icons-material';
+import {Drawer} from '@mui/material';
 
 const Navbar = () => {
 
@@ -20,6 +23,8 @@ const Navbar = () => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -41,10 +46,23 @@ const Navbar = () => {
     }
     const router = useRouter();
 
+    const sidebar = () => (
+        <Box sx={{width: 250, height: 100}}>
+
+        </Box>
+    );
+
     return (
         <Grid container spacing={0} sx={{ width: '100vw', border: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
-                Navbar
+                <React.Fragment key="left">
+                    <IconButton onClick={() => {debugger; setDrawerOpen(true)}}>
+                        <MenuSharp/>
+                    </IconButton>
+                    <Drawer anchor="left" open={drawerOpen} onClose={() => {setDrawerOpen(false)}}>
+                       {sidebar}
+                    </Drawer>
+                </React.Fragment>
             </Grid>
             <Grid xs={1}>
                 <Button

@@ -13,6 +13,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { IconButton } from '@mui/material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add} from '@mui/icons-material';
+import {Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box} from '@mui/material';
+
 
 const Navbar = () => {
 
@@ -20,6 +24,8 @@ const Navbar = () => {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
+    const [drawerOpen, setDrawerOpen] = React.useState(false);
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -41,10 +47,34 @@ const Navbar = () => {
     }
     const router = useRouter();
 
+    const sidebarIcons = [<Favorite/>, <People/>, <House/>,<Kitchen/>, <CalendarMonth/>, <Add/>]
+    const sidebarLinks = ["/profile-page", "/profile-page", "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
+
+
     return (
         <Grid container spacing={0} sx={{ width: '100vw', border: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
-                Navbar
+                <React.Fragment key="left">
+                    <IconButton onClick={() => {setDrawerOpen(true)}}>
+                        <MenuSharp/>
+                    </IconButton>
+                    <Drawer anchor="left" open={drawerOpen} onClose={() => {setDrawerOpen(false)}}>
+                        <Box sx={{width: 250}}>
+                            <List>
+                            {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
+                                <ListItem key={text}>
+                                    <ListItemButton onClick={() => {window.location.href=sidebarLinks[index]}}>
+                                        <ListItemIcon>
+                                            {sidebarIcons[index]}
+                                        </ListItemIcon>
+                                        <ListItemText primary={text}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
+                            </List>
+                        </Box>
+                    </Drawer>
+                </React.Fragment>
             </Grid>
             <Grid xs={1}>
                 <Button

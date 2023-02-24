@@ -48,29 +48,14 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite/>, <People/>, <House/>,<Kitchen/>, <CalendarMonth/>, <Add/>]
+    const sidebarLinks = ["/profile-page", "/profile-page", "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]
 
-    const sidebar = () => (
-        <Box sx={{width: 250}}>
-            <List>
-                {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
-                    <ListItem key={text}>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {sidebarIcons[index]}
-                            </ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-        </Box>
-    );
 
     return (
         <Grid container spacing={0} sx={{ width: '100vw', border: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
                 <React.Fragment key="left">
-                    <IconButton onClick={() => {debugger; setDrawerOpen(true)}}>
+                    <IconButton onClick={() => {setDrawerOpen(true)}}>
                         <MenuSharp/>
                     </IconButton>
                     <Drawer anchor="left" open={drawerOpen} onClose={() => {setDrawerOpen(false)}}>
@@ -78,7 +63,7 @@ const Navbar = () => {
                             <List>
                             {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                 <ListItem key={text}>
-                                    <ListItemButton>
+                                    <ListItemButton onClick={() => {window.location.href=sidebarLinks[index]}}>
                                         <ListItemIcon>
                                             {sidebarIcons[index]}
                                         </ListItemIcon>

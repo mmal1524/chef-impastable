@@ -51,8 +51,8 @@ export default function SignUp() {
     console.log(thisUser);
     console.log(thisUser.getPass);
 
-    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])(?=.{8,})')
-    let whiteSpace = new RegExp("/^\s+$/");
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*#?&])(?=.{8,})')
+    let passwordRegex = /^[A-Za-z\d@$!%*?&]+$/;
 
     return (
         <Container 
@@ -160,11 +160,18 @@ export default function SignUp() {
                                 console.log("button clicked")
                                 if (thisUser.getPass === oldPassValue) {
                                     console.log(thisUser.getPass)
-                                    if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (whiteSpace.test(newPassValue))) {
-                                        // reset
-                                        console.log("change now")
+                                    if (newPassValue != oldPassValue) {
+                                        if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (passwordRegex.test(newPassValue))) {
+                                            // reset
+                                            console.log("change now")
+                                        } else {
+                                            handleClickOpenP();
+                                        }
                                     } else {
-                                        handleClickOpenP();
+                                        // error message for no need to change password
+                                        console.log("same password no need change")
+                                        console.log("old: ", oldPassValue)
+                                        console.log("new: ", newPassValue)
                                     }
                                 } else {
                                     handleClickOpenO();

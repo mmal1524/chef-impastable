@@ -1,8 +1,7 @@
-import connect from "../../lib/mongodb"
+import connect from "../../lib/mongoose"
 import User from "../../model/schema"
 
 connect()
-
 export default async function handler(req,res){
     try {
         const {username, password}=req.body

@@ -17,6 +17,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import clientPromise from "../lib/mongodb";
 import { useState, useEffect } from 'react'
+import RecipeCard from '../components/recipe-card';
 
 export async function getServerSideProps() {
     try {
@@ -24,13 +25,12 @@ export async function getServerSideProps() {
         const db = client.db("test");
 
         const users = await db.collection("users").find({}).toArray();
-        //console.log(users);
         return {
             props: { users: JSON.parse(JSON.stringify(users)) },
         };
     }
     catch (e) {
-        console.log("ERROR!!!!!!!")
+        console.log("error")
         console.error(e);
     }
 }
@@ -39,7 +39,7 @@ export async function getServerSideProps() {
 function generate(element) {
     return [0, 1, 2, 3].map((value) =>
         React.cloneElement(element, {
-            key: value,
+            key: "value",
         }),
     );
 }
@@ -48,18 +48,12 @@ const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-export default function DietaryRestrictions() {
+export default function DietaryRestrictions({ users }) {
 
     const [dense, setDense] = React.useState(false);
     const [secondary, setSecondary] = React.useState(false);
-    /*const [users, setUsers] = useState({})
-    React.useEffect(() => {
-        fetch('/api/diet-restrictionapi')
-        //.then(response => response.json())
-        .then(users => setUsers(users))
-        console.log(users)
-    }, [])*/
     return (
+        
         <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
             <FormGroup row>
                 <FormControlLabel
@@ -91,7 +85,7 @@ export default function DietaryRestrictions() {
                         {generate(
                             <ListItem
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="delete" onClick={() => { getServerSideProps() }}>
+                                    <IconButton edge="end" aria-label="delete" onClick={() => { }}>
 
                                         <DeleteIcon />
                                     </IconButton>

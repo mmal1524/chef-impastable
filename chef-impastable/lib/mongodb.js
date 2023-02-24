@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb'
 import mongoose from "mongoose";
 
-const connection={};
+/*const connection={};
 
 async function connect(){
   if(connection.isConnected) {
@@ -10,9 +10,9 @@ async function connect(){
     const db = await mongoose.connect(process.env.MONGODB_URI)
     connection.isConnected = db.connections[0].readyState;
 }
-export default connect;
+export default connect;*/
 
-/*if (!process.env.MONGODB_URI) {
+if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
 }
 
@@ -40,4 +40,4 @@ if (process.env.NODE_ENV === 'development') {
 
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.
-export default clientPromise */
+export default clientPromise 

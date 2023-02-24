@@ -63,6 +63,13 @@ const Navbar = () => {
                     Profile
                 </MenuItem>
                 <MenuItem 
+                onClick={() => {
+                    window.location.href="/dietaryrestrictions";
+                }}
+                >
+                    Dietary Restrictions
+                </MenuItem>
+                <MenuItem 
                 >
                     Logout
                 </MenuItem>

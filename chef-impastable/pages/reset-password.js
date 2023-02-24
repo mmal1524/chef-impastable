@@ -13,6 +13,7 @@ export default function SignUp() {
     const [newPassValue, setValuePass] = useState("");
     const [newPassValueC, setValuePassC] = useState("");
     const [openP, setOpenP] = useState(false);
+    const [openO, setOpenO] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const router = useRouter();
@@ -29,31 +30,47 @@ export default function SignUp() {
     const handleCloseP = () => {
         setOpenP(false);
     };
+    const handleCloseO = () => {
+        setOpenO(false);
+    };
 
 
     let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])(?=.{8,})')
     let whiteSpace = new RegExp("/^\s+$/");
 
     return (
-        <Container component="main" maxWidth="auto" 
+        <Container 
+            component="main" 
+            maxWidth="auto" 
             sx={{
                 my: 1
             }}
         >
-            <Box
+            <Box 
                 sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                    my: 1,
+                    height: 150,
+                    displayColor: 'pink',
                 }}
-            > 
+            >                
+            </Box>
+            <Box
+                alignItems='center'
+                justify='center'
+                display='flex'
+                sx={{
+                    flexDirection: 'column',
+                    my: 1,
+                    //backgroundColor: 'gold',
+                }}
+            >
                 <Typography component="h1" variant="h5" sx={{ mb: 1 }}>Reset Password</Typography>
                 <Box 
                     noValidate 
                     sx={{ my: 1 }} 
                     alignItems='center' 
                     justifyItems='center'
-                    maxWidth='60%'
+                    //maxWidth='60%'
                 >
                     <Grid>
                         <Box
@@ -110,7 +127,7 @@ export default function SignUp() {
                         sx={{ 
                             whiteSpace: 'normal',
                             textAlign: 'center',
-                            mt: 2,
+                            my: 2,
                             mx: 'auto',
                             width: 400
                         }} 
@@ -122,8 +139,13 @@ export default function SignUp() {
                             type="submit" 
                             size="large" 
                             variant="contained" 
-                            sx={{ my: 2, width: 400 }}
+                            sx={{ my: 1, width: 400 }}
                             onClick={async () => {
+                                if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (whiteSpace.test(newPassValue))) {
+
+                                } else {
+                                    handleCloseP();
+                                }
                             }}
                         >
                             Reset Password
@@ -148,6 +170,26 @@ export default function SignUp() {
                                 </Button>
                             </DialogActions>
                         </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openO}
+                            onClose={handleCloseO}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Incorrect Old Password"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Your inputted password does not match your old password.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseO} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </Box>
                 </Box>
             </Box>
@@ -156,7 +198,20 @@ export default function SignUp() {
     );
 
     // async connect db check if old password correct
-    // async conenct reset password
+    async function CheckOldCorrect(oldPassValue) {
+        const res = await fetch('/api/find-username', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
 
 }
 

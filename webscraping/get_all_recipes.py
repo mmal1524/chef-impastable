@@ -1,4 +1,5 @@
 from urllib import request
+from python_database_connection import get_database
 
 import urllib3
 from recipe_scrapers import scrape_me
@@ -8,6 +9,9 @@ from lxml import etree
 
 opened = urllib.request.urlopen("https://www.allrecipes.com/recipes-a-z-6735880")
 soup = BeautifulSoup(opened, 'html.parser')
+
+dbname = get_database()
+collection_name = dbname["recipes"]
 
 # get links to alphabetized subgroups of recipe types
 links_from_a_z = soup.find_all("a", class_ ="link-list__link")
@@ -47,6 +51,7 @@ for link in links_from_a_z:
                 ingredient_list = recipe_soup.find_all("li", class_= "mntl-structured-ingredients__list-item")
 
                 all_ingredients = []
+                all_ingredients_json = []
 
                 for ingredient in ingredient_list:
                     ingredient_split = []
@@ -62,11 +67,22 @@ for link in links_from_a_z:
                         if len(ingredients) == 2:
                             ingredients.insert(0, " ")
 
-                print(all_ingredients)
+                        ingredient_json = dict()
+                        ingredient_json["ingredient"] = ingredients[2]
+                        ingredient_json["quantity"] = ingredients[0]
+                        ingredient_json["measurement"] = ingredients[1]
+                        all_ingredients_json.append(ingredient_json)
+
+                #print(all_ingredients)
+                print(ingredient_json)
                 recipes_ingredients.append(all_ingredients)
                 recipe_scrape = scrape_me(recipe["href"])
                 #print(recipe_scrape.to_json())
                 print(recipe["href"])
+                recipe_json = recipe_scrape.to_json();
+                recipe_json["ingredients"] = all_ingredients_json;
+                print(recipe_json)
+                #collection_name.insert_one(recipe_json)
             #break
 
         break

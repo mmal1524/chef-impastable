@@ -17,7 +17,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import clientPromise from "../lib/mongodb";
 import { useState, useEffect } from 'react'
-import RecipeCard from '../components/recipe-card';
+
 
 export async function getServerSideProps() {
     try {

@@ -43,6 +43,7 @@ const Navbar = () => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
+        localStorage.clear();
         router.push("/");
     }
     const router = useRouter();
@@ -116,7 +117,7 @@ const Navbar = () => {
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
-                            window.location.href = "/dietaryrestrictions";
+                            window.location.href = "/rowstest";
                         }}
                     >
                         Dietary Restrictions

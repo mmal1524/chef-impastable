@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function Rows(props) {
+export default function Rows(tags) {
     const [dense, setDense] = React.useState(false);
     return (
         <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
@@ -27,13 +27,15 @@ export default function Rows(props) {
                     <List dense={dense}>
                         <ListItem
                             secondaryAction={
-                                <IconButton edge="end" aria-label="delete" onClick={() => { }}>
+                                <IconButton edge="end" aria-label="delete" onClick={() => {
+
+                                 }}>
                                     <DeleteIcon />
                                 </IconButton>
                             }
                         >
                             <ListItemText
-                                primary={props.user.username}
+                                primary={tags}
                             />
                         </ListItem>
                     </List>

@@ -49,7 +49,7 @@ export async function getServerSideProps(context) {
 export default function Home({
   isConnected,
 }) {
-  const [usernameValue, setValueUser] = useState("");
+    const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
         //console.log(`Typed => ${e.target.value}`);
@@ -133,10 +133,16 @@ export default function Home({
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
-                        if (data.success) {
-                            router.push("profile-page");
-                        } else {
+                        if (!data.success) {
                             handleClickOpen();
+                        } else {
+                            localStorage.setItem('user', 
+                                JSON.stringify({
+                                username: data.username,
+                                password: data.password,
+                                dietaryTags: data.dietaryTags
+                            }));
+                            router.push("profile-page");
                         }
                     }}
                 >Login

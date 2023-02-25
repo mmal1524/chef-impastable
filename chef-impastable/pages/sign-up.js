@@ -71,8 +71,8 @@ export default function SignUp() {
         setOpenS(false);
     };
 
-    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9\s])(?=.{8,})')
-    let whiteSpace = new RegExp("/^\s+$/");
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*#?&])(?=.{8,})')
+    let passwordRegex = /^[A-Za-z\d@$!%*?&]+$/
     const userNameRegex = /^[a-zA-Z0-9_.]+$/
 
     return (
@@ -162,10 +162,15 @@ export default function SignUp() {
                                     if (foundUser.success) {
                                         handleClickOpenU();
                                     } else {
-                                        if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue) && (whiteSpace.test(passwordValue))) {
+                                        if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue) && (passwordRegex.test(passwordValue))) {
                                             var data = await RegUser(usernameValue, passwordValue);
                                             if (data.success) {
 
+                                                localStorage.setItem('user', 
+                                                    JSON.stringify({
+                                                    username: usernameValue,
+                                                    password: passwordValue,
+                                                }));
                                                 router.push('/profile-page');
                                             } else {
                                                 handleClickOpenE();

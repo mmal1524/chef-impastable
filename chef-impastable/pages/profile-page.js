@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { getInitials } from '../components/user';
+//import { getInitials } from '../components/user';
 import { displayLarge } from '../components/user';
-import { displaySmall } from '../components/user';
+//import { displaySmall } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -13,8 +13,8 @@ import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
-import Navbar from './navbar.js'
-import clientPromise from "../lib/mongodb";
+import Navbar from './navbar.js';
+//import clientPromise from "../lib/mongodb";
 
 
 function TabPanel(props) {

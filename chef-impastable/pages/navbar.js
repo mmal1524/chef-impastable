@@ -117,7 +117,7 @@ const Navbar = () => {
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
-                            window.location.href = "/rowstest";
+                            window.location.href = "/dietaryrestrictions";
                         }}
                     >
                         Dietary Restrictions

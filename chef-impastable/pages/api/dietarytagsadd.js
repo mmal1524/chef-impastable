@@ -8,8 +8,6 @@ connect()
 export default async function handler(req,res){
     const{username, tag}=req.body;
     try {
-        console.log(tag);
-        console.log(username);
         const user = await User.findOneAndUpdate({username: username}, {$push: { dietaryTags: tag}});
         return res.json({
             username: user.username,

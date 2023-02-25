@@ -5,7 +5,7 @@ export default function Kitchen() {
         <>
             <h1>This will be the Fridge/Kitchen page</h1>
             <h2>
-                <Link href="/">Back to home</Link>
+                <Link href="/homepage">Back to home</Link>
             </h2>
         </>
     );

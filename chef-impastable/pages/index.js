@@ -134,7 +134,7 @@ export default function Home({
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success) {
-                            router.push("profile-page");
+                            router.push("homepage");
                         } else {
                             handleClickOpen();
                         }

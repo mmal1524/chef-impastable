@@ -1,5 +1,5 @@
 import { modalUnstyledClasses } from "@mui/material";
-import mongoose from "mongoose";
+import mongoose, { SchemaType, SchemaTypes } from "mongoose";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -10,6 +10,19 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String, 
         required:true
+    },
+    displayName:{
+        type:String,
+        default:username
+    },
+    avatar:{
+        type:String
+    },
+    friends:{
+        type: [SchemaTypes.ObjectId]
+    },
+    friendRequests:{
+        type: [SchemaTypes.ObjectId]
     }
 });
 

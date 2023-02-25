@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 import Navbar from './navbar.js'
+import clientPromise from "../lib/mongodb";
 
 
 function TabPanel(props) {
@@ -162,3 +163,4 @@ export default function ProfilePage() {
         </>
     );
 }
+

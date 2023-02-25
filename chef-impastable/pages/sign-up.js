@@ -165,7 +165,8 @@ export default function SignUp() {
                                         if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue) && (whiteSpace.test(passwordValue))) {
                                             var data = await RegUser(usernameValue, passwordValue);
                                             if (data.success) {
-                                            router.push('/profile-page');
+
+                                                router.push('/profile-page');
                                             } else {
                                                 handleClickOpenE();
                                             }
@@ -288,6 +289,9 @@ export default function SignUp() {
                 username: username,
                 password: password,
                 displayName: username,
+                avatar: "",
+                friends: [],
+                friendRequests: []
             })
         })
         const data = await res.json();

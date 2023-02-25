@@ -1,6 +1,7 @@
 import * as React from 'react';
-import User from '../components/user';
-import { currUser } from '../components/user';
+import { getInitials } from '../components/user';
+import { displayLarge } from '../components/user';
+import { displaySmall } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -51,17 +52,19 @@ function a11yProps(index) {
 
 export default function ProfilePage() {
 
-    var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
-    var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
-    var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
-    var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
-    var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
+    //var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
+    //var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
+    //var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
+    //var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
+    //var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
 
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const user = localStorage.getItem('user');
 
     return (
         <>
@@ -73,7 +76,7 @@ export default function ProfilePage() {
                 <Grid container spacing={6}>
                     <Grid xs={10}>
                         {/* Displaying user's profile picture, name, and username */}
-                        {user.displayLarge()}
+                        {displayLarge(user)}
                     </Grid>
                     <Grid xs={2}>
                         {/* Edit profile button */}
@@ -93,9 +96,7 @@ export default function ProfilePage() {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {user.friends[0].displaySmall()}
-                            {user.friends[1].displaySmall()}
-                            {user.friends[2].displaySmall()}
+                            This is where friends will go
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}
@@ -109,7 +110,7 @@ export default function ProfilePage() {
                                alignItems="center"
                                spacing={2}
                             >
-                                {user.friendRequests[0].displaySmall()}
+                                This is where friend requests go
                                 <Button 
                                     variant="outlined" 
                                     sx={{color: 'green', borderColor: 'green'}}

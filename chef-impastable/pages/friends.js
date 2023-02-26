@@ -32,12 +32,14 @@ export default function FriendsPage() {
             </div>
             <Grid container spacing={6}>
                 <Grid xs={6}>
+                <h3 className="h3">Search For Friends</h3>
+                <Divider />
                 <TextField
                     error
                     id="standard-error-helper-text"
                     label="Error"
-                    defaultValue="Search for friends"
-                    helperText="Incorrect entry."
+                    defaultValue="Enter Username"
+                    helperText="No users found"
                     variant="standard"
                     InputProps={{
                         startAdornment: (
@@ -49,14 +51,28 @@ export default function FriendsPage() {
                     />
                 </Grid>
                 <Grid xs={6}>
-                <Box sx={{width: '100%', marginBottom: 4}}>
-                        <h3 className="h3">Friends</h3>
-                        <Divider />
-                        {user.friends[0].displaySmall()}
-                        {user.friends[1].displaySmall()}
-                        {user.friends[2].displaySmall()}
+                    <Box sx={{width: '100%', marginBottom: 4}}>
+                    <h3 className="h3">Friends List</h3>
+                    <Divider />
+
+                    <Grid container spacing={3} direction = "column">
+                        {<Grid xs={5} direction = "row">
+                            {user.friends[0].displaySmall()}
+                            {<Button variant="outlined">Remove</Button>}
+                            {<Button variant="outlined">View</Button>} </Grid>}
+
+                        {<Grid container spacing = {2} direction = "row">
+                            {user.friends[1].displaySmall()}
+                            {<Button variant="outlined">Remove</Button>}
+                            {<Button variant="outlined">View</Button>} </Grid>}
+                        
+                        {<Grid container spacing = {2} direction = "row">
+                            {user.friends[2].displaySmall()}
+                            {<Button variant="outlined">Remove</Button>}
+                            {<Button variant="outlined">View</Button>} </Grid>}
+                    </Grid>
                     </Box>
-                </Grid>
+                    </Grid>
             </Grid>
         </div>
     );

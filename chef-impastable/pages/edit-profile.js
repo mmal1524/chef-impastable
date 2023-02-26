@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Divider } from '@mui/material';
 import { useRouter } from "next/router";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 export default function EditProfilePage() {
@@ -49,15 +50,33 @@ export default function EditProfilePage() {
            <div className="App">
                 <Navbar />
             </div>
-            <form noValidate autoComplete="off">
-                <TextField required 
-                    id="standard-required" 
-                    label="Display Name" 
-                    value={displayNameValue}
-                    onChange={handleChangeDisplayName}
-                    sx={{padding: 2}}
-                />
-            </form>
+            <Grid container spacing={2}>
+                <Grid xs={10}>
+                    {/* Display name field */}
+                    <form noValidate autoComplete="off">
+                        <TextField required 
+                            id="standard-required" 
+                            label="Display Name" 
+                            value={displayNameValue}
+                            onChange={handleChangeDisplayName}
+                            sx={{padding: 2}}
+                        />
+                    </form>
+                </Grid>
+                <Grid xs={2}>
+                    {/* Reset password button */}
+                    <Button 
+                            variant="outlined" 
+                            startIcon={<SettingsIcon />} 
+                            sx={{color: 'black', borderColor: 'black'}}
+                            onClick={() => {
+                                //router.push("edit-profile");
+                            }}
+                        >
+                            Reset Passowrd
+                        </Button>
+                </Grid>
+            </Grid>
             <Divider sx={{marginTop: 3, marginBottom: 3}}></Divider>
             <Stack 
                 direction="column"

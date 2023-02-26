@@ -52,7 +52,7 @@ const Navbar = () => {
 
 
     return (
-        <Grid container spacing={0} sx={{ margin: 0, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+        <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => {setDrawerOpen(true)}}>

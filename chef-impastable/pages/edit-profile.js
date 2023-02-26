@@ -7,6 +7,9 @@ export default function EditProfilePage() {
             <h2>
                 <Link href="/">Back to home</Link>
             </h2>
+            <h2>
+                <Link href="/reset-password">Change Password</Link>
+            </h2>
         </>
     );
 }

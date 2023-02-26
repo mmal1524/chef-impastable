@@ -31,7 +31,7 @@ export function displaySmall(user) {
                     alt={user.displayName} 
                     src={user.avatar} 
                 >
-                    {getInitials(user.username)}
+                    {getInitials(user.displayName)}
                 </Avatar>
                 {/* Displays user's display name and username next to profile picture */}
                 <Stack
@@ -75,7 +75,7 @@ export function displayLarge(user) {
                     alt={user.displayName} 
                     src={user.avatar} 
                 >
-                    {getInitials(user.username)}
+                    {getInitials(user.displayName)}
                 </Avatar>
                 {/* Displays user's display name and username next to profile picture */}
                 <Stack

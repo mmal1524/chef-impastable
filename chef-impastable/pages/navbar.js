@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
-import User from '../components/user';
+import User, { getInitials } from '../components/user';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -20,7 +20,7 @@ import {Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box}
 
 const Navbar = () => {
 
-    var user = new User('Sarah Wagler', 'sawagler', "", [], []);
+    var user = JSON.parse(localStorage.getItem('user'));
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
@@ -52,7 +52,7 @@ const Navbar = () => {
 
 
     return (
-        <Grid container spacing={0} sx={{ width: '100vw', border: 4, borderColor: 'Orange' }}>
+        <Grid container spacing={0} sx={{ margin: 0, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => {setDrawerOpen(true)}}>
@@ -90,7 +90,7 @@ const Navbar = () => {
                         alt={user.displayName}
                         src={user.profilePicture}
                     >
-                        {user.getInitials()}
+                        {getInitials(user.displayName)}
                     </Avatar>
                 </Button>
                 <Menu

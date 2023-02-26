@@ -134,6 +134,12 @@ export default function Home({
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success) {
+                            localStorage.setItem('user', 
+                                JSON.stringify({
+                                username: data.username,
+                                password: data.password,
+                                kitchen: data.kitchen
+                            }));
                             router.push("homepage");
                         } else {
                             handleClickOpen();

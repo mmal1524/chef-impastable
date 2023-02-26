@@ -12,7 +12,12 @@ export default async function handler(req,res){
             return res.json({success : false});
         }
         else {
-            return res.json({success: true});
+            return res.json({
+                username: user.username,
+                password: user.password,
+                kitchen: user.kitchen,
+                success: true
+            });
         }
     } catch (error) {
         res.status(400).json({status:'Not able to create a new user.'})

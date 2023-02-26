@@ -167,10 +167,11 @@ export default function SignUp() {
                                             if (data.success) {
                                                 localStorage.setItem('user', 
                                                     JSON.stringify({
-                                                    username: usernameValue,
-                                                    password: passwordValue,
+                                                    username: data.username,
+                                                    password: data.password,
+                                                    kitchen: data.kitchen
                                                 }));
-                                                router.push('/profile-page');
+                                                router.push('/homepage');
                                             } else {
                                                 handleClickOpenE();
                                             }

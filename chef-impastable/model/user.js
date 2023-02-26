@@ -13,8 +13,12 @@ const userSchema = new mongoose.Schema({
     },
     displayName: {
         type:String,
-        required:true
+        //required:true
+    },
+    kitchen: {
+        type:[String]
     }
+
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

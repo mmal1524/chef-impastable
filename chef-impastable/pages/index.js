@@ -142,7 +142,7 @@ export default function Home({
                                 password: data.password,
                                 dietaryTags: data.dietaryTags
                             }));
-                            router.push("profile-page");
+                            router.push("/homepage");
                         }
                     }}
                 >Login

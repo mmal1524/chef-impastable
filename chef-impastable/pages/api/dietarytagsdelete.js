@@ -1,5 +1,5 @@
-import connect from "../../lib/mongoose"
-import User from "../../model/schema"
+import connect from "../../lib/mongodb"
+import User from "../../model/user"
 
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);

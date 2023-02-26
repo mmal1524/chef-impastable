@@ -40,7 +40,7 @@ const recipeSchema = new mongoose.Schema({
         required:false
     },
     language: {
-        type=String,
+        type:String,
         required:false
     },
     nutrients: {

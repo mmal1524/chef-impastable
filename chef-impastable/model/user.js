@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema({
     },
     displayName: {
         type:String,
-        required:true
+        //required:true
+    },
+    dietaryTags: {
+        type:[String]
     }
 });
 

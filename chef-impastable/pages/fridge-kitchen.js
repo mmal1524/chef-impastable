@@ -1,13 +1,12 @@
 import * as React from 'react';
 import Link from 'next/link';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Unstable_Grid2';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { Divider } from '@mui/material';
+import { Divider, TextField, Grid } from '@mui/material';
 import Navbar from './navbar.js'
+import Button from '@mui/material/Button';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -21,9 +20,9 @@ function TabPanel(props) {
         {...other}
       >
         {value === index && (
-          <Box sx={{ p: 3 }}>
+          <Grid sx={{ p: 3 }}>
             <Typography>{children}</Typography>
-          </Box>
+          </Grid>
         )}
       </div>
     );
@@ -52,25 +51,62 @@ export default function Kitchen() {
 
     return (
         <>
-            <h1>This will be the Fridge/Kitchen page</h1>
+
+            <div className="App">
+                <Navbar />
+            </div>
             <h2>
                 <Link href="/homepage">Back to home</Link>
             </h2>
             <div>
-                <Box sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Grid sx={{ width: '100%' }}>
+                    <Grid sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="Fridge" {...a11yProps(0)} />
                             <Tab label="Kitchen" {...a11yProps(1)} />
                         </Tabs>
-                    </Box>
+                    </Grid>
                     <TabPanel value={value} index={0}>
                         Fridge
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        Kitchen
+                        <Grid container>
+                            <Grid>
+                                <TextField
+                                    id="search-kitchen"
+                                    label="Search"
+                                    variant="outlined"
+                                />
+                                <Button 
+                                    type="submit" 
+                                    size="large"
+                                    variant="contained"
+                                    onClick={() => {
+                                        //search for appliance
+                                        console.log("clicked")
+                                    }}
+                                >
+                                    Enter
+                                </Button>
+                            </Grid>
+                            <Grid item xs></Grid>
+                            <Grid>
+                                <Button 
+                                    type="submit" 
+                                    size="large"
+                                    variant="contained"
+                                    onClick={() => {
+                                        //route to edit page
+                                        console.log("clicked")
+                                    }}
+                                >
+                                    Edit Kitchen
+                                </Button>
+                            </Grid>
+                        </Grid>
+
                     </TabPanel>
-                </Box>
+                </Grid>
             </div>
         </>
     );

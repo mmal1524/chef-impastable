@@ -14,6 +14,9 @@ export default function SignUp() {
     const [newPassValueC, setValuePassC] = useState("");
     const [openP, setOpenP] = useState(false);
     const [openO, setOpenO] = useState(false);
+    const [openN, setOpenN] = useState(false);
+    const [openE, setOpenE] = useState(false);
+    const [openS, setOpenS] = useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const router = useRouter();
@@ -33,13 +36,32 @@ export default function SignUp() {
     const handleCloseO = () => {
         setOpenO(false);
     };
+    const handleCloseN = () => {
+        setOpenN(false);
+    };
+    const handleCloseE = () => {
+        setOpenE(false);
+    };
+    const handleCloseS = () => {
+        setOpenS(false);
+        router.push('/profile-page');
+    };
     const handleClickOpenP = () => {
         setOpenP(true);
     };
     const handleClickOpenO = () => {
         setOpenO(true);
     };
-
+    const handleClickOpenN = () => {
+        setOpenN(true);
+    };
+    const handleClickOpenE = () => {
+        setOpenE(true);
+    };
+    const handleClickOpenS = () => {
+        setOpenS(true);
+    };
+    
     const thisUser = JSON.parse(localStorage.getItem('user'));
     Object.defineProperties(thisUser, {
         getPass: {
@@ -47,6 +69,11 @@ export default function SignUp() {
                 return this.password
             },
         }, 
+        getUsername: {
+            get() {
+                return this.username
+            }
+        },
     });
     console.log(thisUser);
     console.log(thisUser.getPass);
@@ -162,16 +189,25 @@ export default function SignUp() {
                                     console.log(thisUser.getPass)
                                     if (newPassValue != oldPassValue) {
                                         if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (passwordRegex.test(newPassValue))) {
-                                            // reset
-                                            console.log("change now")
+                                            //console.log("change now")
+                                            var data = await EditPw(thisUser.getUsername, newPassValue);
+                                            if (data.success) {
+                                                localStorage.setItem('user', 
+                                                    JSON.stringify({
+                                                    username: data.username,
+                                                    password: data.password,
+                                                }));
+                                                //console.log(thisUser.getPass)
+                                                handleClickOpenS();
+                                                //router.push('/profile-page');
+                                            } else {
+                                                handleClickOpenE();
+                                            }
                                         } else {
                                             handleClickOpenP();
                                         }
                                     } else {
-                                        // error message for no need to change password
-                                        console.log("same password no need change")
-                                        console.log("old: ", oldPassValue)
-                                        console.log("new: ", newPassValue)
+                                        handleClickOpenN();
                                     }
                                 } else {
                                     handleClickOpenO();
@@ -220,6 +256,66 @@ export default function SignUp() {
                                 </Button>
                             </DialogActions>
                         </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openN}
+                            onClose={handleCloseN}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"No Change Necessary"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Your old and new password match. There is no need for change.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseN} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openE}
+                            onClose={handleCloseE}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Error"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Error. Failed to change Password.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseE} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            fullScreen={fullScreen}
+                            open={openS}
+                            onClose={handleCloseS}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"Success"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Password Changed
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseS} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </Box>
                 </Box>
             </Box>
@@ -227,16 +323,16 @@ export default function SignUp() {
 
     );
 
-    // async connect db check if old password correct
-    async function CheckOldCorrect(oldPassValue) {
-        const res = await fetch('/api/find-username', {
-            method: 'POST',
+    async function EditPw(username, password) {
+        const res = await fetch('/api/change-password', {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 username: username,
+                password: password,
             })
         })
         const data = await res.json();

@@ -18,6 +18,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Avatar from '@mui/material/Avatar';
+import { getInitials } from '../components/user';
 
 
 export default function EditProfilePage() {
@@ -29,17 +31,17 @@ export default function EditProfilePage() {
         setValueDisplayName(e.target.value)
     }
 
-    const [crRecPriv, setValueCrRecPriv] = React.useState("everyone");
+    const [crRecPriv, setValueCrRecPriv] = React.useState(user.createdPrivacy);
     const handleChangeCrRecPriv = (event) => {
         setValueCrRecPriv(event.target.value);
       };
 
-    const [svRecPriv, setValueSvRecPriv] = React.useState("everyone");
+    const [svRecPriv, setValueSvRecPriv] = React.useState(user.savedPrivacy);
     const handleChangeSvRecPriv = (event) => {
         setValueSvRecPriv(event.target.value);
     };
 
-    const [revRecPriv, setValueRevRecPriv] = React.useState("everyone");
+    const [revRecPriv, setValueRevRecPriv] = React.useState(user.reviewedPrivacy);
     const handleChangeRevRecPriv = (event) => {
         setValueRevRecPriv(event.target.value);
     };
@@ -64,6 +66,17 @@ export default function EditProfilePage() {
             <Grid container spacing={2}>
                 <Grid xs={10}>
                     {/* Avatar */}
+                    <Button component="label">
+                        {/*<input hidden id="upload-avatar-pic" accept="image/*" type="file" />*/}
+                        <Avatar
+                            sx={{ width: 100, height: 100 }}
+                            alt={user.displayName}
+                            src={user.profilePicture}
+                        >
+                            {getInitials(user.displayName)}
+                        </Avatar>
+                    </Button>
+                    <p></p>
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
                         <TextField required 
@@ -71,7 +84,7 @@ export default function EditProfilePage() {
                             label="Display Name" 
                             value={displayNameValue}
                             onChange={handleChangeDisplayName}
-                            sx={{padding: 2}}
+                            sx={{marginTop: 2}}
                         />
                     </form>
                 </Grid>
@@ -218,8 +231,12 @@ export default function EditProfilePage() {
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
                             user.displayName = displayNameValue;
+                            user.createdPrivacy = crRecPriv;
+                            user.savedPrivacy = svRecPriv;
+                            user.reviewedPrivacy = revRecPriv;
                             localStorage.setItem('user', JSON.stringify(user));
-                            var data = await updateUser(user.username, user.displayName);
+                            var data = await updateUser(user.username, user.displayName, user.createdPrivacy,
+                                                        user.savedPrivacy, user.reviewedPrivacy);
                             console.log(data);
                             router.push("profile-page");
                         }}
@@ -232,9 +249,9 @@ export default function EditProfilePage() {
         </>
     );
 
-    async function updateUser(username, newDisplayName) {
+    async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv) {
         console.log(username);
-        const res = await fetch('/api/updateDisplayName', {
+        const res = await fetch('/api/updateUser', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -242,7 +259,10 @@ export default function EditProfilePage() {
             },
             body: JSON.stringify({
                 username: username,
-                newDisplayName: newDisplayName
+                newDisplayName: newDisplayName,
+                newCreatPriv: newCreatPriv,
+                newSavPriv: newSavPriv,
+                newRevPriv: newRevPriv
             })
         });
         const data = await res.json();

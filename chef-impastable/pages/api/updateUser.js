@@ -7,9 +7,14 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username, newDisplayName}=req.body
+        const {username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv}=req.body
         const user = await User.findOne({username})
-        const update = {displayName: newDisplayName}
+        const update = {
+            displayName: newDisplayName,
+            createdPrivacy: newCreatPriv,
+            savedPrivacy: newSavPriv,
+            reviewedPrivacy: newRevPriv
+        }
         await user.updateOne(update)
         if (!user) {
             return res.json({success: false});

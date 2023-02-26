@@ -299,7 +299,10 @@ export default function SignUp() {
                 displayName: username,
                 avatar: "",
                 friends: ["friend1"],
-                friendRequests: []
+                friendRequests: [],
+                createdPrivacy: "everyone",
+                savedPrivacy: "everyone",
+                reviewedPrivacy: "everyone"
             })
         })
         const data = await res.json();

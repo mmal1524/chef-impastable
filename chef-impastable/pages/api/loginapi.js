@@ -19,7 +19,10 @@ export default async function handler(req,res){
                 displayName: user.displayName,
                 avatar: user.avatar,
                 friends: user.friends,
-                friendRequests: user.friendRequests
+                friendRequests: user.friendRequests,
+                createdPrivacy: user.createdPrivacy,
+                savedPrivacy: user.savedPrivacy,
+                reviewedPrivacy: user.reviewedPrivacy
             });
         }
     } catch (error) {

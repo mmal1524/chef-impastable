@@ -19,7 +19,10 @@ const userSchema = new mongoose.Schema({
         type:String
     },
     friends: [String],
-    friendRequests: [String]
+    friendRequests: [String],
+    createdPrivacy: String,
+    savedPrivacy: String,
+    reviewedPrivacy: String
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

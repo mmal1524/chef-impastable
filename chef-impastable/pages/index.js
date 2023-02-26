@@ -22,6 +22,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
 
+import User from '../components/user';
 
 export async function getServerSideProps(context) {
   try {
@@ -132,13 +133,10 @@ export default function Home({
                 <Button
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
-                        console.log(usernameValue);
-                        console.log(passwordValue);
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data == null) {
                             handleClickOpen();
                         } else {
-                            console.log(data);
                             localStorage.setItem('user',
                                 JSON.stringify({
                                     username: data.username,
@@ -188,7 +186,7 @@ export default function Home({
     );
 
     async function LoginUser(username, password) {
-        try {
+        //try {
             console.log(username);
             console.log(password);
             const res = await fetch('/api/loginapi', {
@@ -203,10 +201,11 @@ export default function Home({
                 })
             })
             const data = await res.json();
+            console.log(data);
             return data;
-        } catch (error) {
-            res.json(error);
-            return res.status(405).end();
-        }
+        //} catch (error) {
+        //    res.json(error);
+        //    return res.status(405).end();
+        //}
     }
 }

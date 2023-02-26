@@ -18,12 +18,8 @@ const userSchema = new mongoose.Schema({
     avatar:{
         type:String
     },
-    friends:{
-        type: [SchemaTypes.ObjectId]
-    },
-    friendRequests:{
-        type: [SchemaTypes.ObjectId]
-    }
+    friends: [String],
+    friendRequests: [String]
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

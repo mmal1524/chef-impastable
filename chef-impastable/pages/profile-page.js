@@ -1,6 +1,8 @@
 import * as React from 'react';
+import User from '../components/user';
 //import { getInitials } from '../components/user';
 import { displayLarge } from '../components/user';
+import { displayFriends } from '../components/user';
 //import { displaySmall } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
@@ -14,7 +16,6 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 import Navbar from './navbar.js';
-//import clientPromise from "../lib/mongodb";
 
 
 function TabPanel(props) {
@@ -64,7 +65,9 @@ export default function ProfilePage() {
         setValue(newValue);
     };
 
-    const user = localStorage.getItem('user');
+    var user = JSON.parse(localStorage.getItem('user'));
+    console.log(user);
+    var friends = user.friends;
 
     return (
         <>
@@ -96,7 +99,7 @@ export default function ProfilePage() {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            This is where friends will go
+                            {displayFriends(user)}
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}

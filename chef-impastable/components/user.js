@@ -2,12 +2,11 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 
-const currUser = "63efbd6587c0903e01a19bc6";
 
 export function getInitials(displayName) {
-    var words = displayName.split(' ');
+    var words = displayName?.split(' ');
         var initials = "";
-        words.forEach(function(word) {
+        words?.forEach(function(word) {
             initials += word[0];
         });
     return initials;
@@ -99,6 +98,38 @@ export function displayLarge(user) {
         </>
 
     );
+}
+
+export function displayFriends(user) {
+    console.log(user.friends);
+    if (user.friends.length == 0) {
+        return (<>You have no friends :(</>);
+    } else {
+        user.friends.forEach(async function(friend) {
+            var friendObject = await findUser(friend);
+            if (friendObject != null) {
+                displaySmall(friend);
+            }
+        });
+    }
+
+
+    async function findUser(username) {
+        console.log(username);
+        const res = await fetch('/api/finduser', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 }
 
 export default class User {

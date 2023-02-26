@@ -16,7 +16,9 @@ import { Divider } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
 
 export default function FriendsPage() {
     var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
@@ -49,27 +51,31 @@ export default function FriendsPage() {
                         ),
                       }}
                     />
+                    {<Grid container spacing={4} direction = "row">
+                            {user.friends[0].displaySmall()}
+                            {<Button variant="outlined" endIcon={<SendIcon />}>Request</Button>}
+                            {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
                 </Grid>
                 <Grid xs={6}>
                     <Box sx={{width: '100%', marginBottom: 4}}>
                     <h3 className="h3">Friends List</h3>
                     <Divider />
 
-                    <Grid container spacing={3} direction = "column">
-                        {<Grid xs={5} direction = "row">
+                    <Grid container spacing={4} direction = "column">
+                        {<Grid container spacing = {2} direction = "row">
                             {user.friends[0].displaySmall()}
-                            {<Button variant="outlined">Remove</Button>}
-                            {<Button variant="outlined">View</Button>} </Grid>}
+                            {<Button variant="outlined" endIcon={<DeleteIcon />}>Remove</Button>}
+                            {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
 
                         {<Grid container spacing = {2} direction = "row">
                             {user.friends[1].displaySmall()}
-                            {<Button variant="outlined">Remove</Button>}
-                            {<Button variant="outlined">View</Button>} </Grid>}
+                            {<Button variant="outlined" endIcon={<DeleteIcon />} >Remove</Button>}
+                            {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
                         
                         {<Grid container spacing = {2} direction = "row">
                             {user.friends[2].displaySmall()}
-                            {<Button variant="outlined">Remove</Button>}
-                            {<Button variant="outlined">View</Button>} </Grid>}
+                            {<Button variant="outlined" endIcon={<DeleteIcon />}>Remove</Button>}
+                            {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
                     </Grid>
                     </Box>
                     </Grid>

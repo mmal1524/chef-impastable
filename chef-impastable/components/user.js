@@ -13,6 +13,9 @@ export function getInitials(displayName) {
 }
 
 export function displaySmall(user) {
+    console.log(user);
+    console.log(user.displayName);
+    console.log(user.username);
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
             {/* Stack to display user's profile picture, display name, and username */}
@@ -102,15 +105,19 @@ export function displayLarge(user) {
 
 export function displayFriends(friends) {
     console.log(friends);
+    var friendObjects = new Array();
     if (friends.length == 0) {
         return (<>You have no friends :(</>);
     } else {
         friends.forEach(async function(friend) {
-            var friendObject = await findUser(friend);
-            if (friendObject != null) {
-                displaySmall(friend);
+            var f = await findUser(friend);
+            console.log(f);
+            displaySmall(f);
+            if (f != null) {
+                friendObjects.push(f);
             }
         });
+        
     }
 
 

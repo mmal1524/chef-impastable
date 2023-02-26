@@ -15,13 +15,14 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Divider } from '@mui/material';
+import { useRouter } from "next/router";
 
 
 export default function EditProfilePage() {
 
     var user = JSON.parse(localStorage.getItem('user'));
 
-    const [displayNameValue, setValueDisplayName] = useState("Sarah");
+    const [displayNameValue, setValueDisplayName] = useState(user.displayName);
     const handleChangeDisplayName = e => {
         setValueDisplayName(e.target.value)
     }
@@ -41,6 +42,8 @@ export default function EditProfilePage() {
         setValueRevRecPriv(event.target.value);
     };
 
+    const router = useRouter();
+
     return (
         <>
            <div className="App">
@@ -50,7 +53,6 @@ export default function EditProfilePage() {
                 <TextField required 
                     id="standard-required" 
                     label="Display Name" 
-                    //defaultValue={user.displayName} 
                     value={displayNameValue}
                     onChange={handleChangeDisplayName}
                     sx={{padding: 2}}
@@ -141,8 +143,12 @@ export default function EditProfilePage() {
                     <Button 
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
-                        onClick={() => {
-                            
+                        onClick={async () => {
+                            user.displayName = displayNameValue;
+                            localStorage.setItem('user', JSON.stringify(user));
+                            var data = await updateUser(user.username, user.displayName);
+                            console.log(data);
+                            router.push("profile-page");
                         }}
                     >
                         Save
@@ -152,4 +158,22 @@ export default function EditProfilePage() {
 
         </>
     );
+
+    async function updateUser(username, newDisplayName) {
+        console.log(username);
+        const res = await fetch('/api/updateDisplayName', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                newDisplayName: newDisplayName
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 }

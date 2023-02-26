@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { useState } from "react";
-import Link from 'next/link';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import {getInitials} from '../components/user'
 import Navbar from './navbar.js';
 import TextField from '@material-ui/core/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
-import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -17,6 +13,11 @@ import Select from '@mui/material/Select';
 import { Divider } from '@mui/material';
 import { useRouter } from "next/router";
 import SettingsIcon from '@mui/icons-material/Settings';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 export default function EditProfilePage() {
@@ -43,6 +44,16 @@ export default function EditProfilePage() {
         setValueRevRecPriv(event.target.value);
     };
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const router = useRouter();
 
     return (
@@ -52,6 +63,7 @@ export default function EditProfilePage() {
             </div>
             <Grid container spacing={2}>
                 <Grid xs={10}>
+                    {/* Avatar */}
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
                         <TextField required 
@@ -64,17 +76,59 @@ export default function EditProfilePage() {
                     </form>
                 </Grid>
                 <Grid xs={2}>
-                    {/* Reset password button */}
-                    <Button 
+                        <Stack
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
+                            spacing={2}
+                        >
+                        {/* Reset password button */}
+                        <Button 
                             variant="outlined" 
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                //router.push("edit-profile");
+                                //router.push to reset password page
                             }}
                         >
-                            Reset Passowrd
+                            Reset Password
                         </Button>
+                        {/* Delete account button */}
+                        <Button 
+                            variant="outlined" 
+                            startIcon={<SettingsIcon />} 
+                            sx={{color: 'red', borderColor: 'red'}}
+                            onClick={handleClickOpen}
+                        >
+                            Delete Account
+                        </Button>
+                        {/* Pop up */}
+                        <Dialog
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle id="delete-account">
+                                {"Delete Account?"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="delete-account-description">
+                                    This action is permanent. It cannot be undone.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                {/* Delete account */}
+                                <Button onClick={handleClose}
+                                    sx={{color: 'red'}}
+                                >
+                                    Delete Account
+                                </Button>
+                                {/* Close pop up*/}
+                                <Button onClick={handleClose} autoFocus>
+                                    Close
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </Stack>
                 </Grid>
             </Grid>
             <Divider sx={{marginTop: 3, marginBottom: 3}}></Divider>

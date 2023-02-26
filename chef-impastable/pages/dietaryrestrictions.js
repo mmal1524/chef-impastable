@@ -34,9 +34,9 @@ export default function Home() {
     }
     const deleteByIndex = index => {
         setUserTags(oldValues => {
-          return oldValues.filter((_, i) => i !== index)
+            return oldValues.filter((_, i) => i !== index)
         })
-      }
+    }
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -57,11 +57,16 @@ export default function Home() {
     return (
         <div className="app-container">
             <div className="App">
-                    <Navbar />
-                </div>
+                <Navbar />
+            </div>
+
             {userTags && userTags.map((tag, index) => (
-                <div>        
-                    <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
+                <div>
+                    <Box sx={{ flexGrow: 1, maxWidth: 752 }}
+                        alignItems='center'
+                        justify='center'
+                        display='flex'
+                    >
                         <FormGroup row>
                         </FormGroup>
                         <Grid container spacing={2}>
@@ -69,9 +74,15 @@ export default function Home() {
                                 <List dense={dense}>
                                     <ListItem
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" onClick={() => {
+                                            <IconButton edge="end" aria-label="delete" onClick={async () => {
                                                 deleteByIndex(index);
-                                                DeleteTag(username, tag);
+                                                var data = await DeleteTag(username, tag);
+                                                localStorage.setItem('user',
+                                                    JSON.stringify({
+                                                        username: data.username,
+                                                        password: data.password,
+                                                        dietaryTags: data.dietaryTags
+                                                    }));
                                             }}>
                                                 <DeleteIcon />
                                             </IconButton>
@@ -84,30 +95,38 @@ export default function Home() {
                                 </List>
                             </Grid>
                         </Grid>
-                    </Box>          
+                    </Box>
                 </div>
             ))}
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-standard-label">Dietary Restrictions</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        value={tagValue}
-                        onChange={handleAddTag}
-                        label="Dietary Restrictions"
-                    >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"Ham"}>Ham</MenuItem>
-                        <MenuItem value={"Milk"}>Milk</MenuItem>
-                        <MenuItem value={"Sugar"}>Sugar</MenuItem>
-                    </Select>
-                </FormControl>
+
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>
+                <InputLabel id="demo-simple-select-standard-label">Dietary Restrictions</InputLabel>
+                <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={tagValue}
+                    onChange={handleAddTag}
+                    label="Dietary Restrictions"
+                >
+                    <MenuItem value="">
+                        <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={"Lactose"}>Lactose</MenuItem>
+                    <MenuItem value={"Gluten"}>Gluten</MenuItem>
+                    <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
+                    <MenuItem value={"Vegan"}>Vegan</MenuItem>
+                    <MenuItem value={"Dairy"}>Dairy</MenuItem>
+                    <MenuItem value={"Nuts"}>Nuts</MenuItem>
+                    <MenuItem value={"Peanuts"}>Peanuts</MenuItem>
+                    <MenuItem value={"Wheat"}>Wheat</MenuItem>
+                    <MenuItem value={"Shellfish"}>Shellfish</MenuItem>
+                    <MenuItem value={"Fish"}>Fish</MenuItem>
+                </Select>
+            </FormControl>
             <Button
                 type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                 onClick={async () => {
-                    setUserTags([...userTags, tagValue]);
+                    setUserTags(userTags => [...userTags, tagValue]);
                     var data = await AddTag(username, tagValue);
                     localStorage.setItem('user',
                         JSON.stringify({
@@ -123,33 +142,42 @@ export default function Home() {
 }
 
 async function AddTag(username, tag) {
-    const res = await fetch('/api/dietarytagsadd', {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            tag: tag,
+    try {
+        const res = await fetch('/api/dietarytagsadd', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                tag: tag,
+            })
         })
-    })
-    const data = await res.json();
-    return data;
+        const data = await res.json();
+        return data;
+    }
+    catch (error) {
+        return error;
+    }
 }
 
 async function DeleteTag(username, tag) {
-    const res = await fetch('/api/dietarytagsdelete', {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            tag: tag,
+    try {
+        const res = await fetch('/api/dietarytagsdelete', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                tag: tag,
+            })
         })
-    })
-    const data = await res.json();
-    return data;
+        const data = await res.json();
+        return data;
+    } catch {
+        return error
+    }
 }

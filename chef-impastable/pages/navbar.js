@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import Button from '@mui/material/Button';
+import { useState, useEffect } from "react";
 import User, { getInitials } from '../components/user';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -14,18 +15,35 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
-import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add} from '@mui/icons-material';
-import {Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box} from '@mui/material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 
 
 const Navbar = () => {
 
-    var user = JSON.parse(localStorage.getItem('user'));
-
+    const [displayName, setDisplayName] = useState("");
+    const [avatar, setAvatar] = useState("");
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getDisplayName: {
+                get() {
+                    return this.displayName
+                },
+            },
+            getAvatar: {
+                get() {
+                    return this.Avatar
+                }
+            },
+        });
+        setDisplayName(thisUser.getDisplayName);
+        setAvatar(thisUser.getAvatar);
+    }, []);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
-    
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -48,7 +66,7 @@ const Navbar = () => {
     }
     const router = useRouter();
 
-    const sidebarIcons = [<Favorite/>, <People/>, <House/>,<Kitchen/>, <CalendarMonth/>, <Add/>]
+    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
     const sidebarLinks = ["/profile-page", "/profile-page", "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
 
@@ -56,22 +74,22 @@ const Navbar = () => {
         <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
                 <React.Fragment key="left">
-                    <IconButton onClick={() => {setDrawerOpen(true)}}>
-                        <MenuSharp/>
+                    <IconButton onClick={() => { setDrawerOpen(true) }}>
+                        <MenuSharp />
                     </IconButton>
-                    <Drawer anchor="left" open={drawerOpen} onClose={() => {setDrawerOpen(false)}}>
-                        <Box sx={{width: 250}}>
+                    <Drawer anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
+                        <Box sx={{ width: 250 }}>
                             <List>
-                            {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
-                                <ListItem key={text}>
-                                    <ListItemButton onClick={() => {window.location.href=sidebarLinks[index]}}>
-                                        <ListItemIcon>
-                                            {sidebarIcons[index]}
-                                        </ListItemIcon>
-                                        <ListItemText primary={text}/>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))}
+                                {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
+                                    <ListItem key={text}>
+                                        <ListItemButton onClick={() => { window.location.href = sidebarLinks[index] }}>
+                                            <ListItemIcon>
+                                                {sidebarIcons[index]}
+                                            </ListItemIcon>
+                                            <ListItemText primary={text} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
                             </List>
                         </Box>
                     </Drawer>
@@ -88,10 +106,12 @@ const Navbar = () => {
                 >
                     <Avatar
                         sx={{ width: 40, height: 40 }}
-                        alt={user.displayName}
-                        src={user.profilePicture}
+
+
+                        alt={displayName}
+                        src={avatar}
                     >
-                        {getInitials(user.displayName)}
+                        {getInitials(displayName)}
                     </Avatar>
                 </Button>
                 <Menu

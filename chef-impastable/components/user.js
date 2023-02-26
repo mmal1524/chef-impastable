@@ -100,12 +100,12 @@ export function displayLarge(user) {
     );
 }
 
-export function displayFriends(user) {
-    console.log(user.friends);
-    if (user.friends.length == 0) {
+export function displayFriends(friends) {
+    console.log(friends);
+    if (friends.length == 0) {
         return (<>You have no friends :(</>);
     } else {
-        user.friends.forEach(async function(friend) {
+        friends.forEach(async function(friend) {
             var friendObject = await findUser(friend);
             if (friendObject != null) {
                 displaySmall(friend);
@@ -131,6 +131,8 @@ export function displayFriends(user) {
         return data;
     }
 }
+
+
 
 export default class User {
     constructor(displayName, username, profilePicture, friends, friendRequests) {

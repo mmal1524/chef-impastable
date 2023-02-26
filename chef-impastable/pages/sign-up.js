@@ -298,7 +298,7 @@ export default function SignUp() {
                 password: password,
                 displayName: username,
                 avatar: "",
-                friends: [],
+                friends: ["friend1"],
                 friendRequests: []
             })
         })

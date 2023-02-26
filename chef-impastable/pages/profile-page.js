@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
 import Navbar from './navbar.js';
+import { useRouter } from "next/router";
 
 
 function TabPanel(props) {
@@ -53,13 +54,8 @@ function a11yProps(index) {
 
 export default function ProfilePage() {
 
-    //var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
-    //var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
-    //var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
-    //var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
-    //var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
-
     const [value, setValue] = React.useState(0);
+    const router = useRouter();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -88,7 +84,7 @@ export default function ProfilePage() {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                window.location.href="/edit-profile";
+                                router.push("edit-profile");
                             }}
                         >
                             Edit Profile
@@ -99,7 +95,7 @@ export default function ProfilePage() {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {displayFriends(user)}
+                            {displayFriends(user.friends)}
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}

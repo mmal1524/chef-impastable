@@ -43,6 +43,7 @@ const Navbar = () => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
+        localStorage.clear();
         router.push("/");
     }
     const router = useRouter();
@@ -109,10 +110,17 @@ const Navbar = () => {
                 >
                     <MenuItem
                         onClick={() => {
-                            window.location.href = "/profile-page";
+                            router.push("profile-page");
                         }}
                     >
                         Profile
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            router.push("dietaryrestrictions");
+                        }}
+                    >
+                        Dietary Restrictions
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
@@ -126,28 +134,28 @@ const Navbar = () => {
                 </Menu>
             </Grid>
             <Dialog
-                    fullScreen={fullScreen}
-                    open={openPopup}
-                    onClose={handleClosePopup}
-                    aria-labelledby="responsive-dialog-title"
-                >
-                    <DialogTitle id="responsive-dialog-title">
-                        {"Logout Confirmation"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Are you sure you want to log out?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={logout} autoFocus>
-                            Yes
-                        </Button>
-                        <Button onClick={handleClosePopup} autoFocus>
-                            No
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                fullScreen={fullScreen}
+                open={openPopup}
+                onClose={handleClosePopup}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Logout Confirmation"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to log out?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={logout} autoFocus>
+                        Yes
+                    </Button>
+                    <Button onClick={handleClosePopup} autoFocus>
+                        No
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 }

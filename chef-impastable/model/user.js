@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema({
     friendRequests: [String],
     createdPrivacy: String,
     savedPrivacy: String,
-    reviewedPrivacy: String
+    reviewedPrivacy: String,
+    dietaryTags: {
+        type:[String]
+    }
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

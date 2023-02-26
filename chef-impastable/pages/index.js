@@ -50,7 +50,7 @@ export async function getServerSideProps(context) {
 export default function Home({
   isConnected,
 }) {
-  const [usernameValue, setValueUser] = useState("");
+    const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
         //console.log(`Typed => ${e.target.value}`);
@@ -134,19 +134,23 @@ export default function Home({
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
-                        if (data == null) {
+                        if (!data.success) {
                             handleClickOpen();
                         } else {
-                            localStorage.setItem('user',
+                            localStorage.setItem('user', 
                                 JSON.stringify({
-                                    username: data.username,
-                                    password: data.password,
-                                    displayName: data.displayName,
-                                    avatar: data.avatar,
-                                    friends: data.friends,
-                                    friendRequests: data.friendRequests
-                                }));
-                            router.push("profile-page");
+                                username: data.username,
+                                password: data.password,
+                                displayName: data.displayName,
+                                avatar: data.avatar,
+                                friends: data.friends,
+                                friendRequests: data.friendRequests,
+                                createdPrivacy: data.createdPrivacy,
+                                savedPrivacy: data.savedPrivacy,
+                                reviewedPrivacy: data.reviewedPrivacy,
+                                dietaryTags: data.dietaryTags
+                            }));
+                            router.push("/homepage");
                         }
                     }}
                 >Login

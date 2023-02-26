@@ -25,6 +25,7 @@ import { getInitials } from '../components/user';
 export default function EditProfilePage() {
 
     var user = JSON.parse(localStorage.getItem('user'));
+    console.log(user);
 
     const [displayNameValue, setValueDisplayName] = useState(user.displayName);
     const handleChangeDisplayName = e => {

@@ -176,7 +176,7 @@ export default function SignUp() {
                                                         friends: data.friends,
                                                         friendRequests: data.friendRequests
                                                     }));
-                                                router.push("profile-page");
+                                                router.push("homepage");
                                             }
                                         } else {
                                             handleClickOpenP();

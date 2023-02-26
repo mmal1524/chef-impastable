@@ -54,7 +54,7 @@ const Navbar = () => {
     return (
         <Grid container spacing={0} sx={{ width: '100vw', border: 4, borderColor: 'Orange' }}>
             <Grid xs={11}>
-                <React.Fragment key="left">
+                {/* <React.Fragment key="left"> */}
                     <IconButton onClick={() => {setDrawerOpen(true)}}>
                         <MenuSharp/>
                     </IconButton>
@@ -74,7 +74,7 @@ const Navbar = () => {
                             </List>
                         </Box>
                     </Drawer>
-                </React.Fragment>
+                {/* </React.Fragment> */}
             </Grid>
             <Grid xs={1}>
                 <Button

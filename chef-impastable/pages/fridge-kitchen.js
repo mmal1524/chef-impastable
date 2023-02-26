@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Link from 'next/link';
+import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
@@ -103,7 +104,7 @@ export default function Kitchen() {
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
-                    <Grid container>
+                        <Grid container>
                             <Grid>
                                 <TextField
                                     id="search-fridge"
@@ -184,7 +185,7 @@ export default function Kitchen() {
                                     size="large"
                                     variant="contained"
                                     sx={{
-                                        mx: 3,
+                                        mx: 2,
                                         mt: 1,
                                     }}
                                     onClick={() => {
@@ -196,32 +197,31 @@ export default function Kitchen() {
                                 </Button>
                             </Grid>
                         </Grid>
-                        
                         { /*displaying appliances in rows */ }
+
                         {userApps && userApps.map((app, index) => (
-                            <div>
-                                <Box
-                                    sx={{ flexGrow: 1, maxWidth: 752 }}
-                                    alignItems='center'
-                                    justify='center'
-                                    display='flex'
-                                >
-                                    <FormGroup row>
-                                    </FormGroup>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} md={6}>
-                                            <List dense={dense}>
-                                                <ListItem>
-                                                    <ListItemText
-                                                        primary={tag}
-                                                    />
-                                                </ListItem>
-                                            </List>
-                                        </Grid>
+                            <Box
+                                sx={{ flexGrow: 1, maxWidth: 752 }}
+                                alignItems='center'
+                                justify='center'
+                                display='flex'
+                            >
+                                <FormGroup row>
+                                </FormGroup>
+                                <Grid spacing={2}>
+                                    <Grid item xs={12} md={6}>
+                                        <List>
+                                            <ListItem>
+                                                <ListItemText primary={app} />
+                                            </ListItem>
+                                        </List>
                                     </Grid>
-                                </Box>
-                            </div>
+                                </Grid>
+                            </Box>
                         ))}
+
+
+                        
 
                     </TabPanel>
                 </Grid>

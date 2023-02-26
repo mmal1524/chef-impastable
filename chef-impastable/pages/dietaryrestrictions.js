@@ -9,7 +9,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -24,6 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Navbar from './navbar.js'
 
 
+
 export default function Home() {
     const [username, setUsername] = useState("");
     const [tagValue, setTagUser] = useState("");
@@ -32,6 +32,11 @@ export default function Home() {
     const handleAddTag = e => {
         setTagUser(e.target.value)
     }
+    const deleteByIndex = index => {
+        setUserTags(oldValues => {
+          return oldValues.filter((_, i) => i !== index)
+        })
+      }
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -49,14 +54,13 @@ export default function Home() {
         setUsername(thisUser.getUsername);
         setUserTags(thisUser.getTags);
     }, [])
-    console.log(username);
     return (
         <div className="app-container">
             <div className="App">
                     <Navbar />
                 </div>
             {userTags && userTags.map((tag, index) => (
-                <div>
+                <div>        
                     <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
                         <FormGroup row>
                         </FormGroup>
@@ -66,7 +70,8 @@ export default function Home() {
                                     <ListItem
                                         secondaryAction={
                                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                                //delete functionality here
+                                                deleteByIndex(index);
+                                                DeleteTag(username, tag);
                                             }}>
                                                 <DeleteIcon />
                                             </IconButton>
@@ -79,7 +84,7 @@ export default function Home() {
                                 </List>
                             </Grid>
                         </Grid>
-                    </Box>
+                    </Box>          
                 </div>
             ))}
             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
@@ -115,12 +120,27 @@ export default function Home() {
             </Button>
         </div >
     );
-
 }
 
 async function AddTag(username, tag) {
     const res = await fetch('/api/dietarytagsadd', {
         method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            tag: tag,
+        })
+    })
+    const data = await res.json();
+    return data;
+}
+
+async function DeleteTag(username, tag) {
+    const res = await fetch('/api/dietarytagsdelete', {
+        method: 'DELETE',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

@@ -6,54 +6,49 @@ from recipe_scrapers import scrape_me
 from bs4 import BeautifulSoup
 import urllib.request
 from lxml import etree
+dbname = get_database()
+collection_name = dbname["recipes"]
+ingredient_collection = dbname["ingredients"]
 
 # open file and get each url
 f = open("recipeUrlList.txt", "r")
 for line in f:
     url = line.strip()
-    print(url)
-    print("hi")
+    index = url.find("/recipe/")
+    if index != -1:
+        recipe_page = request.urlopen(url)
+        recipe_soup = BeautifulSoup(recipe_page, 'html.parser')
 
-    recipe_page = request.urlopen(url)
-    recipe_soup = BeautifulSoup(recipe_page, 'html.parser')
+        ingredient_list = recipe_soup.find_all("li", class_= "mntl-structured-ingredients__list-item")
 
-    ingredient_list = recipe_soup.find_all("li", class_= "mntl-structured-ingredients__list-item")
+        all_ingredients = []
+        all_ingredients_json = []
 
-    all_ingredients = []
-    all_ingredients_json = []
+        for ingredient in ingredient_list:
+            ingredient_split = []
 
-    for ingredient in ingredient_list:
-        ingredient_split = []
+            for element in ingredient:
+                for span in element:
+                    for thing in span:
+                        ingredient_split.append(thing)
 
-        for element in ingredient:
-            for span in element:
-                for thing in span:
-                    ingredient_split.append(thing)
+            all_ingredients.append(ingredient_split[1::2])
 
-        all_ingredients.append(ingredient_split[1::2])
+        for ingredients in all_ingredients:
+            if len(ingredients) == 2:
+                ingredients.insert(0, " ")
 
-    for ingredients in all_ingredients:
-        if len(ingredients) == 2:
-            ingredients.insert(0, " ")
+            ingredient_json = dict()
+            ingredient_json["ingredient"] = ingredients[2]
+            ingredient_json["quantity"] = ingredients[0]
+            ingredient_json["measurement"] = ingredients[1]
+            all_ingredients_json.append(ingredient_json)
 
-        ingredient_json = dict()
-        ingredient_json["ingredient"] = ingredients[2]
-        ingredient_json["quantity"] = ingredients[0]
-        ingredient_json["measurement"] = ingredients[1]
-        all_ingredients_json.append(ingredient_json)
+            filter_data = {"ingredient": str(ingredients[2])}
+            new_data = {'$set': {"ingredient": str(ingredients[2])}}
+            ingredient_collection.update_one(filter_data, new_data, upsert=True)
 
-    print(all_ingredients_json)
-
-    #print(all_ingredients)
-    #print(all_ingredients_json)
-    #recipes_ingredients.append(all_ingredients)
-    print(url)
-    recipe_scrape = scrape_me(url)
-    print(recipe_scrape.to_json())
-    #print(recipe_scrape.to_json())
-    #print(recipe["href"])
-    recipe_json = recipe_scrape.to_json()
-    recipe_json["ingredients"] = all_ingredients_json
-    #print(recipe_json)
-    #collection_name.insert_one(recipe_json)
-    break
+        recipe_scrape = scrape_me(url)
+        recipe_json = recipe_scrape.to_json()
+        recipe_json["ingredients"] = all_ingredients_json
+        collection_name.insert_one(recipe_json)

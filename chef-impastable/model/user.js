@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
     },
     kitchen: {
         type:[String]
+    }, 
+    dietaryTags: {
+        type:[String]
     }
 
 });

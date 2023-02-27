@@ -4,7 +4,6 @@ import User from "../../model/user"
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
 connect()
-
 export default async function handler(req,res){
     try {
         const {username, password}=req.body
@@ -17,6 +16,7 @@ export default async function handler(req,res){
                 username: user.username,
                 password: user.password,
                 kitchen: user.kitchen,
+                dietaryTags: user.dietaryTags,
                 success: true
             });
         }

@@ -57,10 +57,8 @@ function a11yProps(index) {
 export default function FridgeKitchen() {
 
     //local storage kitchen info
-    const [username, setUsername] = useState("");
-    const [appValue, setAppUser] = useState("");
+    //const [userIngr, setUserIngr] = useState([]);
     const [userApps, setUserApps] = useState([]);
-    const [dense, setDense] = useState(false);
 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
@@ -70,13 +68,15 @@ export default function FridgeKitchen() {
                     return this.kitchen
                 },
             },
-            getUsername: {
+            /*
+            getIngr: {
                 get() {
-                    return this.username
+                    return this.fridge
                 }
             },
+            */
         });
-        //setUsername(thisUser.getUsername);
+        //setUserIngr(thisUser.getIngr)
         setUserApps(thisUser.getApps);
     }, [])
 
@@ -101,6 +101,13 @@ export default function FridgeKitchen() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    // for search bars
+    const [searchKitchen, setSearchKitchen] = useState("");
+    const handleChangeKitchen = e => {
+        //console.log(`Typed => ${e.target.value}`);
+        setSearchKitchen(e.target.value)
+    }
 
     return (
         <>
@@ -175,8 +182,9 @@ export default function FridgeKitchen() {
                                     label="Search"
                                     variant="outlined"
                                     sx={{
-                                        width: 600
+                                        width:  windowSize[0]/2
                                     }}
+                                    onChange={handleChangeKitchen}
                                 />
                                 <Button 
                                     type="submit" 
@@ -212,7 +220,9 @@ export default function FridgeKitchen() {
                                     Edit Kitchen
                                 </Button>
                             </Grid>
-                            
+                            <Grid container sx={{ my: 2, }}>
+                                <Typography>These are your owned appliances.</Typography>
+                            </Grid>
                             <Grid container>
                                 {userApps && userApps.map((app, index) => (
                                     <Box>
@@ -222,7 +232,7 @@ export default function FridgeKitchen() {
                                             <Grid 
                                                 item xs={12} 
                                                 md={6}
-                                                sx={{ width: windowSize[0]/2, border: 1, borderColor: 'divider' }}
+                                                sx={{ width: windowSize[0], }}
                                             >
                                                 <List>
                                                     <ListItemText

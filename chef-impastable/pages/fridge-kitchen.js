@@ -18,46 +18,49 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
+import { useTheme } from '@material-ui/core/styles';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
     return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Grid sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Grid>
-        )}
-      </div>
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+            <Box sx={{ p: 3 }}>
+                <Box>{children}</Box>
+            </Box>
+            )}
+        </div>
     );
-  }
-
-  TabPanel.propTypes = {
+}
+  
+TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
-  };
+};
 
-  function a11yProps(index) {
+function a11yProps(index) {
     return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
     };
-  }
+}
 
-export default function Kitchen() {
+export default function FridgeKitchen() {
 
-    // local storage kitchen info
+    //local storage kitchen info
     const [username, setUsername] = useState("");
     const [appValue, setAppUser] = useState("");
     const [userApps, setUserApps] = useState([]);
+    const [dense, setDense] = useState(false);
 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
@@ -73,14 +76,27 @@ export default function Kitchen() {
                 }
             },
         });
-        setUsername(thisUser.getUsername);
+        //setUsername(thisUser.getUsername);
         setUserApps(thisUser.getApps);
     }, [])
 
 
     // for the tabs
-    const [value, setValue] = React.useState(0);
+    const theme = useTheme();
+    const [value, setValue] = useState(0);
     const router = useRouter();
+    const [windowSize, setWindowSize] = useState([1400,0,]);
+    useEffect(() => {
+        const handleWindowResize = () => {
+          setWindowSize([window.innerWidth, window.innerHeight]);
+        };
+    
+        window.addEventListener('resize', handleWindowResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleWindowResize);
+        };
+      });
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -88,34 +104,34 @@ export default function Kitchen() {
 
     return (
         <>
-
-            <div className="App">
+            <div>
                 <Navbar />
             </div>
-            <h2>
-                <Link href="/homepage">Back to home</Link>
-            </h2>
             <div>
-                <Grid sx={{ width: '100%' }}>
-                    <Grid sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <Tabs value={value} onChange={handleChange}>
+                <Grid container sx={{ width: '100%' }}>
+                    <Grid 
+                        justifyContent='center'
+                        sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
+                    >
+                        <Tabs value={value} onChange={handleChange} variant="fullWidth">
                             <Tab label="Fridge" {...a11yProps(0)} />
                             <Tab label="Kitchen" {...a11yProps(1)} />
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
+                    
                         <Grid container>
-                            <Grid>
+                            <Grid item>
                                 <TextField
                                     id="search-fridge"
                                     label="Search"
                                     variant="outlined"
                                     sx={{
-                                        width: 600
+                                    width: 600
                                     }}
                                 />
                                 <Button 
-                                    type="submit" 
+                                    //type="submit" 
                                     size="large"
                                     variant="contained"
                                     sx={{
@@ -123,7 +139,7 @@ export default function Kitchen() {
                                         mt: 1,
                                     }}
                                     onClick={() => {
-                                        //search for appliance
+                                        //search for ingredient
                                         console.log("clicked")
                                     }}
                                 >
@@ -131,9 +147,9 @@ export default function Kitchen() {
                                 </Button>
                             </Grid>
                             <Grid item xs></Grid>
-                            <Grid>
+                            <Grid item>
                                 <Button 
-                                    type="submit" 
+                                    //type="submit" 
                                     size="large"
                                     variant="contained"
                                     sx={{
@@ -153,7 +169,7 @@ export default function Kitchen() {
                     <TabPanel value={value} index={1}>
                         { /*search bar and edit button at the top*/ }
                         <Grid container>
-                            <Grid>
+                            <Grid item>
                                 <TextField
                                     id="search-kitchen"
                                     label="Search"
@@ -179,7 +195,7 @@ export default function Kitchen() {
                                 </Button>
                             </Grid>
                             <Grid item xs></Grid>
-                            <Grid>
+                            <Grid item>
                                 <Button 
                                     type="submit" 
                                     size="large"
@@ -196,33 +212,31 @@ export default function Kitchen() {
                                     Edit Kitchen
                                 </Button>
                             </Grid>
+                            
+                            <Grid container>
+                                {userApps && userApps.map((app, index) => (
+                                    <Box>
+                                        <FormGroup row>
+                                        </FormGroup>
+                                        <Grid container>
+                                            <Grid 
+                                                item xs={12} 
+                                                md={6}
+                                                sx={{ width: windowSize[0]/2, border: 1, borderColor: 'divider' }}
+                                            >
+                                                <List>
+                                                    <ListItemText
+                                                        sx={{display:'flex', justifyContent:'center'}}
+                                                        primary={app} 
+                                                    />
+                                                </List>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                ))}
+                            </Grid>
                         </Grid>
-                        { /*displaying appliances in rows */ }
-
-                        {userApps && userApps.map((app, index) => (
-                            <Box
-                                sx={{ flexGrow: 1, maxWidth: 752 }}
-                                alignItems='center'
-                                justify='center'
-                                display='flex'
-                            >
-                                <FormGroup row>
-                                </FormGroup>
-                                <Grid spacing={2}>
-                                    <Grid item xs={12} md={6}>
-                                        <List>
-                                            <ListItem>
-                                                <ListItemText primary={app} />
-                                            </ListItem>
-                                        </List>
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        ))}
-
-
-                        
-
+                    
                     </TabPanel>
                 </Grid>
             </div>

@@ -293,7 +293,7 @@ export default function EditProfilePage() {
                                                         savedPrivacy, reviewedPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));
                             console.log(data);
-                            router.push("profile-page");
+                            router.push({pathname:"/profile-page/", query: {username: username}});
                         }}
                     >
                         Save

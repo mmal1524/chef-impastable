@@ -55,7 +55,9 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({user}) {
+export default function ProfilePage({besties}) {
+
+    var friendsList = besties;
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -129,7 +131,7 @@ export default function ProfilePage({user}) {
         setReviewedPrivacy(thisUser.reviewedPrivacy);
     }, []);
 
-    console.log(user);
+    //console.log(user);
 
     // console.log(friends);
     // console.log(friends.length);
@@ -179,7 +181,7 @@ export default function ProfilePage({user}) {
                             {console.log(friends.length)}
                             {console.log(friendsObjects)} */}
                             {      
-                                friends.map((friend) => (
+                                friendsList.map((friend) => (
                                     friendCard(friend)
                                 ))
                             }
@@ -300,14 +302,38 @@ export async function getServerSideProps(context) {
         const client = await clientPromise;
         const db = client.db("test");
         
-        //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
-        //console.log(Types.ObjectId(`${context.query.id}`))
         const user = await db
             .collection("users")
             .find({username: context.query.username}).toArray();
-        //console.log("user: " + JSON.parse(JSON.stringify(user)));
+
+        console.log(user);
+        var friends = user[0].friends;
+        console.log("friends:");
+        console.log(friends);
+
+        const friendObjects = new Array(friends.length);
+        var i = 0;
+        for (i; i < friends.length; i++) {
+            var f = await db
+                .collection("users")
+                .find({username: friends[i]}).toArray();
+            friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
+        }
+        // await friends.foreach(async function(friend) {
+        //     console.log(friend);
+        //     const friendObject = await db 
+        //         .collection("users")
+        //         .find({username: friend}).toArray();
+        //     friendObjects[i] = friendObject[0];
+        //     console.log("besties:")
+        //     console.log(friendObject[0]);
+        // });
+
+        console.log("squad");
+        console.log(friendObjects);
+
         return {
-            props: {user: JSON.parse(JSON.stringify(user))},
+            props: {besties: friendObjects},
         };
     }
     catch (e) {

@@ -18,6 +18,7 @@ import { IconButton } from '@mui/material';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 import Router from "next/router";
+import HomeIcon from '@mui/icons-material/Home';
 
 
 const Navbar = () => {
@@ -76,7 +77,7 @@ const Navbar = () => {
 
     return (
         <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
-            <Grid xs={11}>
+            <Grid xs={1}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
@@ -98,6 +99,16 @@ const Navbar = () => {
                         </Box>
                     </Drawer>
                 </React.Fragment>
+            </Grid>
+            <Grid xs={10}>
+                <IconButton 
+                    aria-label="home button"
+                    onClick={() => {
+                        router.push("homepage");
+                    }}
+                >
+                    <HomeIcon />
+                </IconButton>
             </Grid>
             <Grid xs={1}>
                 <Button

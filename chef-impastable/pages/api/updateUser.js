@@ -23,13 +23,13 @@ export default async function handler(req,res){
             return res.json({
                 username: user.username,
                 password: user.password,
-                displayName: user.displayName,
+                displayName: newDisplayName,
                 avatar: user.avatar,
                 friends: user.friends,
                 friendRequests: user.friendRequests,
-                createdPrivacy: user.createdPrivacy,
-                savedPrivacy: user.savedPrivacy,
-                reviewedPrivacy: user.reviewedPrivacy,
+                createdPrivacy: newCreatPriv,
+                savedPrivacy: newSavPriv,
+                reviewedPrivacy: newRevPriv,
                 dietaryTags: user.dietaryTags
             });
         }

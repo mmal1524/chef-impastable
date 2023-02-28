@@ -302,7 +302,8 @@ export default function SignUp() {
                 friendRequests: [],
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
-                reviewedPrivacy: "everyone"
+                reviewedPrivacy: "everyone",
+                dietaryTags: []
             })
         })
         const data = await res.json();

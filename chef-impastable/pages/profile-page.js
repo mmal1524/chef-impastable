@@ -68,9 +68,13 @@ export default function ProfilePage() {
     const [avatar, setAvatar] = useState("");
     const [friends, setFriends] = useState([]);
     const [friendRequests, setFriendRequests] = useState("");
+    var [createdPrivacy, setCreatedPrivacy] = useState("");
+    var [savedPrivacy, setSavedPrivacy] = useState("");
+    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
+        console.log(thisUser);
         Object.defineProperties(thisUser, {
             getUsername: {
                 get() {
@@ -96,6 +100,21 @@ export default function ProfilePage() {
                 get() {
                     return this.friendRequests
                 },
+            },
+            getCreatedPrivacy: {
+                get() {
+                    return this.createdPrivacy
+                },
+            },
+            getSavedPrivacy: {
+                get() {
+                    return this.savedPrivacy
+                },
+            },
+            getReviewedPrivacy: {
+                get() {
+                    return this.reviewedPrivacy
+                },
             }
         });
         setUsername(thisUser.getUsername);
@@ -103,6 +122,9 @@ export default function ProfilePage() {
         setAvatar(thisUser.getAvatar);
         setFriends(thisUser.getFriends);
         setFriendRequests(thisUser.getFriendRequests);
+        setCreatedPrivacy(thisUser.getCreatedPrivacy);
+        setSavedPrivacy(thisUser.savedPrivacy);
+        setReviewedPrivacy(thisUser.reviewedPrivacy);
     }, []);
 
     // console.log(friends);
@@ -133,6 +155,16 @@ export default function ProfilePage() {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
+                                localStorage.setItem('user', JSON.stringify({
+                                    username: username,
+                                    displayName: displayName,
+                                    avatar: avatar,
+                                    friends: friends,
+                                    friendRequests: friendRequests,
+                                    createdPrivacy: createdPrivacy,
+                                    savedPrivacy: savedPrivacy,
+                                    reviewedPrivacy: reviewedPrivacy
+                                 }))
                                 router.push("edit-profile");
                             }}
                         >
@@ -292,29 +324,3 @@ export default function ProfilePage() {
 //         return data;
 //     }
 // }
-
-export async function getServerSideProps(context) {
-    console.log(context.query.username);
-    return {
-        props: {friends: []}
-    }
-    // try {
-    //     const client = await clientPromise;
-    //     const db = client.db("test");
-    //     console.log("id: " + context.query.id)
-    //     //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
-    //     //console.log(Types.ObjectId(`${context.query.id}`))
-    //     console.log(ObjectId(`${context.query.id}`))
-    //     const recipe = await db
-    //         .collection("recipes")
-    //         .findOne(new ObjectId(`${context.query.id}`));
-    //     console.log("recipe: " + JSON.parse(JSON.stringify(recipe)));
-    //     return {
-    //         props: {recipe: JSON.parse(JSON.stringify(recipe))},
-    //     };
-    // }
-    // catch (e) {
-    //     console.error(e);
-    // }
-    
-}

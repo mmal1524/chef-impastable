@@ -30,6 +30,35 @@ export default function EditProfilePage() {
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+
+    const handleChangeDisplayName = e => {
+        setDisplayName(e.target.value);
+    }
+    const handleChangeCreatedPrivacy = e => {
+        setCreatedPrivacy(e.target.value);
+    }
+    const handleChangeSavedPrivacy = e => {
+        setSavedPrivacy(e.target.value);
+    }
+    const handleChangeReviewedPrivacy = e => {
+        setReviewedPrivacy(e.target.value);
+    }
+
+    // const [crRecPriv, setValueCrRecPriv] = useState("");
+    // const handleChangeCrRecPriv = (event) => {
+    //     setValueCrRecPriv(event.target.value);
+    //   };
+
+
+    // const [svRecPriv, setValueSvRecPriv] = useState(savedPrivacy);
+    // const handleChangeSvRecPriv = (event) => {
+    //     setValueSvRecPriv(event.target.value);
+    // };
+
+    // const [revRecPriv, setValueRevRecPriv] = useState(reviewedPrivacy);
+    // const handleChangeRevRecPriv = (event) => {
+    //     setValueRevRecPriv(event.target.value);
+    // };
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -76,27 +105,6 @@ export default function EditProfilePage() {
 
     console.log(displayName);
 
-    const [displayNameValue, setValueDisplayName] = useState(displayName);
-    const handleChangeDisplayName = e => {
-        setValueDisplayName(e.target.value)
-    }
-
-    const [crRecPriv, setValueCrRecPriv] = useState(createdPrivacy);
-    const handleChangeCrRecPriv = (event) => {
-        setValueCrRecPriv(event.target.value);
-      };
-
-
-    const [svRecPriv, setValueSvRecPriv] = useState(savedPrivacy);
-    const handleChangeSvRecPriv = (event) => {
-        setValueSvRecPriv(event.target.value);
-    };
-
-    const [revRecPriv, setValueRevRecPriv] = useState(reviewedPrivacy);
-    const handleChangeRevRecPriv = (event) => {
-        setValueRevRecPriv(event.target.value);
-    };
-
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -130,11 +138,10 @@ export default function EditProfilePage() {
                     <p></p>
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
-                        {console.log(displayNameValue)}
                         <TextField required 
                             id="standard-required" 
                             label="Display Name" 
-                            value={displayNameValue}
+                            value={displayName}
                             onChange={handleChangeDisplayName}
                             sx={{marginTop: 2}}
                         />
@@ -216,8 +223,8 @@ export default function EditProfilePage() {
                         <FormControl variant="filled" sx={{ m: 4, p: 4, minWidth: 120 }}>
                             <InputLabel id="created"></InputLabel>
                             <Select
-                                value={crRecPriv}
-                                onChange={handleChangeCrRecPriv}
+                                value={createdPrivacy}
+                                onChange={handleChangeCreatedPrivacy}
                             >
                                 <MenuItem value={"everyone"}>Everyone</MenuItem>
                                 <MenuItem value={"friends only"}>Friends Only</MenuItem>
@@ -239,8 +246,8 @@ export default function EditProfilePage() {
                         <FormControl variant="filled" sx={{ m: 4, p: 4, minWidth: 120 }}>
                             <InputLabel id="saved"></InputLabel>
                             <Select
-                                value={svRecPriv}
-                                onChange={handleChangeSvRecPriv}
+                                value={savedPrivacy}
+                                onChange={handleChangeSavedPrivacy}
                             >
                                 <MenuItem value={"everyone"}>Everyone</MenuItem>
                                 <MenuItem value={"friends only"}>Friends Only</MenuItem>
@@ -262,8 +269,8 @@ export default function EditProfilePage() {
                         <FormControl variant="filled" sx={{ m: 4, p: 4, minWidth: 120 }}>
                             <InputLabel id="reviewed"></InputLabel>
                             <Select
-                                value={revRecPriv}
-                                onChange={handleChangeRevRecPriv}
+                                value={reviewedPrivacy}
+                                onChange={handleChangeReviewedPrivacy}
                             >
                                 <MenuItem value={"everyone"}>Everyone</MenuItem>
                                 <MenuItem value={"friends only"}>Friends Only</MenuItem>
@@ -282,10 +289,6 @@ export default function EditProfilePage() {
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
-                            displayName = displayNameValue;
-                            createdPrivacy = crRecPriv;
-                            savedPrivacy = svRecPriv;
-                            reviewedPrivacy = revRecPriv;
                             var data = await updateUser(username, displayName, createdPrivacy,
                                                         savedPrivacy, reviewedPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));

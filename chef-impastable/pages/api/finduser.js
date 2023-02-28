@@ -4,10 +4,11 @@ import User from "../../model/user"
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
 connect()
+
 export default async function handler(req,res){
     try {
-        const {username, password}=req.body
-        const user = await User.findOne({username, password})
+        const {username}=req.body
+        const user = await User.findOne({username})
         if (!user) {
             return null;
         }
@@ -15,7 +16,6 @@ export default async function handler(req,res){
             return res.json({
                 username: user.username,
                 password: user.password,
-                kitchen: user.kitchen,
                 displayName: user.displayName,
                 avatar: user.avatar,
                 friends: user.friends,
@@ -23,8 +23,7 @@ export default async function handler(req,res){
                 createdPrivacy: user.createdPrivacy,
                 savedPrivacy: user.savedPrivacy,
                 reviewedPrivacy: user.reviewedPrivacy,
-                dietaryTags: user.dietaryTags,
-                success: true
+                dietaryTags: user.dietaryTags
             });
         }
     } catch (error) {

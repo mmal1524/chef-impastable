@@ -9,14 +9,22 @@ export default async function handler(req,res){
     try {
         const user = await User.create(req.body);
         if(!user){
-            return res.json({success : false});
+            return null;
         }
         else {
             return res.json({
                 username: user.username,
                 password: user.password,
                 kitchen: user.kitchen,
-                success: true
+                displayName: user.displayName,
+                avatar: user.avatar,
+                friends: user.friends,
+                friendRequests: user.friendRequests,
+                createdPrivacy: user.createdPrivacy,
+                savedPrivacy: user.savedPrivacy,
+                reviewedPrivacy: user.createdPrivacy,
+                dietaryTags: user.dietaryTags,
+                success: true,
             });
         }
     } catch (error) {

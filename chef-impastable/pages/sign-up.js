@@ -164,16 +164,20 @@ export default function SignUp() {
                                     } else {
                                         if ((passwordValue == passwordValueC) && strongPassword.test(passwordValue) && (passwordRegex.test(passwordValue))) {
                                             var data = await RegUser(usernameValue, passwordValue);
-                                            if (data.success) {
-                                                localStorage.setItem('user', 
-                                                    JSON.stringify({
-                                                    username: data.username,
-                                                    password: data.password,
-                                                    kitchen: data.kitchen
-                                                }));
-                                                router.push('/homepage');
-                                            } else {
+                                            if (data == null) {
                                                 handleClickOpenE();
+                                            } else {
+                                                localStorage.setItem('user',
+                                                    JSON.stringify({
+                                                        username: data.username,
+                                                        password: data.password,
+                                                        kitchen: data.kitchen,
+                                                        displayName: data.displayName,
+                                                        avatar: data.avatar,
+                                                        friends: data.friends,
+                                                        friendRequests: data.friendRequests
+                                                    }));
+                                                router.push("homepage");
                                             }
                                         } else {
                                             handleClickOpenP();
@@ -294,6 +298,13 @@ export default function SignUp() {
                 username: username,
                 password: password,
                 displayName: username,
+                avatar: "",
+                friends: ["friend1", "friend2", "friend3"],
+                friendRequests: [],
+                createdPrivacy: "everyone",
+                savedPrivacy: "everyone",
+                reviewedPrivacy: "everyone",
+                dietaryTags: []
             })
         })
         const data = await res.json();

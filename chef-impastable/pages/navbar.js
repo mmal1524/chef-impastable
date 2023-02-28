@@ -182,8 +182,6 @@ const Navbar = () => {
             </Dialog>
         </Grid>
     );
-
-    
 }
-
 export default Navbar;
+

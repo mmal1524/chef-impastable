@@ -2,7 +2,7 @@ import * as React from 'react';
 import User, { displaySmall } from '../components/user';
 //import { getInitials } from '../components/user';
 import { displayLarge } from '../components/user';
-import { displayFriends } from '../components/user';
+//import { displayFriends } from '../components/user';
 //import { displaySmall } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
@@ -19,6 +19,7 @@ import Navbar from './navbar.js';
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
+import clientPromise from '../lib/mongodb_client';
 
 
 function TabPanel(props) {
@@ -54,7 +55,7 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage() {
+export default function ProfilePage({user}) {
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -68,7 +69,7 @@ export default function ProfilePage() {
     const [avatar, setAvatar] = useState("");
     const [friends, setFriends] = useState([]);
     const [friendRequests, setFriendRequests] = useState("");
-
+    
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -105,13 +106,10 @@ export default function ProfilePage() {
         setFriendRequests(thisUser.getFriendRequests);
     }, []);
 
+    console.log(user);
+
     // console.log(friends);
     // console.log(friends.length);
-
-    // var friendsObjects = getFriendsArray(friends).then(function(result) {
-    //     console.log(result);
-    //     return result;
-    // });
     // console.log(friendsObjects);
 
     return (
@@ -264,6 +262,28 @@ export default function ProfilePage() {
     }
 }
 
+export async function getServerSideProps(context) {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
+        
+        //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
+        //console.log(Types.ObjectId(`${context.query.id}`))
+        const user = await db
+            .collection("users")
+            .find({username: context.query.username}).toArray();
+        //console.log("user: " + JSON.parse(JSON.stringify(user)));
+        return {
+            props: {user: JSON.parse(JSON.stringify(user))},
+        };
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+
+
 // async function getFriendsArray(friends) {
 //     console.log(friends);
 //     console.log(friends.length);
@@ -293,28 +313,3 @@ export default function ProfilePage() {
 //     }
 // }
 
-export async function getServerSideProps(context) {
-    console.log(context.query.username);
-    return {
-        props: {friends: []}
-    }
-    // try {
-    //     const client = await clientPromise;
-    //     const db = client.db("test");
-    //     console.log("id: " + context.query.id)
-    //     //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
-    //     //console.log(Types.ObjectId(`${context.query.id}`))
-    //     console.log(ObjectId(`${context.query.id}`))
-    //     const recipe = await db
-    //         .collection("recipes")
-    //         .findOne(new ObjectId(`${context.query.id}`));
-    //     console.log("recipe: " + JSON.parse(JSON.stringify(recipe)));
-    //     return {
-    //         props: {recipe: JSON.parse(JSON.stringify(recipe))},
-    //     };
-    // }
-    // catch (e) {
-    //     console.error(e);
-    // }
-    
-}

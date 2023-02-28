@@ -49,14 +49,11 @@ export default function EditKitchen() {
         const handleWindowResize = () => {
           setWindowSize([window.innerWidth, window.innerHeight]);
         };
-    
         window.addEventListener('resize', handleWindowResize);
-    
         return () => {
           window.removeEventListener('resize', handleWindowResize);
         };
-      });
-
+    });
     const router = useRouter();
 
     return (

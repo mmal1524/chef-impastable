@@ -90,14 +90,11 @@ export default function FridgeKitchen() {
         const handleWindowResize = () => {
           setWindowSize([window.innerWidth, window.innerHeight]);
         };
-    
         window.addEventListener('resize', handleWindowResize);
-    
         return () => {
           window.removeEventListener('resize', handleWindowResize);
         };
-      });
-
+    });
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -108,6 +105,7 @@ export default function FridgeKitchen() {
         //console.log(`Typed => ${e.target.value}`);
         setSearchKitchen(e.target.value)
     }
+    let idxMatch = (arr, q) => userApps.findIndex(item => q.toUpperCase() === item.toUpperCase());
 
     return (
         <>
@@ -196,6 +194,12 @@ export default function FridgeKitchen() {
                                     }}
                                     onClick={() => {
                                         //search for appliance
+                                        const idx = idxMatch(userApps, searchKitchen)
+                                        console.log(idx);
+                                        if (idx >= 0) {
+                                            // found
+                                            console.log("found");
+                                        }
                                         console.log("clicked")
                                     }}
                                 >

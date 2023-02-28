@@ -9,6 +9,7 @@ import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
 import Navbar from './navbar.js'
+import { CardMedia } from "@mui/material";
 
 export default function Recipe({ recipe }) {
     //console.log(" recipe:")
@@ -29,31 +30,60 @@ export default function Recipe({ recipe }) {
             ))}*/
     return (
         <>
-            <div className="App">
-                <Navbar />
-            </div>
-            <h1>{recipe.title}</h1>
-            <h2>
-                Instructions
-            </h2>
-            {recipe.instructions_list.map((instruction) => (
-                <ul>{instruction}</ul>
-            ))}
-            <h2>
-                Nutrients
-            </h2>
-
-            {Object.keys(nutrients).map((key, index) => {
-                return (
+            <Grid>
+                <div className="App">
+                    <Navbar />
+                </div>
+                <Grid container
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center">
+                    <h1>{recipe.title}</h1>
+                </Grid>
+                <Grid container
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center">
+                    <CardMedia>
+                        <img src={recipe.image} alt="image of {props.recipe.title}" width={300} />
+                    </CardMedia>
+                </Grid>
+                <Grid container
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center">
+                    <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
+                </Grid>
+                <h2>
+                    Instructions
+                </h2>
+                {recipe.instructions_list.map((instruction) => (
                     <ul>
-                        {key}: {nutrients[key]}
+                        <li key={instruction.toString()}>{instruction}</li>
                     </ul>
-                );
-            })}
-            <h2>
-                Ingredients
-            </h2>
-            
+                ))}
+                <h2>
+                    Nutrients
+                </h2>
+                Calories: {nutrients.calories}
+                Carbohydrate Content: {nutrients.carbohydrateContent}
+                Cholesterol Content: {nutrients.cholesterolContent}
+                {Object.keys(nutrients).map((key, index) => {
+                    return (
+                        <ul>
+                            {key}: {nutrients[key]}
+                        </ul>
+                    );
+                })}
+                <h2>
+                    Ingredients
+                </h2>
+                {recipe.ingredients.map(ingredient => (
+                    <ul>
+                        {ingredient.quantity} {ingredient.ingredient} {ingredient.measurement}
+                    </ul>
+                ))}
+            </Grid>
         </>
     );
 }

@@ -13,9 +13,6 @@ export function getInitials(displayName) {
 }
 
 export function displaySmall(user) {
-    console.log(user);
-    console.log(user.displayName);
-    console.log(user.username);
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
             {/* Stack to display user's profile picture, display name, and username */}
@@ -59,7 +56,7 @@ export function displaySmall(user) {
     );
 }
 
-export function displayLarge(user) {
+export function displayLarge(username, displayName, avatar) {
     return (
         <>
             {/* Stack to display user's profile picture, display name, and username */}
@@ -72,10 +69,9 @@ export function displayLarge(user) {
                 {/* Profile Picture, if no url, displays user's initials */}
                 <Avatar 
                     sx={{width: 85, height: 85}} 
-                    alt={user.displayName} 
-                    src={user.avatar} 
+                    alt={displayName} 
                 >
-                    {getInitials(user.displayName)}
+                    {getInitials(displayName)}
                 </Avatar>
                 {/* Displays user's display name and username next to profile picture */}
                 <Stack
@@ -84,8 +80,8 @@ export function displayLarge(user) {
                     alignItems="stretch"
                     spacing={0}
                 >
-                    <h1 className="displayName">{user.displayName}</h1>
-                    <h3 className="username">{user.username}</h3>
+                    <h1 className="displayName">{displayName}</h1>
+                    <h3 className="username">{username}</h3>
                 </Stack>
 
             </Stack>
@@ -105,24 +101,22 @@ export function displayLarge(user) {
 
 export function displayFriends(friends) {
     console.log(friends);
-    var friendObjects = new Array();
+    var string = '';
     if (friends.length == 0) {
         return (<>You have no friends :(</>);
     } else {
         friends.forEach(async function(friend) {
             var f = await findUser(friend);
+            var returnval = displaySmall(f);
+            console.log(returnval);
             console.log(f);
-            displaySmall(f);
-            if (f != null) {
-                friendObjects.push(f);
-            }
         });
-        
+        console.log(string);
+        return (<div>{string}</div>);   
     }
 
 
     async function findUser(username) {
-        console.log(username);
         const res = await fetch('/api/finduser', {
             method: 'POST',
             headers: {
@@ -134,7 +128,6 @@ export function displayFriends(friends) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 }

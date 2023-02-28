@@ -48,6 +48,7 @@ export async function getServerSideProps() {
         const recipes = await db
             .collection("recipes")
             .find({})
+            .limit(20)
             .toArray();
         //console.log(recipes);
         return {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Navbar from './navbar.js';
@@ -24,25 +24,75 @@ import { getInitials } from '../components/user';
 
 export default function EditProfilePage() {
 
-    var user = JSON.parse(localStorage.getItem('user'));
-    console.log(user);
+    const [username, setUsername] = useState("");
+    var [displayName, setDisplayName] = useState("");
+    var [avatar, setAvatar] = useState("");
+    var [createdPrivacy, setCreatedPrivacy] = useState("");
+    var [savedPrivacy, setSavedPrivacy] = useState("");
+    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        console.log(thisUser);
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            },
+            getDisplayName: {
+                get() {
+                    return this.displayName
+                },
+            },
+            getAvatar: {
+                get() {
+                    return this.avatar
+                },
+            },
+            getCreatedPrivacy: {
+                get() {
+                    return this.createdPrivacy
+                },
+            },
+            getSavedPrivacy: {
+                get() {
+                    return this.savedPrivacy
+                },
+            },
+            getReviewedPrivacy: {
+                get() {
+                    return this.reviewedPrivacy
+                },
+            }
+        });
+        setUsername(thisUser.getUsername);
+        setDisplayName(thisUser.getDisplayName);
+        setAvatar(thisUser.getAvatar);
+        setCreatedPrivacy(thisUser.getCreatedPrivacy);
+        setSavedPrivacy(thisUser.savedPrivacy);
+        setReviewedPrivacy(thisUser.reviewedPrivacy);
+    }, []);
 
-    const [displayNameValue, setValueDisplayName] = useState(user.displayName);
+    console.log(displayName);
+
+    const [displayNameValue, setValueDisplayName] = useState(displayName);
     const handleChangeDisplayName = e => {
         setValueDisplayName(e.target.value)
     }
 
-    const [crRecPriv, setValueCrRecPriv] = React.useState(user.createdPrivacy);
+    const [crRecPriv, setValueCrRecPriv] = useState(createdPrivacy);
     const handleChangeCrRecPriv = (event) => {
         setValueCrRecPriv(event.target.value);
       };
 
-    const [svRecPriv, setValueSvRecPriv] = React.useState(user.savedPrivacy);
+
+    const [svRecPriv, setValueSvRecPriv] = useState(savedPrivacy);
     const handleChangeSvRecPriv = (event) => {
         setValueSvRecPriv(event.target.value);
     };
 
-    const [revRecPriv, setValueRevRecPriv] = React.useState(user.reviewedPrivacy);
+    const [revRecPriv, setValueRevRecPriv] = useState(reviewedPrivacy);
     const handleChangeRevRecPriv = (event) => {
         setValueRevRecPriv(event.target.value);
     };
@@ -71,15 +121,16 @@ export default function EditProfilePage() {
                         {/*<input hidden id="upload-avatar-pic" accept="image/*" type="file" />*/}
                         <Avatar
                             sx={{ width: 100, height: 100 }}
-                            alt={user.displayName}
-                            src={user.profilePicture}
+                            alt={displayName}
+                            src={avatar}
                         >
-                            {getInitials(user.displayName)}
+                            {getInitials(displayName)}
                         </Avatar>
                     </Button>
                     <p></p>
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
+                        {console.log(displayNameValue)}
                         <TextField required 
                             id="standard-required" 
                             label="Display Name" 
@@ -231,13 +282,13 @@ export default function EditProfilePage() {
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
-                            user.displayName = displayNameValue;
-                            user.createdPrivacy = crRecPriv;
-                            user.savedPrivacy = svRecPriv;
-                            user.reviewedPrivacy = revRecPriv;
-                            localStorage.setItem('user', JSON.stringify(user));
-                            var data = await updateUser(user.username, user.displayName, user.createdPrivacy,
-                                                        user.savedPrivacy, user.reviewedPrivacy);
+                            displayName = displayNameValue;
+                            createdPrivacy = crRecPriv;
+                            savedPrivacy = svRecPriv;
+                            reviewedPrivacy = revRecPriv;
+                            var data = await updateUser(username, displayName, createdPrivacy,
+                                                        savedPrivacy, reviewedPrivacy);
+                            localStorage.setItem('user', JSON.stringify(data));
                             console.log(data);
                             router.push("profile-page");
                         }}

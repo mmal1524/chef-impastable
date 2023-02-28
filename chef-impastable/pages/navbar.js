@@ -33,7 +33,7 @@ const Navbar = () => {
             },
             getAvatar: {
                 get() {
-                    return this.Avatar
+                    return this.avatar
                 }
             },
         });
@@ -178,6 +178,8 @@ const Navbar = () => {
             </Dialog>
         </Grid>
     );
+
+    
 }
 
 export default Navbar;

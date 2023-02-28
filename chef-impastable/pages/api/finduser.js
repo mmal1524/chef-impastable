@@ -1,5 +1,5 @@
 import connect from "../../lib/mongodb"
-import User from '../../model/user'
+import User from "../../model/user"
 
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
@@ -7,8 +7,9 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const user = await User.create(req.body);
-        if(!user){
+        const {username}=req.body
+        const user = await User.findOne({username})
+        if (!user) {
             return null;
         }
         else {
@@ -21,11 +22,12 @@ export default async function handler(req,res){
                 friendRequests: user.friendRequests,
                 createdPrivacy: user.createdPrivacy,
                 savedPrivacy: user.savedPrivacy,
-                reviewedPrivacy: user.createdPrivacy,
+                reviewedPrivacy: user.reviewedPrivacy,
                 dietaryTags: user.dietaryTags
             });
         }
     } catch (error) {
         res.status(400).json({status:'Not able to create a new user.'})
+        console.log('error');
     }
 }

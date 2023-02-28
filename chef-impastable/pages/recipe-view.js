@@ -8,24 +8,52 @@ import clientPromise from '../lib/mongodb_client';
 //import mongoose from 'mongoose';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
+import Navbar from './navbar.js'
 
 export default function Recipe({ recipe }) {
     //console.log(" recipe:")
     //console.log(recipe)
     const nutrientsArray = Object.values(recipe.nutrients);
+    const nutrients = recipe.nutrients;
+    //console.log(nutrients);
+    const mappedIngredients = [];
+    const ingredients = recipe.ingredients;
+    //console.log(ingredients);
+    /*for (let i = 0; i < ingredients.length; i++) {
+        console.log(ingredients[i]);
+        //mappedIngredients.push(ingredients[i].join(' '));
+    }*/
+    /*
+    {mappedIngredients.map((instruction) => (
+                <ul>{instruction}</ul>
+            ))}*/
     return (
         <>
+            <div className="App">
+                <Navbar />
+            </div>
             <h1>{recipe.title}</h1>
             <h2>
-                <Link href="/homepage">Back to home</Link>
+                Instructions
             </h2>
-            
             {recipe.instructions_list.map((instruction) => (
                 <ul>{instruction}</ul>
             ))}
-            {nutrientsArray.map((nutrient) => (
-                <ul>{nutrient}</ul>
-            ))}
+            <h2>
+                Nutrients
+            </h2>
+
+            {Object.keys(nutrients).map((key, index) => {
+                return (
+                    <ul>
+                        {key}: {nutrients[key]}
+                    </ul>
+                );
+            })}
+            <h2>
+                Ingredients
+            </h2>
+            
         </>
     );
 }
@@ -35,14 +63,9 @@ export async function getServerSideProps(context) {
     try {
         const client = await clientPromise;
         const db = client.db("test");
-        //console.log("id: " + context.query.id)
-        //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
-        //console.log(Types.ObjectId(`${context.query.id}`))
-        //console.log(ObjectId(`${context.query.id}`))
         const recipe = await db
             .collection("recipes")
             .findOne(new ObjectId(`${context.query.id}`));
-        //console.log("recipe: " + JSON.parse(JSON.stringify(recipe)));
         return {
             props: { recipe: JSON.parse(JSON.stringify(recipe)) },
         };

@@ -104,8 +104,6 @@ export default function FridgeKitchen() {
     const handleChangeKitchen = e => {
         setSearchKitchen(e.target.value)
     }
-    //let idxMatch = (arr, q) => userApps.findIndex(item => q.toUpperCase() === item.toUpperCase());
-    console.log(idx);
 
     return (
         <>
@@ -198,12 +196,6 @@ export default function FridgeKitchen() {
                                         //console.log(idxx)
                                         setIdx(idxx);
                                         //console.log("right after set, idx val:",idx);
-                                        if (idxx >= 0) {
-                                            // found
-                                            console.log("found");
-                                        }
-                                        console.log("clicked, idx val:", idxx);
-
                                     }}
                                 >
                                     Enter

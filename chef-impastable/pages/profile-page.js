@@ -293,3 +293,28 @@ export default function ProfilePage() {
 //     }
 // }
 
+export async function getServerSideProps(context) {
+    console.log(context.query.username);
+    return {
+        props: {friends: []}
+    }
+    // try {
+    //     const client = await clientPromise;
+    //     const db = client.db("test");
+    //     console.log("id: " + context.query.id)
+    //     //console.log(mongoose.Types.ObjectId(`${context.query.id}`))
+    //     //console.log(Types.ObjectId(`${context.query.id}`))
+    //     console.log(ObjectId(`${context.query.id}`))
+    //     const recipe = await db
+    //         .collection("recipes")
+    //         .findOne(new ObjectId(`${context.query.id}`));
+    //     console.log("recipe: " + JSON.parse(JSON.stringify(recipe)));
+    //     return {
+    //         props: {recipe: JSON.parse(JSON.stringify(recipe))},
+    //     };
+    // }
+    // catch (e) {
+    //     console.error(e);
+    // }
+    
+}

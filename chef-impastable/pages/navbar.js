@@ -17,12 +17,14 @@ import { useTheme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
+import Router from "next/router";
 
 
 const Navbar = () => {
 
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
+    const [username, setUsername] = useState("");
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -37,8 +39,10 @@ const Navbar = () => {
                 }
             },
         });
+
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
+        setUsername(thisUser.username);
     }, []);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
@@ -130,7 +134,7 @@ const Navbar = () => {
                 >
                     <MenuItem
                         onClick={() => {
-                            router.push("profile-page");
+                            Router.push({pathname:"/profile-page/", query: {username: username}});
                         }}
                     >
                         Profile

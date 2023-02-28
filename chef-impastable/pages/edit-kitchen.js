@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Autocomplete from '@mui/material/Autocomplete';
 import clientPromise from "../lib/mongodb_client";
-import Dialog from '@mui/material';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -26,14 +26,12 @@ import { useTheme } from '@mui/material/styles';
 export default function EditKitchen({appliances}) {
 
     const kitchenArr = appliances.map(a => a.name);
-    // var kitchenArr = appliances.map( function( el ){ 
-    //     return el.name; 
-    //    });
-    console.log(kitchenArr[0]);
+    //console.log(kitchenArr[0]);
 
     const [username, setUsername] = useState("");
     const [userApps, setUserApps] = useState([]);
     const [searchKitchen, setSearchKitchen] = useState("");
+    console.log(searchKitchen);
     const deleteByIndex = index => {
         setUserApps(oldValues => {
             return oldValues.filter((_, i) => i !== index)
@@ -68,8 +66,10 @@ export default function EditKitchen({appliances}) {
         };
     });
     const router = useRouter();
-    const handleChangeKitchen = e => {
-        setSearchKitchen(e.target.value)
+
+    
+    const handleChangeKitchen = (event, newValue) => {
+        setSearchKitchen(newValue);
         console.log(searchKitchen);
     }
     const theme = useTheme();
@@ -92,9 +92,15 @@ export default function EditKitchen({appliances}) {
                         disablePortal
                         id="combo-box-demo"
                         options={kitchenArr}
-                        onChange={handleChangeKitchen}
+                        onInputChange={handleChangeKitchen}
                         sx={{ width: windowSize[0]/3 }}
-                        renderInput={(params) => <TextField {...params} label="Search Available Appliances" />}
+                        renderInput={params => (
+                            <TextField 
+                                {...params} 
+                                label="Search Available Appliances"
+                                onChange={({ target }) => setSearchKitchen(target.value)} 
+                            />
+                        )}
                     />
                     <Button 
                         type="submit" 
@@ -106,23 +112,28 @@ export default function EditKitchen({appliances}) {
                         }}
                         onClick={ async() => {
                             //search for appliance
-                            var idx = await indexMatch(kitchenArr, searchKitchen);
-                            if (idx < 0) {
-                                // error message
+                            console.log(searchKitchen);
+                            if (typeof searchKitchen === 'undefined') {
                                 handleClickOpenE();
-                                console.log("error")
+                                console.log("error");
                             } else {
-                                setUserApps(userApps => [...userApps, searchKitchen]);
-                                var data = await AddApp(username, searchKitchen);
-                                localStorage.setItem('user',
-                                    JSON.stringify({
-                                        username: data.username,
-                                        password: data.password,
-                                        kitchen: data.kitchen
-                                }));
-                                console.log(data.username);
+                                var idx = await indexMatch(kitchenArr, searchKitchen);
+                                if (idx < 0) {
+                                    // error message
+                                    handleClickOpenE();
+                                    console.log("error");
+                                } else {
+                                    setUserApps(userApps => [...userApps, searchKitchen]);
+                                    var data = await AddApp(username, searchKitchen);
+                                    localStorage.setItem('user',
+                                        JSON.stringify({
+                                            username: data.username,
+                                            password: data.password,
+                                            kitchen: data.kitchen
+                                    }));
+                                    console.log(data.username);
+                                }
                             }
-                            console.log("clicked")
                         }}
                         >
                             Enter
@@ -189,7 +200,9 @@ export default function EditKitchen({appliances}) {
                     ))}
                 </Grid>
             </Grid>
-            {/* <Dialog
+        </div>
+        <div>
+            <Dialog
                 fullScreen={fullScreen}
                 open={openE}
                 onClose={handleCloseE}
@@ -208,7 +221,7 @@ export default function EditKitchen({appliances}) {
                             OK
                         </Button>
                     </DialogActions>
-            </Dialog> */}
+            </Dialog>
         </div>
         </>
     );

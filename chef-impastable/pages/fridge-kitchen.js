@@ -98,14 +98,14 @@ export default function FridgeKitchen() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
     // for search bars
     const [searchKitchen, setSearchKitchen] = useState("");
+    const [idx, setIdx] = useState(-1);
     const handleChangeKitchen = e => {
-        //console.log(`Typed => ${e.target.value}`);
         setSearchKitchen(e.target.value)
     }
-    let idxMatch = (arr, q) => userApps.findIndex(item => q.toUpperCase() === item.toUpperCase());
+    //let idxMatch = (arr, q) => userApps.findIndex(item => q.toUpperCase() === item.toUpperCase());
+    console.log(idx);
 
     return (
         <>
@@ -192,15 +192,18 @@ export default function FridgeKitchen() {
                                         mx: 3,
                                         mt: 1,
                                     }}
-                                    onClick={() => {
+                                    onClick={async () => {
                                         //search for appliance
-                                        const idx = idxMatch(userApps, searchKitchen)
-                                        console.log(idx);
-                                        if (idx >= 0) {
+                                        var idxx = await indexMatch(userApps, searchKitchen);
+                                        //console.log(idxx)
+                                        setIdx(idxx);
+                                        //console.log("right after set, idx val:",idx);
+                                        if (idxx >= 0) {
                                             // found
                                             console.log("found");
                                         }
-                                        console.log("clicked")
+                                        console.log("clicked, idx val:", idxx);
+
                                     }}
                                 >
                                     Enter
@@ -236,7 +239,9 @@ export default function FridgeKitchen() {
                                             <Grid 
                                                 item xs={12} 
                                                 md={6}
-                                                sx={{ width: windowSize[0], }}
+                                                sx={{ width: windowSize[0],
+                                                    backgroundColor: index === idx ? 'greenyellow' : 'white',
+                                                }}
                                             >
                                                 <List>
                                                     <ListItemText
@@ -256,4 +261,8 @@ export default function FridgeKitchen() {
             </div>
         </>
     );
+}
+
+async function indexMatch(array, q) {
+    return array.findIndex(item => q.toUpperCase() === item.toUpperCase());
 }

@@ -22,6 +22,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
 
+import User from '../components/user';
 
 export async function getServerSideProps(context) {
   try {
@@ -49,7 +50,7 @@ export async function getServerSideProps(context) {
 export default function Home({
   isConnected,
 }) {
-  const [usernameValue, setValueUser] = useState("");
+    const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
         //console.log(`Typed => ${e.target.value}`);
@@ -133,16 +134,23 @@ export default function Home({
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
-                        if (data.success) {
-                            //
+                        if (!data.success) {
+                            handleClickOpen();
+                        } else {
                             localStorage.setItem('user', 
                                 JSON.stringify({
-                                username: usernameValue,
-                                password: passwordValue,
+                                username: data.username,
+                                password: data.password,
+                                displayName: data.displayName,
+                                avatar: data.avatar,
+                                friends: data.friends,
+                                friendRequests: data.friendRequests,
+                                createdPrivacy: data.createdPrivacy,
+                                savedPrivacy: data.savedPrivacy,
+                                reviewedPrivacy: data.reviewedPrivacy,
+                                dietaryTags: data.dietaryTags
                             }));
-                            router.push("profile-page");
-                        } else {
-                            handleClickOpen();
+                            router.push("/homepage");
                         }
                     }}
                 >Login
@@ -182,18 +190,26 @@ export default function Home({
     );
 
     async function LoginUser(username, password) {
-        const res = await fetch('/api/loginapi', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
+        //try {
+            console.log(username);
+            console.log(password);
+            const res = await fetch('/api/loginapi', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                })
             })
-        })
-        const data = await res.json();
-        return data;
+            const data = await res.json();
+            console.log(data);
+            return data;
+        //} catch (error) {
+        //    res.json(error);
+        //    return res.status(405).end();
+        //}
     }
 }

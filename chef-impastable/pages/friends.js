@@ -21,50 +21,102 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useRef } from 'react';
+import { friendCardTwo } from '../components/friend-card-2.js';
+import { addFriendCard } from '../components/add-friend-card.js';
+import clientPromise from '../lib/mongodb_client';
 
-//const FriendSearch = ({ friends }) => {
-//  const [searchQuery, setSearchQuery] = useState("");
-
-//  const filteredFriends = friends.filter((friend) =>
-//    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
- // );
+// edge cases to consider: adding myself, adding friends already in my friend list, inputing invalid user, 
 
 
-export default function FriendsPage({users}) {
+export default function FriendsPage({besties}) {
     //console.log(users)
+    var friendsList = besties;
 
-    var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
-    var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
-    var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
-    var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
-    var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
+    const [searchValue, setSearchValue] = useState("");
+    var [foundUser, setfoundUser] = useState("");
     
-
-    const [usernameValue, setUsernameValue] = useState("");
-    const [allUsers, setAllUsers] = useState([]);
-    const [query, setQuery] = useState("")
-    const [displayU, setDisplayU] = useState(false);
-    const [searchUser, setSearchUser] = useState(null);
     // don't need a router, need to have a list of users come up
 
-    const sendValue = async (e) => {
-      e.preventDefault();
-      const response = await fetch('/api/searchfriends');
-      const data = await response.json();
-      setAllUsers(data);
-      return console.log("hi")
-      return console.log(usernameValue.target.value);
-    }
+    const [username, setUsername] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [avatar, setAvatar] = useState("");
+    const [friends, setFriends] = useState([]);
+    const [friendRequests, setFriendRequests] = useState("");
+    var [createdPrivacy, setCreatedPrivacy] = useState("");
+    var [savedPrivacy, setSavedPrivacy] = useState("");
+    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
+
+    useEffect(() => {
+      var thisUser = JSON.parse(localStorage.getItem('user'));
+      Object.defineProperties(thisUser, {
+          getUsername: {
+              get() {
+                  return this.username
+              },
+          },
+          getDisplayName: {
+              get() {
+                  return this.displayName
+              },
+          },
+          getAvatar: {
+              get() {
+                  return this.avatar
+              },
+          },
+          getFriends: {
+              get() {
+                  return this.friends
+              },
+          },
+          getFriendRequests: {
+              get() {
+                  return this.friendRequests
+              },
+          },
+          getCreatedPrivacy: {
+              get() {
+                  return this.createdPrivacy
+              },
+          },
+          getSavedPrivacy: {
+              get() {
+                  return this.savedPrivacy
+              },
+          },
+          getReviewedPrivacy: {
+              get() {
+                  return this.reviewedPrivacy
+              },
+          },
+          getMealPlanPrivacy: {
+              get() {
+                  return this.mealPlanPrivacy
+              }
+          }
+      });
+      setUsername(thisUser.getUsername);
+      setDisplayName(thisUser.getDisplayName);
+      setAvatar(thisUser.getAvatar);
+      setFriends(thisUser.getFriends);
+      setFriendRequests(thisUser.getFriendRequests);
+      setCreatedPrivacy(thisUser.getCreatedPrivacy);
+      setSavedPrivacy(thisUser.getSavedPrivacy);
+      setReviewedPrivacy(thisUser.getReviewedPrivacy);
+      setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
+  }, []);
 
     const handleGetUserName = e => {
-      setUsernameValue(e.target.value)
+      setSearchValue(e.target.value)
     }
 
     const handleNoUser = e => {
       setDisplayU(false);
     }
 
-    console.log(usernameValue)
+    console.log("search value")
+    console.log(searchValue)
 
     return (
         <div>
@@ -81,7 +133,7 @@ export default function FriendsPage({users}) {
                     //defaultValue="Search..."
                     helperText=""
                     variant="standard"
-                    value={usernameValue}
+                    value={searchValue}
                     placeholder="search..."
                     onChange={handleGetUserName}
                     InputProps={{
@@ -97,15 +149,19 @@ export default function FriendsPage({users}) {
                       color='primary'
                       size='small'
                       onClick={ async () => {
-                        var foundUser = await findUser(usernameValue);
-                        if (!foundUser.success) {
+                        console.log('hey');
+                        console.log(searchValue);
+                        var thisFoundUser = await findUser(searchValue);
+                        if (thisFoundUser == null) {
                           console.log("no")
+                          setfoundUser(null);
                         } else {
-                          console.log("find")
+                          console.log(thisFoundUser);
+                          setfoundUser(thisFoundUser);
                           console.log(foundUser)
                         }
                         //<Grid container spacing={3}>
-                        //{user.map((usernameValue) => (
+                        //{user.map((searchValue) => (
                             //<Grid> item key={user.id}>
                            //</Grid>   <UserDisplay = user={user}/>
                            // </Grid>
@@ -125,18 +181,16 @@ export default function FriendsPage({users}) {
                     Search
                     </Button>
                     {<Grid container spacing={4} direction = "row">
-                            {user.friends[0].displaySmall()}
-                            {<Button 
-                              variant="outlined"
-                              endIcon={<SendIcon />}>Request</Button>}
-                            {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
+                        {displayUsers(foundUser)}
+                    </Grid>}
                 </Grid>
                 <Grid xs={6}>
                     <Box sx={{width: '100%', marginBottom: 4}}>
                     <h3 className="h3">Friends List</h3>
                     <Divider />
+                    {displayFriends(friendsList)}
 
-                    <Grid container spacing={4} direction = "column">
+                    {/* <Grid container spacing={4} direction = "column">
                         {<Grid container spacing = {2} direction = "row">
                             {user.friends[0].displaySmall()}
                             {<Button variant="outlined" endIcon={<DeleteIcon />}>Remove</Button>}
@@ -151,7 +205,7 @@ export default function FriendsPage({users}) {
                             {user.friends[2].displaySmall()}
                             {<Button variant="outlined" endIcon={<DeleteIcon />}>Remove</Button>}
                             {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
-                    </Grid>
+                    </Grid> */}
                     </Box>
                     </Grid>
             </Grid>
@@ -159,9 +213,13 @@ export default function FriendsPage({users}) {
     );
 
   async function findUser(username) {
-    console.log(username)
+    console.log(username.length)
+    if (username.length == 0) {
+        console.log("in")
+        return null;
+    }
     console.log("in find user")
-    const res = await fetch('/api/find-username', {
+    const res = await fetch('/api/finduser', {
       method: 'POST', 
       headers: {
         'Accept': 'application/json',
@@ -171,11 +229,66 @@ export default function FriendsPage({users}) {
         username: username,
       })
     })
+    console.log(res)
     console.log("at the end of findUser")
     const data = await res.json();
     console.log('data')
     console.log(data)
     return data;
   } 
+
+  function displayFriends(friendsList) {
+    if (friendsList.length == 0) {
+        return(<>You have no friends :(</>);
+    } else {
+        return (
+            friendsList.map((friend) => (
+                friendCardTwo(friend)
+            ))
+        );
+    }
+}
+
+function displayUsers(searchedUser) {
+  console.log("display")
+  if (searchedUser == null) {
+    return (<></>)
+  }
+  console.log(searchedUser.username)
+  if (searchedUser.username == undefined) {
+    return (<></>)
+  }
+  
+  return addFriendCard(searchedUser);
+}
+}
+
+export async function getServerSideProps(context) {
+  try {
+      const client = await clientPromise;
+      const db = client.db("test");
+      
+      const user = await db
+          .collection("users")
+          .find({username: context.query.username}).toArray();
+
+      var friends = user[0].friends;
+
+      const friendObjects = new Array(friends.length);
+      var i = 0;
+      for (i; i < friends.length; i++) {
+          var f = await db
+              .collection("users")
+              .find({username: friends[i]}).toArray();
+          friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
+      }
+
+      return {
+          props: {besties: friendObjects},
+      };
+  }
+  catch (e) {
+      console.error(e);
+  }
 }
 

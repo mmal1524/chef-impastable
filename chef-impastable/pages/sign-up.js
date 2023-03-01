@@ -239,7 +239,7 @@ export default function SignUp() {
                             aria-labelledby="responsive-dialog-title"
                         >
                             <DialogTitle id="responsive-dialog-title">
-                                {"Incorrect Password"}
+                                {"Error"}
                             </DialogTitle>
                             <DialogContent>
                                 <DialogContentText>

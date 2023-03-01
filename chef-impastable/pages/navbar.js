@@ -72,7 +72,7 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", "/profile-page", "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
 
     return (
@@ -87,7 +87,7 @@ const Navbar = () => {
                             <List>
                                 {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                     <ListItem key={text}>
-                                        <ListItemButton onClick={() => { window.location.href = sidebarLinks[index] }}>
+                                        <ListItemButton onClick={() => { router.push(sidebarLinks[index]) }}>
                                             <ListItemIcon>
                                                 {sidebarIcons[index]}
                                             </ListItemIcon>

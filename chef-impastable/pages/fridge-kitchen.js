@@ -19,6 +19,7 @@ import FormControl from '@mui/material/FormControl';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
 import { useTheme } from '@material-ui/core/styles';
+import Fridge from '../components/fridge.js';
 
 
 function TabPanel(props) {
@@ -123,8 +124,9 @@ export default function FridgeKitchen() {
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
+                        <Fridge></Fridge>
                         { /*search bar and enter button at the top*/ }
-                        <Grid container>
+                        {/* <Grid container>
                             <Grid item>
                                 <TextField
                                     id="search-fridge"
@@ -170,7 +172,7 @@ export default function FridgeKitchen() {
                             </Grid>
                         </Grid>
                         <Grid container>
-                            {/* List ingredients */}
+                            
                             {userIngr && userIngr.map((ingr, index) => (
                                 <Box>
                                     <FormGroup row>
@@ -191,7 +193,7 @@ export default function FridgeKitchen() {
                                     </Grid>
                                 </Box>
                             ))}
-                        </Grid>
+                        </Grid> */}
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         { /*search bar and edit button at the top*/ }

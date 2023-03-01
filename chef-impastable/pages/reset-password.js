@@ -185,21 +185,18 @@ export default function SignUp() {
                             sx={{ my: 1, width: 400 }}
                             onClick={async () => {
                                 console.log("button clicked")
+                                console.log(thisUser.getPass);
                                 if (thisUser.getPass === oldPassValue) {
-                                    console.log(thisUser.getPass)
+                                    //console.log(thisUser.getPass)
                                     if (newPassValue != oldPassValue) {
                                         if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (passwordRegex.test(newPassValue))) {
                                             //console.log("change now")
                                             var data = await EditPw(thisUser.getUsername, newPassValue);
                                             if (data.success) {
                                                 localStorage.setItem('user', 
-                                                    JSON.stringify({
-                                                    username: data.username,
-                                                    password: data.password,
-                                                }));
-                                                //console.log(thisUser.getPass)
+                                                    JSON.stringify(data));
                                                 handleClickOpenS();
-                                                //router.push('/profile-page');
+                                                router.push('/edit-profile');
                                             } else {
                                                 handleClickOpenE();
                                             }
@@ -317,6 +314,20 @@ export default function SignUp() {
                             </DialogActions>
                         </Dialog>
                     </Box>
+                    <Box>
+                        <Button 
+                            type="submit" 
+                            size="large" 
+                            variant="contained" 
+                            sx={{ my: 1, width: 400 }}
+                            onClick={async () => {
+                                console.log("button clicked");
+                                router.push('/edit-profile');
+                            }}
+                        >
+                            Return to Edit Profile
+                        </Button>
+                    </Box>    
                 </Box>
             </Box>
         </Container>

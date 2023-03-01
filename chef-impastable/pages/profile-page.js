@@ -67,6 +67,7 @@ export default function ProfilePage({besties}) {
     };
 
     const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
     const [friends, setFriends] = useState([]);
@@ -83,6 +84,11 @@ export default function ProfilePage({besties}) {
             getUsername: {
                 get() {
                     return this.username
+                },
+            },
+            getPassword: {
+                get() {
+                    return this.password
                 },
             },
             getDisplayName: {
@@ -122,6 +128,7 @@ export default function ProfilePage({besties}) {
             }
         });
         setUsername(thisUser.getUsername);
+        setPassword(thisUser.getPassword);
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
         setFriends(thisUser.getFriends);
@@ -158,6 +165,7 @@ export default function ProfilePage({besties}) {
                             onClick={() => {
                                 localStorage.setItem('user', JSON.stringify({
                                     username: username,
+                                    password: password,
                                     displayName: displayName,
                                     avatar: avatar,
                                     friends: friends,
@@ -246,9 +254,6 @@ export default function ProfilePage({besties}) {
 
             </div>
             
-            <h2>
-                <Link href="/">Back to home</Link>
-            </h2>
         </>
     );
 

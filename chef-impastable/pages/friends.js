@@ -38,6 +38,7 @@ export default function FriendsPage({users}) {
     var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
     var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
     var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
+    
 
     const [usernameValue, setUsernameValue] = useState("");
     const [allUsers, setAllUsers] = useState([]);
@@ -81,6 +82,7 @@ export default function FriendsPage({users}) {
                     helperText=""
                     variant="standard"
                     value={usernameValue}
+                    placeholder="search..."
                     onChange={handleGetUserName}
                     InputProps={{
                         startAdornment: (
@@ -99,7 +101,8 @@ export default function FriendsPage({users}) {
                         if (!foundUser.success) {
                           console.log("no")
                         } else {
-                          console.log("yes")
+                          console.log("find")
+                          console.log(foundUser)
                         }
                         //<Grid container spacing={3}>
                         //{user.map((usernameValue) => (
@@ -123,7 +126,9 @@ export default function FriendsPage({users}) {
                     </Button>
                     {<Grid container spacing={4} direction = "row">
                             {user.friends[0].displaySmall()}
-                            {<Button variant="outlined" endIcon={<SendIcon />}>Request</Button>}
+                            {<Button 
+                              variant="outlined"
+                              endIcon={<SendIcon />}>Request</Button>}
                             {<Button variant="outlined" endIcon={<FullscreenIcon />}>View</Button>} </Grid>}
                 </Grid>
                 <Grid xs={6}>
@@ -154,7 +159,9 @@ export default function FriendsPage({users}) {
     );
 
   async function findUser(username) {
-    const res = await fetch('/api/searchfriends', {
+    console.log(username)
+    console.log("in find user")
+    const res = await fetch('/api/find-username', {
       method: 'POST', 
       headers: {
         'Accept': 'application/json',
@@ -166,6 +173,7 @@ export default function FriendsPage({users}) {
     })
     console.log("at the end of findUser")
     const data = await res.json();
+    console.log('data')
     console.log(data)
     return data;
   } 

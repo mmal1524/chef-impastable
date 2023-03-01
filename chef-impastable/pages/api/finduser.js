@@ -7,8 +7,10 @@ connect()
 
 export default async function handler(req,res){
     try {
+        //console.log(req.body)
         const {username}=req.body
         const user = await User.findOne({username})
+        //console.log(user)
         if (!user) {
             return null;
         }

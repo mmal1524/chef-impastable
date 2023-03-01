@@ -81,6 +81,13 @@ export default function EditKitchen({appliances}) {
     const handleCloseE = () => {
         setOpenE(false);
     };
+    const [openD, setOpenD] = useState(false);
+    const handleClickOpenD = () => {
+        setOpenD(true);
+    };
+    const handleCloseD = () => {
+        setOpenD(false);
+    };
 
 
     return (
@@ -117,21 +124,27 @@ export default function EditKitchen({appliances}) {
                                 handleClickOpenE();
                                 console.log("error");
                             } else {
-                                var idx = await indexMatch(kitchenArr, searchKitchen);
-                                if (idx < 0) {
-                                    // error message
-                                    handleClickOpenE();
-                                    console.log("error");
+                                var idx = await indexMatch(userApps, searchKitchen);
+                                if (idx > -1) {
+                                    // error message, don't add bc duplicate
+                                    handleClickOpenD();
                                 } else {
-                                    setUserApps(userApps => [...userApps, searchKitchen]);
-                                    var data = await AddApp(username, searchKitchen);
-                                    localStorage.setItem('user',
-                                        JSON.stringify({
-                                            username: data.username,
-                                            password: data.password,
-                                            kitchen: data.kitchen
-                                    }));
-                                    console.log(data.username);
+                                    var idx = await indexMatch(kitchenArr, searchKitchen);
+                                    if (idx < 0) {
+                                        // error message
+                                        handleClickOpenE();
+                                        console.log("error");
+                                    } else {
+                                        setUserApps(userApps => [...userApps, searchKitchen]);
+                                        var data = await AddApp(username, searchKitchen);
+                                        localStorage.setItem('user',
+                                            JSON.stringify({
+                                                username: data.username,
+                                                password: data.password,
+                                                kitchen: data.kitchen
+                                        }));
+                                        console.log(data.username);
+                                    }
                                 }
                             }
                         }}
@@ -218,6 +231,26 @@ export default function EditKitchen({appliances}) {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseE} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={openD}
+                onClose={handleCloseD}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Incorrect Appliance"}
+                </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Error. Appliance already owned and cannot be added again.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseD} autoFocus>
                             OK
                         </Button>
                     </DialogActions>

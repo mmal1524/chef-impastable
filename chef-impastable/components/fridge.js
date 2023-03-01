@@ -12,7 +12,7 @@ import List from '@mui/material/List';
 // import ListItem from '@mui/material/ListItem';
 // import ListItemAvatar from '@mui/material/ListItemAvatar';
 // import ListItemIcon from '@mui/material/ListItemIcon';
-// import ListItemText from '@mui/material/ListItemText';
+import ListItemText from '@mui/material/ListItemText';
 import FormGroup from '@mui/material/FormGroup';
 // import FormControlLabel from '@mui/material/FormControlLabel';
 // import FormControl from '@mui/material/FormControl';
@@ -49,6 +49,13 @@ export default function Fridge() {
         setUserIngr(thisUser.getIngr)
         // setUserApps(thisUser.getApps);
     }, [])
+
+    // for search bars
+    const [searchFridge, setSearchFridge] = useState("");
+    const [idx, setIdx] = useState(-1);
+    const handleChangeFridge = e => {
+        setSearchFridge(e.target.value);
+    }
 
     return (
         <>
@@ -91,6 +98,7 @@ export default function Fridge() {
                     sx={{
                     width: 600
                     }}
+                    onChange={handleChangeFridge}
                 />
                 <Button 
                     //type="submit" 
@@ -100,9 +108,13 @@ export default function Fridge() {
                         mx: 3,
                         mt: 1,
                     }}
-                    onClick={() => {
+                    onClick={async () => {
                         //search for ingredient
+                        //console.log(searchFridge);
+                        var idxx = await indexMatch(userIngr, searchFridge);
+                        setIdx(idxx);
                         console.log("clicked")
+                        //console.log(idx);
                     }}
                 >
                     Enter
@@ -138,7 +150,11 @@ export default function Fridge() {
                         <Grid 
                             item xs={12} 
                             md={6}
-                            sx={{ width: windowSize[0]}}
+                            sx={{ 
+                                width: 1200,
+                                //width: windowSize[0],
+                                backgroundColor: index === idx ? 'greenyellow' : 'white',
+                            }}
                         >
                             <List>
                                 <ListItemText
@@ -155,6 +171,9 @@ export default function Fridge() {
     )
 }
 
+// returns index if match of q is found within given array
+// both are toUpperCase so search is case insensitive
 async function indexMatch(array, q) {
-    return array.findIndex(item => q.toUpperCase().contains(item.toUpperCase()));
+    //console.log(array);
+    return array.findIndex(item => q.toUpperCase() === item.toUpperCase());
 }

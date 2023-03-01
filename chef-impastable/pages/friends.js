@@ -77,7 +77,7 @@ export default function FriendsPage({users}) {
                 <TextField
                     id="outlined-search"
                     label=""
-                    defaultValue="Search..."
+                    //defaultValue="Search..."
                     helperText=""
                     variant="standard"
                     value={usernameValue}

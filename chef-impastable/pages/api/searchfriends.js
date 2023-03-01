@@ -8,11 +8,17 @@ connect()
 export default async function handler(req,res){
     try {
         const {username}=req.body
+        //console.log(req.body)
         const user = await User.findOne({username})
+        console.log(user)
+        //console.log(user.username)
         if (!user) {
+            console.log(user)
+            console.log("no user")
             return null;
         }
         else {
+            //return user;
             return res.json({
                 username: user.username,
                 password: user.password,
@@ -27,7 +33,7 @@ export default async function handler(req,res){
             });
         }
     } catch (error) {
-        res.status(400).json({status:'Not able to create a new user.'})
+        res.status(400).json({status:'Not able to find user.'})
         console.log('error');
     }
 }

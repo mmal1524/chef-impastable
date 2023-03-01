@@ -22,6 +22,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
 
+import User from '../components/user';
 
 export async function getServerSideProps(context) {
   try {
@@ -49,7 +50,7 @@ export async function getServerSideProps(context) {
 export default function Home({
   isConnected,
 }) {
-  const [usernameValue, setValueUser] = useState("");
+    const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
         //console.log(`Typed => ${e.target.value}`);
@@ -65,6 +66,7 @@ export default function Home({
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [showPassword, setShowPassword] = useState(false);
 
+
     const handleShowPassword = () => setShowPassword(!showPassword);
 
     const handleMouseDownPassword = (event) => {
@@ -74,6 +76,7 @@ export default function Home({
     const handleClickOpen = () => {
         setOpen(true);
     };
+
 
     const handleClose = () => {
         setOpen(false);
@@ -106,7 +109,7 @@ export default function Home({
                 </Grid>
                 <Grid>
                 <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
                                 id="password"
                                 type={showPassword ? "text" : "password"}
@@ -129,12 +132,25 @@ export default function Home({
                 </Grid>
                 <Button
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
-                    onClick={async () => {
+                    onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
-                        if (data.success) {
-                            router.push("profile-page");
-                        } else {
+                        if (!data.success) {
                             handleClickOpen();
+                        } else {
+                            localStorage.setItem('user', 
+                                JSON.stringify({
+                                username: data.username,
+                                password: data.password,
+                                displayName: data.displayName,
+                                avatar: data.avatar,
+                                friends: data.friends,
+                                friendRequests: data.friendRequests,
+                                createdPrivacy: data.createdPrivacy,
+                                savedPrivacy: data.savedPrivacy,
+                                reviewedPrivacy: data.reviewedPrivacy,
+                                dietaryTags: data.dietaryTags
+                            }));
+                            router.push("/homepage");
                         }
                     }}
                 >Login
@@ -174,18 +190,26 @@ export default function Home({
     );
 
     async function LoginUser(username, password) {
-        const res = await fetch('/api/loginapi', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password,
+        //try {
+            console.log(username);
+            console.log(password);
+            const res = await fetch('/api/loginapi', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                })
             })
-        })
-        const data = await res.json();
-        return data;
+            const data = await res.json();
+            console.log(data);
+            return data;
+        //} catch (error) {
+        //    res.json(error);
+        //    return res.status(405).end();
+        //}
     }
 }

@@ -1,6 +1,9 @@
 import * as React from 'react';
-import User from '../components/user';
-import { currUser } from '../components/user';
+import User, { displaySmall } from '../components/user';
+//import { getInitials } from '../components/user';
+import { displayLarge } from '../components/user';
+//import { displayFriends } from '../components/user';
+//import { displaySmall } from '../components/user';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -12,7 +15,11 @@ import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
-import Navbar from './navbar.js'
+import Navbar from './navbar.js';
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import { friendCard } from '../components/friend-card';
+import clientPromise from '../lib/mongodb_client';
 
 
 function TabPanel(props) {
@@ -48,19 +55,94 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage() {
+export default function ProfilePage({besties}) {
 
-    var friend1 = new User('Mahima', 'mahimasusername', "", [], []);
-    var friend2 = new User('Jiahui', 'jiahuisusername', "", [], []);
-    var friend3 = new User('Kendalyn', 'kendalynsusername', "", [], []);
-    var friend4 = new User('Carmen', 'carmentsusername', "", [], []);
-    var user = new User('Sarah Wagler', 'sawagler', "", [friend1, friend2, friend3], [friend4]);
+    var friendsList = besties;
 
     const [value, setValue] = React.useState(0);
+    const router = useRouter();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [avatar, setAvatar] = useState("");
+    const [friends, setFriends] = useState([]);
+    const [friendRequests, setFriendRequests] = useState("");
+    var [createdPrivacy, setCreatedPrivacy] = useState("");
+    var [savedPrivacy, setSavedPrivacy] = useState("");
+    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+
+    
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        console.log(thisUser);
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            },
+            getPassword: {
+                get() {
+                    return this.password
+                },
+            },
+            getDisplayName: {
+                get() {
+                    return this.displayName
+                },
+            },
+            getAvatar: {
+                get() {
+                    return this.avatar
+                },
+            },
+            getFriends: {
+                get() {
+                    return this.friends
+                },
+            },
+            getFriendRequests: {
+                get() {
+                    return this.friendRequests
+                },
+            },
+            getCreatedPrivacy: {
+                get() {
+                    return this.createdPrivacy
+                },
+            },
+            getSavedPrivacy: {
+                get() {
+                    return this.savedPrivacy
+                },
+            },
+            getReviewedPrivacy: {
+                get() {
+                    return this.reviewedPrivacy
+                },
+            }
+        });
+        setUsername(thisUser.getUsername);
+        setPassword(thisUser.getPassword);
+        setDisplayName(thisUser.getDisplayName);
+        setAvatar(thisUser.getAvatar);
+        setFriends(thisUser.getFriends);
+        setFriendRequests(thisUser.getFriendRequests);
+        setCreatedPrivacy(thisUser.getCreatedPrivacy);
+        setSavedPrivacy(thisUser.savedPrivacy);
+        setReviewedPrivacy(thisUser.reviewedPrivacy);
+    }, []);
+
+    //console.log(user);
+
+    // console.log(friends);
+    // console.log(friends.length);
+    // console.log(friendsObjects);
 
     return (
         <>
@@ -72,7 +154,7 @@ export default function ProfilePage() {
                 <Grid container spacing={6}>
                     <Grid xs={10}>
                         {/* Displaying user's profile picture, name, and username */}
-                        {user.displayLarge()}
+                        {displayLarge(username, displayName, avatar)}
                     </Grid>
                     <Grid xs={2}>
                         {/* Edit profile button */}
@@ -81,7 +163,18 @@ export default function ProfilePage() {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                window.location.href="/edit-profile";
+                                localStorage.setItem('user', JSON.stringify({
+                                    username: username,
+                                    password: password,
+                                    displayName: displayName,
+                                    avatar: avatar,
+                                    friends: friends,
+                                    friendRequests: friendRequests,
+                                    createdPrivacy: createdPrivacy,
+                                    savedPrivacy: savedPrivacy,
+                                    reviewedPrivacy: reviewedPrivacy
+                                 }))
+                                router.push("edit-profile");
                             }}
                         >
                             Edit Profile
@@ -92,9 +185,14 @@ export default function ProfilePage() {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {user.friends[0].displaySmall()}
-                            {user.friends[1].displaySmall()}
-                            {user.friends[2].displaySmall()}
+                            {/* {console.log(friends)}
+                            {console.log(friends.length)}
+                            {console.log(friendsObjects)} */}
+                            {      
+                                friendsList.map((friend) => (
+                                    friendCard(friend)
+                                ))
+                            }
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}
@@ -108,7 +206,7 @@ export default function ProfilePage() {
                                alignItems="center"
                                spacing={2}
                             >
-                                {user.friendRequests[0].displaySmall()}
+                                This is where friend requests go
                                 <Button 
                                     variant="outlined" 
                                     sx={{color: 'green', borderColor: 'green'}}
@@ -156,9 +254,125 @@ export default function ProfilePage() {
 
             </div>
             
-            <h2>
-                <Link href="/">Back to home</Link>
-            </h2>
         </>
     );
+
+    async function getFriendsArray(friends) {
+        console.log(friends);
+        console.log(friends.length);
+        var friendsArray = [];
+        console.log(friendsArray.length);
+        for (var i = 0; i < friends.length; i++) {
+            friendsArray.push(await findUser(friends[i]));
+        }
+    
+        console.log(friendsArray);
+        console.log(friendsArray.length);
+        return friendsArray;
+    
+        async function findUser(username) {
+            const res = await fetch('/api/finduser', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username
+                })
+            });
+            const data = await res.json();
+            return data;
+        }
+    }
+
+    async function findUser(username) {
+        const res = await fetch('/api/finduser', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
 }
+
+export async function getServerSideProps(context) {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
+        
+        const user = await db
+            .collection("users")
+            .find({username: context.query.username}).toArray();
+
+        console.log(user);
+        var friends = user[0].friends;
+        console.log("friends:");
+        console.log(friends);
+
+        const friendObjects = new Array(friends.length);
+        var i = 0;
+        for (i; i < friends.length; i++) {
+            var f = await db
+                .collection("users")
+                .find({username: friends[i]}).toArray();
+            friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
+        }
+        // await friends.foreach(async function(friend) {
+        //     console.log(friend);
+        //     const friendObject = await db 
+        //         .collection("users")
+        //         .find({username: friend}).toArray();
+        //     friendObjects[i] = friendObject[0];
+        //     console.log("besties:")
+        //     console.log(friendObject[0]);
+        // });
+
+        console.log("squad");
+        console.log(friendObjects);
+
+        return {
+            props: {besties: friendObjects},
+        };
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+
+
+// async function getFriendsArray(friends) {
+//     console.log(friends);
+//     console.log(friends.length);
+//     var friendsArray = [];
+//     console.log(friendsArray.length);
+//     for (var i = 0; i < friends.length; i++) {
+//         friendsArray.push(await findUser(friends[i]));
+//     }
+
+//     console.log(friendsArray);
+//     console.log(friendsArray.length);
+//     return friendsArray;
+
+//     async function findUser(username) {
+//         const res = await fetch('/api/finduser', {
+//             method: 'POST',
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 username: username
+//             })
+//         });
+//         const data = await res.json();
+//         return data;
+//     }
+// }

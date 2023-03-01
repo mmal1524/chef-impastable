@@ -141,6 +141,7 @@ export default function Home({
                                 JSON.stringify({
                                 username: data.username,
                                 password: data.password,
+                                fridge: data.fridge,
                                 kitchen: data.kitchen,
                                 displayName: data.displayName,
                                 avatar: data.avatar,

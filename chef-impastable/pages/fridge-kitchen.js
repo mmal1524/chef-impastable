@@ -56,10 +56,13 @@ function a11yProps(index) {
 
 export default function FridgeKitchen() {
 
+    //local storage fridge info
+    const [userIngr, setUserIngr] = useState([]);
+
     //local storage kitchen info
-    //const [userIngr, setUserIngr] = useState([]);
     const [userApps, setUserApps] = useState([]);
 
+    // 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -68,15 +71,13 @@ export default function FridgeKitchen() {
                     return this.kitchen
                 },
             },
-            /*
             getIngr: {
                 get() {
                     return this.fridge
                 }
             },
-            */
         });
-        //setUserIngr(thisUser.getIngr)
+        setUserIngr(thisUser.getIngr)
         setUserApps(thisUser.getApps);
     }, [])
 
@@ -122,7 +123,7 @@ export default function FridgeKitchen() {
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
-                    
+                        { /*search bar and enter button at the top*/ }
                         <Grid container>
                             <Grid item>
                                 <TextField
@@ -167,6 +168,29 @@ export default function FridgeKitchen() {
                                     Edit Fridge
                                 </Button>
                             </Grid>
+                        </Grid>
+                        <Grid container>
+                            {/* List ingredients */}
+                            {userIngr && userIngr.map((ingr, index) => (
+                                <Box>
+                                    <FormGroup row>
+                                    </FormGroup>
+                                    <Grid container>
+                                        <Grid 
+                                            item xs={12} 
+                                            md={6}
+                                            sx={{ width: windowSize[0]}}
+                                        >
+                                            <List>
+                                                <ListItemText
+                                                    sx={{display:'flex', justifyContent:'center'}}
+                                                    primary={ingr} 
+                                                />
+                                            </List>
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            ))}
                         </Grid>
                     </TabPanel>
                     <TabPanel value={value} index={1}>

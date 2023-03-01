@@ -15,6 +15,7 @@ export default async function handler(req,res){
             return res.json({
                 username: user.username,
                 password: user.password,
+                fridge: user.fridge,
                 kitchen: user.kitchen,
                 displayName: user.displayName,
                 avatar: user.avatar,

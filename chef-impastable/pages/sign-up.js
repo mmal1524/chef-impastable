@@ -171,11 +171,13 @@ export default function SignUp() {
                                                     JSON.stringify({
                                                         username: data.username,
                                                         password: data.password,
+                                                        fridge: data.fridge,
                                                         kitchen: data.kitchen,
                                                         displayName: data.displayName,
                                                         avatar: data.avatar,
                                                         friends: data.friends,
-                                                        friendRequests: data.friendRequests
+                                                        friendRequests: data.friendRequests,
+                                                        dietaryTags: data.dietaryTags
                                                     }));
                                                 router.push("homepage");
                                             }
@@ -298,6 +300,8 @@ export default function SignUp() {
                 username: username,
                 password: password,
                 displayName: username,
+                fridge: [],
+                kitchen: [],
                 avatar: "",
                 friends: ["friend1", "friend2", "friend3"],
                 friendRequests: [],

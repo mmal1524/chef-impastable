@@ -30,6 +30,7 @@ export default function EditProfilePage() {
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
 
     const handleChangeDisplayName = e => {
         setDisplayName(e.target.value);
@@ -42,6 +43,9 @@ export default function EditProfilePage() {
     }
     const handleChangeReviewedPrivacy = e => {
         setReviewedPrivacy(e.target.value);
+    }
+    const handleChangeMealPlanPrivacy = e => {
+        setMealPlanPrivacy(e.target.value);
     }
 
     // const [crRecPriv, setValueCrRecPriv] = useState("");
@@ -62,7 +66,6 @@ export default function EditProfilePage() {
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
-        console.log(thisUser);
         Object.defineProperties(thisUser, {
             getUsername: {
                 get() {
@@ -93,6 +96,11 @@ export default function EditProfilePage() {
                 get() {
                     return this.reviewedPrivacy
                 },
+            },
+            getMealPlanPrivacy: {
+                get() {
+                    return this.mealPlanPrivacy
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -101,9 +109,8 @@ export default function EditProfilePage() {
         setCreatedPrivacy(thisUser.getCreatedPrivacy);
         setSavedPrivacy(thisUser.savedPrivacy);
         setReviewedPrivacy(thisUser.reviewedPrivacy);
+        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
     }, []);
-
-    console.log(displayName);
 
     const [open, setOpen] = React.useState(false);
 
@@ -285,12 +292,35 @@ export default function EditProfilePage() {
                     alignItems="center"
                     spacing={2}
                 >
+                    <Box>
+                        Can view meal plans
+                    </Box>
+                    <Box sx={{width:300}}>
+                        <FormControl variant="filled" sx={{ m: 4, p: 4, minWidth: 120 }}>
+                            <InputLabel id="meal plans"></InputLabel>
+                            <Select
+                                value={mealPlanPrivacy}
+                                onChange={handleChangeMealPlanPrivacy}
+                            >
+                                <MenuItem value={"everyone"}>Everyone</MenuItem>
+                                <MenuItem value={"friends only"}>Friends Only</MenuItem>
+                                <MenuItem value={"nobody"}>Nobody</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Stack>
+                <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={2}
+                >
                     <Button 
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
                             var data = await updateUser(username, displayName, createdPrivacy,
-                                                        savedPrivacy, reviewedPrivacy);
+                                                        savedPrivacy, reviewedPrivacy, mealPlanPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));
                             console.log(data);
                             router.push({pathname:"/profile-page/", query: {username: username}});
@@ -304,7 +334,7 @@ export default function EditProfilePage() {
         </>
     );
 
-    async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv) {
+    async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv, newMealPriv) {
         console.log(username);
         const res = await fetch('/api/updateUser', {
             method: 'POST',
@@ -317,7 +347,8 @@ export default function EditProfilePage() {
                 newDisplayName: newDisplayName,
                 newCreatPriv: newCreatPriv,
                 newSavPriv: newSavPriv,
-                newRevPriv: newRevPriv
+                newRevPriv: newRevPriv,
+                newMealPriv: newMealPriv
             })
         });
         const data = await res.json();

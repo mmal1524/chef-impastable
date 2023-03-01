@@ -303,6 +303,7 @@ export default function SignUp() {
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
                 reviewedPrivacy: "everyone",
+                mealPlanPrivacy: "everyone",
                 dietaryTags: []
             })
         })

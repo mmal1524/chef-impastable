@@ -22,6 +22,7 @@ export default async function handler(req,res){
                 createdPrivacy: user.createdPrivacy,
                 savedPrivacy: user.savedPrivacy,
                 reviewedPrivacy: user.reviewedPrivacy,
+                mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
                 success: true
             });

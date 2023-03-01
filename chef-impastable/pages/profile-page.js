@@ -74,11 +74,11 @@ export default function ProfilePage({besties}) {
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
 
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
-        console.log(thisUser);
         Object.defineProperties(thisUser, {
             getUsername: {
                 get() {
@@ -119,6 +119,11 @@ export default function ProfilePage({besties}) {
                 get() {
                     return this.reviewedPrivacy
                 },
+            },
+            getMealPlanPrivacy: {
+                get() {
+                    return this.mealPlanPrivacy
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -127,15 +132,10 @@ export default function ProfilePage({besties}) {
         setFriends(thisUser.getFriends);
         setFriendRequests(thisUser.getFriendRequests);
         setCreatedPrivacy(thisUser.getCreatedPrivacy);
-        setSavedPrivacy(thisUser.savedPrivacy);
-        setReviewedPrivacy(thisUser.reviewedPrivacy);
+        setSavedPrivacy(thisUser.getSavedPrivacy);
+        setReviewedPrivacy(thisUser.getReviewedPrivacy);
+        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
     }, []);
-
-    //console.log(user);
-
-    // console.log(friends);
-    // console.log(friends.length);
-    // console.log(friendsObjects);
 
     return (
         <>
@@ -164,7 +164,8 @@ export default function ProfilePage({besties}) {
                                     friendRequests: friendRequests,
                                     createdPrivacy: createdPrivacy,
                                     savedPrivacy: savedPrivacy,
-                                    reviewedPrivacy: reviewedPrivacy
+                                    reviewedPrivacy: reviewedPrivacy,
+                                    mealPlanPrivacy: mealPlanPrivacy
                                  }))
                                 router.push("edit-profile");
                             }}
@@ -177,9 +178,6 @@ export default function ProfilePage({besties}) {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {/* {console.log(friends)}
-                            {console.log(friends.length)}
-                            {console.log(friendsObjects)} */}
                             {      
                                 friendsList.map((friend) => (
                                     friendCard(friend)
@@ -219,6 +217,7 @@ export default function ProfilePage({besties}) {
                             <Tab label="Created Recipes" {...a11yProps(0)} />
                             <Tab label="Saved Recipes" {...a11yProps(1)} />
                             <Tab label="Reviewed Recipes" {...a11yProps(2)} />
+                            <Tab label="Meal Plans" {...a11yProps(3)} />
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
@@ -229,6 +228,9 @@ export default function ProfilePage({besties}) {
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         Here is where reviewed recipes will go
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        Here is where meal plans will go
                     </TabPanel>
                 </Box>
 
@@ -246,55 +248,23 @@ export default function ProfilePage({besties}) {
 
             </div>
             
-            <h2>
-                <Link href="/">Back to home</Link>
-            </h2>
         </>
     );
 
-    async function getFriendsArray(friends) {
-        console.log(friends);
-        console.log(friends.length);
-        var friendsArray = [];
-        console.log(friendsArray.length);
-        for (var i = 0; i < friends.length; i++) {
-            friendsArray.push(await findUser(friends[i]));
-        }
-    
-        console.log(friendsArray);
-        console.log(friendsArray.length);
-        return friendsArray;
-    
-        async function findUser(username) {
-            const res = await fetch('/api/finduser', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username
-                })
-            });
-            const data = await res.json();
-            return data;
-        }
-    }
-
-    async function findUser(username) {
-        const res = await fetch('/api/finduser', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username
-            })
-        });
-        const data = await res.json();
-        return data;
-    }
+    // async function findUser(username) {
+    //     const res = await fetch('/api/finduser', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             username: username
+    //         })
+    //     });
+    //     const data = await res.json();
+    //     return data;
+    // }
 }
 
 export async function getServerSideProps(context) {
@@ -306,10 +276,7 @@ export async function getServerSideProps(context) {
             .collection("users")
             .find({username: context.query.username}).toArray();
 
-        console.log(user);
         var friends = user[0].friends;
-        console.log("friends:");
-        console.log(friends);
 
         const friendObjects = new Array(friends.length);
         var i = 0;
@@ -319,17 +286,7 @@ export async function getServerSideProps(context) {
                 .find({username: friends[i]}).toArray();
             friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
         }
-        // await friends.foreach(async function(friend) {
-        //     console.log(friend);
-        //     const friendObject = await db 
-        //         .collection("users")
-        //         .find({username: friend}).toArray();
-        //     friendObjects[i] = friendObject[0];
-        //     console.log("besties:")
-        //     console.log(friendObject[0]);
-        // });
 
-        console.log("squad");
         console.log(friendObjects);
 
         return {
@@ -341,33 +298,3 @@ export async function getServerSideProps(context) {
     }
 }
 
-
-
-// async function getFriendsArray(friends) {
-//     console.log(friends);
-//     console.log(friends.length);
-//     var friendsArray = [];
-//     console.log(friendsArray.length);
-//     for (var i = 0; i < friends.length; i++) {
-//         friendsArray.push(await findUser(friends[i]));
-//     }
-
-//     console.log(friendsArray);
-//     console.log(friendsArray.length);
-//     return friendsArray;
-
-//     async function findUser(username) {
-//         const res = await fetch('/api/finduser', {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 username: username
-//             })
-//         });
-//         const data = await res.json();
-//         return data;
-//     }
-// }

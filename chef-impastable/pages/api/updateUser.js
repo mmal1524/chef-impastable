@@ -7,13 +7,14 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv}=req.body
+        const {username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv, newMealPriv}=req.body
         const user = await User.findOne({username})
         const update = {
             displayName: newDisplayName,
             createdPrivacy: newCreatPriv,
             savedPrivacy: newSavPriv,
-            reviewedPrivacy: newRevPriv
+            reviewedPrivacy: newRevPriv,
+            mealPlanPrivacy: newMealPriv
         }
         await user.updateOne(update)
         if (!user) {
@@ -30,6 +31,7 @@ export default async function handler(req,res){
                 createdPrivacy: newCreatPriv,
                 savedPrivacy: newSavPriv,
                 reviewedPrivacy: newRevPriv,
+                mealPlanPrivacy: newMealPriv,
                 dietaryTags: user.dietaryTags
             });
         }

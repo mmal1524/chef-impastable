@@ -151,7 +151,10 @@ export default function FriendsPage({besties}) {
                       onClick={ async () => {
                         console.log('hey');
                         console.log(searchValue);
+                        console.log('what')
                         var thisFoundUser = await findUser(searchValue);
+                        console.log(await findUser(searchValue))
+                        console.log("up")
                         if (thisFoundUser == null) {
                           console.log("no")
                           setfoundUser(null);
@@ -213,11 +216,13 @@ export default function FriendsPage({besties}) {
     );
 
   async function findUser(username) {
+    //var nullCheck = await fetch('api/finduser')
     console.log(username.length)
     if (username.length == 0) {
         console.log("in")
         return null;
-    }
+    } 
+
     console.log("in find user")
     const res = await fetch('/api/finduser', {
       method: 'POST', 
@@ -251,12 +256,13 @@ export default function FriendsPage({besties}) {
 
 function displayUsers(searchedUser) {
   console.log("display")
+  {<>Please Enter A Username</>}
   if (searchedUser == null) {
-    return (<></>)
+    return (<>Please Enter A Username</>)
   }
   console.log(searchedUser.username)
   if (searchedUser.username == undefined) {
-    return (<></>)
+    return (<>No User Found</>)
   }
   
   return addFriendCard(searchedUser);

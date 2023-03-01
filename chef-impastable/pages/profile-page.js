@@ -1,10 +1,5 @@
 import * as React from 'react';
-import User, { displaySmall } from '../components/user';
-//import { getInitials } from '../components/user';
 import { displayLarge } from '../components/user';
-//import { displayFriends } from '../components/user';
-//import { displaySmall } from '../components/user';
-import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -19,6 +14,7 @@ import Navbar from './navbar.js';
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
+import { friendRequestCard } from '../components/friend-request-card';
 import clientPromise from '../lib/mongodb_client';
 
 
@@ -55,9 +51,10 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({besties}) {
+export default function ProfilePage({besties, futureBesties}) {
 
     var friendsList = besties;
+    var friendRequestsList = futureBesties;
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -178,11 +175,7 @@ export default function ProfilePage({besties}) {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {      
-                                friendsList.map((friend) => (
-                                    friendCard(friend)
-                                ))
-                            }
+                            {displayFriends(friendsList)}
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}
@@ -190,20 +183,7 @@ export default function ProfilePage({besties}) {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friend Requests</h3>
                             <Divider />
-                            <Stack
-                               direction="row"
-                               justifyContent="space-between"
-                               alignItems="center"
-                               spacing={2}
-                            >
-                                This is where friend requests go
-                                <Button 
-                                    variant="outlined" 
-                                    sx={{color: 'green', borderColor: 'green'}}
-                                >
-                                    Accept
-                                </Button>
-                            </Stack>
+                            {displayFriendRequests(friendRequestsList)}
                         </Box>
                     </Grid>
 
@@ -251,6 +231,30 @@ export default function ProfilePage({besties}) {
         </>
     );
 
+    function displayFriends(friendsList) {
+        if (friendsList.length == 0) {
+            return(<>You have no friends :(</>);
+        } else {
+            return (
+                friendsList.map((friend) => (
+                    friendCard(friend)
+                ))
+            );
+        }
+    }
+
+    function displayFriendRequests(friendRequestsList) {
+        if (friendRequestsList.length == 0) {
+            return (<>No friend requests</>);
+        } else {
+            return (
+                friendRequestsList.map((friendRequest) => (
+                    friendRequestCard(friendRequest)
+                ))
+            );
+        }
+    }
+
     // async function findUser(username) {
     //     const res = await fetch('/api/finduser', {
     //         method: 'POST',
@@ -277,6 +281,7 @@ export async function getServerSideProps(context) {
             .find({username: context.query.username}).toArray();
 
         var friends = user[0].friends;
+        var friendRequests = user[0].friendRequests;
 
         const friendObjects = new Array(friends.length);
         var i = 0;
@@ -287,10 +292,16 @@ export async function getServerSideProps(context) {
             friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
         }
 
-        console.log(friendObjects);
+        const friendRequestsObjects = new Array(friendRequests.length);
+        for (i = 0; i < friendRequests.length; i++) {
+            var fr = await db
+                .collection("users")
+                .find({username: friendRequests[i]}).toArray();
+            friendRequestsObjects[i] = JSON.parse(JSON.stringify(fr[0]));
+        }
 
         return {
-            props: {besties: friendObjects},
+            props: {besties: friendObjects, futureBesties: friendRequestsObjects},
         };
     }
     catch (e) {

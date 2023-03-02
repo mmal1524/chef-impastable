@@ -9,7 +9,9 @@ export default async function handler(req,res){
     try {
         const {displayName}=req.body;
         const user = await User.findOne({displayName});
-        console.log(user)
+        //console.log(await User.findMany({displayName}))
+        //console.log('user:')
+        //console.log(typeof(user));
         
         return res.json({
             username: user.username,

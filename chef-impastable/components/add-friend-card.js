@@ -7,8 +7,27 @@ import { getInitials } from "./user";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
  
+
 export function addFriendCard(friend) {
+    
+    const router = useRouter();
+
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            }
+        });
+        setUsername(thisUser.getUsername)
+    }, []);
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -40,6 +59,15 @@ export function addFriendCard(friend) {
                 <Button 
                     variant="outlined" 
                     sx={{color:'green', borderColor: 'green'}}
+                    onClick={async () => {
+                        // adds friend to request list
+                        var currUser = await addFriendRequest(username, friend.username);
+
+                        await addFriendRequest(friend.username, username)
+
+                        localStorage.setItem('user', JSON.stringify(currUser));
+                        Router.reload();
+                    }}
                     endIcon={<SendIcon />}
                 >
                     Add
@@ -64,4 +92,21 @@ export function addFriendCard(friend) {
 
     );
 
+
+    async function addFriendRequest(username, friendRequest) {
+        const res = await fetch('api/addFriendRequest', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                friendRequest: friendRequest,
+                friend: friend
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 }

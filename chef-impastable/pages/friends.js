@@ -24,6 +24,8 @@ import { useRef } from 'react';
 import { friendCardTwo } from '../components/friend-card-2.js';
 import { addFriendCard } from '../components/add-friend-card.js';
 import clientPromise from '../lib/mongodb_client';
+import { useRouter } from "next/router";
+
 
 // edge cases to consider: adding myself, adding friends already in my friend list, inputing invalid user, 
 
@@ -39,10 +41,10 @@ export default function FriendsPage({besties}) {
     // don't need a router, need to have a list of users come up
 
     const [username, setUsername] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [friends, setFriends] = useState([]);
-    const [friendRequests, setFriendRequests] = useState("");
+    var [displayName, setDisplayName] = useState("");
+    var [avatar, setAvatar] = useState("");
+    var [friends, setFriends] = useState([]);
+    var [friendRequests, setFriendRequests] = useState("");
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
@@ -112,12 +114,20 @@ export default function FriendsPage({besties}) {
       setSearchValue(e.target.value)
     }
 
-    const handleNoUser = e => {
-      setDisplayU(false);
-    }
-
     console.log("search value")
     console.log(searchValue)
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const router = useRouter();
 
     return (
         <div>
@@ -154,6 +164,8 @@ export default function FriendsPage({besties}) {
                         console.log(searchValue);
                         var thisFoundUser = await findUser(searchValue);
                         var thisFoundUserDis = await findUserDisplay(searchValue);
+                        console.log('this found user');
+                        console.log(thisFoundUserDis);
                         console.log(await findUserDisplay(searchValue))
                         console.log("up")
                         

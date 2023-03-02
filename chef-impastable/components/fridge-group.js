@@ -9,20 +9,22 @@ import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import withRouter from "next/router";
+import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 
 function FridgeGroup(props) {
+    console.log(props)
     return (
         <Card sx={{width:200}} variant="outlined">
             <CardActionArea>
-                <CardHeader title={props.group.name} sx={{fontSize:10}}>
+                <CardHeader title={props.name} sx={{fontSize:10}}>
                 </CardHeader>
                      
                 <CardContent sx={{overflow: "auto"}}>
                     <List>
-                        {props.group.ingredients.map((ingredient, index) => (
-                            <ListItem key={text}>
+                        {props.ingredients.map((ingredient, index) => (
+                            <ListItem key={ingredient}>
                                 <ListItemButton>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary={ingredient} />
                                 </ListItemButton>
                             </ListItem>
                         ))}

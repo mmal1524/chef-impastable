@@ -16,6 +16,7 @@ export default async function handler(req,res){
                 username: user.username,
                 password: user.password,
                 fridge: user.fridge,
+                fridge_grouped: user.fridge_grouped,
                 kitchen: user.kitchen,
                 displayName: user.displayName,
                 avatar: user.avatar,

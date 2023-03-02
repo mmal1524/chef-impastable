@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     fridge: {
         type:[String]
     },
+    fridge_grouped: {
+        type: Map,
+        of: [String]
+    },
     kitchen: {
         type:[String]
     }, 

@@ -137,11 +137,13 @@ export default function Home({
                         if (!data.success) {
                             handleClickOpen();
                         } else {
+                            console.log(data.fridge_grouped)
                             localStorage.setItem('user', 
                                 JSON.stringify({
                                 username: data.username,
                                 password: data.password,
                                 fridge: data.fridge,
+                                fridge_grouped: data.fridge_grouped,
                                 kitchen: data.kitchen,
                                 displayName: data.displayName,
                                 avatar: data.avatar,

@@ -254,21 +254,6 @@ export default function ProfilePage({besties, futureBesties}) {
             );
         }
     }
-
-    // async function findUser(username) {
-    //     const res = await fetch('/api/finduser', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             username: username
-    //         })
-    //     });
-    //     const data = await res.json();
-    //     return data;
-    // }
 }
 
 export async function getServerSideProps(context) {

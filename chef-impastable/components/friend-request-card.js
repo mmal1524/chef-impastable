@@ -4,8 +4,26 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { getInitials } from "./user";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
  
 export function friendRequestCard(friendRequest) {
+
+    const router = useRouter();
+
+    const [username, setUsername] = useState("");
+    
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            }
+        });
+        setUsername(thisUser.getUsername)
+    }, []);
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -37,6 +55,20 @@ export function friendRequestCard(friendRequest) {
                 <Button 
                     variant="outlined" 
                     sx={{color: 'green', borderColor: 'green'}}
+                    onClick={async () => {
+
+                        // adds friend to friend list
+                        var currUser = await addFriend(username, friendRequest.username);
+
+                        // removes friend from friend requests
+                        currUser = await deleteFriendRequest(username, friendRequest.username);
+
+                        // adds user to friend's friend list
+                        await addFriend(friendRequest.username, username);
+                        
+                        localStorage.setItem('user', JSON.stringify(currUser));
+                        router.reload();
+                    }}
                 >
                     Accept
                 </Button>
@@ -53,5 +85,39 @@ export function friendRequestCard(friendRequest) {
         </Box>
 
     );
+
+    async function addFriend(username, friend) {
+        const res = await fetch('/api/addFriend', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friend: friend
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
+
+    async function deleteFriendRequest(username, friendRequest) {
+        const res = await fetch('/api/deleteFriendRequest', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friendRequest: friendRequest
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 
 }

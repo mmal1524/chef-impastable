@@ -328,7 +328,7 @@ function displayUsers(searchedUser) {
     return (<>No User Found With Username <br></br></>)
   }
   
-  return addFriendCard(searchedUser);
+  return addFriendCard(searchedUser, username);
 }
 
 function displayUsersDis(searchedUserDis) {
@@ -344,7 +344,7 @@ function displayUsersDis(searchedUserDis) {
     }
     console.log(searchedUserDis)
     
-    return addFriendCard(searchedUserDis);
+    return (<>{addFriendCard(searchedUserDis)}</>);
   }
 }
 

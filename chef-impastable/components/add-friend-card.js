@@ -11,23 +11,26 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
  
 
-export function addFriendCard(friend) {
+export function addFriendCard(friend, username) {
     
+    console.log("in here");
+
     const router = useRouter();
 
-    const [username, setUsername] = useState("");
+    // const [username, setUsername] = useState("");
 
-    useEffect(() => {
-        var thisUser = JSON.parse(localStorage.getItem('user'));
-        Object.defineProperties(thisUser, {
-            getUsername: {
-                get() {
-                    return this.username
-                },
-            }
-        });
-        setUsername(thisUser.getUsername)
-    }, []);
+    // useEffect(() => {
+    //     var thisUser = JSON.parse(localStorage.getItem('user'));
+    //     console.log(thisUser);
+    //     Object.defineProperties(thisUser, {
+    //         getUsername: {
+    //             get() {
+    //                 return this.username
+    //             },
+    //         }
+    //     });
+    //     setUsername(thisUser.getUsername)
+    // }, []);
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -66,7 +69,7 @@ export function addFriendCard(friend) {
                         await addFriendRequest(friend.username, username)
 
                         localStorage.setItem('user', JSON.stringify(currUser));
-                        Router.reload();
+                        router.reload();
                     }}
                     endIcon={<SendIcon />}
                 >
@@ -101,8 +104,8 @@ export function addFriendCard(friend) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                friendRequest: friendRequest,
-                friend: friend
+                username: username,
+                friendRequest: friendRequest
             })
         });
         const data = await res.json();

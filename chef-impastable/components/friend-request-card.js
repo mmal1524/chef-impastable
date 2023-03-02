@@ -61,7 +61,7 @@ export function friendRequestCard(friendRequest) {
                         var currUser = await addFriend(username, friendRequest.username);
 
                         // removes friend from friend requests
-                        await deleteFriendRequest(username, friendRequest.username);
+                        currUser = await deleteFriendRequest(username, friendRequest.username);
 
                         // adds user to friend's friend list
                         await addFriend(friendRequest.username, username);

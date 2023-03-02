@@ -208,8 +208,8 @@ export default function FriendsPage({besties}) {
                     Search
                     </Button>
                     {<Grid container spacing={4} direction = "row">
-                        {displayUsers(foundUser)}
-                        {displayUsersDis(foundUserDis)}
+                        {displayUsers(foundUser, username)}
+                        {displayUsersDis(foundUserDis, username)}
                     </Grid>}
                 </Grid>
                 <Grid xs={6}>
@@ -317,7 +317,7 @@ export default function FriendsPage({besties}) {
 //     }
 // }
 
-function displayUsers(searchedUser) {
+function displayUsers(searchedUser, username) {
   console.log("display")
   {<>Please Enter A Username</>}
   if (searchedUser == null) {
@@ -331,7 +331,7 @@ function displayUsers(searchedUser) {
   return addFriendCard(searchedUser, username);
 }
 
-function displayUsersDis(searchedUserDis) {
+function displayUsersDis(searchedUserDis, username) {
     console.log(searchedUserDis)
     {<>Please Enter A DisplayName</>}
 
@@ -344,7 +344,7 @@ function displayUsersDis(searchedUserDis) {
     }
     console.log(searchedUserDis)
     
-    return (<>{addFriendCard(searchedUserDis)}</>);
+    return (<>{addFriendCard(searchedUserDis, username)}</>);
   }
 }
 

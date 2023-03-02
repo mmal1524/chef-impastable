@@ -48,9 +48,7 @@ export function addFriendCard(friend, username) {
                     sx={{color:'green', borderColor: 'green'}}
                     onClick={async () => {
                         // adds friend to request list
-                        var currUser = await addFriendRequest(username, friend.username);
-
-                        await addFriendRequest(friend.username, username);
+                        var currUser = await addFriendRequest(friend.username, username);
 
                         swal("Friend Request sent");
                     }}

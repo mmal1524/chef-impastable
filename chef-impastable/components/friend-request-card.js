@@ -72,6 +72,20 @@ export function friendRequestCard(friendRequest) {
                 >
                     Accept
                 </Button>
+                <Button 
+                    variant="outlined" 
+                    sx={{color: 'red', borderColor: 'red'}}
+                    onClick={async () => {
+
+                        // removes friend from friend requests
+                        var currUser = await deleteFriendRequest(username, friendRequest.username);
+                        
+                        localStorage.setItem('user', JSON.stringify(currUser));
+                        router.reload();
+                    }}
+                >
+                    Decline
+                </Button>
             </Stack>
 
             <style jsx>{`

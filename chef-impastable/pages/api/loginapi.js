@@ -9,7 +9,7 @@ export default async function handler(req,res){
         const {username, password}=req.body
         const user = await User.findOne({username, password})
         if (!user) {
-            return null;
+            return res.json({success: false});
         }
         else {
             return res.json({
@@ -22,6 +22,7 @@ export default async function handler(req,res){
                 createdPrivacy: user.createdPrivacy,
                 savedPrivacy: user.savedPrivacy,
                 reviewedPrivacy: user.reviewedPrivacy,
+                mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
                 success: true
             });

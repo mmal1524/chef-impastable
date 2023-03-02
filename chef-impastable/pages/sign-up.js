@@ -175,10 +175,10 @@ export default function SignUp() {
                                                         avatar: data.avatar,
                                                         friends: data.friends,
                                                         friendRequests: data.friendRequests,
-                                                        createdPrivacy: createdPrivacy,
-                                                        savedPrivacy: savedPrivacy,
-                                                        reviewedPrivacy: reviewedPrivacy,
-                                                        mealPlanPrivacy: mealPlanPrivacy
+                                                        createdPrivacy: data.createdPrivacy,
+                                                        savedPrivacy: data.savedPrivacy,
+                                                        reviewedPrivacy: data.reviewedPrivacy,
+                                                        mealPlanPrivacy: data.mealPlanPrivacy
                                                     }));
                                                 router.push("homepage");
                                             }

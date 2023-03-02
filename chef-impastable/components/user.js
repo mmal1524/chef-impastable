@@ -69,6 +69,7 @@ export function displayLarge(username, displayName, avatar) {
                 {/* Profile Picture, if no url, displays user's initials */}
                 <Avatar 
                     sx={{width: 85, height: 85}} 
+                    src={avatar}
                     alt={displayName} 
                 >
                     {getInitials(displayName)}

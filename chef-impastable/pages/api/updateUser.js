@@ -7,10 +7,11 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv, newMealPriv}=req.body
+        const {username, newDisplayName, newAvatar, newCreatPriv, newSavPriv, newRevPriv, newMealPriv}=req.body
         const user = await User.findOne({username})
         const update = {
             displayName: newDisplayName,
+            avatar: newAvatar,
             createdPrivacy: newCreatPriv,
             savedPrivacy: newSavPriv,
             reviewedPrivacy: newRevPriv,
@@ -25,7 +26,7 @@ export default async function handler(req,res){
                 username: user.username,
                 password: user.password,
                 displayName: newDisplayName,
-                avatar: user.avatar,
+                avatar: newAvatar,
                 friends: user.friends,
                 friendRequests: user.friendRequests,
                 createdPrivacy: newCreatPriv,

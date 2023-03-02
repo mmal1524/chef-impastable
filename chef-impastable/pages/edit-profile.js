@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from "react";
+import { useState, useEffect, createRef } from "react";
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Navbar from './navbar.js';
@@ -20,7 +20,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Avatar from '@mui/material/Avatar';
 import { getInitials } from '../components/user';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 
+//https://gist.github.com/Pacheco95/aa5c28b7a61dacba5b8f55f84d1fa591
 
 export default function EditProfilePage() {
 
@@ -48,22 +53,31 @@ export default function EditProfilePage() {
         setMealPlanPrivacy(e.target.value);
     }
 
-    // const [crRecPriv, setValueCrRecPriv] = useState("");
-    // const handleChangeCrRecPriv = (event) => {
-    //     setValueCrRecPriv(event.target.value);
-    //   };
-
-
-    // const [svRecPriv, setValueSvRecPriv] = useState(savedPrivacy);
-    // const handleChangeSvRecPriv = (event) => {
-    //     setValueSvRecPriv(event.target.value);
-    // };
-
-    // const [revRecPriv, setValueRevRecPriv] = useState(reviewedPrivacy);
-    // const handleChangeRevRecPriv = (event) => {
-    //     setValueRevRecPriv(event.target.value);
-    // };
+    const inputFileRef = createRef(null);
+    const cleanup = () => {
+        URL.revokeObjectURL(avatar);
+        inputFileRef.current.value = null;
+    };
+    const setAv = (newAvatar) => {
+        if (avatar) {
+          cleanup();
+        }
+        setAvatar(newAvatar);
+    };
+    const handleOnChange = (event) => {
+        const newAvatar = event.target?.files?.[0];
     
+        if (newAvatar) {
+          setAv(URL.createObjectURL(newAvatar));
+        }
+    };
+    const handleClick = (event) => {
+        if (avatar) {
+          event.preventDefault();
+          setAv(null);
+        }
+    };
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -132,16 +146,41 @@ export default function EditProfilePage() {
             <Grid container spacing={2}>
                 <Grid xs={10}>
                     {/* Avatar */}
-                    <Button component="label">
-                        {/*<input hidden id="upload-avatar-pic" accept="image/*" type="file" />*/}
-                        <Avatar
-                            sx={{ width: 100, height: 100 }}
-                            alt={displayName}
-                            src={avatar}
+                    <Avatar
+                        sx={{ width: 100, height: 100 }}
+                        alt={displayName}
+                        src={avatar}
+                        imgProps={{
+                            style: {
+                                maxHeight: "100%",
+                                maxWidth: "100%",
+                                objectFit: "cover",
+                            },
+                        }}
+                    >
+                        {getInitials(displayName)}
+                    </Avatar>
+                    <Fragment>
+                    <label htmlFor="icon-button-photo">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            component="label"
+                            mb={2}
+                            onClick={handleClick}
                         >
-                            {getInitials(displayName)}
-                        </Avatar>
-                    </Button>
+                            {avatar ? <DeleteIcon /> : <FileUploadIcon />}
+                            <input
+                                ref={inputFileRef}
+                                accept="image/*"
+                                hidden
+                                id="avatar-image-upload"
+                                type="file"
+                                onChange={handleOnChange}
+                            />
+                        </Button>
+                    </label>
+                    </Fragment>
                     <p></p>
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
@@ -333,7 +372,7 @@ export default function EditProfilePage() {
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
-                            var data = await updateUser(username, displayName, createdPrivacy,
+                            var data = await updateUser(username, displayName, avatar, createdPrivacy,
                                                         savedPrivacy, reviewedPrivacy, mealPlanPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));
                             console.log(data);
@@ -393,7 +432,7 @@ export default function EditProfilePage() {
         return data;
     }
 
-    async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv, newMealPriv) {
+    async function updateUser(username, newDisplayName, newAvatar, newCreatPriv, newSavPriv, newRevPriv, newMealPriv) {
         const res = await fetch('/api/updateUser', {
             method: 'POST',
             headers: {
@@ -403,6 +442,7 @@ export default function EditProfilePage() {
             body: JSON.stringify({
                 username: username,
                 newDisplayName: newDisplayName,
+                newAvatar: newAvatar,
                 newCreatPriv: newCreatPriv,
                 newSavPriv: newSavPriv,
                 newRevPriv: newRevPriv,

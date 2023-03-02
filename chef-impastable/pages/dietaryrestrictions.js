@@ -142,6 +142,7 @@ export default function Home() {
                     localStorage.setItem('user',
                         JSON.stringify({
                             username: data.username,
+                            password: data.password,
                             displayName: data.displayName,
                             avatar: data.avatar,
                             friends: data.friends,
@@ -149,6 +150,7 @@ export default function Home() {
                             createdPrivacy: data.createdPrivacy,
                             savedPrivacy: data.savedPrivacy,
                             reviewedPrivacy: data.reviewedPrivacy,
+                            mealPlanPrivacy: data.mealPlanPrivacy,
                             dietaryTags: data.dietaryTags
                         }));
                 }}

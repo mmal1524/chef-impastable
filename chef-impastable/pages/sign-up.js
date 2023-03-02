@@ -174,7 +174,11 @@ export default function SignUp() {
                                                         displayName: data.displayName,
                                                         avatar: data.avatar,
                                                         friends: data.friends,
-                                                        friendRequests: data.friendRequests
+                                                        friendRequests: data.friendRequests,
+                                                        createdPrivacy: data.createdPrivacy,
+                                                        savedPrivacy: data.savedPrivacy,
+                                                        reviewedPrivacy: data.reviewedPrivacy,
+                                                        mealPlanPrivacy: data.mealPlanPrivacy
                                                     }));
                                                 router.push("homepage");
                                             }
@@ -299,10 +303,11 @@ export default function SignUp() {
                 displayName: username,
                 avatar: "",
                 friends: ["friend1", "friend2", "friend3"],
-                friendRequests: [],
+                friendRequests: ["friendRequest1", "friendRequest2"],
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
                 reviewedPrivacy: "everyone",
+                mealPlanPrivacy: "everyone",
                 dietaryTags: []
             })
         })

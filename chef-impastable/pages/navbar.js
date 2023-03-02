@@ -121,8 +121,6 @@ const Navbar = () => {
                 >
                     <Avatar
                         sx={{ width: 40, height: 40 }}
-
-
                         alt={displayName}
                         src={avatar}
                     >

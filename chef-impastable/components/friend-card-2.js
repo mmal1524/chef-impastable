@@ -17,7 +17,19 @@ import DialogTitle from '@mui/material/DialogTitle';
  
 export function friendCardTwo(friend) {
 
+    const router = useRouter();
+
     const [username, setUsername] = useState("");
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -30,18 +42,6 @@ export function friendCardTwo(friend) {
         });
         setUsername(thisUser.getUsername)
     }, []);
-
-    const [open, setOpen] = useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const router = useRouter();
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -100,10 +100,10 @@ export function friendCardTwo(friend) {
                                 // remove user from friend's friend list
                                 await deleteFriend(friend.username, username);
 
-                                swal("Friend Removed");
-
                                 localStorage.setItem('user', JSON.stringify(currUser));
                                 router.reload();
+                                
+                                swal("Friend Removed");
                                 }}
                                     sx = {{color: 'red'}}
                                 > 

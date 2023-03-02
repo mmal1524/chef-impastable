@@ -57,7 +57,7 @@ export function addFriendCard(friend, username) {
 
                     endIcon={<SendIcon />}
                 >
-                    Add
+                    Request
                 </Button>
                 
                 <Button 

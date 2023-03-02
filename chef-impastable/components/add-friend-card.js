@@ -7,15 +7,14 @@ import { getInitials } from "./user";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import swal from 'sweetalert';
  
+
+
 
 export function addFriendCard(friend, username) {
     
-    console.log("in here");
 
-    const router = useRouter();
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -51,15 +50,16 @@ export function addFriendCard(friend, username) {
                         // adds friend to request list
                         var currUser = await addFriendRequest(username, friend.username);
 
-                        await addFriendRequest(friend.username, username)
+                        await addFriendRequest(friend.username, username);
 
-                        localStorage.setItem('user', JSON.stringify(currUser));
-                        router.reload();
+                        swal("Friend Request sent");
                     }}
+
                     endIcon={<SendIcon />}
                 >
                     Request
                 </Button>
+                
                 <Button 
                     variant="outlined" 
                     endIcon={<FullscreenIcon />}

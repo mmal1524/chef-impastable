@@ -194,12 +194,12 @@ export default function EditProfilePage() {
                     </form>
                 </Grid>
                 <Grid xs={2}>
-                        <Stack
-                            direction="column"
-                            justifyContent="center"
-                            alignItems="center"
-                            spacing={2}
-                        >
+                    <Stack
+                        direction="column"
+                        justifyContent="center"
+                        alignItems="center"
+                        spacing={2}
+                    >
                         {/* Reset password button */}
                         <Button 
                             variant="outlined" 

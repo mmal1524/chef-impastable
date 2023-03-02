@@ -34,6 +34,7 @@ export default function FriendsPage({besties}) {
 
     const [searchValue, setSearchValue] = useState("");
     var [foundUser, setfoundUser] = useState("");
+    var [foundUserDis, setfoundUserDis] = useState("")
     
     // don't need a router, need to have a list of users come up
 
@@ -151,18 +152,29 @@ export default function FriendsPage({besties}) {
                       onClick={ async () => {
                         console.log('hey');
                         console.log(searchValue);
-                        console.log('what')
                         var thisFoundUser = await findUser(searchValue);
-                        console.log(await findUser(searchValue))
+                        var thisFoundUserDis = await findUserDisplay(searchValue);
+                        console.log(await findUserDisplay(searchValue))
                         console.log("up")
+                        
                         if (thisFoundUser == null) {
                           console.log("no")
                           setfoundUser(null);
                         } else {
-                          console.log(thisFoundUser);
-                          setfoundUser(thisFoundUser);
-                          console.log(foundUser)
+                            setfoundUser(thisFoundUser);
                         }
+                        if (thisFoundUserDis === null) {
+                            setfoundUserDis(null);
+                        } else {
+                            setfoundUserDis(thisFoundUserDis);
+                        }
+                        
+                        if (JSON.stringify(thisFoundUser) == JSON.stringify(thisFoundUserDis)) {
+                            console.log("hey")
+                            setfoundUser(thisFoundUser);
+                            setfoundUserDis(null)
+                        }
+                    
                         //<Grid container spacing={3}>
                         //{user.map((searchValue) => (
                             //<Grid> item key={user.id}>
@@ -185,6 +197,7 @@ export default function FriendsPage({besties}) {
                     </Button>
                     {<Grid container spacing={4} direction = "row">
                         {displayUsers(foundUser)}
+                        {displayUsersDis(foundUserDis)}
                     </Grid>}
                 </Grid>
                 <Grid xs={6}>
@@ -242,6 +255,33 @@ export default function FriendsPage({besties}) {
     return data;
   } 
 
+  async function findUserDisplay(displayName) {
+    //var nullCheck = await fetch('api/finduserdisplay')
+    console.log(displayName.length)
+    if (displayName.length == 0) {
+        console.log("in")
+        return null;
+    } 
+
+    console.log("in find user")
+    const res = await fetch('/api/finduserdisplay', {
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        displayName: displayName,
+      })
+    })
+    console.log(res)
+    console.log("at the end of findUser")
+    const data = await res.json();
+    console.log('data')
+    console.log(data)
+    return data;
+  }
+
   function displayFriends(friendsList) {
     if (friendsList.length == 0) {
         return(<>You have no friends :(</>);
@@ -252,21 +292,48 @@ export default function FriendsPage({besties}) {
             ))
         );
     }
+
+    
 }
+
+// function displayUserDecider(usernameUser, displayUser) {
+//     if (usernameUser == displayUser) {
+//         return(displayUsers(usernameUser));
+//     } else {
+//         displayUsers(usernameUser);
+//         displayUsersDis(displayUser);
+//     }
+// }
 
 function displayUsers(searchedUser) {
   console.log("display")
   {<>Please Enter A Username</>}
   if (searchedUser == null) {
-    return (<>Please Enter A Username</>)
+    return (<>Please Search For User <br></br></>)
   }
   console.log(searchedUser.username)
   if (searchedUser.username == undefined) {
-    return (<>No User Found</>)
+    return (<>No User Found With Username <br></br></>)
   }
   
   return addFriendCard(searchedUser);
 }
+
+function displayUsersDis(searchedUserDis) {
+    console.log(searchedUserDis)
+    {<>Please Enter A DisplayName</>}
+
+    if (searchedUserDis == null) {
+      return (<></>)
+    }
+
+    if (searchedUserDis.displayName == undefined) {
+      return (<>No User Found With Display Name</>)
+    }
+    console.log(searchedUserDis)
+    
+    return addFriendCard(searchedUserDis);
+  }
 }
 
 export async function getServerSideProps(context) {

@@ -168,6 +168,7 @@ export default function EditProfilePage() {
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
                                 //router.push to reset password page
+                                router.push('/reset-password');
                             }}
                         >
                             Reset Password

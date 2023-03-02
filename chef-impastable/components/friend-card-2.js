@@ -9,12 +9,27 @@ import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
  
 export function friendCardTwo(friend) {
 
     const router = useRouter();
 
     const [username, setUsername] = useState("");
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -55,32 +70,57 @@ export function friendCardTwo(friend) {
                     <h3 className="displayName">{friend.displayName}</h3>
                     <h5 className="username">{friend.username}</h5>
                 </Stack>
+
                 <Button 
                     variant="outlined" 
                     sx={{color:'red', borderColor: 'red'}}
-                    onClick={async () => {
-
-                        // removes friend from friend list
-                        var currUser = await deleteFriend(username, friend.username);
-
-                        // remove user from friend's friend list
-                        await deleteFriend(friend.username, username);
-                        
-                        localStorage.setItem('user', JSON.stringify(currUser));
-                        router.reload();
-                    }}
                     endIcon={<DeleteIcon />}
-                >
+                    onClick={handleClickOpen}
+                > 
                     Remove
                 </Button>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <DialogTitle id="remove-friend">
+                        {"Remove This User?"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="remove-friend-description">
+                            If you change your mind, you'll have to request to be friends again.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={async () => {
+
+                                // removes friend from friend list
+                                var currUser = await deleteFriend(username, friend.username);
+
+                                // remove user from friend's friend list
+                                await deleteFriend(friend.username, username);
+
+                                swal("Friend Removed");
+
+                                localStorage.setItem('user', JSON.stringify(currUser));
+                                router.reload();
+                                }}
+                                    sx = {{color: 'red'}}
+                                > 
+                                    Remove Friend
+                                </Button>
+                                <Button onClick={handleClose} autoFocus>
+                                    Cancel
+                                </Button>
+                        </DialogActions>
+                    </Dialog>
                 <Button 
                     variant="outlined" 
                     endIcon={<FullscreenIcon />}
                 >
                     View
                 </Button>
-            </Stack>
-
+            </Stack> 
             <style jsx>{`
                 .displayName {
                     margin: 0px;

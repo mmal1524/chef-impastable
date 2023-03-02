@@ -57,13 +57,6 @@ export function addFriendCard(friend, username) {
                 >
                     Request
                 </Button>
-                
-                <Button 
-                    variant="outlined" 
-                    endIcon={<FullscreenIcon />}
-                >
-                    View
-                </Button>
             </Stack>
 
             <style jsx>{`

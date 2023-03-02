@@ -167,7 +167,6 @@ export default function EditProfilePage() {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                //router.push to reset password page
                                 router.push('/reset-password');
                             }}
                         >
@@ -197,7 +196,21 @@ export default function EditProfilePage() {
                             </DialogContent>
                             <DialogActions>
                                 {/* Delete account */}
-                                <Button onClick={handleClose}
+                                <Button onClick={async () => {
+                                    // remove user from all friend lists
+                                    await deleteFromFriends(username);
+                                    console.log("deleted from friends lists");
+
+                                    // remove user from all friendRequests lists
+                                    await deleteFromFriendRequests(username);
+                                    console.log("deleted from friend requests lists");
+
+                                    // remove user from database
+                                    await deleteUser(username);
+                                    console.log("deleted user");
+
+                                    router.push('/');
+                                }}
                                     sx={{color: 'red'}}
                                 >
                                     Delete Account
@@ -335,8 +348,52 @@ export default function EditProfilePage() {
         </>
     );
 
+    async function deleteFromFriends(username) {
+        const res = await fetch('/api/deleteFriendAll', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
+    async function deleteFromFriendRequests(username) {
+        const res = await fetch('/api/deleteFriendRequestsAll', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
+    async function deleteUser(username) {
+        const res = await fetch('/api/deleteUser', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
     async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv, newMealPriv) {
-        console.log(username);
         const res = await fetch('/api/updateUser', {
             method: 'POST',
             headers: {

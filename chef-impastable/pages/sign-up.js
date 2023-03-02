@@ -174,7 +174,11 @@ export default function SignUp() {
                                                         displayName: data.displayName,
                                                         avatar: data.avatar,
                                                         friends: data.friends,
-                                                        friendRequests: data.friendRequests
+                                                        friendRequests: data.friendRequests,
+                                                        createdPrivacy: createdPrivacy,
+                                                        savedPrivacy: savedPrivacy,
+                                                        reviewedPrivacy: reviewedPrivacy,
+                                                        mealPlanPrivacy: mealPlanPrivacy
                                                     }));
                                                 router.push("homepage");
                                             }

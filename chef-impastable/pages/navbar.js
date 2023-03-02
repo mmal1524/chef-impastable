@@ -77,7 +77,7 @@ const Navbar = () => {
 
     return (
         <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
-            <Grid xs={1}>
+            <Grid xs={0.3}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
@@ -100,7 +100,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={10}>
+            <Grid xs={10.7}>
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -121,8 +121,6 @@ const Navbar = () => {
                 >
                     <Avatar
                         sx={{ width: 40, height: 40 }}
-
-
                         alt={displayName}
                         src={avatar}
                     >

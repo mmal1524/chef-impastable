@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema({
     createdPrivacy: String,
     savedPrivacy: String,
     reviewedPrivacy: String,
+    mealPlanPrivacy: String,
     dietaryTags: {
         type:[String]
     }

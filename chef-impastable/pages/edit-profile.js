@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from "react";
+import { useState, useEffect, createRef } from "react";
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Navbar from './navbar.js';
@@ -20,7 +20,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Avatar from '@mui/material/Avatar';
 import { getInitials } from '../components/user';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 
+//https://gist.github.com/Pacheco95/aa5c28b7a61dacba5b8f55f84d1fa591
 
 export default function EditProfilePage() {
 
@@ -30,6 +35,7 @@ export default function EditProfilePage() {
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
 
     const handleChangeDisplayName = e => {
         setDisplayName(e.target.value);
@@ -43,26 +49,37 @@ export default function EditProfilePage() {
     const handleChangeReviewedPrivacy = e => {
         setReviewedPrivacy(e.target.value);
     }
+    const handleChangeMealPlanPrivacy = e => {
+        setMealPlanPrivacy(e.target.value);
+    }
 
-    // const [crRecPriv, setValueCrRecPriv] = useState("");
-    // const handleChangeCrRecPriv = (event) => {
-    //     setValueCrRecPriv(event.target.value);
-    //   };
-
-
-    // const [svRecPriv, setValueSvRecPriv] = useState(savedPrivacy);
-    // const handleChangeSvRecPriv = (event) => {
-    //     setValueSvRecPriv(event.target.value);
-    // };
-
-    // const [revRecPriv, setValueRevRecPriv] = useState(reviewedPrivacy);
-    // const handleChangeRevRecPriv = (event) => {
-    //     setValueRevRecPriv(event.target.value);
-    // };
+    const inputFileRef = createRef(null);
+    const cleanup = () => {
+        URL.revokeObjectURL(avatar);
+        inputFileRef.current.value = null;
+    };
+    const setAv = (newAvatar) => {
+        if (avatar) {
+          cleanup();
+        }
+        setAvatar(newAvatar);
+    };
+    const handleOnChange = (event) => {
+        const newAvatar = event.target?.files?.[0];
     
+        if (newAvatar) {
+          setAv(URL.createObjectURL(newAvatar));
+        }
+    };
+    const handleClick = (event) => {
+        if (avatar) {
+          event.preventDefault();
+          setAv(null);
+        }
+    };
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
-        console.log(thisUser);
         Object.defineProperties(thisUser, {
             getUsername: {
                 get() {
@@ -93,6 +110,11 @@ export default function EditProfilePage() {
                 get() {
                     return this.reviewedPrivacy
                 },
+            },
+            getMealPlanPrivacy: {
+                get() {
+                    return this.mealPlanPrivacy
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -101,9 +123,8 @@ export default function EditProfilePage() {
         setCreatedPrivacy(thisUser.getCreatedPrivacy);
         setSavedPrivacy(thisUser.savedPrivacy);
         setReviewedPrivacy(thisUser.reviewedPrivacy);
+        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
     }, []);
-
-    console.log(displayName);
 
     const [open, setOpen] = React.useState(false);
 
@@ -125,16 +146,41 @@ export default function EditProfilePage() {
             <Grid container spacing={2}>
                 <Grid xs={10}>
                     {/* Avatar */}
-                    <Button component="label">
-                        {/*<input hidden id="upload-avatar-pic" accept="image/*" type="file" />*/}
-                        <Avatar
-                            sx={{ width: 100, height: 100 }}
-                            alt={displayName}
-                            src={avatar}
+                    <Avatar
+                        sx={{ width: 100, height: 100 }}
+                        alt={displayName}
+                        src={avatar}
+                        imgProps={{
+                            style: {
+                                maxHeight: "100%",
+                                maxWidth: "100%",
+                                objectFit: "cover",
+                            },
+                        }}
+                    >
+                        {getInitials(displayName)}
+                    </Avatar>
+                    <Fragment>
+                    <label htmlFor="icon-button-photo">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            component="label"
+                            mb={2}
+                            onClick={handleClick}
                         >
-                            {getInitials(displayName)}
-                        </Avatar>
-                    </Button>
+                            {avatar ? <DeleteIcon /> : <FileUploadIcon />}
+                            <input
+                                ref={inputFileRef}
+                                accept="image/*"
+                                hidden
+                                id="avatar-image-upload"
+                                type="file"
+                                onChange={handleOnChange}
+                            />
+                        </Button>
+                    </label>
+                    </Fragment>
                     <p></p>
                     {/* Display name field */}
                     <form noValidate autoComplete="off">
@@ -160,7 +206,6 @@ export default function EditProfilePage() {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                //router.push to reset password page
                                 router.push('/reset-password');
                             }}
                         >
@@ -190,7 +235,21 @@ export default function EditProfilePage() {
                             </DialogContent>
                             <DialogActions>
                                 {/* Delete account */}
-                                <Button onClick={handleClose}
+                                <Button onClick={async () => {
+                                    // remove user from all friend lists
+                                    await deleteFromFriends(username);
+                                    console.log("deleted from friends lists");
+
+                                    // remove user from all friendRequests lists
+                                    await deleteFromFriendRequests(username);
+                                    console.log("deleted from friend requests lists");
+
+                                    // remove user from database
+                                    await deleteUser(username);
+                                    console.log("deleted user");
+
+                                    router.push('/');
+                                }}
                                     sx={{color: 'red'}}
                                 >
                                     Delete Account
@@ -286,12 +345,35 @@ export default function EditProfilePage() {
                     alignItems="center"
                     spacing={2}
                 >
+                    <Box>
+                        Can view meal plans
+                    </Box>
+                    <Box sx={{width:300}}>
+                        <FormControl variant="filled" sx={{ m: 4, p: 4, minWidth: 120 }}>
+                            <InputLabel id="meal plans"></InputLabel>
+                            <Select
+                                value={mealPlanPrivacy}
+                                onChange={handleChangeMealPlanPrivacy}
+                            >
+                                <MenuItem value={"everyone"}>Everyone</MenuItem>
+                                <MenuItem value={"friends only"}>Friends Only</MenuItem>
+                                <MenuItem value={"nobody"}>Nobody</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Stack>
+                <Stack
+                    direction="row"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    spacing={2}
+                >
                     <Button 
                         variant="outlined"
                         sx={{color: 'black', borderColor: 'black'}}
                         onClick={async () => {
-                            var data = await updateUser(username, displayName, createdPrivacy,
-                                                        savedPrivacy, reviewedPrivacy);
+                            var data = await updateUser(username, displayName, avatar, createdPrivacy,
+                                                        savedPrivacy, reviewedPrivacy, mealPlanPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));
                             console.log(data);
                             router.push({pathname:"/profile-page/", query: {username: username}});
@@ -305,8 +387,52 @@ export default function EditProfilePage() {
         </>
     );
 
-    async function updateUser(username, newDisplayName, newCreatPriv, newSavPriv, newRevPriv) {
-        console.log(username);
+    async function deleteFromFriends(username) {
+        const res = await fetch('/api/deleteFriendAll', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
+    async function deleteFromFriendRequests(username) {
+        const res = await fetch('/api/deleteFriendRequestsAll', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
+    async function deleteUser(username) {
+        const res = await fetch('/api/deleteUser', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
+        const data = await res.json();
+        return data;
+    }
+
+    async function updateUser(username, newDisplayName, newAvatar, newCreatPriv, newSavPriv, newRevPriv, newMealPriv) {
         const res = await fetch('/api/updateUser', {
             method: 'POST',
             headers: {
@@ -316,9 +442,11 @@ export default function EditProfilePage() {
             body: JSON.stringify({
                 username: username,
                 newDisplayName: newDisplayName,
+                newAvatar: newAvatar,
                 newCreatPriv: newCreatPriv,
                 newSavPriv: newSavPriv,
-                newRevPriv: newRevPriv
+                newRevPriv: newRevPriv,
+                newMealPriv: newMealPriv
             })
         });
         const data = await res.json();

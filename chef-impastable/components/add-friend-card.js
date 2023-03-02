@@ -8,13 +8,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import swal from 'sweetalert';
+import { useState } from 'react';
+
  
 
 
 
 export function addFriendCard(friend, username) {
-    
+    const [isDisabled, setIsDisabled] = useState(false);
 
+    const handleClick = async () => {
+        setIsDisabled(true);
+        try {
+          // adds friend to request list
+          var currUser = await addFriendRequest(friend.username, username);
+
+          swal("Friend Request sent");
+        } catch (error) {
+          console.error(error); // Handle the error
+        } finally {
+          setIsDisabled(false); // Re-enable the button
+        }
+      };
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -46,16 +61,10 @@ export function addFriendCard(friend, username) {
                 <Button 
                     variant="outlined" 
                     sx={{color:'green', borderColor: 'green'}}
-                    onClick={async () => {
-                        // adds friend to request list
-                        var currUser = await addFriendRequest(friend.username, username);
-
-                        swal("Friend Request sent");
-                    }}
-
+                    onClick={handleClick} disabled={setIsDisabled}
                     endIcon={<SendIcon />}
                 >
-                    Request
+                    {isDisabled ? 'Added': 'Request'}
                 </Button>
             </Stack>
 

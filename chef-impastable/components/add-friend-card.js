@@ -17,21 +17,6 @@ export function addFriendCard(friend, username) {
 
     const router = useRouter();
 
-    // const [username, setUsername] = useState("");
-
-    // useEffect(() => {
-    //     var thisUser = JSON.parse(localStorage.getItem('user'));
-    //     console.log(thisUser);
-    //     Object.defineProperties(thisUser, {
-    //         getUsername: {
-    //             get() {
-    //                 return this.username
-    //             },
-    //         }
-    //     });
-    //     setUsername(thisUser.getUsername)
-    // }, []);
-
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
             {/* Stack to display user's profile picture, display name, and username */}
@@ -73,7 +58,7 @@ export function addFriendCard(friend, username) {
                     }}
                     endIcon={<SendIcon />}
                 >
-                    Add
+                    Request
                 </Button>
                 <Button 
                     variant="outlined" 

@@ -7,8 +7,26 @@ import { getInitials } from "./user";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
  
 export function friendCardTwo(friend) {
+
+    const router = useRouter();
+
+    const [username, setUsername] = useState("");
+    
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            }
+        });
+        setUsername(thisUser.getUsername)
+    }, []);
 
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
@@ -40,6 +58,17 @@ export function friendCardTwo(friend) {
                 <Button 
                     variant="outlined" 
                     sx={{color:'red', borderColor: 'red'}}
+                    onClick={async () => {
+
+                        // removes friend from friend list
+                        var currUser = await deleteFriend(username, friend.username);
+
+                        // remove user from friend's friend list
+                        await deleteFriend(friend.username, username);
+                        
+                        localStorage.setItem('user', JSON.stringify(currUser));
+                        router.reload();
+                    }}
                     endIcon={<DeleteIcon />}
                 >
                     Remove
@@ -64,4 +93,20 @@ export function friendCardTwo(friend) {
 
     );
 
+    async function deleteFriend(username, friend) {
+        const res = await fetch('/api/deleteFriend', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friend: friend
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 }

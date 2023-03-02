@@ -1,33 +1,33 @@
-import Link from 'next/link';
-import Router from 'next/router';
-import * as React from 'react';
-//import withRouter from 'next/router';
-//import { useRouter } from 'next/router';
 import clientPromise from '../lib/mongodb_client';
-//import { Types } from 'mongoose';
-//import mongoose from 'mongoose';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
 import Navbar from './navbar.js'
 import { CardMedia } from "@mui/material";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 export default function Recipe({ recipe }) {
-    //console.log(" recipe:")
-    //console.log(recipe)
-    const nutrientsArray = Object.values(recipe.nutrients);
-    const nutrients = recipe.nutrients;
-    //console.log(nutrients);
-    const mappedIngredients = [];
-    const ingredients = recipe.ingredients;
-    //console.log(ingredients);
-    /*for (let i = 0; i < ingredients.length; i++) {
-        console.log(ingredients[i]);
-        //mappedIngredients.push(ingredients[i].join(' '));
-    }*/
-    /*
-    {mappedIngredients.map((instruction) => (
-                <ul>{instruction}</ul>
-            ))}*/
+    function createRow(name, value) {
+        return { name, value };
+    } 
+    console.log(JSON.stringify(recipe.nutrients.calories));
+
+    const nutritionRows = [
+        createRow('Calories', recipe.nutrients.calories),
+        createRow('Carbohydrate Content', recipe.nutrients.carbohydrateContent),
+        createRow('Cholesterol Content', recipe.nutrients.cholesterolContent),
+        createRow('Fiber Content', recipe.nutrients.fiberContent),
+        createRow('Protein Content', recipe.nutrients.proteinContent),
+        createRow('Saturated Fat Content', recipe.nutrients.saturatedFatContent),
+        createRow('Sodium Content', recipe.nutrients.sodiumContent),
+        createRow('Fat Content', recipe.nutrients.fatContent),
+        createRow('Unsaturated Fat Content', recipe.nutrients.unsaturatedFatContent),
+    ];
     return (
         <>
             <Grid>
@@ -54,35 +54,51 @@ export default function Recipe({ recipe }) {
                     alignItems="center">
                     <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
-                <h2>
-                    Instructions
-                </h2>
-                {recipe.instructions_list.map((instruction) => (
-                    <ul>
-                        <li key={instruction.toString()}>{instruction}</li>
-                    </ul>
-                ))}
-                <h2>
-                    Nutrients
-                </h2>
-                Calories: {nutrients.calories}
-                Carbohydrate Content: {nutrients.carbohydrateContent}
-                Cholesterol Content: {nutrients.cholesterolContent}
-                {Object.keys(nutrients).map((key, index) => {
-                    return (
+                <div>
+                    <h2>
+                        Instructions
+                    </h2>
+                    {recipe.instructions_list.map((instruction) => (
                         <ul>
-                            {key}: {nutrients[key]}
+                            <li>{instruction}</li>
                         </ul>
-                    );
-                })}
-                <h2>
-                    Ingredients
-                </h2>
-                {recipe.ingredients.map(ingredient => (
-                    <ul>
-                        {ingredient.quantity} {ingredient.ingredient} {ingredient.measurement}
-                    </ul>
-                ))}
+                    ))}
+                    <h2>
+                        Ingredients
+                    </h2>
+                    {recipe.ingredients.map(ingredient => (
+                        <ul>
+                            <li>{ingredient.ingredient}, quantity: {ingredient.quantity}, measurement: {ingredient.measurement}</li>
+                        </ul>
+                    ))}
+                    <h2>
+                        Nutrition Facts
+                    </h2>
+
+                    <TableContainer component={Paper} sx={{ maxWidth: 800 }}>
+                        <Table sx={{ maxWidth: 800 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Nutrients</TableCell>
+                                    <TableCell align="middle">Value</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {nutritionRows.map((row) => (
+                                    <TableRow
+                                    key={row.name}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.name}
+                                        </TableCell>
+                                        <TableCell align="middle">{row.value}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </div>
             </Grid>
         </>
     );
@@ -103,6 +119,5 @@ export async function getServerSideProps(context) {
     catch (e) {
         console.error(e);
     }
-
 }
 

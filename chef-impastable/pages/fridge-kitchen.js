@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
 import { useTheme } from '@material-ui/core/styles';
 import Fridge from '../components/fridge.js';
+import clientPromise from '../lib/mongodb_client.js';
 
 
 function TabPanel(props) {
@@ -55,7 +56,7 @@ function a11yProps(index) {
     };
 }
 
-export default function FridgeKitchen() {
+export default function FridgeKitchen({ingredientOptions}) {
 
     //local storage fridge info
     const [userIngr, setUserIngr] = useState([]);
@@ -124,7 +125,7 @@ export default function FridgeKitchen() {
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
-                        <Fridge></Fridge>
+                        <Fridge ingredientOptions={ingredientOptions}></Fridge>
                         { /*search bar and enter button at the top*/ }
                         {/* <Grid container>
                             <Grid item>
@@ -283,4 +284,26 @@ export default function FridgeKitchen() {
 
 async function indexMatch(array, q) {
     return array.findIndex(item => q.toUpperCase() === item.toUpperCase());
+}
+
+export async function getServerSideProps() {
+    try {
+        console.log("server side")
+        const client = await clientPromise;
+        const db = client.db("test");
+        const ingredientOptions = await db
+            .collection("ingredients")
+            .find({})
+            .toArray();
+        // console.log(ingredients)
+        //console.log(appliances);
+        return {
+            //props: { appliances }
+            props: {ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))},
+        };
+    }
+    catch (e) {
+        console.error(e);
+    }
+    
 }

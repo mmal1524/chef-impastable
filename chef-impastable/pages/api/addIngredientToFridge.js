@@ -9,6 +9,7 @@ connect()
 
 export default async function handler(req,res){
     try {
+        console.log(req.body.username)
         const ingredient=req.body.ingredient
         const group = req.body.group
         console.log(ingredient, group)
@@ -16,7 +17,9 @@ export default async function handler(req,res){
         const ingredientRet = await Ingredient.findOne({ingredient})
         console.log(ingredientRet)
         const user = await User.findOne({username: req.body.username})
+        console.log(user)
         console.log(user.fridge)
+        console.log(user.fridge_grouped)
         // console.log((user.fridge_grouped.get("nothing")))
         if(!ingredientRet){
             // ingredient needs to be added to the database
@@ -24,19 +27,40 @@ export default async function handler(req,res){
         }
         console.log("ingredient check")
         // Check if group is already in the users fridge groups
-        if (!user.fridge_grouped.get(group)) {
+        if (!user.fridge_grouped && !user.fridge_grouped.get(group)) {
             console.log("group exists")
             console.log(user)
             user.fridge_grouped.set(group, [ingredient])
         }
         else {
             var fridge_group = user.fridge_grouped.get(group)
+            
             fridge_group.push(ingredient)
             user.fridge_grouped.set(group, fridge_group)
         }
         user.fridge.push(ingredient)
         user.save()
         console.log("end of if/else")
+        // var grouped_fridge = user.fridge_grouped
+        // if (!user.fridge_grouped[group]) {
+        //     console.log("group exists")
+        //     console.log(user)
+        //     grouped_fridge[group] = [ingredient]
+        //     user.fridge_grouped[group] = [ingredient]
+        // }
+        // else {
+        //     var fridge_group = user.fridge_grouped[group]
+        //     fridge_group.push(ingredient)
+        //     grouped_fridge[fridge_group] = fridge_group
+        //     user.fridge_grouped=grouped_fridge
+        // }
+        // console.log(group)
+        // console.log(grouped_fridge)
+        // await user.updateOne({fridge_grouped: grouped_fridge})
+        // user.fridge.push(ingredient)
+        // console.log(user)
+        // user.save()
+        // console.log("end of if/else")
 
         return res.json({
             username: user.username,

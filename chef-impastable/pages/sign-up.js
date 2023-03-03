@@ -177,7 +177,8 @@ export default function SignUp() {
                                                         avatar: data.avatar,
                                                         friends: data.friends,
                                                         friendRequests: data.friendRequests,
-                                                        dietaryTags: data.dietaryTags
+                                                        dietaryTags: data.dietaryTags,
+                                                        fridge_grouped: data.fridge_grouped
                                                     }));
                                                 router.push("homepage");
                                             }
@@ -308,7 +309,8 @@ export default function SignUp() {
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
                 reviewedPrivacy: "everyone",
-                dietaryTags: []
+                dietaryTags: [],
+                fridge_grouped: {}
             })
         })
         const data = await res.json();

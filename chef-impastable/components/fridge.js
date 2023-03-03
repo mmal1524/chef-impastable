@@ -25,7 +25,11 @@ import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 import { Snackbar, Alert } from '@mui/material';
 import FridgeGroup from './fridge-group';
 
-export default function Fridge() {
+export default function Fridge(props) {
+    // console.log(props)
+    const ingredientArr = props.ingredientOptions.map(a => a.ingredient);
+    const [ingredientArr2, setIngredientArr2]  =useState(ingredientArr)
+
     const [openEditModal, setOpenEditModal] = useState(false);
     const [addIngr, setAddIngr] = useState("");
     const [searchGroups, setSearchGroup] = useState("");
@@ -39,6 +43,7 @@ export default function Fridge() {
 
     // //local storage kitchen info
     // const [userApps, setUserApps] = useState([]);
+    const [showDeleted, setShowDeleted] = useState(false)
 
     // 
     useEffect(() => {
@@ -68,13 +73,14 @@ export default function Fridge() {
         setUserIngr(thisUser.getIngr)
         setFridgeGrouped(thisUser.fridge_grouped)
         setUsername(thisUser.getUsername)
+        setIngredientArr2(ingredientArr.filter(ing => userIngr ? !userIngr.includes(ing.toLowerCase()) : true))
         console.log(thisUser)    
         console.log(fridgeGrouped)
         console.log("keys")
-        console.log(Object.keys(fridgeGrouped))
+        // console.log(Object.keys(fridgeGrouped))
         //console.log(JSON.stringify(fridgeGrouped))
         // setUserApps(thisUser.getApps);
-    }, [openEditModal])
+    }, [openSnackbar, showDeleted])
 
     // for search bars
     const [searchFridge, setSearchFridge] = useState("");
@@ -89,12 +95,17 @@ export default function Fridge() {
           return;
         }
     
-        setOpenSnackbar(false);
+        setOpenSnackbar(false)
         setShowError(false)
+        setShowDeleted(false)
       };
+
 
     return (
         <>
+        <Snackbar open={showDeleted} autoHideDuration={3000} onClose={handleClose}>
+            <Alert severity="success" onClose={handleClose}>Ingredient deleted!</Alert>
+        </Snackbar>
         <Snackbar open={showError} autoHideDuration={3000} onClose={handleClose}>
             <Alert severity="error" onClose={handleClose}>Error: Ingredient is already in fridge</Alert>
         </Snackbar>
@@ -108,7 +119,7 @@ export default function Fridge() {
                     disablePortal
                     id="combo-box-demo"
                     freeSolo
-                    options={Object.keys(fridgeGrouped).map((option) => option)}
+                    options={fridgeGrouped ? Object.keys(fridgeGrouped).map((option) => option) : [] }
                     //renderOption={(props, option) => <li {...props}>{option.title}</li>}
                     onInputChange={(e, new_val) => {console.log(new_val); setSearchGroup(new_val)}}
                     //sx={{ width: windowSize[0]/3 }}
@@ -117,17 +128,30 @@ export default function Fridge() {
                             {...params} 
                             label="New or Existing Group Name"
                             onChange={({ target }) => setSearchGroup(target.value)} 
-                            value={searchGroups}
                         />
                     )}
                 />
-                <TextField
+                <Autocomplete
+                    disablePortal
+                    freeSolo
+                    id="combo-box-demo"
+                    options={ingredientArr2}
+                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                    renderInput={params => (
+                        <TextField 
+                            {...params} 
+                            label="Search Ingredients to Add"
+                            onChange={({ target }) => setAddIngr(target.value)} 
+                        />
+                    )}
+                />
+                {/* <TextField
                     id="search-add"
-                    label="Search"
+                    label="Ingredient to Add"
                     variant="outlined"
                     onChange={(e) => {setAddIngr(e.target.value)}}
                     value={addIngr}
-                />
+                /> */}
                 <Button 
                     type="submit" 
                     size="large"
@@ -161,7 +185,6 @@ export default function Fridge() {
                                 dietaryTags: data.dietaryTags
                             }));
                             setAddIngr("")
-                            setSearchGroup("")
                             console.log(addIngr, searchGroups)
                             setOpenSnackbar(true)
                             
@@ -231,7 +254,7 @@ export default function Fridge() {
                         onClick={() => {
                             //route to edit page
                             console.log("clicked edit fridge")
-                            console.log(Object.keys(fridgeGrouped))
+                            // console.log(Object.keys(fridgeGrouped))
                             setOpenEditModal(true);
                         }}
                     >
@@ -242,11 +265,11 @@ export default function Fridge() {
         <Grid container>
             <Grid item xs={12} sm={6}>
                 <Grid container>
-                    {Object.keys(fridgeGrouped).map((group) => (
+                    {fridgeGrouped ? Object.keys(fridgeGrouped).map((group) => (
                         <Grid item key={group}>
-                                <FridgeGroup name={group} ingredients={fridgeGrouped[group]} />
+                                <FridgeGroup username={username} name={group} ingredients={fridgeGrouped[group]}  delete={() => setShowDeleted(true)}/>
                         </Grid>
-                    ))}
+                    )) : <div></div>}
                 </Grid>
             </Grid>
             <Grid item xs={12} sm={6}> 
@@ -285,7 +308,7 @@ export default function Fridge() {
 // both are toUpperCase so search is case insensitive
 async function indexMatch(array, q) {
     //console.log(array);
-    return array.findIndex(item => q.toUpperCase() === item.toUpperCase());
+    return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
 
 async function addIngredient(ingredient, group, username) {
@@ -312,3 +335,4 @@ async function addIngredient(ingredient, group, username) {
     //    return res.status(405).end();
     //}
 }
+

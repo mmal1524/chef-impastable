@@ -313,7 +313,7 @@ export default function SignUp() {
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
                 reviewedPrivacy: "everyone",
-                fridge_grouped: {},
+                fridge_grouped: {"general": []},
                 mealPlanPrivacy: "everyone",
                 dietaryTags: []
             })

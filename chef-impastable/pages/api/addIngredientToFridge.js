@@ -8,6 +8,8 @@ mongoose.set('strictQuery', false);
 connect()
 
 export default async function handler(req,res){
+    const user = await User.findOne({username: req.body.username})
+
     try {
         console.log(req.body.username)
         const ingredient=req.body.ingredient
@@ -27,8 +29,9 @@ export default async function handler(req,res){
         }
         console.log("ingredient check")
         // Check if group is already in the users fridge groups
-        if (!user.fridge_grouped && !user.fridge_grouped.get(group)) {
-            console.log("group exists")
+        console.log(user.fridge_grouped.get(group))
+        if (!user.fridge_grouped.get(group)) {
+            console.log("group does not exists")
             console.log(user)
             user.fridge_grouped.set(group, [ingredient])
         }
@@ -80,6 +83,6 @@ export default async function handler(req,res){
 
         //console.log(u)
     } catch (error) {
-        res.status(400).json({status:'Error in adding ingredient to user fridge'})
+        res.status(400).json(user)
     }
 }

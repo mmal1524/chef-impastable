@@ -161,16 +161,20 @@ export default function ProfilePage({besties, futureBesties}) {
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
                                 localStorage.setItem('user', JSON.stringify({
-                                    username: username,
-                                    password: password,
-                                    displayName: displayName,
-                                    avatar: avatar,
-                                    friends: friends,
-                                    friendRequests: friendRequests,
-                                    createdPrivacy: createdPrivacy,
-                                    savedPrivacy: savedPrivacy,
-                                    reviewedPrivacy: reviewedPrivacy,
-                                    mealPlanPrivacy: mealPlanPrivacy
+                                    username: data.username,
+                                    password: data.password,
+                                    fridge: data.fridge,
+                                    kitchen: data.kitchen,
+                                    displayName: data.displayName,
+                                    avatar: data.avatar,
+                                    friends: data.friends,
+                                    friendRequests: data.friendRequests,
+                                    dietaryTags: data.dietaryTags,
+                                    fridge_grouped: data.fridge_grouped,
+                                    createdPrivacy: data.createdPrivacy,
+                                    savedPrivacy: data.savedPrivacy,
+                                    reviewedPrivacy: data.reviewedPrivacy,
+                                    mealPlanPrivacy: data.mealPlanPrivacy
                                  }))
                                 router.push("edit-profile");
                             }}

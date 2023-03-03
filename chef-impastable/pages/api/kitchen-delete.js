@@ -9,11 +9,7 @@ export default async function handler(req,res){
     const{username, app}=req.body;
     try {
         const user = await User.findOneAndUpdate({username: username}, {$pull: { kitchen: app}}, {new: true});
-        return res.json({
-            username: user.username,
-            password: user.password,
-            kitchen: user.kitchen,
-        });
+        return res.json(user);
     } catch (error) {
         res.status(400).json()
         console.log('error');

@@ -141,7 +141,18 @@ export default function EditKitchen({appliances}) {
                                             JSON.stringify({
                                                 username: data.username,
                                                 password: data.password,
-                                                kitchen: data.kitchen
+                                                fridge: data.fridge,
+                                                kitchen: data.kitchen,
+                                                displayName: data.displayName,
+                                                avatar: data.avatar,
+                                                friends: data.friends,
+                                                friendRequests: data.friendRequests,
+                                                dietaryTags: data.dietaryTags,
+                                                fridge_grouped: data.fridge_grouped,
+                                                createdPrivacy: data.createdPrivacy,
+                                                savedPrivacy: data.savedPrivacy,
+                                                reviewedPrivacy: data.reviewedPrivacy,
+                                                mealPlanPrivacy: data.mealPlanPrivacy
                                         }));
                                         console.log(data.username);
                                     }
@@ -194,7 +205,18 @@ export default function EditKitchen({appliances}) {
                                                         JSON.stringify({
                                                             username: data.username,
                                                             password: data.password,
-                                                            kitchen: data.kitchen
+                                                            fridge: data.fridge,
+                                                            kitchen: data.kitchen,
+                                                            displayName: data.displayName,
+                                                            avatar: data.avatar,
+                                                            friends: data.friends,
+                                                            friendRequests: data.friendRequests,
+                                                            dietaryTags: data.dietaryTags,
+                                                            fridge_grouped: data.fridge_grouped,
+                                                            createdPrivacy: data.createdPrivacy,
+                                                            savedPrivacy: data.savedPrivacy,
+                                                            reviewedPrivacy: data.reviewedPrivacy,
+                                                            mealPlanPrivacy: data.mealPlanPrivacy
                                                         }));
                                                 }}>
                                                     <DeleteIcon />

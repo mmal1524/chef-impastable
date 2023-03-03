@@ -73,6 +73,9 @@ export default function ProfilePage({besties, futureBesties}) {
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
     var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
+    const [fridge, setFridge] = useState([]);
+    const [kitchen, setKitchen] = useState([])
+    const [fridge_grouped, setFridgeGrouped] = useState({})
 
     
     useEffect(() => {
@@ -127,6 +130,21 @@ export default function ProfilePage({besties, futureBesties}) {
                 get() {
                     return this.mealPlanPrivacy
                 }
+            },
+            getFridge: {
+                get() {
+                    return this.fridge
+                }
+            },
+            getKitchen: {
+                get() {
+                    return this.kitchen
+                }
+            },
+            getFridgeGrouped: {
+                get() {
+                    return this.fridge_grouped
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -161,20 +179,19 @@ export default function ProfilePage({besties, futureBesties}) {
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
                                 localStorage.setItem('user', JSON.stringify({
-                                    username: data.username,
-                                    password: data.password,
-                                    fridge: data.fridge,
-                                    kitchen: data.kitchen,
-                                    displayName: data.displayName,
-                                    avatar: data.avatar,
-                                    friends: data.friends,
-                                    friendRequests: data.friendRequests,
-                                    dietaryTags: data.dietaryTags,
-                                    fridge_grouped: data.fridge_grouped,
-                                    createdPrivacy: data.createdPrivacy,
-                                    savedPrivacy: data.savedPrivacy,
-                                    reviewedPrivacy: data.reviewedPrivacy,
-                                    mealPlanPrivacy: data.mealPlanPrivacy
+                                    username: username,
+                                    password: password,
+                                    displayName: displayName,
+                                    avatar: avatar,
+                                    friends: friends,
+                                    friendRequests: friendRequests,
+                                    createdPrivacy: createdPrivacy,
+                                    savedPrivacy: savedPrivacy,
+                                    reviewedPrivacy: reviewedPrivacy,
+                                    mealPlanPrivacy: mealPlanPrivacy,
+                                    fridge: fridge,
+                                    kitchen: kitchen,
+                                    fridge_grouped: fridge_grouped
                                  }))
                                 router.push("edit-profile");
                             }}

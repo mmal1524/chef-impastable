@@ -7,8 +7,8 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username}=req.body
-        const user = await User.findOne({username})
+        const {username, friend}=req.body
+        const user = await User.findOneAndUpdate({username: username}, {$push: { friends: friend}}, {new: true});
         if (!user) {
             return null;
         }
@@ -28,7 +28,7 @@ export default async function handler(req,res){
             });
         }
     } catch (error) {
-        res.status(400).json({status:'Not able to create a new user.'})
+        res.status(400).json({status:'Not able to update user.'})
         console.log('error');
     }
 }

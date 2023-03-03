@@ -1,10 +1,5 @@
 import * as React from 'react';
-import User, { displaySmall } from '../components/user';
-//import { getInitials } from '../components/user';
 import { displayLarge } from '../components/user';
-//import { displayFriends } from '../components/user';
-//import { displaySmall } from '../components/user';
-import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -19,6 +14,7 @@ import Navbar from './navbar.js';
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
+import { friendRequestCard } from '../components/friend-request-card';
 import clientPromise from '../lib/mongodb_client';
 
 
@@ -55,9 +51,10 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({besties}) {
+export default function ProfilePage({besties, futureBesties}) {
 
     var friendsList = besties;
+    var friendRequestsList = futureBesties;
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -75,11 +72,11 @@ export default function ProfilePage({besties}) {
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
 
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
-        console.log(thisUser);
         Object.defineProperties(thisUser, {
             getUsername: {
                 get() {
@@ -125,6 +122,11 @@ export default function ProfilePage({besties}) {
                 get() {
                     return this.reviewedPrivacy
                 },
+            },
+            getMealPlanPrivacy: {
+                get() {
+                    return this.mealPlanPrivacy
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -134,15 +136,10 @@ export default function ProfilePage({besties}) {
         setFriends(thisUser.getFriends);
         setFriendRequests(thisUser.getFriendRequests);
         setCreatedPrivacy(thisUser.getCreatedPrivacy);
-        setSavedPrivacy(thisUser.savedPrivacy);
-        setReviewedPrivacy(thisUser.reviewedPrivacy);
+        setSavedPrivacy(thisUser.getSavedPrivacy);
+        setReviewedPrivacy(thisUser.getReviewedPrivacy);
+        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
     }, []);
-
-    //console.log(user);
-
-    // console.log(friends);
-    // console.log(friends.length);
-    // console.log(friendsObjects);
 
     return (
         <>
@@ -172,7 +169,8 @@ export default function ProfilePage({besties}) {
                                     friendRequests: friendRequests,
                                     createdPrivacy: createdPrivacy,
                                     savedPrivacy: savedPrivacy,
-                                    reviewedPrivacy: reviewedPrivacy
+                                    reviewedPrivacy: reviewedPrivacy,
+                                    mealPlanPrivacy: mealPlanPrivacy
                                  }))
                                 router.push("edit-profile");
                             }}
@@ -185,14 +183,7 @@ export default function ProfilePage({besties}) {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friends</h3>
                             <Divider />
-                            {/* {console.log(friends)}
-                            {console.log(friends.length)}
-                            {console.log(friendsObjects)} */}
-                            {      
-                                friendsList.map((friend) => (
-                                    friendCard(friend)
-                                ))
-                            }
+                            {displayFriends(friendsList)}
                         </Box>
                     </Grid>
                     {/* Displays user's friend requests */}
@@ -200,20 +191,7 @@ export default function ProfilePage({besties}) {
                         <Box sx={{width: '100%', marginBottom: 4}}>
                             <h3 className="h3">Friend Requests</h3>
                             <Divider />
-                            <Stack
-                               direction="row"
-                               justifyContent="space-between"
-                               alignItems="center"
-                               spacing={2}
-                            >
-                                This is where friend requests go
-                                <Button 
-                                    variant="outlined" 
-                                    sx={{color: 'green', borderColor: 'green'}}
-                                >
-                                    Accept
-                                </Button>
-                            </Stack>
+                            {displayFriendRequests(friendRequestsList)}
                         </Box>
                     </Grid>
 
@@ -227,6 +205,7 @@ export default function ProfilePage({besties}) {
                             <Tab label="Created Recipes" {...a11yProps(0)} />
                             <Tab label="Saved Recipes" {...a11yProps(1)} />
                             <Tab label="Reviewed Recipes" {...a11yProps(2)} />
+                            <Tab label="Meal Plans" {...a11yProps(3)} />
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
@@ -237,6 +216,9 @@ export default function ProfilePage({besties}) {
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         Here is where reviewed recipes will go
+                    </TabPanel>
+                    <TabPanel value={value} index={3}>
+                        Here is where meal plans will go
                     </TabPanel>
                 </Box>
 
@@ -257,48 +239,28 @@ export default function ProfilePage({besties}) {
         </>
     );
 
-    async function getFriendsArray(friends) {
-        console.log(friends);
-        console.log(friends.length);
-        var friendsArray = [];
-        console.log(friendsArray.length);
-        for (var i = 0; i < friends.length; i++) {
-            friendsArray.push(await findUser(friends[i]));
-        }
-    
-        console.log(friendsArray);
-        console.log(friendsArray.length);
-        return friendsArray;
-    
-        async function findUser(username) {
-            const res = await fetch('/api/finduser', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username
-                })
-            });
-            const data = await res.json();
-            return data;
+    function displayFriends(friendsList) {
+        if (friendsList.length == 0) {
+            return(<>You have no friends :(</>);
+        } else {
+            return (
+                friendsList.map((friend) => (
+                    friendCard(friend)
+                ))
+            );
         }
     }
 
-    async function findUser(username) {
-        const res = await fetch('/api/finduser', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username
-            })
-        });
-        const data = await res.json();
-        return data;
+    function displayFriendRequests(friendRequestsList) {
+        if (friendRequestsList.length == 0) {
+            return (<>No friend requests</>);
+        } else {
+            return (
+                friendRequestsList.map((friendRequest) => (
+                    friendRequestCard(friendRequest)
+                ))
+            );
+        }
     }
 }
 
@@ -311,10 +273,8 @@ export async function getServerSideProps(context) {
             .collection("users")
             .find({username: context.query.username}).toArray();
 
-        console.log(user);
         var friends = user[0].friends;
-        console.log("friends:");
-        console.log(friends);
+        var friendRequests = user[0].friendRequests;
 
         const friendObjects = new Array(friends.length);
         var i = 0;
@@ -324,21 +284,17 @@ export async function getServerSideProps(context) {
                 .find({username: friends[i]}).toArray();
             friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
         }
-        // await friends.foreach(async function(friend) {
-        //     console.log(friend);
-        //     const friendObject = await db 
-        //         .collection("users")
-        //         .find({username: friend}).toArray();
-        //     friendObjects[i] = friendObject[0];
-        //     console.log("besties:")
-        //     console.log(friendObject[0]);
-        // });
 
-        console.log("squad");
-        console.log(friendObjects);
+        const friendRequestsObjects = new Array(friendRequests.length);
+        for (i = 0; i < friendRequests.length; i++) {
+            var fr = await db
+                .collection("users")
+                .find({username: friendRequests[i]}).toArray();
+            friendRequestsObjects[i] = JSON.parse(JSON.stringify(fr[0]));
+        }
 
         return {
-            props: {besties: friendObjects},
+            props: {besties: friendObjects, futureBesties: friendRequestsObjects},
         };
     }
     catch (e) {
@@ -346,33 +302,3 @@ export async function getServerSideProps(context) {
     }
 }
 
-
-
-// async function getFriendsArray(friends) {
-//     console.log(friends);
-//     console.log(friends.length);
-//     var friendsArray = [];
-//     console.log(friendsArray.length);
-//     for (var i = 0; i < friends.length; i++) {
-//         friendsArray.push(await findUser(friends[i]));
-//     }
-
-//     console.log(friendsArray);
-//     console.log(friendsArray.length);
-//     return friendsArray;
-
-//     async function findUser(username) {
-//         const res = await fetch('/api/finduser', {
-//             method: 'POST',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 username: username
-//             })
-//         });
-//         const data = await res.json();
-//         return data;
-//     }
-// }

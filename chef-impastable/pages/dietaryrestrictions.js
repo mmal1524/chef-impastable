@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -21,14 +14,16 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Navbar from './navbar.js'
-
-
+import Paper from '@mui/material/Paper';
+import TableContainer from '@mui/material/TableContainer';
 
 export default function Home() {
     const [username, setUsername] = useState("");
+    const [displayName, setDisplayName] = useState("");
     const [tagValue, setTagUser] = useState("");
     const [userTags, setUserTags] = useState([]);
     const [dense, setDense] = React.useState(false);
+
     const handleAddTag = e => {
         setTagUser(e.target.value)
     }
@@ -50,27 +45,34 @@ export default function Home() {
                     return this.username
                 }
             },
+            getDisplayName: {
+                get() {
+                    return this.displayName
+                }
+            },
         });
         setUsername(thisUser.getUsername);
         setUserTags(thisUser.getTags);
+        setDisplayName(thisUser.getDisplayName);
     }, [])
     return (
         <div className="app-container">
             <div className="App">
                 <Navbar />
             </div>
-
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
+            <h1>{displayName}'s Dietary Restrictions</h1>
+            </div>
             {userTags && userTags.map((tag, index) => (
                 <div>
-                    <Box sx={{ flexGrow: 1, maxWidth: 752 }}
-                        alignItems='center'
-                        justify='center'
-                        display='flex'
-                    >
-                        <FormGroup row>
-                        </FormGroup>
+                    <Box >
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12}
+                            alignItems='center'
+                            justifyContent='center'
+                            display='flex' >
+                                <TableContainer component={Paper} sx={{ maxWidth: 800 }} square={true}>
+                                
                                 <List dense={dense}>
                                     <ListItem
                                         secondaryAction={
@@ -80,7 +82,13 @@ export default function Home() {
                                                 localStorage.setItem('user',
                                                     JSON.stringify({
                                                         username: data.username,
-                                                        password: data.password,
+                                                        displayName: data.displayName,
+                                                        avatar: data.avatar,
+                                                        friends: data.friends,
+                                                        friendRequests: data.friendRequests,
+                                                        createdPrivacy: data.createdPrivacy,
+                                                        savedPrivacy: data.savedPrivacy,
+                                                        reviewedPrivacy: data.reviewedPrivacy,
                                                         dietaryTags: data.dietaryTags
                                                     }));
                                             }}>
@@ -88,17 +96,19 @@ export default function Home() {
                                             </IconButton>
                                         }
                                     >
-                                        <ListItemText
+                                        <ListItemText 
                                             primary={tag}
                                         />
                                     </ListItem>
                                 </List>
+                                </TableContainer>
                             </Grid>
                         </Grid>
                     </Box>
                 </div>
             ))}
 
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>
                 <InputLabel id="demo-simple-select-standard-label">Dietary Restrictions</InputLabel>
                 <Select
@@ -123,8 +133,9 @@ export default function Home() {
                     <MenuItem value={"Fish"}>Fish</MenuItem>
                 </Select>
             </FormControl>
+            
             <Button
-                type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200, maxHeight: '35px' }}
                 onClick={async () => {
                     setUserTags(userTags => [...userTags, tagValue]);
                     var data = await AddTag(username, tagValue);
@@ -132,11 +143,20 @@ export default function Home() {
                         JSON.stringify({
                             username: data.username,
                             password: data.password,
+                            displayName: data.displayName,
+                            avatar: data.avatar,
+                            friends: data.friends,
+                            friendRequests: data.friendRequests,
+                            createdPrivacy: data.createdPrivacy,
+                            savedPrivacy: data.savedPrivacy,
+                            reviewedPrivacy: data.reviewedPrivacy,
+                            mealPlanPrivacy: data.mealPlanPrivacy,
                             dietaryTags: data.dietaryTags
                         }));
                 }}
             >Add Tag
             </Button>
+            </div>
         </div >
     );
 }

@@ -178,7 +178,11 @@ export default function SignUp() {
                                                         friends: data.friends,
                                                         friendRequests: data.friendRequests,
                                                         dietaryTags: data.dietaryTags,
-                                                        fridge_grouped: data.fridge_grouped
+                                                        fridge_grouped: data.fridge_grouped,
+                                                        createdPrivacy: data.createdPrivacy,
+                                                        savedPrivacy: data.savedPrivacy,
+                                                        reviewedPrivacy: data.reviewedPrivacy,
+                                                        mealPlanPrivacy: data.mealPlanPrivacy
                                                     }));
                                                 router.push("homepage");
                                             }
@@ -305,12 +309,13 @@ export default function SignUp() {
                 kitchen: [],
                 avatar: "",
                 friends: ["friend1", "friend2", "friend3"],
-                friendRequests: [],
+                friendRequests: ["friendRequest1", "friendRequest2"],
                 createdPrivacy: "everyone",
                 savedPrivacy: "everyone",
                 reviewedPrivacy: "everyone",
-                dietaryTags: [],
-                fridge_grouped: {}
+                fridge_grouped: {},
+                mealPlanPrivacy: "everyone",
+                dietaryTags: []
             })
         })
         const data = await res.json();

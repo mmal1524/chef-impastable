@@ -11,7 +11,7 @@ export default async function handler(req,res){
         console.log(user)
         console.log(user.fridge_grouped);
         if (!user) {
-            return null;
+            return res.json({success: false});
         }
         else {
             return res.json({
@@ -27,6 +27,7 @@ export default async function handler(req,res){
                 createdPrivacy: user.createdPrivacy,
                 savedPrivacy: user.savedPrivacy,
                 reviewedPrivacy: user.reviewedPrivacy,
+                mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
                 success: true
             });

@@ -152,6 +152,7 @@ export default function Home({
                                 createdPrivacy: data.createdPrivacy,
                                 savedPrivacy: data.savedPrivacy,
                                 reviewedPrivacy: data.reviewedPrivacy,
+                                mealPlanPrivacy: data.mealPlanPrivacy,
                                 dietaryTags: data.dietaryTags
                             }));
                             router.push("/homepage");

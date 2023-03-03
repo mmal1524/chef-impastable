@@ -8,14 +8,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import swal from 'sweetalert';
- 
-
-
+import { useRouter } from "next/router";
 
 export function addFriendCard(friend, username) {
     
-
-
+    const router = useRouter();
+    
     return (
         <Box sx={{margin: 1, marginLeft: 0}}>
             {/* Stack to display user's profile picture, display name, and username */}
@@ -49,20 +47,14 @@ export function addFriendCard(friend, username) {
                     onClick={async () => {
                         // adds friend to request list
                         var currUser = await addFriendRequest(friend.username, username);
-
                         swal("Friend Request sent");
+
+                        router.reload();
                     }}
 
                     endIcon={<SendIcon />}
                 >
                     Request
-                </Button>
-                
-                <Button 
-                    variant="outlined" 
-                    endIcon={<FullscreenIcon />}
-                >
-                    View
                 </Button>
             </Stack>
 

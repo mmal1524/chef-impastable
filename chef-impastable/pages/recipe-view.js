@@ -2,7 +2,7 @@ import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
 import Navbar from './navbar.js'
-import { CardMedia } from "@mui/material";
+import { Button, CardMedia } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -35,10 +35,34 @@ export default function Recipe({ recipe }) {
                     <Navbar />
                 </div>
                 <Grid container
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center">
-                    <h1>{recipe.title}</h1>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Grid item
+                        sx={{width: 200}}
+                    ></Grid>
+                    <Grid item
+                        //display="flex"
+                        //justifyContent="center"
+                        //alignItems="center"
+                    >
+                        <h1>{recipe.title}</h1>
+                    </Grid>
+                    <Grid item
+                        sx={{
+                            pt:2,
+                        }}
+                    >
+                        <Button 
+                            //justifyContent='left'
+                            sx={{
+                                width: 200
+                            }}
+                        >
+                            Add to Shopping List
+                        </Button>
+                    </Grid>
                 </Grid>
                 <Grid container
                     display="flex"

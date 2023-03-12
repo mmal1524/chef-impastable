@@ -6,10 +6,13 @@ import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
+import SaveRecipeDialog from '../components/saveRecipeDialog';
 
 
 export default function HomePage({recipes}) {    
     const [displayRecipes, setDisplayRecipes] = useState(recipes);
+    const [showSaveOption, setShowSaveOptions] = useState(false);
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem("user"))
         var saved = thisUser.saved
@@ -18,6 +21,11 @@ export default function HomePage({recipes}) {
     }, [])
     return (
         <> 
+            <SaveRecipeDialog
+                onSubmit = {() => {console.log("submit button clicked")}}
+                show = {showSaveOption}
+                onClose = {() => {console.log("hide save recipe"); setShowSaveOptions(false)}}
+            />
             <div>
                 <Navbar />
             </div>
@@ -35,7 +43,10 @@ export default function HomePage({recipes}) {
                     
                     {recipes.map((recipe) => (                
                         <Grid item key={recipe._id}>
-                            <RecipeCard recipe={recipe}/>
+                            <RecipeCard 
+                                recipe={recipe}
+                                onSave={() => {console.log("show save dialog"); setShowSaveOptions(true);}}
+                            />
                         </Grid>
                     )
                         

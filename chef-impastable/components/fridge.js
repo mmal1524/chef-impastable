@@ -1,25 +1,12 @@
 import * as React from 'react';
 import { Autocomplete, Modal, Typography } from '@mui/material';
-// import Link from 'next/link';
 import Box from '@mui/material/Box';
-// import Tabs from '@mui/material/Tabs';
-// import Tab from '@mui/material/Tab';
-// import PropTypes from 'prop-types';
-// import Typography from '@mui/material/Typography';
 import { Divider, TextField, Grid, DialogTitle, DialogContent } from '@mui/material';
-// import Navbar from './navbar.js'
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemAvatar from '@mui/material/ListItemAvatar';
-// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormGroup from '@mui/material/FormGroup';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import FormControl from '@mui/material/FormControl';
-// import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
-// import { useTheme } from '@material-ui/core/styles';
 import { Dialog } from '@mui/material';
 import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 import { Snackbar, Alert } from '@mui/material';

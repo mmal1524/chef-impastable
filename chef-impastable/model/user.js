@@ -1,4 +1,5 @@
 import { modalUnstyledClasses } from "@mui/material";
+import { ObjectID } from "bson";
 import mongoose, { SchemaTypes } from "mongoose";
 
 const userSchema = new mongoose.Schema({
@@ -36,6 +37,16 @@ const userSchema = new mongoose.Schema({
     mealPlanPrivacy: String,
     dietaryTags: {
         type:[String]
+    },
+    saved: {
+        type:[new mongoose.Schema({
+            name: {
+                type: String
+            },
+            recipes: {
+                type: [ObjectID]
+            }
+        })]
     }
 
 });

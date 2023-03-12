@@ -1,6 +1,7 @@
 import { modalUnstyledClasses } from "@mui/material";
-import { ObjectID } from "bson";
+import { ObjectId, ObjectID } from "bson";
 import mongoose, { SchemaTypes } from "mongoose";
+import SavedFolder from "./savedFolder";
 
 const userSchema = new mongoose.Schema({
     username:{
@@ -39,14 +40,7 @@ const userSchema = new mongoose.Schema({
         type:[String]
     },
     saved: {
-        type:[new mongoose.Schema({
-            name: {
-                type: String
-            },
-            recipes: {
-                type: [ObjectID]
-            }
-        })]
+        type:[ObjectId],
     }
 
 });

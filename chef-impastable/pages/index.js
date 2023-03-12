@@ -138,23 +138,24 @@ export default function Home({
                             handleClickOpen();
                         } else {
                             console.log(data.fridge_grouped)
-                            localStorage.setItem('user', 
-                                JSON.stringify({
-                                    username: data.username,
-                                    password: data.password,
-                                    fridge: data.fridge,
-                                    kitchen: data.kitchen,
-                                    displayName: data.displayName,
-                                    avatar: data.avatar,
-                                    friends: data.friends,
-                                    friendRequests: data.friendRequests,
-                                    dietaryTags: data.dietaryTags,
-                                    fridge_grouped: data.fridge_grouped,
-                                    createdPrivacy: data.createdPrivacy,
-                                    savedPrivacy: data.savedPrivacy,
-                                    reviewedPrivacy: data.reviewedPrivacy,
-                                    mealPlanPrivacy: data.mealPlanPrivacy
-                            }));
+                            localStorage.setItem('user',
+                                JSON.stringify(data)); 
+                            //     JSON.stringify({
+                            //         username: data.username,
+                            //         password: data.password,
+                            //         fridge: data.fridge,
+                            //         kitchen: data.kitchen,
+                            //         displayName: data.displayName,
+                            //         avatar: data.avatar,
+                            //         friends: data.friends,
+                            //         friendRequests: data.friendRequests,
+                            //         dietaryTags: data.dietaryTags,
+                            //         fridge_grouped: data.fridge_grouped,
+                            //         createdPrivacy: data.createdPrivacy,
+                            //         savedPrivacy: data.savedPrivacy,
+                            //         reviewedPrivacy: data.reviewedPrivacy,
+                            //         mealPlanPrivacy: data.mealPlanPrivacy
+                            // }));
                             router.push("/homepage");
                         }
                     }}

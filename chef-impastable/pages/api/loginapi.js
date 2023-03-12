@@ -29,6 +29,7 @@ export default async function handler(req,res){
                 reviewedPrivacy: user.reviewedPrivacy,
                 mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
+                saved: user.saved,
                 success: true
             });
         }

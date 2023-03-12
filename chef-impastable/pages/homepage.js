@@ -4,12 +4,18 @@ import Grid from '@mui/material/Grid';
 import { ImageList, ImageListItem } from '@mui/material'
 import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 
 
 export default function HomePage({recipes}) {    
-    console.log(recipes)
+    const [displayRecipes, setDisplayRecipes] = useState(recipes);
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem("user"))
+        var saved = thisUser.saved
+        console.log(thisUser)
+        console.log(saved)
+    }, [])
     return (
         <> 
             <div>

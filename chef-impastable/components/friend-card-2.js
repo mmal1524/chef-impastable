@@ -126,16 +126,17 @@ export function friendCardTwo(friend) {
                 <Button 
                     variant="outlined" 
                     endIcon={<FullscreenIcon />}
-                    onClick={async () => {
-                        var friendUser = await viewFriend(friend.username);
-                        var createdPriv = friendUser.createdPrivacy;
-                        var savedPriv = friendUser.savedPrivacy;
-                        var reviewedPriv = friendUser.reviewedPrivacy;
-                        var mealPlanPriv = friendUser.mealPlanPrivacy;
+                    onClick={router.push("../view_friends")}
+                        //async () => {
+                        //var friendUser = await viewFriend(friend.username);
+                        //var createdPriv = friendUser.createdPrivacy;
+                        //var savedPriv = friendUser.savedPrivacy;
+                        //var reviewedPriv = friendUser.reviewedPrivacy;
+                        //var mealPlanPriv = friendUser.mealPlanPrivacy;
 
-                        viewFriendProfile(friendUser.username, createdPriv, savedPriv, reviewedPriv, mealPlanPriv);
+                        //viewFriendProfile(friendUser.username, createdPriv, savedPriv, reviewedPriv, mealPlanPriv);
 
-                        }}
+                       // }}
                 >
                     View
                 </Button>

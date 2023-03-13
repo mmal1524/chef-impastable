@@ -12,6 +12,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function Recipe({ recipe }) {
+
+
     function createRow(name, value) {
         return { name, value };
     } 

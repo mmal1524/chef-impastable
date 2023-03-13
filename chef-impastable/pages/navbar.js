@@ -19,6 +19,7 @@ import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from 
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 
 
 const Navbar = () => {
@@ -100,7 +101,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={10.7}>
+            <Grid xs={10.2}>
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -108,6 +109,13 @@ const Navbar = () => {
                     }}
                 >
                     <HomeIcon />
+                </IconButton>
+            </Grid>
+            <Grid xs={0.4} sx={{ pt: 0.5 }}>
+                <IconButton
+                    aria-label='shopping list'
+                >
+                    <ShoppingBasketIcon />
                 </IconButton>
             </Grid>
             <Grid xs={1}>

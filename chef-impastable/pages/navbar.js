@@ -20,6 +20,7 @@ import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import ShoppingList from './shopping-list'
 
 
 const Navbar = () => {
@@ -62,6 +63,16 @@ const Navbar = () => {
     };
     const handleClosePopup = () => {
         setOpen(false);
+    };
+
+    const [shopListPopup, setShopListPopup] = React.useState(false);
+
+    const handleClickOpenShop = () => {
+        setShopListPopup(true);
+    };
+
+    const handleCloseShop = () => {
+        setShopListPopup(false);
     };
 
     const theme = useTheme();
@@ -125,6 +136,7 @@ const Navbar = () => {
                 <Button 
                     sx={{color: 'gray', ml: 1.5}}
                     startIcon={<ShoppingBasketIcon/>}
+                    onClick={handleClickOpenShop}
                 >
                     Shopping List
                 </Button>
@@ -205,6 +217,24 @@ const Navbar = () => {
                     </Button>
                     <Button onClick={handleClosePopup} autoFocus>
                         No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={shopListPopup}
+                onClose={handleCloseShop}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle>
+                    {"Shopping List"}
+                </DialogTitle>
+                <DialogContent>
+                    <ShoppingList/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseShop}>
+                        Done
                     </Button>
                 </DialogActions>
             </Dialog>

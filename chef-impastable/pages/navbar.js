@@ -101,7 +101,11 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={10.2}>
+            <Grid xs={9.0} 
+                sx={{ pt: 0.5, 
+                    //backgroundColor: 'lightblue' 
+                }
+            }>
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -111,12 +115,19 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            <Grid xs={0.4} sx={{ pt: 0.5 }}>
-                <IconButton
-                    aria-label='shopping list'
+            <Grid xs={1.5} 
+                alignContent='center'
+                sx={{ 
+                    pt: 1, 
+                    //backgroundColor: 'greenyellow' 
+                }} 
+            >
+                <Button 
+                    sx={{color: 'gray', ml: 1.5}}
+                    startIcon={<ShoppingBasketIcon/>}
                 >
-                    <ShoppingBasketIcon />
-                </IconButton>
+                    Shopping List
+                </Button>
             </Grid>
             <Grid xs={1}>
                 <Button

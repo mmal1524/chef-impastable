@@ -126,75 +126,7 @@ export default function FridgeKitchen({ingredientOptions}) {
                     </Grid>
                     <TabPanel value={value} index={0}>
                         <Fridge ingredientOptions={ingredientOptions}></Fridge>
-                        { /*search bar and enter button at the top*/ }
-                        {/* <Grid container>
-                            <Grid item>
-                                <TextField
-                                    id="search-fridge"
-                                    label="Search"
-                                    variant="outlined"
-                                    sx={{
-                                    width: 600
-                                    }}
-                                />
-                                <Button 
-                                    //type="submit" 
-                                    size="large"
-                                    variant="contained"
-                                    sx={{
-                                        mx: 3,
-                                        mt: 1,
-                                    }}
-                                    onClick={() => {
-                                        //search for ingredient
-                                        console.log("clicked")
-                                    }}
-                                >
-                                    Enter
-                                </Button>
-                            </Grid>
-                            <Grid item xs></Grid>
-                            <Grid item>
-                                <Button 
-                                    //type="submit" 
-                                    size="large"
-                                    variant="contained"
-                                    sx={{
-                                        mx: 3,
-                                        mt: 1,
-                                    }}
-                                    onClick={() => {
-                                        //route to edit page
-                                        console.log("clicked")
-                                    }}
-                                >
-                                    Edit Fridge
-                                </Button>
-                            </Grid>
-                        </Grid>
-                        <Grid container>
-                            
-                            {userIngr && userIngr.map((ingr, index) => (
-                                <Box>
-                                    <FormGroup row>
-                                    </FormGroup>
-                                    <Grid container>
-                                        <Grid 
-                                            item xs={12} 
-                                            md={6}
-                                            sx={{ width: windowSize[0]}}
-                                        >
-                                            <List>
-                                                <ListItemText
-                                                    sx={{display:'flex', justifyContent:'center'}}
-                                                    primary={ingr} 
-                                                />
-                                            </List>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            ))}
-                        </Grid> */}
+                    
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         { /*search bar and edit button at the top*/ }
@@ -295,15 +227,11 @@ export async function getServerSideProps() {
             .collection("ingredients")
             .find({})
             .toArray();
-        // console.log(ingredients)
-        //console.log(appliances);
         return {
-            //props: { appliances }
             props: {ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))},
         };
     }
     catch (e) {
         console.error(e);
     }
-    
 }

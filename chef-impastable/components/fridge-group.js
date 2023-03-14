@@ -13,8 +13,6 @@ import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 
 function FridgeGroup(props) {
-    console.log("props")
-    console.log(props)
     return (
         <Card sx={{width:200}} variant="outlined">
             <CardHeader title={props.name} sx={{fontSize:10}}>

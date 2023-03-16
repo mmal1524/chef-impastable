@@ -37,7 +37,7 @@ export default async function handler(req, res) {
                 tags: recipe.tags
             });
         }
-        const recipe = await Recipe.findOneAndUpdate({ title: title, "tags.tag": tag }, { $set: { "tags.$.exists": !exists } }, { new: true });
+        const recipe = await Recipe.findOneAndUpdate({ title: title, "tags.tag": tag }, { $set: { "tags.$.exists": exists } }, { new: true });
         return res.json({
             tags: recipe.tags,
             exists: recipe.exists

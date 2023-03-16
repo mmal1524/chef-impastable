@@ -68,11 +68,17 @@ export default function Recipe({ recipe }) {
     };
 
     const handleClick = async (index) => {
-        var data = await AddTag(recipe.title, stateRecipeTags[index].tag, stateRecipeTags[index].exists, true);
-        console.log(JSON.stringify(data));
-        stateRecipeTags[index].exists = !stateRecipeTags[index].exists;
-        setStateRecipeTags(stateRecipeTags);
-        setUpdateCount(updateCount + 1);
+        const updatedTag = {
+            ...stateRecipeTags[index],
+            exists: !stateRecipeTags[index].exists,
+        };
+        const updatedTags = [
+            ...stateRecipeTags.slice(0, index),
+            updatedTag,
+            ...stateRecipeTags.slice(index + 1),
+        ];
+        setStateRecipeTags(updatedTags);
+        await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
     };
 
     return (

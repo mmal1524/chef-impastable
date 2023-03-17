@@ -72,6 +72,8 @@ export default function Recipe({ recipe }) {
         console.log(reviewid);
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
         console.log(recipeUpdated);
+        var userUpdated = await addReviewToUser(username, reviewid.reviewID);
+        console.log(userUpdated);
 
         setOpen(false);
         setDescription("");
@@ -98,6 +100,11 @@ export default function Recipe({ recipe }) {
     }
 
     async function addReviewToRecipe(recipeID, reviewID) {
+        console.log("adding review to recipe");
+        console.log("recipeID:");
+        console.log(recipeID);
+        console.log("reviewID:");
+        console.log(reviewID);
         const res = await fetch('api/addReviewToRecipe', {
             method: 'PUT',
             headers: {
@@ -107,6 +114,28 @@ export default function Recipe({ recipe }) {
             body: JSON.stringify({
                 recipeID: recipeID,
                 reviewID, reviewID
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
+
+    async function addReviewToUser(username, reviewID) {
+        console.log("adding review to user");
+        console.log("username:");
+        console.log(username);
+        console.log("reviewID:");
+        console.log(reviewID);
+        const res = await fetch('api/addReviewToUser', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                reviewID: reviewID
             })
         });
         const data = await res.json();

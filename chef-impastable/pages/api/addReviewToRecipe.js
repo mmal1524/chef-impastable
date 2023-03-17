@@ -8,6 +8,8 @@ connect()
 export default async function handler(req,res){
     try {
         const {recipeID, reviewID}=req.body
+        console.log(reviewID);
+        console.log(typeof reviewID);
 
         const recipe = await Recipe.findOneAndUpdate({_id: recipeID}, {$push: { reviews: reviewID}}, {new: true});
         console.log(recipe);

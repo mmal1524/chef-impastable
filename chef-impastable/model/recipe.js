@@ -1,5 +1,5 @@
 import { modalUnstyledClasses } from "@mui/material";
-import mongoose from "mongoose";
+import mongoose, { SchemaTypes } from "mongoose";
 
 const recipeSchema = new mongoose.Schema({
     author:{
@@ -68,7 +68,7 @@ const recipeSchema = new mongoose.Schema({
         required:false
     },
     reviews: {
-        type:[Schema.Types.ObjectId],
+        type:[SchemaTypes.ObjectId],
         required:false
     }
 });

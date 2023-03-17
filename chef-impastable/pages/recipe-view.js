@@ -25,6 +25,8 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { Stack } from '@mui/system';
 
 export default function Recipe({ recipe }) {
+    var recipe1 = recipe;
+    console.log(recipe);
     const [username, setUsername] = useState("");
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -43,9 +45,9 @@ export default function Recipe({ recipe }) {
     } 
     console.log(JSON.stringify(recipe.nutrients.calories));
 
-    const [open, setOpen] = useState(false);
+    var [open, setOpen] = useState(false);
     var [description, setDescription] = useState("");
-    const [rating, setRating] = useState(0);
+    var [rating, setRating] = useState(0);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -53,6 +55,8 @@ export default function Recipe({ recipe }) {
 
     const handleClose = () => {
         setOpen(false);
+        setDescription("");
+        setRating(0);
     }
 
     const handleChangeDescription = e => {
@@ -61,13 +65,17 @@ export default function Recipe({ recipe }) {
 
     const handlePost = async () => {
         console.log("in handle post");
-        console.log(recipe._id);
+        console.log(recipe1);
         console.log(username);
         console.log(rating);
-        var data = await createReview(recipe._id, username, rating, description);
-        console.log(data);
-        // TODO: add review object to array of reviews within a recipe
-        //var result = await addReview(recipe._id, )
+        var reviewid = await createReview(recipe1._id, username, rating, description);
+        console.log(reviewid);
+        var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
+        console.log(recipeUpdated);
+
+        setOpen(false);
+        setDescription("");
+        setRating(0);
     }
 
     async function createReview(recipeID, author, rating, description) {
@@ -82,6 +90,23 @@ export default function Recipe({ recipe }) {
                 author: author,
                 rating: rating,
                 description: description
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
+
+    async function addReviewToRecipe(recipeID, reviewID) {
+        const res = await fetch('api/addReviewToRecipe', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                reviewID, reviewID
             })
         });
         const data = await res.json();

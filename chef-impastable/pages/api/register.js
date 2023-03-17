@@ -18,6 +18,7 @@ export default async function handler(req,res){
                 fridge: user.fridge,
                 fridge_grouped: user.fridge_grouped,
                 kitchen: user.kitchen,
+                shoppingList: user.shoppingList,
                 displayName: user.displayName,
                 avatar: user.avatar,
                 friends: user.friends,

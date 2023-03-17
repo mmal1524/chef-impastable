@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     kitchen: {
         type:[String]
     }, 
+    shoppingList: [String],
     avatar:{
         type:String
     },

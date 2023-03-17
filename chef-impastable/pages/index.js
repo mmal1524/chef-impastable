@@ -144,6 +144,7 @@ export default function Home({
                                     password: data.password,
                                     fridge: data.fridge,
                                     kitchen: data.kitchen,
+                                    shoppingList: data.shoppingList,
                                     displayName: data.displayName,
                                     avatar: data.avatar,
                                     friends: data.friends,

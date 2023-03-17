@@ -20,7 +20,8 @@ import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import ShoppingList from './shopping-list'
+import ShoppingList from './shopping-list';
+import ShoppingListEdit from './shopping-list-edit';
 
 
 const Navbar = () => {
@@ -66,14 +67,20 @@ const Navbar = () => {
     };
 
     const [shopListPopup, setShopListPopup] = React.useState(false);
-
     const handleClickOpenShop = () => {
         setShopListPopup(true);
     };
-
     const handleCloseShop = () => {
         setShopListPopup(false);
     };
+    const [shopListPopupEdit, setShopListPopupEdit] = React.useState(false);
+    const handleClickOpenShopEdit = () => {
+        setShopListPopupEdit(true);
+    };
+    const handleCloseShopEdit = () => {
+        setShopListPopupEdit(false);
+    };
+
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -200,6 +207,7 @@ const Navbar = () => {
             <Dialog
                 fullScreen={fullScreen}
                 open={openPopup}
+                scroll={'body'}
                 onClose={handleClosePopup}
                 aria-labelledby="responsive-dialog-title"
             >
@@ -223,17 +231,41 @@ const Navbar = () => {
             <Dialog
                 fullScreen={fullScreen}
                 open={shopListPopup}
+
                 onClose={handleCloseShop}
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle>
-                    {"Shopping List"}
+                    {"Shopping List:"}
                 </DialogTitle>
                 <DialogContent>
                     <ShoppingList/>
                 </DialogContent>
                 <DialogActions>
+                    <Button onClick={handleClickOpenShopEdit}>
+                    {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
+                        Edit
+                    </Button>
                     <Button onClick={handleCloseShop}>
+                        Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={shopListPopupEdit}
+
+                onClose={handleCloseShop}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle>
+                    {"Edit Shopping List:"}
+                </DialogTitle>
+                <DialogContent>
+                    <ShoppingListEdit/>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseShopEdit}>
                         Done
                     </Button>
                 </DialogActions>

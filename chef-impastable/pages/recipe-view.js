@@ -1,3 +1,5 @@
+import * as React from 'react';
+import { useState, useEffect } from "react";
 import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
@@ -10,12 +12,82 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { Stack } from '@mui/system';
 
 export default function Recipe({ recipe }) {
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        var thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                },
+            }
+        });
+        setUsername(thisUser.getUsername)
+    }, []);
+
     function createRow(name, value) {
         return { name, value };
     } 
     console.log(JSON.stringify(recipe.nutrients.calories));
+
+    const [open, setOpen] = useState(false);
+    var [description, setDescription] = useState("");
+    const [rating, setRating] = useState(0);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleChangeDescription = e => {
+        setDescription(e.target.value);
+    }
+
+    const handlePost = async () => {
+        console.log("in handle post");
+        console.log(recipe._id);
+        console.log(username);
+        console.log(rating);
+        var data = await createReview(recipe._id, username, rating, description);
+        console.log(data);
+        // TODO: add review object to array of reviews within a recipe
+        //var result = await addReview(recipe._id, )
+    }
+
+    async function createReview(recipeID, author, rating, description) {
+        const res = await fetch('api/createReview', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                author: author,
+                rating: rating,
+                description: description
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
+    }
 
     const nutritionRows = [
         createRow('Calories', recipe.nutrients.calories),
@@ -99,6 +171,56 @@ export default function Recipe({ recipe }) {
                         </Table>
                     </TableContainer>
                 </div>
+                <Button
+                    sx={{margin: 4, backgroundColor:"orange", color:"black"}} 
+                    variant="contained"
+                    startIcon={<RateReviewIcon />}
+                    onClick={handleClickOpen}
+                >
+                    Leave a Review
+                </Button>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Leave a Review</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Rating</DialogContentText>
+                        <Stack
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            spacing={2}
+                        >
+                            <IconButton>
+                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            </IconButton>
+                            <IconButton>
+                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            </IconButton>
+                            <IconButton>
+                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            </IconButton>
+                            <IconButton>
+                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            </IconButton>
+                            <IconButton>
+                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            </IconButton>
+                        </Stack>
+                        <DialogContentText>Description/Comments</DialogContentText>
+                        <TextField
+                            id="description"
+                            multiline
+                            rows={10}
+                            defaultValue=""
+                            sx={{width: '100%'}}
+                            value={description}
+                            onChange={handleChangeDescription}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handlePost}>Post</Button>
+                        <Button onClick={handleClose}>Discard</Button>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </>
     );

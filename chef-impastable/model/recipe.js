@@ -66,6 +66,10 @@ const recipeSchema = new mongoose.Schema({
     yields: {
         type:String,
         required:false
+    },
+    reviews: {
+        type:[Schema.Types.ObjectId],
+        required:false
     }
 });
 

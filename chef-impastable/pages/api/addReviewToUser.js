@@ -14,19 +14,38 @@ export default async function handler(req,res){
         console.log(reviewID);
         console.log(typeof reviewID)
 
-        const user = await User.findOneAndUpdate({username: username}, {$push: { reviews: reviewID}}, {new: true});
-        console.log("HERE");
-        console.log(user);
-        console.log(user.reviews);
+        // const user = await User.findOne({username: username}, function (err, doc){
+        //     if (err) return done(err);
+        //     // Create the new field if it doesn't exist yet
+        //     doc.reviews || (doc.reviews = []);
+        //     doc.reviews.push(reviewID);
+
+        //     doc.save();
+        // });
+
+        const user = await User.findOne({username: username});
+        if (!user.reviews) {
+            user.reviews = [];
+        }
+        user.reviews.push(reviewID);
+        user.save();
+
+        // const user = await User.findOneAndUpdate({username: username}, {$push: { reviews: reviewID}}, {new: true});
+        // console.log("HERE");
+        // console.log("user:")
+        // console.log(user);
+        // console.log("user reviews:")
+        // console.log(user.reviews);
         
-        if (!user) {
-            return null;
-        }
-        else {
-            console.log(user);
-            return res.json({success: true});
-        }
+        // if (!user) {
+        //     return null;
+        // }
+        // else {
+        //     console.log(user);
+        //     return res.json({success: true});
+        // }
     } catch (error) {
+        console.log(error);
         res.status(400).json({status:'Not able to update user.'})
         console.log('error');
     }

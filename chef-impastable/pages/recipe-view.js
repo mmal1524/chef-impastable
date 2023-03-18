@@ -21,6 +21,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { Stack } from '@mui/system';
 
@@ -49,6 +50,12 @@ export default function Recipe({ recipe }) {
     var [description, setDescription] = useState("");
     var [rating, setRating] = useState(0);
 
+    var [firstStar, setFirstStar] = useState(false);
+    var [secondStar, setSecondStar] = useState(false);
+    var [thirdStar, setThirdStar] = useState(false);
+    var [fourthStar, setFourthStar] = useState(false);
+    var [fifthStar, setFifthStar] = useState(false);
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -57,11 +64,66 @@ export default function Recipe({ recipe }) {
         setOpen(false);
         setDescription("");
         setRating(0);
-    }
+    };
 
     const handleChangeDescription = e => {
         setDescription(e.target.value);
-    }
+    };
+
+    const handleFirstClick = () => {
+        if (firstStar && !secondStar) {
+            setFirstStar(false);
+            setSecondStar(false);
+            setThirdStar(false);
+            setFourthStar(false);
+            setFifthStar(false);
+            setRating(0);
+        }
+        else {
+            setFirstStar(true);
+            setSecondStar(false);
+            setThirdStar(false);
+            setFourthStar(false);
+            setFifthStar(false);
+            setRating(1);
+        }
+    };
+
+    const handleSecondClick = () => {
+        setFirstStar(true);
+        setSecondStar(true);
+        setThirdStar(false);
+        setFourthStar(false);
+        setFifthStar(false);
+        setRating(2);
+    };
+
+    const handleThirdClick = () => {
+        setFirstStar(true);
+        setSecondStar(true);
+        setThirdStar(true);
+        setFourthStar(false);
+        setFifthStar(false);
+        setRating(3);
+    };
+
+    const handleFourthClick = () => {
+        setFirstStar(true);
+        setSecondStar(true);
+        setThirdStar(true);
+        setFourthStar(true);
+        setFifthStar(false);
+        setRating(4);
+    };
+
+    const handleFifthClick = () => {
+        setFirstStar(true);
+        setSecondStar(true);
+        setThirdStar(true);
+        setFourthStar(true);
+        setFifthStar(true);
+        setRating(5);
+    };
 
     const handlePost = async () => {
         console.log("in handle post");
@@ -72,12 +134,17 @@ export default function Recipe({ recipe }) {
         console.log(reviewid);
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
         console.log(recipeUpdated);
-        var userUpdated = await addReviewToUser(username, reviewid.reviewID);
-        console.log(userUpdated);
+        // var userUpdated = await addReviewToUser(username, reviewid.reviewID);
+        // console.log(userUpdated);
 
         setOpen(false);
         setDescription("");
         setRating(0);
+        setFirstStar(false);
+        setSecondStar(false);
+        setThirdStar(false);
+        setFourthStar(false);
+        setFifthStar(false);
     }
 
     async function createReview(recipeID, author, rating, description) {
@@ -121,27 +188,27 @@ export default function Recipe({ recipe }) {
         return data;
     }
 
-    async function addReviewToUser(username, reviewID) {
-        console.log("adding review to user");
-        console.log("username:");
-        console.log(username);
-        console.log("reviewID:");
-        console.log(reviewID);
-        const res = await fetch('api/addReviewToUser', {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                reviewID: reviewID
-            })
-        });
-        const data = await res.json();
-        console.log(data);
-        return data;
-    }
+    // async function addReviewToUser(username, reviewID) {
+    //     console.log("adding review to user");
+    //     console.log("username:");
+    //     console.log(username);
+    //     console.log("reviewID:");
+    //     console.log(reviewID);
+    //     const res = await fetch('api/addReviewToUser', {
+    //         method: 'PUT',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             username: username,
+    //             reviewID: reviewID
+    //         })
+    //     });
+    //     const data = await res.json();
+    //     console.log(data);
+    //     return data;
+    // }
 
     const nutritionRows = [
         createRow('Calories', recipe.nutrients.calories),
@@ -243,20 +310,30 @@ export default function Recipe({ recipe }) {
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton>
-                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            <IconButton size="large" onClick={handleFirstClick}>
+                                {firstStar ? 
+                                    <StarIcon sx={{width: 50, height: 50}}/> 
+                                    : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton>
-                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            <IconButton size="large" onClick={handleSecondClick}>
+                                {secondStar ? 
+                                    <StarIcon sx={{width: 50, height: 50}}/> 
+                                    : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton>
-                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            <IconButton size="large" onClick={handleThirdClick}>
+                                {thirdStar ? 
+                                    <StarIcon sx={{width: 50, height: 50}}/> 
+                                    : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton>
-                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            <IconButton size="large" onClick={handleFourthClick}>
+                                {fourthStar ? 
+                                    <StarIcon sx={{width: 50, height: 50}}/> 
+                                    : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton>
-                                <StarOutlineIcon sx={{width: 50, height: 50}}/>
+                            <IconButton size="large" onClick={handleFifthClick}>
+                                {fifthStar ? 
+                                    <StarIcon sx={{width: 50, height: 50}}/> 
+                                    : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
                         </Stack>
                         <DialogContentText>Description/Comments</DialogContentText>

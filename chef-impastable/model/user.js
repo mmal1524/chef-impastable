@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     mealPlanPrivacy: String,
     dietaryTags: {
         type:[String]
+    },
+    reviews: {
+        type:[SchemaTypes.ObjectId],
+        required:false
     }
 
 });

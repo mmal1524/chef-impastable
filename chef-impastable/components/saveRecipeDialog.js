@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { Dialog } from '@mui/material';
 
 export default function SaveRecipeDialog(props) {
-    const folderOptions = ["none"];
+    console.log(props.options);
+    // const folderOptions = [props.options];
     const [folder, setFolder] = useState("none")
 
     return (
@@ -17,7 +18,7 @@ export default function SaveRecipeDialog(props) {
                     disablePortal
                     id="combo-box-demo"
                     freeSolo
-                    options={Object.keys(folderOptions).map((option) => option)}
+                    options={props.options}
                     //renderOption={(props, option) => <li {...props}>{option.title}</li>}
                     onInputChange={(e, new_val) => {console.log(new_val); setFolder(new_val)}}
                     //sx={{ width: windowSize[0]/3 }}
@@ -37,7 +38,7 @@ export default function SaveRecipeDialog(props) {
                         mx: 3,
                         mt: 1,
                     }}
-                    // onClick={}
+                    onClick={() => {props.onSubmit(folder)}}
                 >
                     Save
                 </Button>

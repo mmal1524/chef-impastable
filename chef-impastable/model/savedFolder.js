@@ -9,6 +9,9 @@ const savedFolderSchema = new mongoose.Schema({
     recipes: {
         type: [ObjectID]
     },
+    user: {
+        type: String
+    }
 })
 
 module.exports = mongoose.models.SavedFolder || mongoose.model('SavedFolder', savedFolderSchema);

@@ -16,7 +16,7 @@ function RecipeCard(props) {
     //https://nextjs.org/docs/api-reference/next/link
     //https://stackoverflow.com/questions/55182529/next-js-router-push-with-state
     const router = useRouter();
-    const [isSaved, setSaved] = useState(false);
+    // const [isSaved, setSaved] = useState(false);
 
     return (
         <Card sx={{width:200}} variant="outlined">
@@ -33,9 +33,9 @@ function RecipeCard(props) {
             </CardActionArea>
         <CardActions>
             <IconButton
-                onClick={() => {props.onSave(); setSaved(!isSaved);}}
+                onClick={() => {props.onSave()}}
             >
-                {isSaved 
+                {props.recipe.saved 
                 ? 
                     <Favorite/>
                 : <FavoriteBorderOutlinedIcon />}
@@ -45,4 +45,5 @@ function RecipeCard(props) {
     );
     
 }
+
 export default RecipeCard;

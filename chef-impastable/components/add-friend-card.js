@@ -56,6 +56,13 @@ export function addFriendCard(friend, username) {
                 >
                     Request
                 </Button>
+                <Button
+                    variant="outlined"
+                    sx={{color:'blue', borderColor:'blue'}}
+                    endIcon={<FullscreenIcon/>}
+                >
+                    View
+                </Button>
             </Stack>
 
             <style jsx>{`

@@ -125,18 +125,18 @@ export function friendCardTwo(friend) {
                     </Dialog>
                 <Button 
                     variant="outlined" 
+                    sx={{color:'blue', borderColor:'blue'}}
                     endIcon={<FullscreenIcon />}
-                    onClick={router.push("../view_friends")}
-                        //async () => {
-                        //var friendUser = await viewFriend(friend.username);
-                        //var createdPriv = friendUser.createdPrivacy;
-                        //var savedPriv = friendUser.savedPrivacy;
-                        //var reviewedPriv = friendUser.reviewedPrivacy;
-                        //var mealPlanPriv = friendUser.mealPlanPrivacy;
+                    onClick={
+                    
+                        async () => {
+                        var friendUser = await viewFriend(friend.username);
 
+                        console.log("routing")
+                        console.log(friendUser.username)
+                        router.push({pathname: "/view_friends", query: {username: friendUser.username} })
                         //viewFriendProfile(friendUser.username, createdPriv, savedPriv, reviewedPriv, mealPlanPriv);
-
-                       // }}
+                       }}
                 >
                     View
                 </Button>

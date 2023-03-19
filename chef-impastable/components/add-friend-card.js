@@ -56,10 +56,14 @@ export function addFriendCard(friend, username) {
                 >
                     Request
                 </Button>
-                <Button
-                    variant="outlined"
+                <Button 
+                    variant="outlined" 
                     sx={{color:'blue', borderColor:'blue'}}
-                    endIcon={<FullscreenIcon/>}
+                    endIcon={<FullscreenIcon />}
+                    onClick={ async () => {
+                        var friendUser = await viewFriend(friend.username);
+                        router.push({pathname: "/view_friends", query: {username: friendUser.username} })
+                       }}
                 >
                     View
                 </Button>
@@ -94,4 +98,21 @@ export function addFriendCard(friend, username) {
         console.log(data);
         return data;
     }
+
+    async function viewFriend(friend) {
+        const res = await fetch('/api/finduser', {
+            method: 'POST', 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: friend,
+            })
+    })
+    const friendJSON = await res.json();
+    console.log('data')
+    console.log(friendJSON)
+    return friendJSON;
+  } 
 }

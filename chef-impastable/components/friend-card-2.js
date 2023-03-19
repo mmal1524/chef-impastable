@@ -127,15 +127,9 @@ export function friendCardTwo(friend) {
                     variant="outlined" 
                     sx={{color:'blue', borderColor:'blue'}}
                     endIcon={<FullscreenIcon />}
-                    onClick={
-                    
-                        async () => {
+                    onClick={ async () => {
                         var friendUser = await viewFriend(friend.username);
-
-                        console.log("routing")
-                        console.log(friendUser.username)
                         router.push({pathname: "/view_friends", query: {username: friendUser.username} })
-                        //viewFriendProfile(friendUser.username, createdPriv, savedPriv, reviewedPriv, mealPlanPriv);
                        }}
                 >
                     View

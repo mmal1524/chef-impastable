@@ -10,6 +10,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
+import clientPromise from '../lib/mongodb_client';
 
 
 import { useRouter } from "next/router";
@@ -48,11 +49,10 @@ function a11yProps(index) {
 }
 
 export default function ViewFriends(friend) {
-    console.log('this is the function')
-    console.log(friend)
     const [username, setUsername] = useState("");
     var [displayName, setDisplayName] = useState("");
     var [avatar, setAvatar] = useState("");
+    var [friends, setFriends] = useState([]);
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
@@ -60,6 +60,8 @@ export default function ViewFriends(friend) {
 
     useEffect(() => {
       var thisUser = JSON.parse(localStorage.getItem('user'));
+      console.log("user")
+      console.log(thisUser)
       Object.defineProperties(thisUser, {
           getUsername: {
               get() {
@@ -75,6 +77,11 @@ export default function ViewFriends(friend) {
               get() {
                   return this.avatar
               },
+          },
+          getFriends: {
+            get() {
+                return this.friends
+            },
           },
           getCreatedPrivacy: {
               get() {
@@ -100,19 +107,20 @@ export default function ViewFriends(friend) {
       setUsername(thisUser.getUsername);
       setDisplayName(thisUser.getDisplayName);
       setAvatar(thisUser.getAvatar);
+      setFriends(thisUser.getFriends)
       setCreatedPrivacy(thisUser.getCreatedPrivacy);
       setSavedPrivacy(thisUser.getSavedPrivacy);
       setReviewedPrivacy(thisUser.getReviewedPrivacy);
       setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
   }, []);
 
-  const [friendUsername, setFriendUsername] = useState("");
-    var [friendDisplayName, setFriendDisplayName] = useState("");
-    var [friendAvatar, setFriendAvatar] = useState("");
-    var [friendCreatedPrivacy, setFriendCreatedPrivacy] = useState("");
-    var [friendSavedPrivacy, setFriendSavedPrivacy] = useState("");
-    var [friendReviewedPrivacy, setFriendReviewedPrivacy] = useState("");
-    var [friendMealPlanPrivacy, setFriendMealPlanPrivacy] = useState("");
+    const friendUsername = friend.friend.username;
+    var friendDisplayName = friend.friend.displayName;
+    var friendAvatar = friend.friend.avatar;
+    var friendCreatedPrivacy = friend.friend.createdPrivacy;
+    var friendSavedPrivacy = friend.friend.savedPrivacy;
+    var friendReviewedPrivacy = friend.friend.reviewedPrivacy;
+    var friendMealPlanPrivacy = friend.friend.mealPlanPrivacy;
 
     const [value, setValue] = React.useState(0);
 
@@ -144,100 +152,111 @@ export default function ViewFriends(friend) {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    {displayCreated(friendCreatedPrivacy)}
+                    {displayCreated(friendCreatedPrivacy, friendUsername, friends)}
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    {displaySaved(friendSavedPrivacy)}
+                    {displaySaved(friendSavedPrivacy, friendUsername, friends)}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    {displayReviewed(friendReviewedPrivacy)}
+                    {displayReviewed(friendReviewedPrivacy, friendUsername, friends)}
                 </TabPanel>
                 <TabPanel value={value} index={3}>
-                    {displayMealPlans(friendMealPlanPrivacy)}
+                    {displayMealPlans(friendMealPlanPrivacy, friendUsername, friends)}
                 </TabPanel>
             </Box>
         </div>
     );
-
 }
 
-function displayCreated(privacy) {
+function displayCreated(privacy, target, myFriends) {
     if (privacy == null) {
-        return (<>there's something missing in this user</>)
+        return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>This is where created recipes will go!<br></br></>)
+      return (<>Everyone: This is where created recipes will go!</>)
     }
     if (privacy == "friends only") {
-        //need to find out if this user is friends with current logged in user
-        return (<>friends</>)
-        //else return you have to be friends to see this users
+        if (myFriends.includes(target)) {
+            return (<>Friends: This is where created recipes will go!</>);
+        } else {
+            console.log(target in myFriends)
+            return (<>Become friends to view this user's created recipes!</>);
+        }
     }
     if (privacy == "nobody") {
-        return (<>This user's created recipes are private</>)
+        return (<>This user's created recipes are private!</>)
     }
   }
 
-  function displaySaved(privacy) {
+  function displaySaved(privacy, target, myFriends) {
     if (privacy == null) {
-        return (<>there's something missing in this user</>)
+        return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>This is where saved recipes will go!<br></br></>)
+      return (<>Everyone: This is where saved recipes will go!</>)
     }
     if (privacy == "friends only") {
-        //need to find out if this user is friends with current logged in user
-        return (<>friends</>)
-        //else return you have to be friends to see this users
+        if (myFriends.includes(target)) {
+            return (<>Friends: This is where saved recipes will go!</>);
+        } else {
+            console.log(target in myFriends)
+            return (<>Become friends to view this user's saved recipes!</>);
+        }
     }
     if (privacy == "nobody") {
-        return (<>This user's saved recipes are private</>)
+        return (<>This user's saved recipes are private!</>)
     }
   }
 
-  function displayReviewed(privacy) {
+  function displayReviewed(privacy, target, myFriends) {
     if (privacy == null) {
-        return (<>there's something missing in this user</>)
+        return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>This is where reviewed recipes will go!<br></br></>)
+      return (<>Everyone: This is where reviewed recipes will go!</>)
     }
     if (privacy == "friends only") {
-        //need to find out if this user is friends with current logged in user
-        return (<>friends</>)
-        //else return you have to be friends to see this users
+        if (myFriends.includes(target)) {
+            return (<>Friends: This is where reviewed recipes will go!</>);
+        } else {
+            console.log(target in myFriends)
+            return (<>Become friends to view this user's reviewed recipes!</>);
+        }
     }
     if (privacy == "nobody") {
-        return (<>This user's reviewed recipes are private</>)
+        return (<>This user's reviewed recipes are private!</>)
     }
   }
 
-  function displayMealPlans(privacy) {
+  function displayMealPlans(privacy, target, myFriends) {
     if (privacy == null) {
-        return (<>there's something missing in this user</>)
+        return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>This is where meal plans will go!<br></br></>)
+      return (<>Everyone: This is where meal plans will go!</>)
     }
     if (privacy == "friends only") {
-        //need to find out if this user is friends with current logged in user
-        return (<>friends</>)
-        //else return you have to be friends to see this users
+        if (myFriends.includes(target)) {
+            return (<>Friends: This is where meal plans will go!</>);
+        } else {
+            console.log(target in myFriends)
+            return (<>Become friends to view this user's meal plans!</>);
+        }
     }
     if (privacy == "nobody") {
-        return (<>This user's meal plans are private</>)
+        return (<>This user's meal plans are private!</>)
     }
   }
 
   export async function getServerSideProps(context) {
-    console.log("query: " + context.query)
+    console.log("query: " + context.query.username)
     try {
         const client = await clientPromise;
         const db = client.db("test");
         const viewfriend = await db
             .collection("users")
-            .findOne({username: context.query.username})
-        console.log(viewfriend)
+            .findOne({username: context.query.username});
+        
         return {
             props: { friend: JSON.parse(JSON.stringify(viewfriend)) },
         };

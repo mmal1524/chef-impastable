@@ -24,11 +24,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import { Stack } from '@mui/system';
+import { reviewCard } from '../components/review-card';
+import { useRouter } from "next/router";
 
-export default function Recipe({ recipe }) {
+export default function Recipe({ recipe, reviews }) {
+    const router = useRouter();
+
     var recipe1 = recipe;
-    console.log(recipe);
+
     const [username, setUsername] = useState("");
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -126,25 +131,12 @@ export default function Recipe({ recipe }) {
     };
 
     const handlePost = async () => {
-        console.log("in handle post");
-        console.log(recipe1);
-        console.log(username);
-        console.log(rating);
+        // creating a review object
         var reviewid = await createReview(recipe1._id, username, rating, description);
-        console.log(reviewid);
+        // adding review ID to recipe reviews
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
-        console.log(recipeUpdated);
-        // var userUpdated = await addReviewToUser(username, reviewid.reviewID);
-        // console.log(userUpdated);
-
-        setOpen(false);
-        setDescription("");
-        setRating(0);
-        setFirstStar(false);
-        setSecondStar(false);
-        setThirdStar(false);
-        setFourthStar(false);
-        setFifthStar(false);
+        // reloading page
+        router.reload();
     }
 
     async function createReview(recipeID, author, rating, description) {
@@ -187,28 +179,6 @@ export default function Recipe({ recipe }) {
         console.log(data);
         return data;
     }
-
-    // async function addReviewToUser(username, reviewID) {
-    //     console.log("adding review to user");
-    //     console.log("username:");
-    //     console.log(username);
-    //     console.log("reviewID:");
-    //     console.log(reviewID);
-    //     const res = await fetch('api/addReviewToUser', {
-    //         method: 'PUT',
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             username: username,
-    //             reviewID: reviewID
-    //         })
-    //     });
-    //     const data = await res.json();
-    //     console.log(data);
-    //     return data;
-    // }
 
     const nutritionRows = [
         createRow('Calories', recipe.nutrients.calories),
@@ -352,9 +322,23 @@ export default function Recipe({ recipe }) {
                         <Button onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
+                <h2>Reviews</h2>
+                {displayReviews(reviews)}
             </Grid>
         </>
     );
+
+    function displayReviews(reviews) {
+        if (!reviews || reviews.length == 0) {
+            return(<>No reviews, create one now!</>);
+        } else {
+            return(
+                reviews.map((review) => (
+                    reviewCard(review)
+                ))
+            );
+        }
+    }
 }
 
 export async function getServerSideProps(context) {
@@ -365,8 +349,25 @@ export async function getServerSideProps(context) {
         const recipe = await db
             .collection("recipes")
             .findOne(new ObjectId(`${context.query.id}`));
+
+        var reviews = recipe.reviews;
+        var reviewObjects;
+        if (!reviews) {
+            reviewObjects = [];
+        }
+        else {
+            reviewObjects = new Array(reviews.length);
+            var i = 0;
+            for (i; i < reviews.length; i++) {
+                var r = await db
+                    .collection("reviews")
+                    .find({_id: reviews[i]}).toArray();
+                reviewObjects[i] = JSON.parse(JSON.stringify(r[0]));
+            }
+        }
+
         return {
-            props: { recipe: JSON.parse(JSON.stringify(recipe)) },
+            props: { recipe: JSON.parse(JSON.stringify(recipe)), reviews: reviewObjects },
         };
     }
     catch (e) {

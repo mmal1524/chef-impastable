@@ -137,19 +137,23 @@ export default function Home({
                         if (!data.success) {
                             handleClickOpen();
                         } else {
+                            console.log(data.fridge_grouped)
                             localStorage.setItem('user', 
                                 JSON.stringify({
-                                username: data.username,
-                                password: data.password,
-                                displayName: data.displayName,
-                                avatar: data.avatar,
-                                friends: data.friends,
-                                friendRequests: data.friendRequests,
-                                createdPrivacy: data.createdPrivacy,
-                                savedPrivacy: data.savedPrivacy,
-                                reviewedPrivacy: data.reviewedPrivacy,
-                                mealPlanPrivacy: data.mealPlanPrivacy,
-                                dietaryTags: data.dietaryTags
+                                    username: data.username,
+                                    password: data.password,
+                                    fridge: data.fridge,
+                                    kitchen: data.kitchen,
+                                    displayName: data.displayName,
+                                    avatar: data.avatar,
+                                    friends: data.friends,
+                                    friendRequests: data.friendRequests,
+                                    dietaryTags: data.dietaryTags,
+                                    fridge_grouped: data.fridge_grouped,
+                                    createdPrivacy: data.createdPrivacy,
+                                    savedPrivacy: data.savedPrivacy,
+                                    reviewedPrivacy: data.reviewedPrivacy,
+                                    mealPlanPrivacy: data.mealPlanPrivacy
                             }));
                             router.push("/homepage");
                         }

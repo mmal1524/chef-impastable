@@ -73,6 +73,9 @@ export default function ProfilePage({besties, futureBesties}) {
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
     var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
+    const [fridge, setFridge] = useState([]);
+    const [kitchen, setKitchen] = useState([])
+    const [fridge_grouped, setFridgeGrouped] = useState({})
 
     
     useEffect(() => {
@@ -127,6 +130,21 @@ export default function ProfilePage({besties, futureBesties}) {
                 get() {
                     return this.mealPlanPrivacy
                 }
+            },
+            getFridge: {
+                get() {
+                    return this.fridge
+                }
+            },
+            getKitchen: {
+                get() {
+                    return this.kitchen
+                }
+            },
+            getFridgeGrouped: {
+                get() {
+                    return this.fridge_grouped
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -170,7 +188,10 @@ export default function ProfilePage({besties, futureBesties}) {
                                     createdPrivacy: createdPrivacy,
                                     savedPrivacy: savedPrivacy,
                                     reviewedPrivacy: reviewedPrivacy,
-                                    mealPlanPrivacy: mealPlanPrivacy
+                                    mealPlanPrivacy: mealPlanPrivacy,
+                                    fridge: fridge,
+                                    kitchen: kitchen,
+                                    fridge_grouped: fridge_grouped
                                  }))
                                 router.push("edit-profile");
                             }}

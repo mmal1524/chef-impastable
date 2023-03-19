@@ -15,6 +15,16 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    fridge: {
+        type:[String]
+    },
+    fridge_grouped: {
+        type: Map,
+        of: [String]
+    },
+    kitchen: {
+        type:[String]
+    }, 
     avatar:{
         type:String
     },
@@ -27,6 +37,7 @@ const userSchema = new mongoose.Schema({
     dietaryTags: {
         type:[String]
     }
+
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

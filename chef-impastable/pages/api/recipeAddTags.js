@@ -17,6 +17,26 @@ export default async function handler(req, res) {
             "exists": false
         },
         {
+            "tag": "Keto",
+            "exists": false
+        },
+        {
+            "tag": "Kosher",
+            "exists": false
+        },
+        {
+            "tag": "Paleo",
+            "exists": false
+        },
+        {
+            "tag": "Pescetarian",
+            "exists": false
+        },
+        {
+            "tag": "Halal",
+            "exists": false
+        },
+        {
             "tag": "Dairy Free",
             "exists": false
         },
@@ -27,12 +47,28 @@ export default async function handler(req, res) {
         {
             "tag": "Nut Free",
             "exists": false
-        }];
+        },
+        {
+            "tag": "Wheat free",
+            "exists": false
+        },
+        {
+            "tag": "Fish free",
+            "exists": false
+        },
+        {
+            "tag": "Shellfish free",
+            "exists": false
+        },
+        {
+            "tag": "Egg free",
+            "exists": false
+        },
+    ];
     try {
         console.log(isDefined)
         if (!isDefined) {
             const recipe = await Recipe.findOneAndUpdate({ title: title },  { $push: { tags: { $each: recipeTags } } }, { new: true });
-            console.log("i am not defined")
             return res.json({
                 tags: recipe.tags
             });

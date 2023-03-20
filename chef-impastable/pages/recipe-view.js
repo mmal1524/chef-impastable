@@ -322,9 +322,16 @@ export default function Recipe({ recipe, reviews }) {
                         <Button onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
-                <h2>Reviews</h2>
+                <h2 className='reviews'>{reviews.length} Reviews</h2>
+                {averageRating(reviews)}
                 {displayReviews(reviews)}
             </Grid>
+
+            <style jsx>{`
+                .reviews {
+                    margin: 0px;
+                }
+            `}</style>
         </>
     );
 
@@ -337,6 +344,30 @@ export default function Recipe({ recipe, reviews }) {
                     reviewCard(review)
                 ))
             );
+        }
+    }
+
+    function averageRating(reviews) {
+        if (reviews.length == 0) {
+            return (
+                <>
+                    <div>Average Rating: N/A</div>
+                    <p></p>
+                </>
+            );
+        } else {
+            var i = 0;
+            var total = 0;
+            for (i; i < reviews.length; i++) {
+                total += reviews[i].rating;
+            }
+            var average = total/reviews.length;
+            return (
+                <>
+                    <div>Average Rating: {average.toFixed(2)} stars</div>
+                    <p></p>
+                </>
+            )
         }
     }
 }

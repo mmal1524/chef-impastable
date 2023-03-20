@@ -27,7 +27,8 @@ export default async function handler(req,res){
                 reviewedPrivacy: user.createdPrivacy,
                 success: true,
                 mealPlanPrivacy: user.mealPlanPrivacy,
-                dietaryTags: user.dietaryTags
+                dietaryTags: user.dietaryTags,
+                reviewedRecipes: user.reviewedRecipes
             });
         }
     } catch (error) {

@@ -133,13 +133,22 @@ export default function Recipe({ recipe, reviews }) {
     const handlePost = async () => {
         // creating a review object
         var reviewid = await createReview(recipe1._id, username, rating, description);
+
         // adding review ID to recipe reviews
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
+        // adding review ID to user's reviewed recipes
+        var userUpdated = await addReviewToUser(username, reviewid.reviewID);
+        console.log(userUpdated);
+        localStorage.setItem('user', JSON.stringify(userUpdated));
         // reloading page
         router.reload();
     }
 
     async function createReview(recipeID, author, rating, description) {
+        console.log(recipeID);
+        console.log(author);
+        console.log(rating);
+        console.log(description);
         const res = await fetch('api/createReview', {
             method: 'POST',
             headers: {
@@ -159,11 +168,6 @@ export default function Recipe({ recipe, reviews }) {
     }
 
     async function addReviewToRecipe(recipeID, reviewID) {
-        console.log("adding review to recipe");
-        console.log("recipeID:");
-        console.log(recipeID);
-        console.log("reviewID:");
-        console.log(reviewID);
         const res = await fetch('api/addReviewToRecipe', {
             method: 'PUT',
             headers: {
@@ -172,11 +176,28 @@ export default function Recipe({ recipe, reviews }) {
             },
             body: JSON.stringify({
                 recipeID: recipeID,
-                reviewID, reviewID
+                reviewID: reviewID
             })
         });
         const data = await res.json();
-        console.log(data);
+        return data;
+    }
+
+    async function addReviewToUser(username, reviewID) {
+        console.log(username);
+        console.log(reviewID);
+        const res = await fetch('api/addReviewToUser', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                reviewID: reviewID
+            })
+        });
+        const data = await res.json();
         return data;
     }
 

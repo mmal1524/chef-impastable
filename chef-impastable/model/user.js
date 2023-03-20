@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema({
     dietaryTags: {
         type:[String]
     },
-    reviews: {
+    reviewedRecipes: {
         type:[SchemaTypes.ObjectId],
         required:false
     }

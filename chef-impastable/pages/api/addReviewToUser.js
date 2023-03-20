@@ -9,41 +9,30 @@ connect()
 export default async function handler(req,res){
     try {
         const {username, reviewID}=req.body
-        console.log(typeof username);
-        console.log(username);
-        console.log(reviewID);
-        console.log(typeof reviewID)
+        const user = await User.findOneAndUpdate({username: username}, {$push: { reviewedRecipes: reviewID}}, {new: true});
 
-        // const user = await User.findOne({username: username}, function (err, doc){
-        //     if (err) return done(err);
-        //     // Create the new field if it doesn't exist yet
-        //     doc.reviews || (doc.reviews = []);
-        //     doc.reviews.push(reviewID);
-
-        //     doc.save();
-        // });
-
-        const user = await User.findOne({username: username});
-        if (!user.reviews) {
-            user.reviews = [];
+        if (!user) {
+            return null;
         }
-        user.reviews.push(reviewID);
-        user.save();
-
-        // const user = await User.findOneAndUpdate({username: username}, {$push: { reviews: reviewID}}, {new: true});
-        // console.log("HERE");
-        // console.log("user:")
-        // console.log(user);
-        // console.log("user reviews:")
-        // console.log(user.reviews);
-        
-        // if (!user) {
-        //     return null;
-        // }
-        // else {
-        //     console.log(user);
-        //     return res.json({success: true});
-        // }
+        else {
+            return res.json({
+                username: user.username,
+                password: user.password,
+                fridge: user.fridge,
+                fridge_grouped: user.fridge_grouped,
+                kitchen: user.kitchen,
+                displayName: user.displayName,
+                avatar: user.avatar,
+                friends: user.friends,
+                friendRequests: user.friendRequests,
+                createdPrivacy: user.createdPrivacy,
+                savedPrivacy: user.savedPrivacy,
+                reviewedPrivacy: user.reviewedPrivacy,
+                mealPlanPrivacy: user.mealPlanPrivacy,
+                dietaryTags: user.dietaryTags,
+                reviewedRecipes: user.reviewedRecipes
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(400).json({status:'Not able to update user.'})

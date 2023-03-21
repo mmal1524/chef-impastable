@@ -80,6 +80,14 @@ const Navbar = () => {
     const handleCloseShopEdit = () => {
         setShopListPopupEdit(false);
     };
+    const closeViewOpenEdit = () => {
+        setShopListPopup(false);
+        setShopListPopupEdit(true);
+    }
+    const closeEditOpenView = () => {
+        setShopListPopup(true);
+        setShopListPopupEdit(false);
+    }
 
 
     const theme = useTheme();
@@ -242,7 +250,7 @@ const Navbar = () => {
                     <ShoppingList/>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClickOpenShopEdit}>
+                    <Button onClick={closeViewOpenEdit}>
                     {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
                         Edit
                     </Button>
@@ -254,6 +262,8 @@ const Navbar = () => {
             <Dialog
                 fullScreen={fullScreen}
                 open={shopListPopupEdit}
+                fullWidth={true}
+                maxWidth={'sm'}
 
                 onClose={handleCloseShop}
                 aria-labelledby="responsive-dialog-title"
@@ -265,6 +275,9 @@ const Navbar = () => {
                     <ShoppingListEdit/>
                 </DialogContent>
                 <DialogActions>
+                    <Button onClick={closeEditOpenView}>
+                        Back to View
+                    </Button>
                     <Button onClick={handleCloseShopEdit}>
                         Done
                     </Button>

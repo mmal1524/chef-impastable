@@ -39,6 +39,7 @@ export default function FriendsPage({besties}) {
     var [foundUserDis, setfoundUserDis] = useState("")
     
     // don't need a router, need to have a list of users come up
+  
 
     const [username, setUsername] = useState("");
     var [displayName, setDisplayName] = useState("");

@@ -1,3 +1,5 @@
+import * as React from 'react';
+import Typography from '@mui/material/Typography';
 import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
@@ -10,11 +12,26 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import { createTheme } from '@mui/material/styles';
+import { useState, useEffect } from 'react';
 
 export default function Recipe({ recipe }) {
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: "#ffc107",
+            },
+        },
+    });
+
     function createRow(name, value) {
         return { name, value };
-    } 
+    }
     console.log(JSON.stringify(recipe.nutrients.calories));
 
     const nutritionRows = [
@@ -28,11 +45,65 @@ export default function Recipe({ recipe }) {
         createRow('Fat Content', recipe.nutrients.fatContent),
         createRow('Unsaturated Fat Content', recipe.nutrients.unsaturatedFatContent),
     ];
+
+    const [stateRecipeTags, setStateRecipeTags] = React.useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            var data = await AddTag(recipe.title, null, null, null, false);
+            setStateRecipeTags(data.tags);
+        };
+        if (recipe.tags === undefined) {
+            //if the recipe tags are undefined, must be initialized 
+            fetchData();
+        } else {
+            setStateRecipeTags(recipe.tags)
+        }
+    }, [])
+
+    const [updateCount, setUpdateCount] = useState(0);
+    const [expanded, setExpanded] = React.useState('panel1');
+    const handleChange = (panel) => (event, newExpanded) => {
+        setExpanded(newExpanded ? panel : false);
+    };
+
+    const handleClick = async (index) => {
+        const updatedTag = {
+            ...stateRecipeTags[index],
+            exists: !stateRecipeTags[index].exists,
+        };
+        const updatedTags = [
+            ...stateRecipeTags.slice(0, index),
+            updatedTag,
+            ...stateRecipeTags.slice(index + 1),
+        ];
+        setStateRecipeTags(updatedTags);
+        await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
+    };
+
     return (
         <>
             <Grid>
                 <div className="App">
                     <Navbar />
+                </div>
+                <div>
+                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+                        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                            <Typography>Dietary Tags</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Box sx={{ '& > :not(style)': { m: 1 } }}>
+                                {stateRecipeTags && stateRecipeTags.map((tag, index) => (
+                                    <Fab variant="extended" size="medium" color={(stateRecipeTags[index].exists) ? "primary" : ""} aria-label="add" onClick={async () => handleClick(index)} theme={theme} key={index + updateCount}>
+                                        {tag.tag}
+                                    </Fab>
+                                ))}
+                            </Box>
+                        </AccordionDetails>
+                    </Accordion>
+
+
                 </div>
                 <Grid container
                     display="flex"
@@ -86,7 +157,7 @@ export default function Recipe({ recipe }) {
                             <TableBody>
                                 {nutritionRows.map((row) => (
                                     <TableRow
-                                    key={row.name}
+                                        key={row.name}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">
@@ -102,6 +173,29 @@ export default function Recipe({ recipe }) {
             </Grid>
         </>
     );
+}
+
+async function AddTag(title, tag, exists, isDefined) {
+    try {
+        const res = await fetch('/api/recipeAddTags', {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                tag: tag,
+                exists: exists,
+                isDefined: isDefined
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
+    catch (error) {
+        return error;
+    }
 }
 
 export async function getServerSideProps(context) {
@@ -120,4 +214,5 @@ export async function getServerSideProps(context) {
         console.error(e);
     }
 }
+
 

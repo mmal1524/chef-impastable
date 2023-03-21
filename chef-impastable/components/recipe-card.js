@@ -46,6 +46,8 @@ function RecipeCard( props ) {
     const [username, setUsername] = useState("");
     var [friends, setFriends] = useState([]);
 
+    const [sendList, setSendList] = useState([]);
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -100,14 +102,21 @@ function RecipeCard( props ) {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button> 
-                                    Send
-                                </Button>
-                                <Button onClick={handleClose} autoFocus>
-                                    Cancel
-                                </Button>
-                        </DialogActions>
-                    </Dialog>
+                        <Button 
+                            // onClick={ async () => {
+                            //     var i = 0;
+                            //     for (i; i < sendList.length; i++) {
+                            //         console.log(sendList[i])
+                            //     }
+                            // }}
+                            > 
+                            Send
+                        </Button>
+                        <Button onClick={handleClose} autoFocus>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
         </CardActions>
     </Card>
     );
@@ -174,8 +183,9 @@ function displayFriends(friendsList) {
                           checked={checked.indexOf(value) !== -1}
                           tabIndex={-1}
                           disableRipple
-                          //inputProps={{ 'aria-labelledby': labelId }}
+                          inputProps={{ 'aria-labelledby': labelId }}
                         />
+                        {console.log("here")}
                       </ListItemIcon>
                       <ListItemText id={labelId} primary={`${friendsList[value]}`} />
                     </ListItemButton>
@@ -184,6 +194,28 @@ function displayFriends(friendsList) {
               })}
             </List>
           );
+    }
+
+    async function createShare(recipeID, sender, reciever) {
+        console.log(recipeID);
+        console.log(sender);
+        console.log(reciever);
+        const res = await fetch('api/createShare', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                author: author,
+                rating: rating,
+                description: description
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
     }
 }
 

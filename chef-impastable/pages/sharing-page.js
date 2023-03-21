@@ -121,7 +121,7 @@ export default function SharingPage( {besties} ) {
             <div>
                 <Navbar /> 
             </div>
-            <Grid container spacing={4}>
+            <Grid container spacing={5.5}>
               <Grid xs={3}>
                 <Box sx={{width: '100%', marginBottom: 4}}>
                     <h3 className="h3"> Friends </h3>

@@ -15,6 +15,10 @@ const recipeSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+    cook_time: {
+        type:String, 
+        required:false
+    },
     description: {
         type:String,
         required:true
@@ -59,6 +63,10 @@ const recipeSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+    title: {
+        type:String,
+        reqiured:false
+    },
     total_time: {
         type:Number,
         required:false
@@ -70,7 +78,19 @@ const recipeSchema = new mongoose.Schema({
     reviews: {
         type:[SchemaTypes.ObjectId],
         required:false
-    }
+    },
+    tags: [
+        {
+            tag: {
+                type:String, 
+                required:false
+            },
+            exists: {
+                type:Boolean,
+                required:false
+            }
+        }
+    ]
 });
 
 module.exports = mongoose.models.Recipe || mongoose.model('Recipe', recipeSchema);

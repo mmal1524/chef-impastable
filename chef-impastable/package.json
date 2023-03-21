@@ -15,12 +15,15 @@
     "@mui/material": "^5.11.9",
     "dns": "^0.2.2",
     "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
     "mongodb": "^4.8.1",
     "mongoose": "^6.9.2",
-    "next": "^13.2.4",
+    "net": "^1.0.2",
+    "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "tls": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "18.7.5",

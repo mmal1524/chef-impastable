@@ -2,6 +2,7 @@ import {Card, CardHeader, CardContent, CardMedia} from "@mui/material";
 import Image from "next/image";
 import {CardActionArea, CardActions, IconButton} from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import SendIcon from '@mui/icons-material/Send';
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Link } from "@mui/material";
@@ -31,6 +32,9 @@ function RecipeCard(props) {
         <CardActions>
             <IconButton>
                 <FavoriteBorderOutlinedIcon />
+            </IconButton>
+            <IconButton>
+                <SendIcon />
             </IconButton>
         </CardActions>
     </Card>

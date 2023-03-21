@@ -272,7 +272,7 @@ const Navbar = () => {
                     {"Edit Shopping List:"}
                 </DialogTitle>
                 <DialogContent>
-                    <ShoppingListEdit/>
+                    <ShoppingListEdit></ShoppingListEdit>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeEditOpenView}>
@@ -287,4 +287,5 @@ const Navbar = () => {
     );
 }
 export default Navbar;
+
 

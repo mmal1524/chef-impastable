@@ -6,7 +6,7 @@ import { Grid, List, ListItemText, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
 
 const ShoppingList = () => {
-
+    console.log(JSON.parse(localStorage.getItem('user')));
     const [shoppingList, setShoppingList] = useState("");
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));

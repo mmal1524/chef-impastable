@@ -6,17 +6,22 @@ import { Grid, List, ListItem, ListItemText, TextField } from '@mui/material';
 import { useState, useEffect } from "react";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Autocomplete } from '@mui/material';
+//import clientPromise from "../lib/mongodb_client";
 
-const ShoppingListEdit = () => {
+export default function ShoppingListEdit() {
 
     const [username, setUsername] = useState("");
     const [shoppingList, setShoppingList] = useState("");
+    const [fridge, setFridge] = useState([]);
+    const [addIngr, setAddIngr] = useState("");
 
     const deleteByIndex = index => {
         setShoppingList(oldValues => {
             return oldValues.filter((_, i) => i !== index)
         })
     }
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -28,11 +33,17 @@ const ShoppingListEdit = () => {
             getUsername: {
                 get() {
                     return this.username
-                }
-            }
+                },
+            },
+            getFridge: {
+                get() {
+                    return this.fridge
+                },
+            },
         });
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
+        setFridge(thisUser.getFridge);
         // var emptyList = document.getElementById("empty");
         // if (shoppingList.length == 0) {
         //     emptyList.style.display = "block";
@@ -40,6 +51,15 @@ const ShoppingListEdit = () => {
         //     emptyList.style.display = "none";
         // }
     }, []);
+
+    // for autocomplete search bar
+    const ingrArr = JSON.parse(localStorage.getItem('ing')).map(a => a.ingredient);
+    //console.log(ingrArr);
+    const [ingrArr2, setIngrArr2] = useState(ingrArr);
+    useEffect(() => {
+        setIngrArr2(ingrArr.filter(ing => shoppingList ? (!fridge.includes(ing.toLowerCase()) && !shoppingList.includes(ing.toLowerCase())) : true))
+        //console.log(ingrArr2)
+    })
 
     return (
         <>   
@@ -52,12 +72,43 @@ const ShoppingListEdit = () => {
                     //width: '38vw'
                 }}
             >
-                <TextField label="Search for Items" id="Search Bar" sx={{width: 400}}/>
+                <Autocomplete
+                    disablePortal
+                    freeSolo
+                    id="for-search"
+                    options={ingrArr2}
+                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                    renderInput={params => (
+                        <TextField 
+                        {...params}
+                        label="Search for Items" id="Search Bar" 
+                        sx={{width: 400}}
+                        onChange={({ target }) => setAddIngr(target.value)}
+                        />
+                    )}
+                />
                 <Button
                     type="submit" 
                     size="large" 
                     variant="contained"
                     sx={{width: 130}}
+                    onClick={async () => {
+                        // check if already in shopping list
+                        var idxSL = await indexMatch(shoppingList, addIngr);
+                        // if yes, error message
+                        // check if already in fridge
+                        var idxSL = await indexMatch(shoppingList, addIngr);
+                        // if yes, error message
+                        // if not in either
+                        var data = await addIngredient(username, addIngr);
+                        localStorage.setItem('user',
+                            JSON.stringify(data));
+                        setAddIngr("");
+                        setShoppingList(shoppingList => [...shoppingList, addIngr]);
+                        console.log("added")
+                        console.log(shoppingList)
+                        
+                    }}
                 >Enter</Button>
             </Grid>
             {/* <Grid container id="empty">
@@ -104,8 +155,6 @@ const ShoppingListEdit = () => {
     );
 }
 
-export default ShoppingListEdit;
-
 async function DeleteListItem(username, item) {
     try {
         const res = await fetch('/api/deleteShopListItem', {
@@ -125,6 +174,56 @@ async function DeleteListItem(username, item) {
         return error
     }
 }
+
+async function addIngredient(username, item) {
+    //try {
+        console.log(item);
+        const res = await fetch('/api/addShoppingListItem', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                item: item,
+            })
+        })
+        const data = await res.json();
+        console.log(data);
+        return data;
+    //} catch (error) {
+    //    res.json(error);
+    //    return res.status(405).end();
+    //}
+}
+
+async function indexMatch(array, q) {
+    //console.log(array);
+    return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
+}
+
+// export async function getServerSideProps() {
+//     try {
+//         console.log("ss for shopping list")
+
+//         const client = await clientPromise;
+//         const db = client.db("test");
+
+//         const ingredients = await db
+//             .collection("ingredients")
+//             .find({})
+//             .toArray();
+//         // console.log(ingredients)
+//         return {
+//             props: {ingredients: JSON.parse(JSON.stringify(ingredients))},
+//         };
+//     }
+//     catch (e) {
+//         console.error(e);
+//     }
+    
+// }
 
 
 

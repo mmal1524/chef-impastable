@@ -36,7 +36,7 @@ export default function FriendsPage({besties}) {
 
     const [searchValue, setSearchValue] = useState("");
     var [foundUser, setfoundUser] = useState("");
-    var [foundUserDis, setfoundUserDis] = useState("")
+    var [foundUserDis, setfoundUserDis] = useState("");
     
     // don't need a router, need to have a list of users come up
 
@@ -160,17 +160,10 @@ export default function FriendsPage({besties}) {
                       color='primary'
                       size='small'
                       onClick={ async () => {
-                        console.log('hey');
-                        console.log(searchValue);
                         var thisFoundUser = await findUser(searchValue);
                         var thisFoundUserDis = await findUserDisplay(searchValue);
-                        console.log('this found user');
-                        console.log(thisFoundUserDis);
-                        console.log(await findUserDisplay(searchValue))
-                        console.log("up")
                         
                         if (thisFoundUser == null) {
-                          console.log("no")
                           setfoundUser(null);
                         } else {
                             setfoundUser(thisFoundUser);
@@ -241,14 +234,10 @@ export default function FriendsPage({besties}) {
     );
 
   async function findUser(username) {
-    //var nullCheck = await fetch('api/finduser')
-    console.log(username.length)
     if (username.length == 0) {
-        console.log("in")
         return null;
     } 
 
-    console.log("in find user")
     const res = await fetch('/api/finduser', {
       method: 'POST', 
       headers: {
@@ -259,11 +248,7 @@ export default function FriendsPage({besties}) {
         username: username,
       })
     })
-    console.log(res)
-    console.log("at the end of findUser")
     const data = await res.json();
-    console.log('data')
-    console.log(data)
     return data;
   } 
 
@@ -303,9 +288,7 @@ export default function FriendsPage({besties}) {
                 friendCardTwo(friend)
             ))
         );
-    }
-
-    
+    }  
 }
 
 // function displayUserDecider(usernameUser, displayUser) {

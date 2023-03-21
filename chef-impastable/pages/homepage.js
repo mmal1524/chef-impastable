@@ -7,7 +7,6 @@ import Navbar from './navbar';
 import { useEffect } from 'react';
 import React from 'react';
 
-
 export default function HomePage({recipes}) {    
     console.log(recipes)
     return (

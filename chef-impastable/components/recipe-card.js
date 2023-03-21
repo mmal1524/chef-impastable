@@ -20,8 +20,13 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card.js';
-
-
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
+import CommentIcon from '@mui/icons-material/Comment';
 
 function RecipeCard( props ) {
     //https://nextjs.org/docs/api-reference/next/link
@@ -128,25 +133,57 @@ async function findUser(username) {
     return data;
   } 
 
-async function displayFriends(friendsList) {
+function displayFriends(friendsList) {
+    const [checked, setChecked] = React.useState([0]);
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
+    
     if (friendsList.length == 0) {
         return(<>You have no friends :(</>);
     } else {
-        var friendsObjects = new Array;
+        var friendListLength = new Array; 
         var i = 0;
         for (i; i < friendsList.length; i++) {
-            var friend = await findUser(friendsList[i]);
-            console.log("friend")
-            console.log(friend)
-            friendsObjects.push(friend)
+            friendListLength.push(i);
         }
-        console.log("type");
-        console.log((typeof[friendsObjects]));
         return (
-            friendsObjects.map((friend) => (
-                friendCard(friend)
-            ))
-        );
+            <List sx={{ width: '100%', maxWidth: 360, maxHeight: 200, bgcolor: 'background.paper' }}>
+              {friendListLength.map((value) => {
+                const labelId = `checkbox-list-label-${value}`;
+        
+                return (
+                  <ListItem
+                    key={value}
+                    disablePadding
+                  >
+                    <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          checked={checked.indexOf(value) !== -1}
+                          tabIndex={-1}
+                          disableRipple
+                          //inputProps={{ 'aria-labelledby': labelId }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText id={labelId} primary={`${friendsList[value]}`} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          );
     }
 }
 

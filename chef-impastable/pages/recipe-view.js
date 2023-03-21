@@ -33,7 +33,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
-import { useState, useEffect } from 'react';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();

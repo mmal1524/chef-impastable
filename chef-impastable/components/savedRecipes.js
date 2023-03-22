@@ -12,8 +12,7 @@ import SaveRecipeDialog from './saveRecipeDialog';
 export default function SavedRecipes() {
     const [folders, setFolders] = useState([]);
     const [currFolder, setCurrFolder] = useState({name: "", recipes: []});
-    // const [displayRecipes, setDisplayRecipes] = useState([]);
-    // const [folderNames, setFolderNames] = useState([]);
+
     const [inFolder, setInFolder] = useState(false);
     const [noneIndex, setNoneIndex] = useState(-1);
     const [showAddFolder, setAddFolder] = useState(false);
@@ -37,16 +36,7 @@ export default function SavedRecipes() {
                 else if (currFolder.name == folder.name) {
                     setCurrFolder(folder);
                 }
-                // if (folder.name != 'none') {
-                //     fNames.push(folder.name);
-                // }
-                // else {
-                //     setCurrFolder(folder);
-                //     debugger;
-                //     setDisplayRecipes(folder.recipes);
-                // }
             });
-            // setFolderNames(fNames);
         }
         getSavedFolders();
     }, [update])
@@ -66,8 +56,6 @@ export default function SavedRecipes() {
                 if (data) {
                     localStorage.setItem('user', JSON.stringify(data));
                 }
-                // displayRecipes[recipeIndex].saved = !displayRecipes[recipeIndex].saved;
-                // setDisplayRecipes(displayRecipes);
                 console.log("submit button clicked"); 
                 setShowSaveOptions(false);
                 setUpdate(update + 1);
@@ -140,14 +128,6 @@ export default function SavedRecipes() {
                             console.log("show save dialog"); 
                             setShowSaveOptions(true); 
                             setRecipeID(recipe._id); 
-                            // setRecipeIndex(index);
-                            
-                            //     console.log("unsave recipe");
-                            //     unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
-                            //     displayRecipes[index].saved = !displayRecipes[index].saved;
-                            //     setDisplayRecipes(displayRecipes);
-                            //     setRecipeID(recipe._id);
-                            // }
                         }}
                     />
                 </Grid>

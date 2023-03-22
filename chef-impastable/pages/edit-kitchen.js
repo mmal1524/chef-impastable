@@ -216,7 +216,8 @@ export default function EditKitchen({appliances}) {
                                                             createdPrivacy: data.createdPrivacy,
                                                             savedPrivacy: data.savedPrivacy,
                                                             reviewedPrivacy: data.reviewedPrivacy,
-                                                            mealPlanPrivacy: data.mealPlanPrivacy
+                                                            mealPlanPrivacy: data.mealPlanPrivacy,
+                                                            reviewedRecipes: data.reviewedRecipes
                                                         }));
                                                 }}>
                                                     <DeleteIcon />

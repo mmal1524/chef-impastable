@@ -317,7 +317,8 @@ export default function SignUp() {
                 fridge_grouped: {"general": []},
                 mealPlanPrivacy: "everyone",
                 dietaryTags: [], 
-                saved: []
+                saved: [],
+                reviewedRecipes: []
             })
         })
         const data = await res.json();

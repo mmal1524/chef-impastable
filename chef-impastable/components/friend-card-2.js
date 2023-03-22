@@ -14,13 +14,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+//import { viewFriendProfile } from "./view-friends-card";
  
 export function friendCardTwo(friend) {
 
     const router = useRouter();
 
     const [username, setUsername] = useState("");
-
+    const [password, setPassword] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [avatar, setAvatar] = useState("");
+    const [friends, setFriends] = useState([]);
+    const [friendRequests, setFriendRequests] = useState("");
+    var [createdPrivacy, setCreatedPrivacy] = useState("");
+    var [savedPrivacy, setSavedPrivacy] = useState("");
+    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
+    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -102,7 +111,7 @@ export function friendCardTwo(friend) {
 
                                 localStorage.setItem('user', JSON.stringify(currUser));
                                 router.reload();
-                                
+
                                 swal("Friend Removed");
                                 }}
                                     sx = {{color: 'red'}}
@@ -116,7 +125,12 @@ export function friendCardTwo(friend) {
                     </Dialog>
                 <Button 
                     variant="outlined" 
+                    sx={{color:'blue', borderColor:'blue'}}
                     endIcon={<FullscreenIcon />}
+                    onClick={ async () => {
+                        var friendUser = await viewFriend(friend.username);
+                        router.push({pathname: "/view_friends", query: {username: friendUser.username} })
+                       }}
                 >
                     View
                 </Button>
@@ -149,4 +163,21 @@ export function friendCardTwo(friend) {
         console.log(data);
         return data;
     }
+
+    async function viewFriend(friend) {
+        const res = await fetch('/api/finduser', {
+            method: 'POST', 
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: friend,
+            })
+    })
+    const friendJSON = await res.json();
+    console.log('data')
+    console.log(friendJSON)
+    return friendJSON;
+  } 
 }

@@ -39,8 +39,14 @@ const userSchema = new mongoose.Schema({
     dietaryTags: {
         type:[String]
     },
+<<<<<<< HEAD
     saved: {
         type:[ObjectId],
+=======
+    reviewedRecipes: {
+        type:[SchemaTypes.ObjectId],
+        required:false
+>>>>>>> 8f0a1cb6462aadc597a8baea0a17291144f6952e
     }
 
 });

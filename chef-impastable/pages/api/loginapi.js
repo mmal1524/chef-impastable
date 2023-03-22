@@ -30,7 +30,8 @@ export default async function handler(req,res){
                 mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
                 saved: user.saved,
-                success: true
+                success: true,
+                reviewedRecipes: user.reviewedRecipes
             });
         }
     } catch (error) {

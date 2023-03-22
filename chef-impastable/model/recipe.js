@@ -1,5 +1,5 @@
 import { modalUnstyledClasses } from "@mui/material";
-import mongoose from "mongoose";
+import mongoose, { SchemaTypes } from "mongoose";
 
 const recipeSchema = new mongoose.Schema({
     author:{
@@ -13,6 +13,10 @@ const recipeSchema = new mongoose.Schema({
     },
     category: {
         type:String,
+        required:false
+    },
+    cook_time: {
+        type:String, 
         required:false
     },
     description: {
@@ -59,6 +63,10 @@ const recipeSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+    title: {
+        type:String,
+        reqiured:false
+    },
     total_time: {
         type:Number,
         required:false
@@ -66,7 +74,23 @@ const recipeSchema = new mongoose.Schema({
     yields: {
         type:String,
         required:false
-    }
+    },
+    reviews: {
+        type:[SchemaTypes.ObjectId],
+        required:false
+    },
+    tags: [
+        {
+            tag: {
+                type:String, 
+                required:false
+            },
+            exists: {
+                type:Boolean,
+                required:false
+            }
+        }
+    ]
 });
 
 module.exports = mongoose.models.Recipe || mongoose.model('Recipe', recipeSchema);

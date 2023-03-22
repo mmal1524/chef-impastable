@@ -169,7 +169,8 @@ export default function Fridge(props) {
                                 createdPrivacy: data.createdPrivacy,
                                 savedPrivacy: data.savedPrivacy,
                                 reviewedPrivacy: data.reviewedPrivacy,
-                                dietaryTags: data.dietaryTags
+                                dietaryTags: data.dietaryTags,
+                                reviewedRecipes: data.reviewedRecipes
                             }));
                             setAddIngr("")
                             console.log(addIngr, searchGroups)

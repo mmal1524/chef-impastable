@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import connect from "../../lib/mongodb"
 import User from "../../model/user"
 
@@ -7,17 +8,9 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username, newDisplayName, newAvatar, newCreatPriv, newSavPriv, newRevPriv, newMealPriv}=req.body
-        const user = await User.findOne({username})
-        const update = {
-            displayName: newDisplayName,
-            avatar: newAvatar,
-            createdPrivacy: newCreatPriv,
-            savedPrivacy: newSavPriv,
-            reviewedPrivacy: newRevPriv,
-            mealPlanPrivacy: newMealPriv
-        }
-        await user.updateOne(update)
+        const {username, reviewID}=req.body
+        const user = await User.findOneAndUpdate({username: username}, {$push: { reviewedRecipes: reviewID}}, {new: true});
+
         if (!user) {
             return null;
         }
@@ -25,19 +18,23 @@ export default async function handler(req,res){
             return res.json({
                 username: user.username,
                 password: user.password,
-                displayName: newDisplayName,
-                avatar: newAvatar,
+                fridge: user.fridge,
+                fridge_grouped: user.fridge_grouped,
+                kitchen: user.kitchen,
+                displayName: user.displayName,
+                avatar: user.avatar,
                 friends: user.friends,
                 friendRequests: user.friendRequests,
-                createdPrivacy: newCreatPriv,
-                savedPrivacy: newSavPriv,
-                reviewedPrivacy: newRevPriv,
-                mealPlanPrivacy: newMealPriv,
+                createdPrivacy: user.createdPrivacy,
+                savedPrivacy: user.savedPrivacy,
+                reviewedPrivacy: user.reviewedPrivacy,
+                mealPlanPrivacy: user.mealPlanPrivacy,
                 dietaryTags: user.dietaryTags,
                 reviewedRecipes: user.reviewedRecipes
             });
         }
     } catch (error) {
+        console.log(error);
         res.status(400).json({status:'Not able to update user.'})
         console.log('error');
     }

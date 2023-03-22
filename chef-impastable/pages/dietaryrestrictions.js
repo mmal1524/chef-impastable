@@ -159,7 +159,8 @@ export default function Home() {
                             createdPrivacy: data.createdPrivacy,
                             savedPrivacy: data.savedPrivacy,
                             reviewedPrivacy: data.reviewedPrivacy,
-                            mealPlanPrivacy: data.mealPlanPrivacy
+                            mealPlanPrivacy: data.mealPlanPrivacy,
+                            reviewedRecipes: data.reviewedRecipes
                         }));
                 }}
             >Add Tag

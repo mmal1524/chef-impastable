@@ -8,6 +8,10 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Autocomplete } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 //import clientPromise from "../lib/mongodb_client";
 
 export default function ShoppingListEdit() {
@@ -62,6 +66,14 @@ export default function ShoppingListEdit() {
         //console.log(ingrArr2)
     })
 
+    // for messages
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    // unassigned
+    const [openS, setOpenS] = useState(false);
+    const handleClickOpenS = () => {setOpenS(true);};
+    const handleCloseS = () => {setOpenS(false);};
+
     return (
         <>   
         <div sx={{width: 800}}>
@@ -96,19 +108,25 @@ export default function ShoppingListEdit() {
                     onClick={async () => {
                         // check if already in shopping list
                         var idxSL = await indexMatch(shoppingList, addIngr);
-                        // if yes, error message
-                        // check if already in fridge
-                        var idxSL = await indexMatch(shoppingList, addIngr);
-                        // if yes, error message
-                        // if not in either
-                        var data = await addIngredient(username, addIngr);
-                        localStorage.setItem('user',
-                            JSON.stringify(data));
-                        setAddIngr("");
-                        setShoppingList(shoppingList => [...shoppingList, addIngr]);
-                        console.log("added")
-                        console.log(shoppingList)
-                        
+                        if (idxSL == -1) {
+                            // item not found in shopping list
+                            // check if already in fridge
+                            var idxF = await indexMatch(fridge, addIngr);
+                            if (idxF == -1) {
+                                // item not found in fridge
+                                var data = await addIngredient(username, addIngr);
+                                localStorage.setItem('user', JSON.stringify(data));
+                                setAddIngr("");
+                                setShoppingList(shoppingList => [...shoppingList, addIngr]);
+                                console.log("added")
+                                console.log(shoppingList)
+                                // confirmation popup? can tell if added
+                            } else {
+                                // item already owned in fridge, error message?
+                            }
+                        } else {
+                            // item already in list, error message?
+                        }
                     }}
                 >Add</Button>
                 <Button
@@ -129,6 +147,7 @@ export default function ShoppingListEdit() {
                 List is empty.
             </Grid> */}
             <Grid containter>
+                {/* {displayList(shoppingList)} */}
                 {shoppingList && shoppingList.map((item, index) => (
                     <Box>
                         <FormGroup row>
@@ -143,8 +162,7 @@ export default function ShoppingListEdit() {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);
                                                 console.log(localStorage.getItem('user'))
-                                                localStorage.setItem('user',
-                                                    JSON.stringify(data));
+                                                localStorage.setItem('user', JSON.stringify(data));
                                                 console.log(localStorage.getItem('user'));
                                             }}
                                             >
@@ -165,9 +183,75 @@ export default function ShoppingListEdit() {
                 
             </Grid>
         </div>
+        <div>
+            {/* confirmation popup */}
+            <Dialog
+                fullScreen={fullScreen}
+                open={openS}
+                onClose={handleCloseS}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Success"}
+                </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            The ingredient was successfully added!
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseS} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+            </Dialog>
+        </div>
         </>
     );
 }
+
+// function displayList(shoppingList) {
+//     if (shoppingList.length > 0) {
+//         return (
+//             <Grid>
+//             {shoppingList && shoppingList.map((item, index) => (
+//                 <Box>
+//                     <FormGroup row>
+//                     </FormGroup>
+//                     <Grid container>
+//                         <Grid>
+//                             <List>
+//                                 <ListItem
+//                                     secondaryAction={
+//                                         <IconButton edge="end" aria-label="delete" 
+//                                         onClick={async () => {
+//                                             deleteByIndex(index);
+//                                             var data = await DeleteListItem(username, item);
+//                                             console.log(localStorage.getItem('user'))
+//                                             localStorage.setItem('user', JSON.stringify(data));
+//                                             console.log(localStorage.getItem('user'));
+//                                         }}
+//                                         >
+//                                             <DeleteIcon />
+//                                         </IconButton>
+//                                     }
+//                                 >
+//                                     <ListItemText
+//                                         sx={{display: 'flex', justifyContent: 'center'}}
+//                                         primary={item}
+//                                     />
+//                                 </ListItem>
+//                             </List>
+//                         </Grid>
+//                     </Grid>
+//                 </Box>
+//             ))}
+//             </Grid>
+//         );
+//     } else {
+//         return (<>Shopping List Empty</>);
+//     }
+// }
 
 async function DeleteListItem(username, item) {
     try {

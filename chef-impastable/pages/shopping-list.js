@@ -18,22 +18,42 @@ const ShoppingList = () => {
             },
         });
         setShoppingList(thisUser.getShoppingList);
-        // var emptyList = document.getElementById("empty");
-        // console.log(shoppingList.length);
-        // if (shoppingList.length != 0) {
-        //     emptyList.style.display = "block";
-        // } else {
-        //     emptyList.style.display = "none";
-        // }
     }, []);
 
     return (
         <>   
         <div >
-            {/* <Grid container id="empty">
-                List is empty.
-            </Grid> */}
             <Grid containter>
+                {displayList(shoppingList)}
+                {/* {shoppingList && shoppingList.map((item, index) => (
+                    <Box>
+                        <FormGroup row>
+                        </FormGroup>
+                        <Grid container>
+                            <Grid>
+                                <List>
+                                    <ListItemText
+                                        sx={{display: 'flex', justifyContent: 'center'}}
+                                        primary={item}
+                                    />
+                                </List>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                ))} */}
+                
+            </Grid>
+        </div>
+        </>
+    );
+}
+
+export default ShoppingList;
+
+function displayList(shoppingList) {
+    if (shoppingList.length > 0) {
+        return (
+            <Grid>
                 {shoppingList && shoppingList.map((item, index) => (
                     <Box>
                         <FormGroup row>
@@ -50,14 +70,16 @@ const ShoppingList = () => {
                         </Grid>
                     </Box>
                 ))}
-                
             </Grid>
-        </div>
-        </>
-    );
+        );
+    } else {
+        return (
+            <Grid>
+                <Typography>Your List is Empty, add something!</Typography>
+            </Grid>
+        );
+    }
 }
-
-export default ShoppingList;
 
 
 

@@ -6,6 +6,7 @@ import { Grid, List, ListItem, ListItemText, TextField } from '@mui/material';
 import { useState, useEffect } from "react";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ClearIcon from '@mui/icons-material/Clear';
 import { Autocomplete } from '@mui/material';
 //import clientPromise from "../lib/mongodb_client";
 
@@ -69,7 +70,7 @@ export default function ShoppingListEdit() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     pt:1,
-                    //width: '38vw'
+                    
                 }}
             >
                 <Autocomplete
@@ -81,8 +82,8 @@ export default function ShoppingListEdit() {
                     renderInput={params => (
                         <TextField 
                         {...params}
-                        label="Search for Items" id="Search Bar" 
-                        sx={{width: 400}}
+                        label="Search for Item" id="Search Bar" 
+                        sx={{width: 300}}
                         onChange={({ target }) => setAddIngr(target.value)}
                         />
                     )}
@@ -91,7 +92,7 @@ export default function ShoppingListEdit() {
                     type="submit" 
                     size="large" 
                     variant="contained"
-                    sx={{width: 130}}
+                    sx={{width: 110}}
                     onClick={async () => {
                         // check if already in shopping list
                         var idxSL = await indexMatch(shoppingList, addIngr);
@@ -109,7 +110,20 @@ export default function ShoppingListEdit() {
                         console.log(shoppingList)
                         
                     }}
-                >Enter</Button>
+                >Add</Button>
+                <Button
+                    type="submit" 
+                    size="large" 
+                    variant="outlined"
+                    color="error"
+                    startIcon={<ClearIcon/>}
+                    sx={{width: 110}}
+                    onClick={async () => {
+                        setShoppingList([]);
+                        var data = await ClearList(username);
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }}
+                >Clear</Button>
             </Grid>
             {/* <Grid container id="empty">
                 List is empty.
@@ -171,7 +185,26 @@ async function DeleteListItem(username, item) {
         const data = await res.json();
         return data;
     } catch {
-        return error
+        console.error(e);
+    }
+}
+
+async function ClearList(username) {
+    try {
+        const res = await fetch('/api/clearShoppingListItems', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        console.error(e);
     }
 }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Typography } from '@mui/material';
 import { TextField, DialogTitle, DialogContent } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useState, useEffect } from "react";
@@ -12,8 +12,18 @@ export default function SaveRecipeDialog(props) {
 
     return (
         <Dialog open={props.show} onClose={props.onClose}>
-            <DialogTitle>Save Recipe</DialogTitle>
+            <DialogTitle>{props.title ? props.title : "Save Recipe"}</DialogTitle>
             <DialogContent>
+                {props.unsave ? 
+                <>
+                    <Button onClick={props.unsave}>
+                        Unsave
+                    </Button>
+                    <Typography>
+                        OR
+                    </Typography>
+                </>
+                : null}
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"

@@ -10,21 +10,37 @@ export default async function getSavedFolders(req,res){
     try {
         const username=req.body.user;
         const getRecipeData = req.body.getData;
-        const folders = await SavedFolder.find({user: username});
-        console.log(folders);
+        console.log(getRecipeData);
+        var folders = await SavedFolder.find({user: username});
+        // console.log(folders);
+        console.log(typeof(folders));
         if (!folders) {
             res.status(400).json({status: "Not able to find folders"});
         }
         else {
             if (getRecipeData) {
-                folders.forEach( (folder) => {
-                    folder.recipes = folder.recipes.map( async (recipeID) => {
-                        await Recipe.findById(recipeID);
-                    });
-                    console.log(folder.recipes);
-                });
-                console.log(folders);
+                var dupFolders = [];
+                // console.log("in if")
+                for (var i = 0; i < folders.length; i++) {
+                    var tempFolder = Object();
+                    tempFolder.name = folders[i].name;
+                    var recipes = folders[i].recipes;
+                    var recipesData = []
+                    for (var j = 0; j < recipes.length; j++) {
+                        var data = await Recipe.findById(recipes[j]);
+                        // console.log(data);
+                        recipesData.push(data);
+                    }
+                    Object(folders);
+                    tempFolder.recipes = recipesData;
+                    dupFolders.push(tempFolder);
+                    // console.log(dupFolders);
+                    // folders[i].recipes = recipesData;
+                    // console.log(folders);
+                }
+                return res.json(dupFolders);
             }
+            // console.log(folders);
             return res.json(folders);
         }
     } catch (error) {

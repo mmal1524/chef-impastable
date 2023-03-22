@@ -51,8 +51,11 @@ export default function HomePage({recipes}) {
     return (
         <> 
             <SaveRecipeDialog
-                onSubmit = {(folderName) => {
-                    saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID); 
+                onSubmit = {async (folderName) => {
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID); 
+                    if (data) {
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }
                     if (!folderNames.includes(folderName)) {
                         folderNames.push(folderName);
                         setFolderNames(folderNames);
@@ -96,14 +99,9 @@ export default function HomePage({recipes}) {
                                     else {
                                         console.log("unsave recipe");
                                         unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
-                                        //console.log(displayRecipes[index]);
-                                        // console.log(displayRecipes[index].saved);
-                                        // console.log(displayRecipes[index]);
                                         displayRecipes[index].saved = !displayRecipes[index].saved;
-                                        // debugger;
                                         setDisplayRecipes(displayRecipes);
                                         setRecipeID(recipe._id);
-                                        // console.log("set display recipes???");
                                     }
                                 }}
                             />
@@ -126,7 +124,8 @@ async function getFolders(user_id) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            user: user_id
+            user: user_id,
+            getData: false
         })
     })
     const data = await res.json();

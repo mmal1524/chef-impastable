@@ -21,7 +21,7 @@ function RecipeCard(props) {
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, title: props.recipe.title, author: props.recipe.author, ingredients: props.recipe.ingredients, instructions: props.recipe.instructions_list, nutrients: props.recipe.nutrients}})}}>
+            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 

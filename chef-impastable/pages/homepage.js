@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
 
-
 export default function HomePage({recipes}) {    
     const [displayRecipes, setDisplayRecipes] = useState(recipes);
     const [showSaveOption, setShowSaveOptions] = useState(false);

@@ -19,21 +19,6 @@ export default async function handler(req,res){
         folder.recipes.pull(recipeID);
         console.log(folder);
         folder.save();
-        // if (sf) {
-        //     sf.recipes.push(recipeID);
-        //     sf.save();
-        // }
-        // else {
-        //     //console.log("new folder");
-        //     //console.log(user._id);
-        //     console.log(user);
-        //     const newFolder = await SavedFolder.create({name: folder, recipes: [recipeID], user: user.username});
-        //     console.log(newFolder);
-        //     //console.log(recipeID);
-        //     //newFolder.recipes.push(recipeID);
-        //     user.saved.push(newFolder._id);
-        //     user.save();
-        // }
         if (folder) {
         return res.json(folder);
         }

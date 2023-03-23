@@ -14,7 +14,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-//import { viewFriendProfile } from "./view-friends-card";
  
 export function friendCardTwo(friend) {
 
@@ -160,7 +159,6 @@ export function friendCardTwo(friend) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -176,8 +174,6 @@ export function friendCardTwo(friend) {
             })
     })
     const friendJSON = await res.json();
-    console.log('data')
-    console.log(friendJSON)
     return friendJSON;
   } 
 }

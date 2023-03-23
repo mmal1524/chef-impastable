@@ -7,7 +7,6 @@ import { getInitials } from "./user";
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useRouter } from "next/router";
-import Alert from '@mui/material/Alert';
 import swal from 'sweetalert';
 
 
@@ -143,7 +142,6 @@ export function addFriendCard(friend, username) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -159,8 +157,6 @@ export function addFriendCard(friend, username) {
             })
     })
     const friendJSON = await res.json();
-    console.log('data')
-    console.log(friendJSON)
     return friendJSON;
   } 
 }

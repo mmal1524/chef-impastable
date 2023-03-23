@@ -1,32 +1,17 @@
 import * as React from 'react';
 import { Autocomplete, Modal, Typography } from '@mui/material';
-// import Link from 'next/link';
 import Box from '@mui/material/Box';
-// import Tabs from '@mui/material/Tabs';
-// import Tab from '@mui/material/Tab';
-// import PropTypes from 'prop-types';
-// import Typography from '@mui/material/Typography';
-import { Divider, TextField, Grid, DialogTitle, DialogContent } from '@mui/material';
-// import Navbar from './navbar.js'
+import { TextField, Grid, DialogTitle, DialogContent } from '@mui/material';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemAvatar from '@mui/material/ListItemAvatar';
-// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormGroup from '@mui/material/FormGroup';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import FormControl from '@mui/material/FormControl';
-// import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
-// import { useTheme } from '@material-ui/core/styles';
 import { Dialog } from '@mui/material';
-import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 import { Snackbar, Alert } from '@mui/material';
 import FridgeGroup from './fridge-group';
 
 export default function Fridge(props) {
-    // console.log(props)
     const ingredientArr = props.ingredientOptions.map(a => a.ingredient);
     const [ingredientArr2, setIngredientArr2]  =useState(ingredientArr)
 
@@ -42,10 +27,8 @@ export default function Fridge(props) {
     const [fridgeGrouped, setFridgeGrouped] = useState({})
 
     // //local storage kitchen info
-    // const [userApps, setUserApps] = useState([]);
     const [showDeleted, setShowDeleted] = useState(false)
 
-    // 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -74,12 +57,6 @@ export default function Fridge(props) {
         setFridgeGrouped(thisUser.fridge_grouped)
         setUsername(thisUser.getUsername)
         setIngredientArr2(ingredientArr.filter(ing => userIngr ? !userIngr.includes(ing.toLowerCase()) : true))
-        console.log(thisUser)    
-        console.log(fridgeGrouped)
-        console.log("keys")
-        // console.log(Object.keys(fridgeGrouped))
-        //console.log(JSON.stringify(fridgeGrouped))
-        // setUserApps(thisUser.getApps);
     }, [openSnackbar, showDeleted])
 
     // for search bars
@@ -98,7 +75,7 @@ export default function Fridge(props) {
         setOpenSnackbar(false)
         setShowError(false)
         setShowDeleted(false)
-      };
+    };
 
 
     return (
@@ -120,9 +97,7 @@ export default function Fridge(props) {
                     id="combo-box-demo"
                     freeSolo
                     options={fridgeGrouped ? Object.keys(fridgeGrouped).map((option) => option) : [] }
-                    //renderOption={(props, option) => <li {...props}>{option.title}</li>}
-                    onInputChange={(e, new_val) => {console.log(new_val); setSearchGroup(new_val)}}
-                    //sx={{ width: windowSize[0]/3 }}
+                    onInputChange={(e, new_val) => {setSearchGroup(new_val)}}
                     renderInput={params => (
                         <TextField 
                             {...params} 
@@ -145,13 +120,6 @@ export default function Fridge(props) {
                         />
                     )}
                 />
-                {/* <TextField
-                    id="search-add"
-                    label="Ingredient to Add"
-                    variant="outlined"
-                    onChange={(e) => {setAddIngr(e.target.value)}}
-                    value={addIngr}
-                /> */}
                 <Button 
                     type="submit" 
                     size="large"
@@ -163,37 +131,16 @@ export default function Fridge(props) {
                     onClick={async () => {
                         //search for appliance
                         var idxx = await indexMatch(userIngr, addIngr);
-                        //console.log(idxx)
                         if (idxx == -1) {
-                            console.log("need to add fridge")
                             var data = await addIngredient(addIngr, searchGroups, username)
-                            console.log(data)
-                            localStorage.setItem('user', 
-                                JSON.stringify({
-                                username: data.username,
-                                password: data.password,
-                                fridge: data.fridge,
-                                fridge_grouped: data.fridge_grouped,
-                                kitchen: data.kitchen,
-                                displayName: data.displayName,
-                                avatar: data.avatar,
-                                friends: data.friends,
-                                friendRequests: data.friendRequests,
-                                createdPrivacy: data.createdPrivacy,
-                                savedPrivacy: data.savedPrivacy,
-                                reviewedPrivacy: data.reviewedPrivacy,
-                                dietaryTags: data.dietaryTags,
-                                reviewedRecipes: data.reviewedRecipes
-                            }));
+                            localStorage.setItem('user', JSON.stringify(data));
                             setAddIngr("")
                             console.log(addIngr, searchGroups)
                             setOpenSnackbar(true)
-                            
                         }
                         else {
                             setShowError(true)
                         }
-                        //console.log("right after set, idx val:",idx);
                     }}
                 >
                     Enter
@@ -223,7 +170,6 @@ export default function Fridge(props) {
                         onChange={handleChangeFridge}
                     />
                     <Button 
-                        //type="submit" 
                         size="large"
                         variant="contained"
                         sx={{
@@ -232,17 +178,13 @@ export default function Fridge(props) {
                         }}
                         onClick={async () => {
                             //search for ingredient
-                            //console.log(searchFridge);
                             var idxx = await indexMatch(userIngr, searchFridge);
                             setIdx(idxx);
-                            console.log("clicked")
-                            //console.log(idx);
                         }}
                     >
                         Enter
                     </Button>
                 </Grid>
-                <Grid item xs></Grid>
                 <Grid item>
                     <Button 
                         //type="submit" 
@@ -254,12 +196,10 @@ export default function Fridge(props) {
                         }}
                         onClick={() => {
                             //route to edit page
-                            console.log("clicked edit fridge")
-                            // console.log(Object.keys(fridgeGrouped))
                             setOpenEditModal(true);
                         }}
                     >
-                        Edit Fridge
+                        Edit Fridge 
                     </Button>
             </Grid>
         </Grid>
@@ -285,7 +225,6 @@ export default function Fridge(props) {
                                 md={6}
                                 sx={{ 
                                     width: 1200,
-                                    //width: windowSize[0],
                                     backgroundColor: index === idx ? 'greenyellow' : 'white',
                                 }}
                             >
@@ -308,32 +247,23 @@ export default function Fridge(props) {
 // returns index if match of q is found within given array
 // both are toUpperCase so search is case insensitive
 async function indexMatch(array, q) {
-    //console.log(array);
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
 
 async function addIngredient(ingredient, group, username) {
-    //try {
-        console.log(ingredient);
-        console.log(group);
-        const res = await fetch('/api/addIngredientToFridge', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ingredient: ingredient,
-                group: group,
-                username: username
-            })
+    const res = await fetch('/api/addIngredientToFridge', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ingredient: ingredient,
+            group: group,
+            username: username
         })
-        const data = await res.json();
-        console.log(data);
-        return data;
-    //} catch (error) {
-    //    res.json(error);
-    //    return res.status(405).end();
-    //}
+    })
+    const data = await res.json();
+    return data;
 }
 

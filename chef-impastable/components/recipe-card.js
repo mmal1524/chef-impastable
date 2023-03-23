@@ -1,15 +1,10 @@
 import {Card, CardHeader, CardContent, CardMedia} from "@mui/material";
-import Image from "next/image";
 import {CardActionArea, CardActions, IconButton} from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import SendIcon from '@mui/icons-material/Send';
-import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
-import { Link } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";
-import withRouter from "next/router";
 
 function RecipeCard(props) {
     //https://nextjs.org/docs/api-reference/next/link
@@ -18,7 +13,7 @@ function RecipeCard(props) {
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, title: props.recipe.title, author: props.recipe.author, ingredients: props.recipe.ingredients, instructions: props.recipe.instructions_list, nutrients: props.recipe.nutrients}})}}>
+            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id}})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 

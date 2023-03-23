@@ -8,29 +8,12 @@ connect()
 export default async function handler(req,res){
     try {
         const {username}=req.body
-        //console.log(req.body)
         const user = await User.findOne({username})
-        console.log(user)
-        //console.log(user.username)
         if (!user) {
-            console.log(user)
-            console.log("no user")
             return null;
         }
         else {
-            //return user;
-            return res.json({
-                username: user.username,
-                password: user.password,
-                displayName: user.displayName,
-                avatar: user.avatar,
-                friends: user.friends,
-                friendRequests: user.friendRequests,
-                createdPrivacy: user.createdPrivacy,
-                savedPrivacy: user.savedPrivacy,
-                reviewedPrivacy: user.reviewedPrivacy,
-                dietaryTags: user.dietaryTags
-            });
+            return res.json(user);
         }
     } catch (error) {
         res.status(400).json({status:'Not able to find user.'})

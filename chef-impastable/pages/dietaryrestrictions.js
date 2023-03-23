@@ -6,7 +6,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import FormGroup from '@mui/material/FormGroup';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -79,23 +78,7 @@ export default function Home() {
                                             <IconButton edge="end" aria-label="delete" onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteTag(username, tag);
-                                                localStorage.setItem('user',
-                                                    JSON.stringify({
-                                                        username: data.username,
-                                                        password: data.password,
-                                                        fridge: data.fridge,
-                                                        kitchen: data.kitchen,
-                                                        displayName: data.displayName,
-                                                        avatar: data.avatar,
-                                                        friends: data.friends,
-                                                        friendRequests: data.friendRequests,
-                                                        dietaryTags: data.dietaryTags,
-                                                        fridge_grouped: data.fridge_grouped,
-                                                        createdPrivacy: data.createdPrivacy,
-                                                        savedPrivacy: data.savedPrivacy,
-                                                        reviewedPrivacy: data.reviewedPrivacy,
-                                                        mealPlanPrivacy: data.mealPlanPrivacy
-                                                    }));
+                                                localStorage.setItem('user', JSON.stringify(data));
                                             }}>
                                                 <DeleteIcon />
                                             </IconButton>
@@ -144,24 +127,7 @@ export default function Home() {
                 onClick={async () => {
                     setUserTags(userTags => [...userTags, tagValue]);
                     var data = await AddTag(username, tagValue);
-                    localStorage.setItem('user',
-                        JSON.stringify({
-                            username: data.username,
-                            password: data.password,
-                            fridge: data.fridge,
-                            kitchen: data.kitchen,
-                            displayName: data.displayName,
-                            avatar: data.avatar,
-                            friends: data.friends,
-                            friendRequests: data.friendRequests,
-                            dietaryTags: data.dietaryTags,
-                            fridge_grouped: data.fridge_grouped,
-                            createdPrivacy: data.createdPrivacy,
-                            savedPrivacy: data.savedPrivacy,
-                            reviewedPrivacy: data.reviewedPrivacy,
-                            mealPlanPrivacy: data.mealPlanPrivacy,
-                            reviewedRecipes: data.reviewedRecipes
-                        }));
+                    localStorage.setItem('user', JSON.stringify(data));
                 }}
             >Add Tag
             </Button>

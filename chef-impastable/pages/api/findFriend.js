@@ -10,7 +10,7 @@ export default async function handler(req,res){
         const {username, friend}=req.body
         const exists = await User.findOne({username: username, friends: friend})
         if(!exists){
-            //friendRequest does not exist
+            //friend does not exist
             return res.json({success : false});
         }
         else {

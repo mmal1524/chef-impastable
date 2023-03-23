@@ -188,22 +188,6 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                localStorage.setItem('user', JSON.stringify({
-                                    username: username,
-                                    password: password,
-                                    displayName: displayName,
-                                    avatar: avatar,
-                                    friends: friends,
-                                    friendRequests: friendRequests,
-                                    createdPrivacy: createdPrivacy,
-                                    savedPrivacy: savedPrivacy,
-                                    reviewedPrivacy: reviewedPrivacy,
-                                    mealPlanPrivacy: mealPlanPrivacy,
-                                    fridge: fridge,
-                                    kitchen: kitchen,
-                                    fridge_grouped: fridge_grouped,
-                                    reviewedRecipes: reviewedRecipes
-                                 }))
                                 router.push("edit-profile");
                             }}
                         >

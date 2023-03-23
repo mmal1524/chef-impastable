@@ -10,9 +10,28 @@ import { friendCard } from '../components/friend-card';
 import clientPromise from '../lib/mongodb_client';
 import ForumIcon from '@mui/icons-material/Forum';
 import { friendShared } from '../components/friend-shared-card.js';
+import RecipeCard from '../components/recipe-card';
 
-export default function SharingPage( {besties} ) {
+export default function SharingPage( {besties, sentShares, receivedShares} ) {
     var friendsList = besties;
+
+    // have to go through each sent share, get the recipe id, find the recipe object with api, add them all to an array called sentRecipes
+    var i = 0;
+    var sentRecipeIDS = [];
+    for (i; i < sentShares.length; i++) {
+        // go through each recipeID and get the recipe object later.
+        sentRecipeIDS.push(sentShares[i].recipeID)
+    }
+    console.log(sentRecipeIDS)
+
+    // go through all received shares, get recipe id, find the recipe object with api, add them all to an array called receivedRecipes
+    var j = 0;
+    var receivedRecipeIDS = [];
+    for (j; j < receivedShares.length; j++) {
+        // go through all recipeID and get recipe object later.
+        receivedRecipeIDS.push(receivedShares[j].recipeID)
+    }
+    console.log(receivedRecipeIDS)
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -22,19 +41,6 @@ export default function SharingPage( {besties} ) {
     };
 
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [friends, setFriends] = useState([]);
-    const [friendRequests, setFriendRequests] = useState("");
-    var [createdPrivacy, setCreatedPrivacy] = useState("");
-    var [savedPrivacy, setSavedPrivacy] = useState("");
-    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
-    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
-    const [fridge, setFridge] = useState([]);
-    const [kitchen, setKitchen] = useState([])
-    const [fridge_grouped, setFridgeGrouped] = useState({})
-
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -44,77 +50,9 @@ export default function SharingPage( {besties} ) {
                     return this.username
                 },
             },
-            getPassword: {
-                get() {
-                    return this.password
-                },
-            },
-            getDisplayName: {
-                get() {
-                    return this.displayName
-                },
-            },
-            getAvatar: {
-                get() {
-                    return this.avatar
-                },
-            },
-            getFriends: {
-                get() {
-                    return this.friends
-                },
-            },
-            getFriendRequests: {
-                get() {
-                    return this.friendRequests
-                },
-            },
-            getCreatedPrivacy: {
-                get() {
-                    return this.createdPrivacy
-                },
-            },
-            getSavedPrivacy: {
-                get() {
-                    return this.savedPrivacy
-                },
-            },
-            getReviewedPrivacy: {
-                get() {
-                    return this.reviewedPrivacy
-                },
-            },
-            getMealPlanPrivacy: {
-                get() {
-                    return this.mealPlanPrivacy
-                }
-            },
-            getFridge: {
-                get() {
-                    return this.fridge
-                }
-            },
-            getKitchen: {
-                get() {
-                    return this.kitchen
-                }
-            },
-            getFridgeGrouped: {
-                get() {
-                    return this.fridge_grouped
-                }
-            }
+            
         });
         setUsername(thisUser.getUsername);
-        setPassword(thisUser.getPassword);
-        setDisplayName(thisUser.getDisplayName);
-        setAvatar(thisUser.getAvatar);
-        setFriends(thisUser.getFriends);
-        setFriendRequests(thisUser.getFriendRequests);
-        setCreatedPrivacy(thisUser.getCreatedPrivacy);
-        setSavedPrivacy(thisUser.getSavedPrivacy);
-        setReviewedPrivacy(thisUser.getReviewedPrivacy);
-        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
     }, []);
     return (
         <div>
@@ -133,6 +71,16 @@ export default function SharingPage( {besties} ) {
                 <h3 className="h3"> Recipes recieved </h3>
                 <Divider />
                     {<Grid container spacing={4} direction = "row">
+                    {/* <Grid container spacing={1}>
+                    
+                    {recipes.map((recipe) => (                
+                        <Grid item key={recipe._id}>
+                            <RecipeCard recipe={recipe}/>
+                        </Grid>
+                    )
+                        
+                    )}
+                </Grid> */}
                     </Grid>}
               </Grid>
               <Grid xs={4.5}>
@@ -156,6 +104,26 @@ export default function SharingPage( {besties} ) {
           );
       }
   }
+
+  async function findRecipe(recipeID) {
+    //var nullCheck = await fetch('api/get_recipe_by_id')
+
+    const res = await fetch('/api/get_recipe_by_id', {
+      method: 'POST', 
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        recipeID: recipeID,
+      })
+    })
+    console.log(res)
+    const data = await res.json();
+    console.log('data')
+    console.log(data)
+    return data;
+  }
 }
 
 export async function getServerSideProps(context) {
@@ -178,8 +146,16 @@ export async function getServerSideProps(context) {
           friendObjects[i] = JSON.parse(JSON.stringify(f[0]));
       }
 
+      const sentShares = await db
+            .collection("shares")
+            .find({sender: context.query.username}).toArray();
+
+    const receivedShares = await db
+            .collection("shares")
+            .find({receiver: context.query.username}).toArray();
+      
       return {
-          props: {besties: friendObjects},
+          props: {besties: friendObjects, sentShares: JSON.parse(JSON.stringify(sentShares)), receivedShares: JSON.parse(JSON.stringify(receivedShares))},
       };
   }
   catch (e) {

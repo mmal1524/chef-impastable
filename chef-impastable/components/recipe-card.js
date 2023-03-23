@@ -46,7 +46,7 @@ function RecipeCard( props ) {
     const [username, setUsername] = useState("");
     var [friends, setFriends] = useState([]);
 
-    const [sendList, setSendList] = useState([]);
+    var [sendList, setSendList] = useState([]);
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -103,12 +103,14 @@ function RecipeCard( props ) {
                     </DialogContent>
                     <DialogActions>
                         <Button 
-                            // onClick={ async () => {
-                            //     var i = 0;
-                            //     for (i; i < sendList.length; i++) {
-                            //         console.log(sendList[i])
-                            //     }
-                            // }}
+                            onClick={ async () => {
+                                console.log(sendList)
+                                var i = 0;
+                                for (i; i < sendList.length; i++) {
+                                    var share = await createShare(props.recipe._id, username, sendList[i])
+                                }
+                                router.reload();
+                            }}
                             > 
                             Send
                         </Button>
@@ -120,86 +122,69 @@ function RecipeCard( props ) {
         </CardActions>
     </Card>
     );
-    
-}
 
-async function findUser(username) {
-    if (username.length == 0) {
-        return null;
-    } 
+    function displayFriends(friendsList) {
+        const [checked, setChecked] = React.useState([0]);
 
-    const res = await fetch('/api/finduser', {
-      method: 'POST', 
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-      })
-    })
-    const data = await res.json();
-    return data;
-  } 
+        const handleToggle = (value) => () => {
+            const currentIndex = checked.indexOf(value);
+            const newChecked = [...checked];
 
-function displayFriends(friendsList) {
-    const [checked, setChecked] = React.useState([0]);
+            if (currentIndex === -1) {
+                newChecked.push(value);
+            } else {
+                newChecked.splice(currentIndex, 1);
+            }
 
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+            setChecked(newChecked);
+        };
 
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
+        var j = 0;
+        sendList = []
+        for (j; j < checked.length; j++) {
+            sendList.push(friendsList[checked[j]])
         }
 
-        setChecked(newChecked);
-    };
-    
-    if (friendsList.length == 0) {
-        return(<>You have no friends :(</>);
-    } else {
-        var friendListLength = new Array; 
-        var i = 0;
-        for (i; i < friendsList.length; i++) {
-            friendListLength.push(i);
-        }
-        return (
-            <List sx={{ width: '100%', maxWidth: 360, maxHeight: 200, bgcolor: 'background.paper' }}>
-              {friendListLength.map((value) => {
-                const labelId = `checkbox-list-label-${value}`;
         
-                return (
-                  <ListItem
-                    key={value}
-                    disablePadding
-                  >
-                    <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                      <ListItemIcon>
-                        <Checkbox
-                          edge="start"
-                          checked={checked.indexOf(value) !== -1}
-                          tabIndex={-1}
-                          disableRipple
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                        {console.log("here")}
-                      </ListItemIcon>
-                      <ListItemText id={labelId} primary={`${friendsList[value]}`} />
-                    </ListItemButton>
-                  </ListItem>
-                );
-              })}
-            </List>
-          );
+        if (friendsList.length == 0) {
+            return(<>You have no friends :(</>);
+        } else {
+            var friendListLength = new Array; 
+            var i = 0;
+            for (i; i < friendsList.length; i++) {
+                friendListLength.push(i);
+            }
+            return (
+                <List sx={{ width: '100%', maxWidth: 360, maxHeight: 200, bgcolor: 'background.paper' }}>
+                {friendListLength.map((value) => {
+                    const labelId = `checkbox-list-label-${value}`;
+            
+                    return (
+                    <ListItem
+                        key={value}
+                        disablePadding
+                    >
+                        <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                        <ListItemIcon>
+                            <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(value) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                        </ListItemIcon>
+                        <ListItemText id={labelId} primary={`${friendsList[value]}`} />
+                        </ListItemButton>
+                    </ListItem>
+                    );
+                })}
+                </List>
+            );
+        }
     }
 
-    async function createShare(recipeID, sender, reciever) {
-        console.log(recipeID);
-        console.log(sender);
-        console.log(reciever);
+    async function createShare(recipeID, sender, receiver) {
         const res = await fetch('api/createShare', {
             method: 'POST',
             headers: {
@@ -208,9 +193,8 @@ function displayFriends(friendsList) {
             },
             body: JSON.stringify({
                 recipeID: recipeID,
-                author: author,
-                rating: rating,
-                description: description
+                sender: sender,
+                receiver: receiver,
             })
         });
         const data = await res.json();
@@ -218,5 +202,4 @@ function displayFriends(friendsList) {
         return data;
     }
 }
-
 export default RecipeCard;

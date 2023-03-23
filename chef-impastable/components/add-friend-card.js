@@ -8,6 +8,8 @@ import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { useRouter } from "next/router";
 import Alert from '@mui/material/Alert';
+import swal from 'sweetalert';
+
 
 export function addFriendCard(friend, username) {
     
@@ -44,13 +46,26 @@ export function addFriendCard(friend, username) {
                     variant="outlined"
                     sx={{color:'green', borderColor: 'green'}}
                     onClick={async () => {
-                        // adds friend to request list
-                        var alreadyRequested = await findFriendRequest(friend.username, username);
-                        if (alreadyRequested.success) {
-                            alert("You have already sent a friend request to this user")
-                        } else {
-                            var currUser = await addFriendRequest(friend.username, username);
-                            alert("Friend Request Sent!")
+                        // determines if user has requested themselves
+                        if (friend.username == username) {
+                            swal("", "You cannot request yourself", "info");
+                        } 
+                        else {
+                            // determines if user already has them in friends list
+                            var alreadyFriends = await findFriend(username, friend.username);
+                            if (alreadyFriends.success) {
+                                swal("", "You're already friends with this user", "info")
+                            }
+                            else {
+                                // determines if user has already requested them
+                                var alreadyRequested = await findFriendRequest(friend.username, username);
+                                if (alreadyRequested.success) {
+                                    swal("", "You have already sent a friend request to this user", "info");
+                                } else {
+                                    var currUser = await addFriendRequest(friend.username, username);
+                                    swal("", "Friend Request Sent!", "success");
+                                }
+                            }
                         }
                     }}
 
@@ -93,6 +108,22 @@ export function addFriendCard(friend, username) {
             body: JSON.stringify({
                 username: username,
                 friendRequest: friendRequest
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
+
+    async function findFriend(username, friend) {
+        const res = await fetch('api/findFriend', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friend: friend
             })
         })
         const data = await res.json();

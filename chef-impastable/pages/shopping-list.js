@@ -76,6 +76,7 @@ function displayList(shoppingList) {
         return (
             <Grid>
                 <Typography>Your List is Empty, add something!</Typography>
+                <Typography>Add an ingredient by pressing edit or return choose a recipe to add to your list.</Typography>
             </Grid>
         );
     }

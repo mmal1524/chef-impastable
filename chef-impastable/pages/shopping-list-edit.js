@@ -49,12 +49,6 @@ export default function ShoppingListEdit() {
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
-        // var emptyList = document.getElementById("empty");
-        // if (shoppingList.length == 0) {
-        //     emptyList.style.display = "block";
-        // } else {
-        //     emptyList.style.display = "none";
-        // }
     }, []);
 
     // for autocomplete search bar
@@ -116,8 +110,8 @@ export default function ShoppingListEdit() {
                                 // item not found in fridge
                                 var data = await addIngredient(username, addIngr);
                                 localStorage.setItem('user', JSON.stringify(data));
-                                setAddIngr("");
                                 setShoppingList(shoppingList => [...shoppingList, addIngr]);
+                                setAddIngr("");
                                 console.log("added")
                                 console.log(shoppingList)
                                 // confirmation popup? can tell if added
@@ -128,7 +122,9 @@ export default function ShoppingListEdit() {
                             // item already in list, error message?
                         }
                     }}
-                >Add</Button>
+                >
+                    Add
+                </Button>
                 <Button
                     type="submit" 
                     size="large" 
@@ -140,8 +136,11 @@ export default function ShoppingListEdit() {
                         setShoppingList([]);
                         var data = await ClearList(username);
                         localStorage.setItem('user', JSON.stringify(data));
+                        console.log(shoppingList)
                     }}
-                >Clear</Button>
+                >
+                    Clear
+                </Button>
             </Grid>
             {/* <Grid container id="empty">
                 List is empty.
@@ -210,49 +209,6 @@ export default function ShoppingListEdit() {
     );
 }
 
-// function displayList(shoppingList) {
-//     if (shoppingList.length > 0) {
-//         return (
-//             <Grid>
-//             {shoppingList && shoppingList.map((item, index) => (
-//                 <Box>
-//                     <FormGroup row>
-//                     </FormGroup>
-//                     <Grid container>
-//                         <Grid>
-//                             <List>
-//                                 <ListItem
-//                                     secondaryAction={
-//                                         <IconButton edge="end" aria-label="delete" 
-//                                         onClick={async () => {
-//                                             deleteByIndex(index);
-//                                             var data = await DeleteListItem(username, item);
-//                                             console.log(localStorage.getItem('user'))
-//                                             localStorage.setItem('user', JSON.stringify(data));
-//                                             console.log(localStorage.getItem('user'));
-//                                         }}
-//                                         >
-//                                             <DeleteIcon />
-//                                         </IconButton>
-//                                     }
-//                                 >
-//                                     <ListItemText
-//                                         sx={{display: 'flex', justifyContent: 'center'}}
-//                                         primary={item}
-//                                     />
-//                                 </ListItem>
-//                             </List>
-//                         </Grid>
-//                     </Grid>
-//                 </Box>
-//             ))}
-//             </Grid>
-//         );
-//     } else {
-//         return (<>Shopping List Empty</>);
-//     }
-// }
-
 async function DeleteListItem(username, item) {
     try {
         const res = await fetch('/api/deleteShopListItem', {
@@ -319,6 +275,50 @@ async function indexMatch(array, q) {
     //console.log(array);
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
+
+
+// function displayList(shoppingList) {
+//     if (shoppingList.length > 0) {
+//         return (
+//             <Grid>
+//             {shoppingList && shoppingList.map((item, index) => (
+//                 <Box>
+//                     <FormGroup row>
+//                     </FormGroup>
+//                     <Grid container>
+//                         <Grid>
+//                             <List>
+//                                 <ListItem
+//                                     secondaryAction={
+//                                         <IconButton edge="end" aria-label="delete" 
+//                                         onClick={async () => {
+//                                             deleteByIndex(index);
+//                                             var data = await DeleteListItem(username, item);
+//                                             console.log(localStorage.getItem('user'))
+//                                             localStorage.setItem('user', JSON.stringify(data));
+//                                             console.log(localStorage.getItem('user'));
+//                                         }}
+//                                         >
+//                                             <DeleteIcon />
+//                                         </IconButton>
+//                                     }
+//                                 >
+//                                     <ListItemText
+//                                         sx={{display: 'flex', justifyContent: 'center'}}
+//                                         primary={item}
+//                                     />
+//                                 </ListItem>
+//                             </List>
+//                         </Grid>
+//                     </Grid>
+//                 </Box>
+//             ))}
+//             </Grid>
+//         );
+//     } else {
+//         return (<>Shopping List Empty</>);
+//     }
+// }
 
 // export async function getServerSideProps() {
 //     try {

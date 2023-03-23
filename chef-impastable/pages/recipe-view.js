@@ -19,6 +19,7 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
+import AddFromRec from '../components/add-ingredient-from-recipe.js';
 
 export default function Recipe({ recipe }) {
     const theme = createTheme({
@@ -130,6 +131,7 @@ export default function Recipe({ recipe }) {
                             sx={{
                                 width: 200
                             }}
+                            onClick={ async() => {AddFromRec(recipe.ingredients)}}
                         >
                             Add to Shopping List
                         </Button>

@@ -146,7 +146,7 @@ export default function CreateRecipe() {
                         <Typography component="h4" variant="body1">
                             For this section: Please separate instructions by pressing enter
                         </Typography>
-                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Ingredient Instructions" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
+                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Instruction List" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}

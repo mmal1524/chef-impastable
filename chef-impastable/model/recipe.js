@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const recipeSchema = new mongoose.Schema({
     author:{
         type:String,
-        required:true,
+        required:false,
         unique:true
     },
     canonical_url:{
@@ -21,7 +21,7 @@ const recipeSchema = new mongoose.Schema({
     },
     description: {
         type:String,
-        required:true
+        required:false
     },
     host: {
         type:String,
@@ -33,14 +33,14 @@ const recipeSchema = new mongoose.Schema({
     },
     ingredients: {
         type:Array,
-        required:true,
+        required:false,
     },
     instructions: {
         type:String,
-        required:true
+        required:false
     },
     instructions_list: {
-        type:Array,
+        type:[String],
         required:false
     },
     language: {
@@ -48,15 +48,15 @@ const recipeSchema = new mongoose.Schema({
         required:false
     },
     nutrients: {
-        type:Object,
+        type:Array,
         required:false
     },
     prep_time: {
-        type: Number,
-        required:true
+        type:String,
+        required:false
     },
     ratings: {
-        type:Number,
+        type:String,
         required:false
     },
     site_name: {
@@ -68,7 +68,7 @@ const recipeSchema = new mongoose.Schema({
         reqiured:false
     },
     total_time: {
-        type:Number,
+        type:String,
         required:false
     },
     yields: {

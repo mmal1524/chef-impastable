@@ -157,6 +157,13 @@ const Navbar = () => {
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
+                            router.push("createrecipe");
+                        }}
+                    >
+                        Create Recipe
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
                             handleClickOpenPopup();
                             handleClose();
                         }}

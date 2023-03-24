@@ -266,6 +266,7 @@ export default function CreateRecipe() {
                                 const list = instructions.split("\n")
                                 const recipe = await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, list,
                                     calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat);
+                                await AddTag(recipe.title, false);
                                 Router.push({
                                     pathname: "/recipe-view/", 
                                     query: { id: recipe._id },
@@ -336,6 +337,27 @@ export default function CreateRecipe() {
         }
         catch {
             return error
+        }
+    }
+
+    async function AddTag(title, isDefined) {
+        try {
+            const res = await fetch('/api/recipeAddTags', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: title,
+                    isDefined: isDefined
+                })
+            })
+            const data = await res.json();
+            return data;
+        }
+        catch (error) {
+            return error;
         }
     }
 }

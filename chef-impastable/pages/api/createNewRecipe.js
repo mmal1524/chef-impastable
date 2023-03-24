@@ -7,7 +7,7 @@ connect()
 
 export default async function handler(req, res) {
     const { title, image, preptime, cookTime, totalTime, yields, description, instructions,
-        calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat } = req.body;
+        calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username } = req.body;
     try {
         const nutritionFacts = [
             {calories: calories}, 
@@ -20,8 +20,6 @@ export default async function handler(req, res) {
             {fatContent: fat},
             {unsaturatedFat: unsaturatedFat}
         ];
-        /*const recipe = await Recipe.create(null, null, null, cookTime, description, null, image, null, null, instructions, 
-                                           "en", nutritionFacts, preptime, null, null, title, totalTime, yields, null);*/
         const recipe = new Recipe({
             title: title,
             image: image,
@@ -30,8 +28,10 @@ export default async function handler(req, res) {
             total_time: totalTime, 
             yields: yields,
             description: description,
-            instruction_list: instructionList,
-            nutrients: nutritionFacts
+            instructions_list: instructions,
+            nutrients: nutritionFacts,
+            author: username,
+            isUser: true
         })
         recipe.save(function (err, recipe) {
             if (err) {
@@ -40,9 +40,7 @@ export default async function handler(req, res) {
               console.log('Recipe saved to database: ', recipe);
             }
           });
-        return res.json({
-            success: true
-        });
+        return res.json(recipe);
     } catch (error) {
         res.status(400).json()
         console.log('error');

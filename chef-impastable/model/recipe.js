@@ -86,7 +86,11 @@ const recipeSchema = new mongoose.Schema({
                 required:false
             }
         }
-    ]
+    ],
+    isUser: {
+        type:Boolean,
+        required:false
+    }
 });
 
 module.exports = mongoose.models.Recipe || mongoose.model('Recipe', recipeSchema);

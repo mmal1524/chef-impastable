@@ -19,14 +19,27 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Router from "next/router";
 
 export default function CreateRecipe() {
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        const thisUser = JSON.parse(localStorage.getItem('user'));
+        Object.defineProperties(thisUser, {
+            getUsername: {
+                get() {
+                    return this.username
+                }
+            }
+        });
+        setUsername(thisUser.getUsername);
+    }, [])
+
     const [cookTime, setcookTime] = useState("");
     const [description, setdescription] = useState("");
     const [image, setImage] = useState("");
     //add ingredient
     const [instructions, setinstructions] = useState("");
-    const [instructionList, setInstructionList] = useState([]);
     const [preptime, setpreptime] = useState("");
     const [title, settitle] = useState("");
     const [totalTime, setTotalTime] = useState("");
@@ -41,14 +54,13 @@ export default function CreateRecipe() {
     const [fat, setFat] = useState("");
     const [unsaturatedFat, setUnsaturatedFat] = useState("");
 
+    //popup if required fields are left blank
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
     const handleClickOpen = () => {
         setOpen(true);
     };
-
     const handleClose = () => {
         setOpen(false);
     };
@@ -66,8 +78,6 @@ export default function CreateRecipe() {
     const handleInstructions = e => {
         setinstructions(e.target.value)
     }
-    //instructions list
-    //nutrients
     const handlePrepTime = e => {
         setpreptime(e.target.value)
     }
@@ -246,7 +256,6 @@ export default function CreateRecipe() {
                     </TableContainer>
                     <Button size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                         onClick={async () => {
-                            setInstructionList(instructions.split("\n"));
                             if (!title | !image | !preptime | !cookTime | !totalTime | !yields | !description | !instructions) {
                                 //if any of the required fields are empty, send an error
                                 handleClickOpen();
@@ -254,8 +263,14 @@ export default function CreateRecipe() {
                             else {
                                 //add recipe to database
                                 //TODO: also send array of objects (of ingredients) in this call
-                                await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, instructionList,
-                                                   calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat);
+                                const list = instructions.split("\n")
+                                const recipe = await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, list,
+                                    calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat);
+                                Router.push({
+                                    pathname: "/recipe-view/", 
+                                    query: { id: recipe._id },
+                                    state: { recipe }
+                                })
                             }
                         }}>
                         Create Recipe
@@ -285,33 +300,42 @@ export default function CreateRecipe() {
         </div>
     );
 
-    async function CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, instructions, 
-                                calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat) {
-        const res = await fetch('/api/createNewRecipe', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: title, 
-                image: image, 
-                preptime: preptime, 
-                cookTime: cookTime,
-                totalTime: totalTime,
-                yields: yields, 
-                description: description,
-                instructions: instructions,
-                calories: calories,
-                carbs: carbs,
-                cholesterol: cholesterol, 
-                fiber: fiber, 
-                protein: protein, 
-                saturatedFat: saturatedFat, 
-                sodium: sodium,
-                fat: fat, 
-                unsaturatedFat: unsaturatedFat
+    async function CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, instructions,
+        calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username) {
+        try {
+            const res = await fetch('/api/createNewRecipe', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    title: title,
+                    image: image,
+                    preptime: preptime,
+                    cookTime: cookTime,
+                    totalTime: totalTime,
+                    yields: yields,
+                    description: description,
+                    instructions: instructions,
+                    calories: calories,
+                    carbs: carbs,
+                    cholesterol: cholesterol,
+                    fiber: fiber,
+                    protein: protein,
+                    saturatedFat: saturatedFat,
+                    sodium: sodium,
+                    fat: fat,
+                    unsaturatedFat: unsaturatedFat,
+                    username: username,
+                    isUser: true
+                })
             })
-        })
+            const data = await res.json();
+            return data;
+        }
+        catch {
+            return error
+        }
     }
 }

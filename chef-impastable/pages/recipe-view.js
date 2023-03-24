@@ -123,9 +123,13 @@ export default function Recipe({ recipe }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
+                    <p>Prep time: {recipe.prep_time} minutes, Cook time: {recipe.cook_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
                 <div>
+                    <h2> 
+                        Description
+                    </h2>
+                    {recipe.description}
                     <h2>
                         Instructions
                     </h2>

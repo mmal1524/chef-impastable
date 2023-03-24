@@ -183,7 +183,8 @@ export default function SignUp() {
                                                         createdPrivacy: data.createdPrivacy,
                                                         savedPrivacy: data.savedPrivacy,
                                                         reviewedPrivacy: data.reviewedPrivacy,
-                                                        mealPlanPrivacy: data.mealPlanPrivacy
+                                                        mealPlanPrivacy: data.mealPlanPrivacy,
+                                                        reviewedRecipes: data.reviewedRecipes
                                                     }));
                                                 router.push("homepage");
                                             }
@@ -317,7 +318,8 @@ export default function SignUp() {
                 reviewedPrivacy: "everyone",
                 fridge_grouped: {"general": []},
                 mealPlanPrivacy: "everyone",
-                dietaryTags: []
+                dietaryTags: [],
+                reviewedRecipes: []
             })
         })
         const data = await res.json();

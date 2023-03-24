@@ -7,6 +7,7 @@ async function addToListButton({ingredients}) {
     const [fridge, setFridge] = useState([]);
     const [success, setSuccess] = useState(false);
 
+    console.log("button pressed")
 
 
     useEffect(() => {
@@ -53,7 +54,7 @@ async function addToListButton({ingredients}) {
             } else {
                 // item already owned in fridge, error message?
             }
-            
+
         } else {
             // item already in list, error message?
         }

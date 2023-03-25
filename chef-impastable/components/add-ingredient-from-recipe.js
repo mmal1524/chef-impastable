@@ -8,10 +8,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {Grid, Box, FormGroup, List, ListItemText, Button, Typography} from '@mui/material'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { useRouter } from "next/router";
 
 export default function AddToListDialog(props) {
-    const router = useRouter();
     //console.log(props)
     //console.log(props.recipe.ingredients)
     const ingrArr = props.recipe.ingredients.map(a => a.ingredient);
@@ -21,8 +19,6 @@ export default function AddToListDialog(props) {
     const [fridge, setFridge] = useState([]);
     var toAdd = [];
     //console.log(toAdd)
-    //console.log("button pressed")
-
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -42,10 +38,13 @@ export default function AddToListDialog(props) {
                 },
             },
         });
+        console.log("setting sL")
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
     }, []);
+
+    console.log("shopping list:"+ shoppingList)
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -66,12 +65,12 @@ export default function AddToListDialog(props) {
         } else {
             // found in list, owned
             toAdd[i] = 0;
-            console.log("toadd" + toAdd[i])
+            //console.log("toadd" + toAdd[i])
         }
     }
     //const disabled = useState(smthToAdd);
 
-    console.log(toAdd)
+    //console.log(toAdd)
 
     const closeAction = () => {
         props.onClose();
@@ -82,10 +81,12 @@ export default function AddToListDialog(props) {
             if (toAdd[j] == 1) {
                 toAdd[j] = null;
                 var data = await addIngredient(username, ingrArr[j]);
+                setShoppingList(shoppingList => [...shoppingList, ingrArr[j]]);
                 localStorage.setItem('user', JSON.stringify(data));
             }
         }
-        console.log(data)
+
+        console.log("shoppinglist after add" + shoppingList)
         closeAction();
     }
 
@@ -133,9 +134,8 @@ export default function AddToListDialog(props) {
                 <Button 
                     //disabled={disabled}
                     onClick={async() => {
+                        console.log("clicked")
                         await handleAddToList();
-                        //closeAction();
-                        //router.reload();
                     }}
                 >
                     Confirm Add.

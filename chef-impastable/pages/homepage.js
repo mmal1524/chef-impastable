@@ -8,7 +8,11 @@ import { useEffect } from 'react';
 import React from 'react';
 
 
-export default function HomePage({recipes}) {
+export default function HomePage(props) {
+    //console.log(props.recipes)
+    useEffect(() => {
+        localStorage.setItem('ing', JSON.stringify(props.ingredients));
+    }, [])
     return (
         <> 
             <div>
@@ -40,6 +44,10 @@ export async function getServerSideProps() {
             .collection("recipes")
             .find({})
             .limit(20)
+            .toArray();
+        const ingredients = await db
+            .collection("ingredients")
+            .find({})
             .toArray();
         return {
             props: {recipes: JSON.parse(JSON.stringify(recipes)), ingredients: JSON.parse(JSON.stringify(ingredients))}, 

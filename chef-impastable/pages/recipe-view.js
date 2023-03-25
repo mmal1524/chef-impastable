@@ -323,11 +323,11 @@ export default function Recipe({ recipe, reviews }) {
                         >
                             Add to Shopping List
                         </Button>
-                        <AddToListDialog
+                        {addSLDialog && (<AddToListDialog
                             recipe={recipe}
                             open={addSLDialog}
                             onClose = {() => {setAddSLDialog(false)}}
-                        />
+                        />)}
                     </Grid>
                 </Grid>
                 <Grid container

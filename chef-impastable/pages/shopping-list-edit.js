@@ -138,7 +138,7 @@ export default function ShoppingListEdit() {
                         setShoppingList([]);
                         var data = await ClearList(username);
                         localStorage.setItem('user', JSON.stringify(data));
-                        console.log("shopping list"+ shoppingList)
+                        //console.log("shopping list cleared"+ shoppingList)
                     }}
                 >
                     Clear
@@ -162,9 +162,9 @@ export default function ShoppingListEdit() {
                                             onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);
-                                                console.log(localStorage.getItem('user'))
+                                                //console.log(localStorage.getItem('user'))
                                                 localStorage.setItem('user', JSON.stringify(data));
-                                                console.log(localStorage.getItem('user'));
+                                                //console.log("item deleted" + shoppingList);
                                             }}
                                             >
                                                 <DeleteIcon />

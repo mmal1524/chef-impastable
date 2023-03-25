@@ -15,6 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import ForumIcon from '@mui/icons-material/Forum';
+import { CollectionsBookmarkOutlined } from "@mui/icons-material";
 //import { viewFriendProfile } from "./view-friends-card";
  
 export function friendShared(friend) {
@@ -22,15 +23,7 @@ export function friendShared(friend) {
     const router = useRouter();
 
     const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [friends, setFriends] = useState([]);
-    const [friendRequests, setFriendRequests] = useState("");
-    var [createdPrivacy, setCreatedPrivacy] = useState("");
-    var [savedPrivacy, setSavedPrivacy] = useState("");
-    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
-    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
+    
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -84,10 +77,10 @@ export function friendShared(friend) {
                     variant="outlined" 
                     sx={{color:'light blue', borderColor:'light blue'}}
                     endIcon={<ForumIcon />}
-                    // onClick={ async () => {
-                    //     var friendUser = await viewFriend(friend.username);
-                    //     router.push({pathname: "/view_friends", query: {username: friendUser.username} })
-                    //    }}
+                    onClick={ async () => {
+                        var friendUser = await viewFriend(friend.username);
+                        router.push({pathname: "/sharing-page", query: {username: username, friendusername: friendUser.username} })
+                       }}
                 >
                     shared
                 </Button>
@@ -103,23 +96,6 @@ export function friendShared(friend) {
         </Box>
 
     );
-
-    async function deleteFriend(username, friend) {
-        const res = await fetch('/api/deleteFriend', {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                friend: friend
-            })
-        });
-        const data = await res.json();
-        console.log(data);
-        return data;
-    }
 
     async function viewFriend(friend) {
         const res = await fetch('/api/finduser', {

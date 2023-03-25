@@ -1,14 +1,28 @@
-import { useState } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import {Grid, Box, FormGroup, List, ListItemText, Button, Typography} from '@mui/material'
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
-async function addToListButton({ingredients}) {
-    const ingrArr = ingredients.map(a => a.ingr);
+export default function AddToListDialog(props) {
+    console.log(props)
+    console.log(props.recipe.ingredients)
+    const ingrArr = props.recipe.ingredients.map(a => a.ingredient);
+    console.log(ingrArr)
     const [username, setUsername] = useState("");
     const [shoppingList, setShoppingList] = useState("");
     const [fridge, setFridge] = useState([]);
     const [success, setSuccess] = useState(false);
+    var toAdd = [];
+    //var toAdd = props.arr;
+    console.log(toAdd)
 
     console.log("button pressed")
-
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -34,44 +48,95 @@ async function addToListButton({ingredients}) {
         setFridge(thisUser.getFridge);
     }, []);
 
-    for (let i = 0; i < ingrArr.length(); i++) {
-        // check if already in shopping list (for all items)
-        var idxSL = await indexMatch(shoppingList, ingrArr[i]);
-        if (idxSL == -1) {
-            // item not found in shopping list
-            // check if already in fridge
-            var idxF = await indexMatch(fridge, ingrArr[i]);
-            if (idxF == -1) {
-                // item not found in fridge
-                var data = await addIngredient(username, ingrArr[i]);
-                //localStorage.setItem('user', JSON.stringify(data));
-                
-                setShoppingList(shoppingList => [...shoppingList, ingrArr[i]]);
-                console.log("added")
-                console.log(shoppingList)
-                setSuccess(true);
-                // confirmation popup? can tell if added
-            } else {
-                // item already owned in fridge, error message?
-            }
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+    function indexMatch(array, q) {
+        //console.log(array);
+        return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
+    }
+    for (let i = 0; i < ingrArr.length; i++) {
+        // check if already in shopping list or fridge(for all items)
+        var idxSL = indexMatch(shoppingList, ingrArr[i]);
+        var idxF = indexMatch(fridge, ingrArr[i]);
+        if (idxSL == -1 && idxF == -1) {
+            // not found in list, not owned
+            toAdd[i] = 1;
         } else {
-            // item already in list, error message?
+            // found in list, owned
+            toAdd[i] = 0;
         }
     }
-    
-}
+    //console.log(toAdd)
 
-// for add to shopping list
-async function indexMatch(array, q) {
-    //console.log(array);
-    return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
+    const handleAddToList = async () => {
+        for (let j = 0; j < ingrArr.length; j++) {
+            if (toAdd[j] == 1) {
+                var data = await addIngredient(username, ingrArr[j]);
+                localStorage.setItem('user', JSON.stringify(data));
+            }
+            console.log(data)
+        }
+        props.onClose;
+    }
+
+    return(
+        <Dialog
+            fullScreen={fullScreen}
+            open={props.open}
+            fullWidth={true}
+            maxWidth={'sm'}
+
+            onClose={props.onClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle>
+                {"Add to Shopping List:"}
+            </DialogTitle>
+            <DialogContent>
+                <Grid>
+                    <Typography>Green items will be added to your shopping list. Red items are already owned.</Typography>
+                    {ingrArr && ingrArr.map((item, index) => (
+                        <Box>
+                            <FormGroup row>
+                            </FormGroup>
+                            <Grid container>
+                                <Grid
+                                    sx={{backgroundColor: toAdd[index] === 1 ? 'lightgreen' : 'pink',}}
+                                >
+                                    <List>
+                                        <ListItemText
+                                            sx={{display: 'flex', justifyContent: 'center'}}
+                                            primary={item}
+                                        />
+                                    </List>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    ))}
+                </Grid>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>
+                    Cancel
+                </Button>
+                <Button 
+                    onClick={async() => {
+                        handleAddToList();
+                    }}
+                >
+                    Confirm Add.
+                </Button>
+            </DialogActions>
+        </Dialog>
+    );
+    
 }
 
 async function addIngredient(username, item) {
     //try {
         console.log(item);
-        const res = await fetch('/api/addShoppingListItem', {
+        const res = await fetch('../pages/api/addShoppingListItem', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

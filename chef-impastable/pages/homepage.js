@@ -8,12 +8,7 @@ import { useEffect } from 'react';
 import React from 'react';
 
 
-export default function HomePage(props) {    
-    console.log(props.recipes)
-    useEffect(() => {
-        localStorage.setItem('ing', JSON.stringify(props.ingredients));
-    }, [])
-
+export default function HomePage({recipes}) {
     return (
         <> 
             <div>
@@ -21,14 +16,6 @@ export default function HomePage(props) {
             </div>
             <p></p>
             <div>
-            
-                {/* <ImageList variant="masonry" cols={width/200} gap={2}>
-                    {recipes.map((recipe) => (                
-                        <ImageListItem key={recipe.id}>
-                            <RecipeCard recipe={recipe}/>
-                        </ImageListItem>
-                    ))}
-                </ImageList> */}
                 <Grid container spacing={3}>
                     
                     {props.recipes.map((recipe) => (                
@@ -53,11 +40,6 @@ export async function getServerSideProps() {
             .collection("recipes")
             .find({})
             .limit(20)
-            .toArray();
-        //console.log(recipes);
-        const ingredients = await db
-            .collection("ingredients")
-            .find({})
             .toArray();
         return {
             props: {recipes: JSON.parse(JSON.stringify(recipes)), ingredients: JSON.parse(JSON.stringify(ingredients))}, 

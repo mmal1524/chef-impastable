@@ -4,11 +4,11 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { getInitials } from "./user";
-import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import swal from 'sweetalert';
 import { useRouter } from "next/router";
+import swal from 'sweetalert';
+
 
 export function addFriendCard(friend, username) {
     
@@ -42,14 +42,30 @@ export function addFriendCard(friend, username) {
                     <h5 className="username">{friend.username}</h5>
                 </Stack>
                 <Button 
-                    variant="outlined" 
+                    variant="outlined"
                     sx={{color:'green', borderColor: 'green'}}
                     onClick={async () => {
-                        // adds friend to request list
-                        var currUser = await addFriendRequest(friend.username, username);
-                        swal("Friend Request sent");
-
-                        router.reload();
+                        // determines if user has requested themselves
+                        if (friend.username == username) {
+                            swal("", "You cannot request yourself", "info");
+                        } 
+                        else {
+                            // determines if user already has them in friends list
+                            var alreadyFriends = await findFriend(username, friend.username);
+                            if (alreadyFriends.success) {
+                                swal("", "You're already friends with this user", "info")
+                            }
+                            else {
+                                // determines if user has already requested them
+                                var alreadyRequested = await findFriendRequest(friend.username, username);
+                                if (alreadyRequested.success) {
+                                    swal("", "You have already sent a friend request to this user", "info");
+                                } else {
+                                    var currUser = await addFriendRequest(friend.username, username);
+                                    swal("", "Friend Request Sent!", "success");
+                                }
+                            }
+                        }
                     }}
 
                     endIcon={<SendIcon />}
@@ -81,6 +97,37 @@ export function addFriendCard(friend, username) {
 
     );
 
+    async function findFriendRequest(username, friendRequest) {
+        const res = await fetch('api/findFriendRequest', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friendRequest: friendRequest
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
+
+    async function findFriend(username, friend) {
+        const res = await fetch('api/findFriend', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                friend: friend
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
 
     async function addFriendRequest(username, friendRequest) {
         const res = await fetch('api/addFriendRequest', {
@@ -95,7 +142,6 @@ export function addFriendCard(friend, username) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -111,8 +157,6 @@ export function addFriendCard(friend, username) {
             })
     })
     const friendJSON = await res.json();
-    console.log('data')
-    console.log(friendJSON)
     return friendJSON;
   } 
 }

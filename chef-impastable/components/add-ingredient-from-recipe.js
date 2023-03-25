@@ -8,21 +8,20 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {Grid, Box, FormGroup, List, ListItemText, Button, Typography} from '@mui/material'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useRouter } from "next/router";
 
 export default function AddToListDialog(props) {
-    console.log(props)
-    console.log(props.recipe.ingredients)
+    const router = useRouter();
+    //console.log(props)
+    //console.log(props.recipe.ingredients)
     const ingrArr = props.recipe.ingredients.map(a => a.ingredient);
-    console.log(ingrArr)
+    console.log("ingrArr: " + ingrArr)
     const [username, setUsername] = useState("");
     const [shoppingList, setShoppingList] = useState("");
     const [fridge, setFridge] = useState([]);
-    const [success, setSuccess] = useState(false);
     var toAdd = [];
-    //var toAdd = props.arr;
-    console.log(toAdd)
-
-    console.log("button pressed")
+    //console.log(toAdd)
+    //console.log("button pressed")
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -51,6 +50,7 @@ export default function AddToListDialog(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+    //const [smthToAdd, setSmthToAdd] = useState(false);
     function indexMatch(array, q) {
         //console.log(array);
         return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
@@ -61,23 +61,32 @@ export default function AddToListDialog(props) {
         var idxF = indexMatch(fridge, ingrArr[i]);
         if (idxSL == -1 && idxF == -1) {
             // not found in list, not owned
+            //setSmthToAdd(true);
             toAdd[i] = 1;
         } else {
             // found in list, owned
             toAdd[i] = 0;
+            console.log("toadd" + toAdd[i])
         }
     }
-    //console.log(toAdd)
+    //const disabled = useState(smthToAdd);
+
+    console.log(toAdd)
+
+    const closeAction = () => {
+        props.onClose();
+    }
 
     const handleAddToList = async () => {
         for (let j = 0; j < ingrArr.length; j++) {
             if (toAdd[j] == 1) {
+                toAdd[j] = null;
                 var data = await addIngredient(username, ingrArr[j]);
                 localStorage.setItem('user', JSON.stringify(data));
             }
-            console.log(data)
         }
-        props.onClose;
+        console.log(data)
+        closeAction();
     }
 
     return(
@@ -95,7 +104,8 @@ export default function AddToListDialog(props) {
             </DialogTitle>
             <DialogContent>
                 <Grid>
-                    <Typography>Green items will be added to your shopping list. Red items are already owned.</Typography>
+                    <Typography>Green items will be added to your shopping list.</Typography>
+                    <Typography>Red items are already owned or on the list.</Typography>
                     {ingrArr && ingrArr.map((item, index) => (
                         <Box>
                             <FormGroup row>
@@ -117,12 +127,15 @@ export default function AddToListDialog(props) {
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.onClose}>
+                <Button onClick={closeAction}>
                     Cancel
                 </Button>
                 <Button 
+                    //disabled={disabled}
                     onClick={async() => {
-                        handleAddToList();
+                        await handleAddToList();
+                        //closeAction();
+                        //router.reload();
                     }}
                 >
                     Confirm Add.
@@ -134,9 +147,9 @@ export default function AddToListDialog(props) {
 }
 
 async function addIngredient(username, item) {
-    //try {
-        console.log(item);
-        const res = await fetch('../pages/api/addShoppingListItem', {
+    try {
+        //console.log(item);
+        const res = await fetch('/api/addShoppingListItem', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -150,8 +163,9 @@ async function addIngredient(username, item) {
         const data = await res.json();
         console.log(data);
         return data;
-    //} catch (error) {
+    } catch (error) {
+        console.log("error")
     //    res.json(error);
     //    return res.status(405).end();
-    //}
+    }
 }

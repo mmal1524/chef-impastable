@@ -95,6 +95,7 @@ export default function ShoppingListEdit() {
                     )}
                 />
                 <Button
+                    // Add Button
                     type="submit" 
                     size="large" 
                     variant="contained"
@@ -126,6 +127,7 @@ export default function ShoppingListEdit() {
                     Add
                 </Button>
                 <Button
+                    // CLEAR button
                     type="submit" 
                     size="large" 
                     variant="outlined"
@@ -136,7 +138,7 @@ export default function ShoppingListEdit() {
                         setShoppingList([]);
                         var data = await ClearList(username);
                         localStorage.setItem('user', JSON.stringify(data));
-                        console.log(shoppingList)
+                        console.log("shopping list"+ shoppingList)
                     }}
                 >
                     Clear

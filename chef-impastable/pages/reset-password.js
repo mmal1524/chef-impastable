@@ -192,9 +192,8 @@ export default function SignUp() {
                                         if ((newPassValue == newPassValueC) && strongPassword.test(newPassValue) && (passwordRegex.test(newPassValue))) {
                                             //console.log("change now")
                                             var data = await EditPw(thisUser.getUsername, newPassValue);
-                                            if (data.success) {
-                                                localStorage.setItem('user', 
-                                                    JSON.stringify(data));
+                                            if (data.success != false) {
+                                                localStorage.setItem('user', JSON.stringify(data));
                                                 handleClickOpenS();
                                                 router.push('/edit-profile');
                                             } else {

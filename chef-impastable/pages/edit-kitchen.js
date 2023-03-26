@@ -26,7 +26,6 @@ import { useTheme } from '@mui/material/styles';
 export default function EditKitchen({appliances}) {
 
     const kitchenArr = appliances.map(a => a.name);
-    //console.log(kitchenArr[0]);
 
     const [username, setUsername] = useState("");
     const [userApps, setUserApps] = useState([]);
@@ -93,6 +92,9 @@ export default function EditKitchen({appliances}) {
     return (
         <>   
         <div>
+            <div className="App">
+                <Navbar />
+            </div>
             <Grid container>
                 <Grid item>
                     <Autocomplete
@@ -137,24 +139,7 @@ export default function EditKitchen({appliances}) {
                                     } else {
                                         setUserApps(userApps => [...userApps, searchKitchen]);
                                         var data = await AddApp(username, searchKitchen);
-                                        localStorage.setItem('user',
-                                            JSON.stringify({
-                                                username: data.username,
-                                                password: data.password,
-                                                fridge: data.fridge,
-                                                kitchen: data.kitchen,
-                                                displayName: data.displayName,
-                                                avatar: data.avatar,
-                                                friends: data.friends,
-                                                friendRequests: data.friendRequests,
-                                                dietaryTags: data.dietaryTags,
-                                                fridge_grouped: data.fridge_grouped,
-                                                createdPrivacy: data.createdPrivacy,
-                                                savedPrivacy: data.savedPrivacy,
-                                                reviewedPrivacy: data.reviewedPrivacy,
-                                                mealPlanPrivacy: data.mealPlanPrivacy
-                                        }));
-                                        console.log(data.username);
+                                        localStorage.setItem('user', JSON.stringify(data));
                                     }
                                 }
                             }
@@ -201,23 +186,7 @@ export default function EditKitchen({appliances}) {
                                                 <IconButton edge="end" aria-label="delete" onClick={async () => {
                                                     deleteByIndex(index);
                                                     var data = await DeleteApp(username, app);
-                                                    localStorage.setItem('user',
-                                                        JSON.stringify({
-                                                            username: data.username,
-                                                            password: data.password,
-                                                            fridge: data.fridge,
-                                                            kitchen: data.kitchen,
-                                                            displayName: data.displayName,
-                                                            avatar: data.avatar,
-                                                            friends: data.friends,
-                                                            friendRequests: data.friendRequests,
-                                                            dietaryTags: data.dietaryTags,
-                                                            fridge_grouped: data.fridge_grouped,
-                                                            createdPrivacy: data.createdPrivacy,
-                                                            savedPrivacy: data.savedPrivacy,
-                                                            reviewedPrivacy: data.reviewedPrivacy,
-                                                            mealPlanPrivacy: data.mealPlanPrivacy
-                                                        }));
+                                                    localStorage.setItem('user', JSON.stringify(data));
                                                 }}>
                                                     <DeleteIcon />
                                                 </IconButton>
@@ -331,9 +300,7 @@ export async function getServerSideProps() {
             .collection("appliances")
             .find({})
             .toArray();
-        //console.log(appliances);
         return {
-            //props: { appliances }
             props: {appliances: JSON.parse(JSON.stringify(appliances))},
         };
     }

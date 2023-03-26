@@ -1,5 +1,3 @@
-import Head from 'next/head'
-import Navbar from './navbar.js'
 import * as React from 'react';
 import clientPromise from '../lib/mongodb'
 import Link from 'next/link';
@@ -22,7 +20,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Dialog, Grid, IconButton, InputLabel, OutlinedInput, Typography } from '@mui/material';
 
-import User from '../components/user';
 
 export async function getServerSideProps(context) {
   try {
@@ -53,11 +50,9 @@ export default function Home({
     const [usernameValue, setValueUser] = useState("");
     const [passwordValue, setValuePass] = useState("");
     const handleChangeUser = e => {
-        //console.log(`Typed => ${e.target.value}`);
         setValueUser(e.target.value)
     }
     const handleChangePass = e => {
-        //console.log(`Typed => ${e.target.value}`);
         setValuePass(e.target.value)
     }
     const router = useRouter();
@@ -87,7 +82,6 @@ export default function Home({
             <Box
                 sx={{
                     marginTop: 8,
-                    //width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -134,27 +128,11 @@ export default function Home({
                     type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
-                        if (!data.success) {
+                        if (data.success == false) {
                             handleClickOpen();
                         } else {
                             console.log(data.fridge_grouped)
-                            localStorage.setItem('user', 
-                                JSON.stringify({
-                                    username: data.username,
-                                    password: data.password,
-                                    fridge: data.fridge,
-                                    kitchen: data.kitchen,
-                                    displayName: data.displayName,
-                                    avatar: data.avatar,
-                                    friends: data.friends,
-                                    friendRequests: data.friendRequests,
-                                    dietaryTags: data.dietaryTags,
-                                    fridge_grouped: data.fridge_grouped,
-                                    createdPrivacy: data.createdPrivacy,
-                                    savedPrivacy: data.savedPrivacy,
-                                    reviewedPrivacy: data.reviewedPrivacy,
-                                    mealPlanPrivacy: data.mealPlanPrivacy
-                            }));
+                            localStorage.setItem('user', JSON.stringify(data));
                             router.push("/homepage");
                         }
                     }}
@@ -195,26 +173,18 @@ export default function Home({
     );
 
     async function LoginUser(username, password) {
-        //try {
-            console.log(username);
-            console.log(password);
-            const res = await fetch('/api/loginapi', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                })
+        const res = await fetch('/api/loginapi', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password,
             })
-            const data = await res.json();
-            console.log(data);
-            return data;
-        //} catch (error) {
-        //    res.json(error);
-        //    return res.status(405).end();
-        //}
+        })
+        const data = await res.json();
+        return data;
     }
 }

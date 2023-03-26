@@ -14,8 +14,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import ForumIcon from '@mui/icons-material/Forum';
+//import { viewFriendProfile } from "./view-friends-card";
  
-export function friendCardTwo(friend) {
+export function friendShared(friend) {
 
     const router = useRouter();
 
@@ -78,60 +80,16 @@ export function friendCardTwo(friend) {
                     <h3 className="displayName">{friend.displayName}</h3>
                     <h5 className="username">{friend.username}</h5>
                 </Stack>
-
                 <Button 
                     variant="outlined" 
-                    sx={{color:'red', borderColor: 'red'}}
-                    endIcon={<DeleteIcon />}
-                    onClick={handleClickOpen}
-                > 
-                    Remove
-                </Button>
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
+                    sx={{color:'light blue', borderColor:'light blue'}}
+                    endIcon={<ForumIcon />}
+                    // onClick={ async () => {
+                    //     var friendUser = await viewFriend(friend.username);
+                    //     router.push({pathname: "/view_friends", query: {username: friendUser.username} })
+                    //    }}
                 >
-                    <DialogTitle id="remove-friend">
-                        {"Remove This User?"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText id="remove-friend-description">
-                            If you change your mind, you'll have to request to be friends again.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={async () => {
-
-                                // removes friend from friend list
-                                var currUser = await deleteFriend(username, friend.username);
-
-                                // remove user from friend's friend list
-                                await deleteFriend(friend.username, username);
-
-                                localStorage.setItem('user', JSON.stringify(currUser));
-                                router.reload();
-
-                                swal("Friend Removed");
-                                }}
-                                    sx = {{color: 'red'}}
-                                > 
-                                    Remove Friend
-                                </Button>
-                                <Button onClick={handleClose} autoFocus>
-                                    Cancel
-                                </Button>
-                        </DialogActions>
-                    </Dialog>
-                <Button 
-                    variant="outlined" 
-                    sx={{color:'blue', borderColor:'blue'}}
-                    endIcon={<FullscreenIcon />}
-                    onClick={ async () => {
-                        var friendUser = await viewFriend(friend.username);
-                        router.push({pathname: "/view_friends", query: {username: friendUser.username} })
-                       }}
-                >
-                    View
+                    shared
                 </Button>
             </Stack> 
             <style jsx>{`
@@ -159,6 +117,7 @@ export function friendCardTwo(friend) {
             })
         });
         const data = await res.json();
+        console.log(data);
         return data;
     }
 
@@ -174,6 +133,8 @@ export function friendCardTwo(friend) {
             })
     })
     const friendJSON = await res.json();
+    console.log('data')
+    console.log(friendJSON)
     return friendJSON;
   } 
 }

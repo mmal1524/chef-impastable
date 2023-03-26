@@ -9,7 +9,10 @@ export default async function handler(req,res){
     try {
         const {username}=req.body;
         const user = await User.findOne({username});
-        console.log(user)
+        
+        if (user == null) {
+            return res.json({success: false});
+        } 
         
         return res.json({
             username: user.username,
@@ -21,7 +24,8 @@ export default async function handler(req,res){
             createdPrivacy: user.createdPrivacy,
             savedPrivacy: user.savedPrivacy,
             reviewedPrivacy: user.reviewedPrivacy,
-            dietaryTags: user.dietaryTags
+            dietaryTags: user.dietaryTags,
+            success: true
         });
     } catch (error) {
         res.status(400).json({status:'Not able to create a new user.'})

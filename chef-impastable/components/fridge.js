@@ -118,7 +118,6 @@ export default function Fridge(props) {
 
     // used for handling if the ingredient should be added to the database or not
     var addButton; 
-
     return (
         <>
             <Snackbar open={showDeleted} autoHideDuration={3000} onClose={handleClose}>
@@ -138,9 +137,7 @@ export default function Fridge(props) {
                         id="combo-box-demo"
                         freeSolo
                         options={fridgeGrouped ? Object.keys(fridgeGrouped).map((option) => option) : []}
-                        //renderOption={(props, option) => <li {...props}>{option.title}</li>}
                         onInputChange={(e, new_val) => { setSearchGroup(new_val) }}
-                        //sx={{ width: windowSize[0]/3 }}
                         renderInput={params => (
                             <TextField
                                 {...params}
@@ -184,21 +181,7 @@ export default function Fridge(props) {
                                     handleClickOpen();
                                 } else {
                                     localStorage.setItem('user',
-                                        JSON.stringify({
-                                            username: data.username,
-                                            password: data.password,
-                                            fridge: data.fridge,
-                                            fridge_grouped: data.fridge_grouped,
-                                            kitchen: data.kitchen,
-                                            displayName: data.displayName,
-                                            avatar: data.avatar,
-                                            friends: data.friends,
-                                            friendRequests: data.friendRequests,
-                                            createdPrivacy: data.createdPrivacy,
-                                            savedPrivacy: data.savedPrivacy,
-                                            reviewedPrivacy: data.reviewedPrivacy,
-                                            dietaryTags: data.dietaryTags
-                                        }));
+                                        JSON.stringify(data));
                                     setAddIngr("")
                                     console.log(addIngr, searchGroups)
                                     setOpenSnackbar(true)
@@ -224,21 +207,7 @@ export default function Fridge(props) {
                                 handleClickOpenExists();
                             } else {
                                 localStorage.setItem('user',
-                                    JSON.stringify({
-                                        username: data.username,
-                                        password: data.password,
-                                        fridge: data.fridge,
-                                        fridge_grouped: data.fridge_grouped,
-                                        kitchen: data.kitchen,
-                                        displayName: data.displayName,
-                                        avatar: data.avatar,
-                                        friends: data.friends,
-                                        friendRequests: data.friendRequests,
-                                        createdPrivacy: data.createdPrivacy,
-                                        savedPrivacy: data.savedPrivacy,
-                                        reviewedPrivacy: data.reviewedPrivacy,
-                                        dietaryTags: data.dietaryTags
-                                    }));
+                                    JSON.stringify(user));
                                 setAddIngr("")
                                 console.log(addIngr, searchGroups)
                                 setOpenSnackbar(true)
@@ -365,7 +334,6 @@ export default function Fridge(props) {
                         }}
                         onClick={() => {
                             //route to edit page
-                            // console.log(Object.keys(fridgeGrouped))
                             setOpenEditModal(true);
                         }}>
                         Edit Fridge
@@ -417,7 +385,6 @@ export default function Fridge(props) {
 // returns index if match of q is found within given array
 // both are toUpperCase so search is case insensitive
 async function indexMatch(array, q) {
-    //console.log(array);
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
 
@@ -439,10 +406,6 @@ async function addIngredient(ingredient, group, username, addButton) {
     const data = await res.json();
     console.log(data);
     return data;
-    //} catch (error) {
-    //    res.json(error);
-    //    return res.status(405).end();
-    //}
 }
 
 

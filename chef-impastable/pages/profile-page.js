@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
 import { friendRequestCard } from '../components/friend-request-card';
 import clientPromise from '../lib/mongodb_client';
+import SavedRecipes from '../components/savedRecipes';
 import { reviewCardButton } from '../components/review-card-button';
 import { ObjectId } from 'mongodb';
 
@@ -228,7 +229,7 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
                         Here is where created recipes will go
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        Here is where saved recipes will go
+                        <SavedRecipes></SavedRecipes>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         {displayReviews(reviewsList)}

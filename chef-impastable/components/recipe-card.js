@@ -1,12 +1,8 @@
 import {Card, CardHeader, CardContent, CardMedia} from "@mui/material";
-import Image from "next/image";
 import {CardActionArea, CardActions, IconButton} from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { Favorite } from "@mui/icons-material";
 import SendIcon from '@mui/icons-material/Send';
-import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
-import { Link } from "@mui/material";
 import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";

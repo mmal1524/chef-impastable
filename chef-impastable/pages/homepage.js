@@ -74,14 +74,6 @@ export default function HomePage({recipes}) {
             </div>
             <p></p>
             <div>
-            
-                {/* <ImageList variant="masonry" cols={width/200} gap={2}>
-                    {recipes.map((recipe) => (                
-                        <ImageListItem key={recipe.id}>
-                            <RecipeCard recipe={recipe}/>
-                        </ImageListItem>
-                    ))}
-                </ImageList> */}
                 <Grid container spacing={3}>
                     
                     {displayRecipes.map((recipe, index) => (                
@@ -180,7 +172,6 @@ export async function getServerSideProps() {
             .find({})
             .limit(20)
             .toArray();
-        //console.log(recipes);
         return {
             props: {recipes: JSON.parse(JSON.stringify(recipes))},
         };

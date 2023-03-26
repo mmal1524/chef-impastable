@@ -9,10 +9,11 @@ export default async function handler(req,res){
     try {
         const {displayName}=req.body;
         const user = await User.findOne({displayName});
-        //console.log(await User.findMany({displayName}))
-        //console.log('user:')
-        //console.log(typeof(user));
         
+        if (user == null) {
+            return res.json({success: false})
+        }
+
         return res.json({
             username: user.username,
             password: user.password,
@@ -23,7 +24,8 @@ export default async function handler(req,res){
             createdPrivacy: user.createdPrivacy,
             savedPrivacy: user.savedPrivacy,
             reviewedPrivacy: user.reviewedPrivacy,
-            dietaryTags: user.dietaryTags
+            dietaryTags: user.dietaryTags,
+            success: true
         });
     } catch (error) {
         res.status(400).json({status:'Not able to create a new user.'})

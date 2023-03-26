@@ -15,7 +15,7 @@ export default function HomePage({recipes}) {
                 <Navbar />
             </div>
             <p></p>
-            <div>
+            <div data-test="Recipes">
                 <Grid container spacing={3}>
                     
                     {recipes.map((recipe) => (                

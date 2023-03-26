@@ -7,16 +7,16 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username}=req.body
-        const name = await User.findOne({username})
-        if(!name){
-            //username not found, username not taken, return false
+        const {username, friend}=req.body
+        const exists = await User.findOne({username: username, friends: friend})
+        if(!exists){
+            //friend does not exist
             return res.json({success : false});
         }
         else {
             return res.json({success: true});
         }
     } catch (error) {
-        res.status(400).json({status:'User was not found'})
+        res.status(400).json({status:'findFriendRequest error'})
     }
 }

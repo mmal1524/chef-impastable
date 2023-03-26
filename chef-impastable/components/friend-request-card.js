@@ -113,7 +113,6 @@ export function friendRequestCard(friendRequest) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -130,7 +129,6 @@ export function friendRequestCard(friendRequest) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 

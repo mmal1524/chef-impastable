@@ -16,6 +16,8 @@ import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
 import { friendRequestCard } from '../components/friend-request-card';
 import clientPromise from '../lib/mongodb_client';
+import { reviewCardButton } from '../components/review-card-button';
+import { ObjectId } from 'mongodb';
 
 
 function TabPanel(props) {
@@ -51,10 +53,11 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({besties, futureBesties}) {
+export default function ProfilePage({besties, futureBesties, reviews, recipes}) {
 
     var friendsList = besties;
     var friendRequestsList = futureBesties;
+    var reviewsList = reviews;
 
     const [value, setValue] = React.useState(0);
     const router = useRouter();
@@ -74,8 +77,9 @@ export default function ProfilePage({besties, futureBesties}) {
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
     var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
     const [fridge, setFridge] = useState([]);
-    const [kitchen, setKitchen] = useState([])
-    const [fridge_grouped, setFridgeGrouped] = useState({})
+    const [kitchen, setKitchen] = useState([]);
+    const [fridge_grouped, setFridgeGrouped] = useState({});
+    var [reviewedRecipes, setReviewedRecipes] = useState([]);
 
     
     useEffect(() => {
@@ -145,6 +149,11 @@ export default function ProfilePage({besties, futureBesties}) {
                 get() {
                     return this.fridge_grouped
                 }
+            },
+            getReviewedRecipes: {
+                get() {
+                    return this.reviewedRecipes
+                }
             }
         });
         setUsername(thisUser.getUsername);
@@ -156,7 +165,8 @@ export default function ProfilePage({besties, futureBesties}) {
         setCreatedPrivacy(thisUser.getCreatedPrivacy);
         setSavedPrivacy(thisUser.getSavedPrivacy);
         setReviewedPrivacy(thisUser.getReviewedPrivacy);
-        setMealPlanPrivacy(thisUser.getMealPlanPrivacy)
+        setMealPlanPrivacy(thisUser.getMealPlanPrivacy);
+        setReviewedRecipes(thisUser.getReviewedRecipes);
     }, []);
 
     return (
@@ -178,21 +188,6 @@ export default function ProfilePage({besties, futureBesties}) {
                             startIcon={<SettingsIcon />} 
                             sx={{color: 'black', borderColor: 'black'}}
                             onClick={() => {
-                                localStorage.setItem('user', JSON.stringify({
-                                    username: username,
-                                    password: password,
-                                    displayName: displayName,
-                                    avatar: avatar,
-                                    friends: friends,
-                                    friendRequests: friendRequests,
-                                    createdPrivacy: createdPrivacy,
-                                    savedPrivacy: savedPrivacy,
-                                    reviewedPrivacy: reviewedPrivacy,
-                                    mealPlanPrivacy: mealPlanPrivacy,
-                                    fridge: fridge,
-                                    kitchen: kitchen,
-                                    fridge_grouped: fridge_grouped
-                                 }))
                                 router.push("edit-profile");
                             }}
                         >
@@ -236,7 +231,7 @@ export default function ProfilePage({besties, futureBesties}) {
                         Here is where saved recipes will go
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        Here is where reviewed recipes will go
+                        {displayReviews(reviewsList)}
                     </TabPanel>
                     <TabPanel value={value} index={3}>
                         Here is where meal plans will go
@@ -283,6 +278,19 @@ export default function ProfilePage({besties, futureBesties}) {
             );
         }
     }
+
+    function displayReviews(reviews) {
+        var i = 0;
+        if (!reviews || reviews.length == 0) {
+            return(<>No reviews, create one now!</>);
+        } else {
+            return(
+                reviews.map((review) => (
+                    reviewCardButton(review, recipes[i++])
+                ))
+            );
+        }
+    }
 }
 
 export async function getServerSideProps(context) {
@@ -314,8 +322,43 @@ export async function getServerSideProps(context) {
             friendRequestsObjects[i] = JSON.parse(JSON.stringify(fr[0]));
         }
 
+        var reviews = user[0].reviewedRecipes;
+        var reviewObjects;
+        if (!reviews) {
+            reviewObjects = [];
+        }
+        else {
+            reviewObjects = new Array(reviews.length);
+            var i = 0;
+            for (i; i < reviews.length; i++) {
+                var r = await db
+                    .collection("reviews")
+                    .find({_id: reviews[i]}).toArray();
+                reviewObjects[i] = JSON.parse(JSON.stringify(r[0]));
+            }
+        }
+
+        var recipeObjects;
+        if (!reviews) {
+            recipeObjects = [];
+        }
+        else {
+            var recipeids = new Array(reviewObjects.length);
+            var i = 0;
+            for (i; i < reviewObjects.length; i++) {
+                recipeids[i] = new ObjectId(reviewObjects[i].recipeID);
+            }
+            recipeObjects = new Array(reviews.length);
+            for (i = 0; i < reviewObjects.length; i++) {
+                var r = await db
+                    .collection("recipes")
+                    .find({_id: recipeids[i]}).toArray();
+                recipeObjects[i] = JSON.parse(JSON.stringify(r[0]));
+            }
+        }
+
         return {
-            props: {besties: friendObjects, futureBesties: friendRequestsObjects},
+            props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects},
         };
     }
     catch (e) {

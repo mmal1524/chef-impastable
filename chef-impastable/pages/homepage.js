@@ -8,8 +8,7 @@ import { useEffect } from 'react';
 import React from 'react';
 
 
-export default function HomePage({recipes}) {    
-    console.log(recipes)
+export default function HomePage({recipes}) {
     return (
         <> 
             <div>
@@ -17,14 +16,6 @@ export default function HomePage({recipes}) {
             </div>
             <p></p>
             <div>
-            
-                {/* <ImageList variant="masonry" cols={width/200} gap={2}>
-                    {recipes.map((recipe) => (                
-                        <ImageListItem key={recipe.id}>
-                            <RecipeCard recipe={recipe}/>
-                        </ImageListItem>
-                    ))}
-                </ImageList> */}
                 <Grid container spacing={3}>
                     
                     {recipes.map((recipe) => (                
@@ -50,7 +41,6 @@ export async function getServerSideProps() {
             .find({})
             .limit(20)
             .toArray();
-        //console.log(recipes);
         return {
             props: {recipes: JSON.parse(JSON.stringify(recipes))},
         };

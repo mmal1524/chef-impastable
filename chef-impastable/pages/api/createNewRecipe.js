@@ -9,17 +9,17 @@ export default async function handler(req, res) {
     const { title, image, preptime, cookTime, totalTime, yields, description, instructions,
         calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username } = req.body;
     try {
-        const nutritionFacts = [
-            {calories: calories}, 
-            {carbohydrateContent: carbs},
-            {cholesterolContent: cholesterol},
-            {fiberContent: fiber},
-            {proteinContent: protein},
-            {saturatedFatContent: saturatedFat},
-            {sodiumContent: sodium},
-            {fatContent: fat},
-            {unsaturatedFat: unsaturatedFat}
-        ];
+        const nutritionFacts = {
+            calories: calories, 
+            carbohydrateContent: carbs,
+            cholesterolContent: cholesterol,
+            fiberContent: fiber,
+            proteinContent: protein,
+            saturatedFatContent: saturatedFat,
+            sodiumContent: sodium,
+            fatContent: fat,
+            unsaturatedFat: unsaturatedFat
+    };
         const recipe = new Recipe({
             title: title,
             image: image,

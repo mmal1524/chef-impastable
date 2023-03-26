@@ -48,7 +48,7 @@ const recipeSchema = new mongoose.Schema({
         required:false
     },
     nutrients: {
-        type:Array,
+        type:Object,
         required:false
     },
     prep_time: {

@@ -10,10 +10,10 @@ export default function SaveRecipeDialog(props) {
     console.log(props.options);
     // const folderOptions = [props.options];
     const [folder, setFolder] = useState("none")
-    const [folders, setFolders] = useState(props.options);
+    const [folders, setFolders] = useState([]);
     
     useEffect(() => {
-        // debugger;
+        debugger;
         //console.log(recipes)
         var thisUser = JSON.parse(localStorage.getItem("user"))
         // var saved = thisUser.saved
@@ -21,11 +21,10 @@ export default function SaveRecipeDialog(props) {
             var f = await getFolders(thisUser.username)
             setFolders(f.map((sf => sf.name)))
         }
-        if (!props.options) {
-            getSavedFolders();
-        }
+        getSavedFolders();
+        
         console.log(thisUser)
-    }, [])
+    }, [props.show])
 
     return (
         <Dialog open={props.show} onClose={props.onClose}>

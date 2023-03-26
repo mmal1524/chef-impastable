@@ -16,12 +16,9 @@ import { useState, useEffect } from "react";
 import { friendCard } from '../components/friend-card';
 import { friendRequestCard } from '../components/friend-request-card';
 import clientPromise from '../lib/mongodb_client';
-<<<<<<< HEAD
 import SavedRecipes from '../components/savedRecipes';
-=======
 import { reviewCardButton } from '../components/review-card-button';
 import { ObjectId } from 'mongodb';
->>>>>>> 8f0a1cb6462aadc597a8baea0a17291144f6952e
 
 
 function TabPanel(props) {

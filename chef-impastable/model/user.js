@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
     reviewedRecipes: {
         type:[SchemaTypes.ObjectId],
         required:false
+    },
+    success: {
+        type:Boolean,
+        required:false
     }
 
 });

@@ -207,7 +207,7 @@ export default function Fridge(props) {
                                 handleClickOpenExists();
                             } else {
                                 localStorage.setItem('user',
-                                    JSON.stringify(user));
+                                    JSON.stringify(data));
                                 setAddIngr("")
                                 console.log(addIngr, searchGroups)
                                 setOpenSnackbar(true)

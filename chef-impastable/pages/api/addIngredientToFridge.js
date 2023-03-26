@@ -37,13 +37,12 @@ export default async function handler(req,res){
         }
         else {
             var fridge_group = user.fridge_grouped.get(group)
-            
             fridge_group.push(ingredient)
             user.fridge_grouped.set(group, fridge_group)
         }
         user.fridge.push(ingredient)
         user.save()
-
+        user.success = true;
         return res.json(user);
         
     } catch (error) {

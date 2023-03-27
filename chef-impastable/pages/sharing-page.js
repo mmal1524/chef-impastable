@@ -25,41 +25,6 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
         currUserDisplay = currFriend.username;
     }
 
-    // maybe try to just send all of the recipes and then filter from there
-
-    // // have to go through each sent share, get the recipe id, find the recipe object with api, add them all to an array called sentRecipes
-    // var i = 0;
-    // var sentRecipeIDS = [];
-    // for (i; i < sentShares.length; i++) {
-    //     // get all the shares that are sent to the currFriend
-    //     // all shared recipes
-    //     if (currFriend == null)  {
-    //         sentRecipeIDS.push(sentShares[i].recipeID)
-    //     } else {
-    //         // only recurn shares that the receiver is current friend
-    //         // go through each recipeID and get the recipe object later.
-    //         if (sentShares[i].receiver == currUsername) {
-    //             sentRecipeIDS.push(sentShares[i].recipeID)
-    //         }
-    //     }
-    // }
-    // console.log(sentRecipeIDS)
-
-    // // go through all received shares, get recipe id, find the recipe object with api, add them all to an array called receivedRecipes
-    // var j = 0;
-    // var receivedRecipeIDS = [];
-    // for (j; j < receivedShares.length; j++) {
-    //     // go through all recipeID and get recipe object later.
-    //     if (currFriend == null)  {
-    //         receivedRecipeIDS.push(receivedShares[j].recipeID)
-    //     } else {
-    //         if (receivedShares[i].sender == currUsername) {
-    //             receivedRecipeIDS.push(receivedShares[j].recipeID)
-    //         }
-    //     }
-    // }
-    // console.log(receivedRecipeIDS)
-
     const [value, setValue] = React.useState(0);
     const router = useRouter();
 
@@ -118,9 +83,10 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
     );
 
     function displayReceived(recipeList, username) {
-        if (username == "Select a friend") {
+        if (username == "") {
             return (<>Select a friend to view your received recipes</>)
         }
+        console.log(username)
         if (recipeList.length == 0) {
             return (<>You have not received any recipes from {username}</>)
         } else {
@@ -135,7 +101,7 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
     }
 
     function displaySent(recipeList, username) {
-        if (username == "Select a friend") {
+        if (username == "") {
             return (<>Select a friend to view your sent recipes</>)
         }
         if (recipeList.length == 0) {

@@ -15,13 +15,15 @@ export default function HomePage({recipes}) {
                 <Navbar />
             </div>
             <p></p>
-            <div data-test="Recipes">
+            <div>
                 <Grid container spacing={3}>
                     
-                    {recipes.map((recipe) => (                
+                    {recipes.map((recipe, index) => (     
+                        // <p data-test={`Recipe-${index}`}>        
                         <Grid item key={recipe._id}>
-                            <RecipeCard recipe={recipe}/>
+                            <RecipeCard recipe={recipe} index={index}/>
                         </Grid>
+                        
                     )
                         
                     )}

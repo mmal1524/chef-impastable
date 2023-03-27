@@ -10,10 +10,11 @@ function RecipeCard(props) {
     //https://nextjs.org/docs/api-reference/next/link
     //https://stackoverflow.com/questions/55182529/next-js-router-push-with-state
     const router = useRouter();
+    console.log(props);
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id}})}}>
+            <CardActionArea data-test={props.index} onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id}})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 

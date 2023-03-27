@@ -15,14 +15,17 @@ import RecipeCard from '../components/recipe-card';
 export default function SharingPage( {friend, besties, sentRecipes, receivedRecipes} ) {
     var friendsList = besties;
     var currFriend = friend;
-    var currUsername = ""
+    var currUsername = "";
+    var currUserDisplay = "";
 
     if (currFriend == null) {
-        currUsername = "All Shared Recipes"
+        currUsername = "Select a friend"
     } else {
-        currUsername = currFriend.username;
-
+        currUsername = "Currently viewing: " + currFriend.username;
+        currUserDisplay = currFriend.username;
     }
+
+    // maybe try to just send all of the recipes and then filter from there
 
     // // have to go through each sent share, get the recipe id, find the recipe object with api, add them all to an array called sentRecipes
     // var i = 0;
@@ -88,7 +91,7 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
               <Grid xs={3}>
                 <Box sx={{width: '100%', marginBottom: 4}}>
                     <h3 className="h3"> Friends </h3>
-                    <h4 className="h3"> Currently Viewing: {currUsername} </h4>
+                    <h4 className="h3"> {currUsername} </h4>
 
                     <Divider />
                     {displayFriends(friendsList)}
@@ -100,23 +103,26 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
                         
                     <Grid container spacing={1}>
                     
-                    {displayReceived(receivedRecipes)}
+                    {displayReceived(receivedRecipes, currUserDisplay)}
                 </Grid>
               </Grid>
               <Grid xs={4.5}>
                 <h3 className="h3"> Recipes sent </h3>
                 <Divider />
                     <Grid container spacing={1}>
-                        {displaySent(sentRecipes)}
+                        {displaySent(sentRecipes, currUserDisplay)}
                     </Grid>
               </Grid>
             </Grid>
         </div>
     );
 
-    function displayReceived(recipeList) {
+    function displayReceived(recipeList, username) {
+        if (username == "Select a friend") {
+            return (<>Select a friend to view your received recipes</>)
+        }
         if (recipeList.length == 0) {
-            return (<>You have not received any recipes</>)
+            return (<>You have not received any recipes from {username}</>)
         } else {
             return (
                 recipeList.map((recipe) => (                
@@ -128,9 +134,12 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
         }
     }
 
-    function displaySent(recipeList) {
+    function displaySent(recipeList, username) {
+        if (username == "Select a friend") {
+            return (<>Select a friend to view your sent recipes</>)
+        }
         if (recipeList.length == 0) {
-            return (<>You have not sent any recipes</>)
+            return (<>You have not sent any recipes to {username}</>)
         } else {
             return (
                 recipeList.map((recipe) => (                
@@ -179,26 +188,14 @@ export async function getServerSideProps(context) {
             .collection("users")
             .findOne({username: context.query.friendusername});
 
-        var sentShares;
-        var receivedShares;
-        if (currFriend == null) {
-            sentShares = await db
-                .collection("shares")
-                .find({sender: context.query.username}).toArray();
+        var sentShares = await db
+            .collection("shares")
+            .find({sender: context.query.username, receiver: context.query.friendusername}).toArray();
 
-            receivedShares = await db
-                .collection("shares")
-                .find({receiver: context.query.username}).toArray();
-
-        } else {
-            sentShares = await db
-                .collection("shares")
-                .find({sender: context.query.username, receiver: context.query.friendusername}).toArray();
-
-            receivedShares = await db
-                .collection("shares")
-                .find({receiver: context.query.username, sender: context.query.friendusername}).toArray();
-            }
+        var receivedShares = await db
+            .collection("shares")
+            .find({receiver: context.query.username, sender: context.query.friendusername}).toArray();
+        
         
         const sentRecipes = []
         var i = 0;
@@ -218,6 +215,7 @@ export async function getServerSideProps(context) {
                 .findOne({_id: receivedShares[i].recipeID})
             receivedRecipes.push(currRecipe)
         }
+        console.log(receivedRecipes.length)
                 
       
         return {

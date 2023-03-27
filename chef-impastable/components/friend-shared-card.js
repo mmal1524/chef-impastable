@@ -80,7 +80,7 @@ export function friendShared(friend) {
                     onClick={ async () => {
                         var friendUser = await viewFriend(friend.username);
                         router.push({pathname: "/sharing-page", query: {username: username, friendusername: friendUser.username} })
-                       }}
+                    }}
                 >
                     shared
                 </Button>

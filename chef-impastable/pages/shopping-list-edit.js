@@ -12,8 +12,6 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-//import clientPromise from "../lib/mongodb_client";
-
 export default function ShoppingListEdit() {
 
     const [username, setUsername] = useState("");
@@ -21,6 +19,7 @@ export default function ShoppingListEdit() {
     const [fridge, setFridge] = useState([]);
     const [addIngr, setAddIngr] = useState("");
 
+    const [ingrArr, setIngrArr] = useState([])
     const deleteByIndex = index => {
         setShoppingList(oldValues => {
             return oldValues.filter((_, i) => i !== index)
@@ -49,11 +48,14 @@ export default function ShoppingListEdit() {
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
+        async function getIngredients() {
+            var i = await getIngr();
+            setIngrArr(i.map((igr => igr.ingredient)))
+        }
+        getIngredients();
     }, []);
 
     // for autocomplete search bar
-    const ingrArr = JSON.parse(localStorage.getItem('ing')).map(a => a.ingredient);
-    //console.log(ingrArr);
     const [ingrArr2, setIngrArr2] = useState(ingrArr);
     useEffect(() => {
         setIngrArr2(ingrArr.filter(ing => shoppingList ? (!fridge.includes(ing.toLowerCase()) && !shoppingList.includes(ing.toLowerCase())) : true))
@@ -248,6 +250,23 @@ async function ClearList(username) {
     } catch {
         console.error(e);
     }
+}
+
+async function getIngr() {
+    const res = await fetch('/api/getIngrDatabase', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            //user: user_id,
+            getData: true,
+        })
+    })
+    const data = await res.json();
+    console.log(data);
+    return data;
 }
 
 async function addIngredient(username, item) {

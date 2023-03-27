@@ -1,8 +1,5 @@
 {
   "dependencies": {
     "@next/font": "^13.2.4"
-  },
-  "devDependencies": {
-    "cypress": "^12.8.1"
   }
 }

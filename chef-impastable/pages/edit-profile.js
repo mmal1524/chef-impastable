@@ -22,7 +22,6 @@ import Avatar from '@mui/material/Avatar';
 import { getInitials } from '../components/user';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import PropTypes from 'prop-types';
 import { Fragment } from 'react';
 
 //https://gist.github.com/Pacheco95/aa5c28b7a61dacba5b8f55f84d1fa591
@@ -238,15 +237,12 @@ export default function EditProfilePage() {
                                 <Button onClick={async () => {
                                     // remove user from all friend lists
                                     await deleteFromFriends(username);
-                                    console.log("deleted from friends lists");
 
                                     // remove user from all friendRequests lists
                                     await deleteFromFriendRequests(username);
-                                    console.log("deleted from friend requests lists");
 
                                     // remove user from database
                                     await deleteUser(username);
-                                    console.log("deleted user");
 
                                     router.push('/');
                                 }}
@@ -375,7 +371,6 @@ export default function EditProfilePage() {
                             var data = await updateUser(username, displayName, avatar, createdPrivacy,
                                                         savedPrivacy, reviewedPrivacy, mealPlanPrivacy);
                             localStorage.setItem('user', JSON.stringify(data));
-                            console.log(data);
                             router.push({pathname:"/profile-page/", query: {username: username}});
                         }}
                     >
@@ -450,7 +445,6 @@ export default function EditProfilePage() {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 }

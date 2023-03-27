@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import connect from "../../lib/mongodb"
 import User from "../../model/user"
 
@@ -7,17 +8,17 @@ connect()
 
 export default async function handler(req,res){
     try {
-        const {username, friendRequest}=req.body
-        const user = await User.findOneAndUpdate({username: username}, {$pull: { friendRequests: friendRequest}}, {new: true});
-        
-        if (user == null) {
+        const {username, reviewID}=req.body
+        const user = await User.findOneAndUpdate({username: username}, {$push: { reviewedRecipes: reviewID}}, {new: true});
+
+        if (!user) {
             return null;
         }
         else {
             return res.json(user);
         }
     } catch (error) {
-        res.status(400).json({status:'Not able to update user.'});
+        res.status(400).json({status:'Not able to update user.'})
         console.log('error');
     }
 }

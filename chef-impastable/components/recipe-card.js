@@ -1,15 +1,20 @@
 import {Card, CardHeader, CardContent, CardMedia} from "@mui/material";
-import Image from "next/image";
 import {CardActionArea, CardActions, IconButton} from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+<<<<<<< HEAD
 import SendIcon from '@mui/icons-material/Send';
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Link } from "@mui/material";
+=======
+import { Favorite } from "@mui/icons-material";
+import SendIcon from '@mui/icons-material/Send';
+>>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
 import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import withRouter from "next/router";
+<<<<<<< HEAD
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,11 +32,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import CommentIcon from '@mui/icons-material/Comment';
+=======
+import { useState } from "react";
+>>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
 
 function RecipeCard( props ) {
     //https://nextjs.org/docs/api-reference/next/link
     //https://stackoverflow.com/questions/55182529/next-js-router-push-with-state
     const router = useRouter();
+    // const [isSaved, setSaved] = useState(false);
 
     const [open, setOpen] = React.useState(false);
 
@@ -68,7 +77,7 @@ function RecipeCard( props ) {
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, title: props.recipe.title, author: props.recipe.author, ingredients: props.recipe.ingredients, instructions: props.recipe.instructions_list, nutrients: props.recipe.nutrients}})}}>
+            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 
@@ -80,8 +89,16 @@ function RecipeCard( props ) {
                 </CardContent>
             </CardActionArea>
         <CardActions>
+            <IconButton
+                onClick={() => {props.onSave()}}
+            >
+                {props.recipe.saved 
+                ? 
+                    <Favorite/>
+                : <FavoriteBorderOutlinedIcon />}
+            </IconButton>
             <IconButton>
-                <FavoriteBorderOutlinedIcon />
+                <SendIcon />
             </IconButton>
             <IconButton
                 onClick={handleClickOpen}>
@@ -202,4 +219,5 @@ function RecipeCard( props ) {
         return data;
     }
 }
+
 export default RecipeCard;

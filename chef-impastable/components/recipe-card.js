@@ -1,20 +1,15 @@
 import {Card, CardHeader, CardContent, CardMedia} from "@mui/material";
 import {CardActionArea, CardActions, IconButton} from '@mui/material';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-<<<<<<< HEAD
 import SendIcon from '@mui/icons-material/Send';
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Link } from "@mui/material";
-=======
 import { Favorite } from "@mui/icons-material";
-import SendIcon from '@mui/icons-material/Send';
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
 import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";
 import withRouter from "next/router";
-<<<<<<< HEAD
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -32,9 +27,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import CommentIcon from '@mui/icons-material/Comment';
-=======
-import { useState } from "react";
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
 
 function RecipeCard( props ) {
     //https://nextjs.org/docs/api-reference/next/link
@@ -96,9 +88,6 @@ function RecipeCard( props ) {
                 ? 
                     <Favorite/>
                 : <FavoriteBorderOutlinedIcon />}
-            </IconButton>
-            <IconButton>
-                <SendIcon />
             </IconButton>
             <IconButton
                 onClick={handleClickOpen}>

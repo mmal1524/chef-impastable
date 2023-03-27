@@ -15,30 +15,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import ForumIcon from '@mui/icons-material/Forum';
-<<<<<<< HEAD
-import { CollectionsBookmarkOutlined } from "@mui/icons-material";
-=======
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
-//import { viewFriendProfile } from "./view-friends-card";
  
 export function friendShared(friend) {
 
     const router = useRouter();
 
     const [username, setUsername] = useState("");
-<<<<<<< HEAD
     
-=======
-    const [password, setPassword] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [friends, setFriends] = useState([]);
-    const [friendRequests, setFriendRequests] = useState("");
-    var [createdPrivacy, setCreatedPrivacy] = useState("");
-    var [savedPrivacy, setSavedPrivacy] = useState("");
-    var [reviewedPrivacy, setReviewedPrivacy] = useState("");
-    var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -92,17 +75,10 @@ export function friendShared(friend) {
                     variant="outlined" 
                     sx={{color:'light blue', borderColor:'light blue'}}
                     endIcon={<ForumIcon />}
-<<<<<<< HEAD
                     onClick={ async () => {
                         var friendUser = await viewFriend(friend.username);
                         router.push({pathname: "/sharing-page", query: {username: username, friendusername: friendUser.username} })
                     }}
-=======
-                    // onClick={ async () => {
-                    //     var friendUser = await viewFriend(friend.username);
-                    //     router.push({pathname: "/view_friends", query: {username: friendUser.username} })
-                    //    }}
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
                 >
                     shared
                 </Button>
@@ -119,26 +95,6 @@ export function friendShared(friend) {
 
     );
 
-<<<<<<< HEAD
-=======
-    async function deleteFriend(username, friend) {
-        const res = await fetch('/api/deleteFriend', {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                friend: friend
-            })
-        });
-        const data = await res.json();
-        console.log(data);
-        return data;
-    }
-
->>>>>>> 59c4c8f0de6a7fb64e639f2826b90f17a676f253
     async function viewFriend(friend) {
         const res = await fetch('/api/finduser', {
             method: 'POST', 

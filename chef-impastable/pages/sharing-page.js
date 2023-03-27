@@ -171,7 +171,6 @@ export async function getServerSideProps(context) {
                 .findOne({_id: sentShares[i].recipeID})
             sentRecipes.push(currRecipe)
         }
-        console.log(sentRecipes.length)
 
         const receivedRecipes = []
         var i = 0;
@@ -180,9 +179,7 @@ export async function getServerSideProps(context) {
                 .collection("recipes")
                 .findOne({_id: receivedShares[i].recipeID})
             receivedRecipes.push(currRecipe)
-        }
-        console.log(receivedRecipes.length)
-                
+        }                
       
         return {
             props: {friend: JSON.parse(JSON.stringify(currFriend)), besties: friendObjects, sentRecipes: JSON.parse(JSON.stringify(sentRecipes)), receivedRecipes: JSON.parse(JSON.stringify(receivedRecipes))},

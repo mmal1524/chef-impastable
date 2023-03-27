@@ -38,7 +38,6 @@ export default function AddToListDialog(props) {
                 },
             },
         });
-        console.log("setting sL")
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
@@ -138,7 +137,7 @@ export default function AddToListDialog(props) {
                         await handleAddToList();
                     }}
                 >
-                    Confirm Add.
+                    Confirm.
                 </Button>
             </DialogActions>
         </Dialog>

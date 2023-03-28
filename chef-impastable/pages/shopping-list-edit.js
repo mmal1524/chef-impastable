@@ -26,7 +26,7 @@ export default function ShoppingListEdit() {
             return oldValues.filter((_, i) => i !== index)
         })
     }
-
+    const [ingrArr, setIngrArr] = useState([]);
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -49,10 +49,15 @@ export default function ShoppingListEdit() {
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
+        async function getIngredients() {
+            var i = await getIngr();
+            setIngrArr(i.map((igr => igr.ingredient)))
+        }
+        getIngredients();
     }, []);
 
     // for autocomplete search bar
-    const ingrArr = JSON.parse(localStorage.getItem('ing')).map(a => a.ingredient);
+    //const ingrArr = JSON.parse(localStorage.getItem('ing')).map(a => a.ingredient);
     //console.log(ingrArr);
     const [ingrArr2, setIngrArr2] = useState(ingrArr);
     useEffect(() => {
@@ -209,6 +214,22 @@ export default function ShoppingListEdit() {
         </div>
         </>
     );
+}
+async function getIngr() {
+    const res = await fetch('/api/getIngrDatabase', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            //user: user_id,
+            getData: true,
+        })
+    })
+    const data = await res.json();
+    console.log(data);
+    return data;
 }
 
 async function DeleteListItem(username, item) {

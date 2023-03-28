@@ -353,6 +353,7 @@ export default function Recipe({ recipe, reviews }) {
                     </TableContainer>
                 </div>
                 <Button
+                    data-test="LeaveAReview"
                     sx={{margin: 4, backgroundColor:"orange", color:"black"}} 
                     variant="contained"
                     startIcon={<RateReviewIcon />}
@@ -362,35 +363,36 @@ export default function Recipe({ recipe, reviews }) {
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Leave a Review</DialogTitle>
-                    <DialogContent>
+                    <DialogContent data-test="ReviewUI">
                         <DialogContentText>Rating</DialogContentText>
                         <Stack
+                            data-test="Stars"
                             direction="row"
                             justifyContent="center"
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton size="large" onClick={handleFirstClick}>
+                            <IconButton data-test="Star1" size="large" onClick={handleFirstClick}>
                                 {firstStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleSecondClick}>
+                            <IconButton data-test="Star2" size="large" onClick={handleSecondClick}>
                                 {secondStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleThirdClick}>
+                            <IconButton data-test="Star3" size="large" onClick={handleThirdClick}>
                                 {thirdStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFourthClick}>
+                            <IconButton data-test="Star4" size="large" onClick={handleFourthClick}>
                                 {fourthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFifthClick}>
+                            <IconButton data-test="Star5" size="large" onClick={handleFifthClick}>
                                 {fifthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
@@ -398,6 +400,7 @@ export default function Recipe({ recipe, reviews }) {
                         </Stack>
                         <DialogContentText>Description/Comments</DialogContentText>
                         <TextField
+                            data-test="description"
                             id="description"
                             multiline
                             rows={10}

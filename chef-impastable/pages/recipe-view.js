@@ -415,7 +415,7 @@ export default function Recipe({ recipe, reviews }) {
                         <Button onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
-                <h2 className='reviews'>{reviews.length} Reviews</h2>
+                <h2 data-test="NumReviews" className='reviews'>{reviews.length} Reviews</h2>
                 {averageRating(reviews)}
                 {displayReviews(reviews)}
             </Grid>

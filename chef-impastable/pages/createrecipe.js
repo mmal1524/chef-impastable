@@ -239,7 +239,6 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     handleClickOpenEmptyString();
                                 } else {
                                     var data = await addIngredient(addIngr, addButton)
-                                    console.log(data)
                                     if (!data.success) {
                                         handleClickOpenExists();
                                     } else {
@@ -400,7 +399,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 //TODO: also send array of objects (of ingredients) in this call
                                 const list = instructions.split("\n")
                                 const recipe = await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, list,
-                                    calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat);
+                                    calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username);
                                 await AddTag(recipe.title, false);
                                 Router.push({
                                     pathname: "/recipe-view/",
@@ -528,7 +527,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     sodium: sodium,
                     fat: fat,
                     unsaturatedFat: unsaturatedFat,
-                    author: username,
+                    username: username,
                     isUser: true
                 })
             })

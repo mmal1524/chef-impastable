@@ -4,8 +4,7 @@ import mongoose, { SchemaTypes } from "mongoose";
 const recipeSchema = new mongoose.Schema({
     author:{
         type:String,
-        required:false,
-        unique:true
+        required:false
     },
     canonical_url:{
         type:String, 

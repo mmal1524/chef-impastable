@@ -33,9 +33,14 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
 import AddToListDialog from '../components/add-ingredient-from-recipe';
+import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
+import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
+import SaveRecipeDialog from '../components/saveRecipeDialog';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
+    const [saved, setSaved] = useState(recipe.saved);
+    const [showSaveDialog, setShowSaveDialog] = useState(false);
 
     const theme = createTheme({
         palette: {
@@ -270,6 +275,18 @@ export default function Recipe({ recipe, reviews }) {
 
     return (
         <>
+            <SaveRecipeDialog
+                onSubmit = {async (folderName) => {
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id); 
+                    if (data) {
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }
+                    setShowSaveDialog(false);
+                    setSaved(true);
+                }}
+                show = {showSaveDialog}
+                onClose = {() => {setShowSaveDialog(false)}}
+            />
             <Grid>
                 <div className="App">
                     <Navbar />
@@ -333,10 +350,30 @@ export default function Recipe({ recipe, reviews }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
+        
                     <CardMedia>
                         <img src={recipe.image} alt="image of {props.recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
+                <Grid container justifyContent="center">
+                    <IconButton
+                        onClick={() => {
+                            if (saved) {
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                setSaved(false);
+                            }
+                            else {
+                                setShowSaveDialog(true);
+                            }
+                        }}
+                    >
+                        {saved 
+                        ? 
+                            <Favorite/>
+                        : <FavoriteBorderOutlined />}
+                    </IconButton>
+                </Grid>
+
                 <Grid container
                     display="flex"
                     justifyContent="center"
@@ -530,6 +567,17 @@ export async function getServerSideProps(context) {
             .collection("recipes")
             .findOne(new ObjectId(`${context.query.id}`));
 
+        const folder = await db
+            .collection("savedfolders")
+            .findOne({user: context.query.username, recipes: new ObjectId(`${context.query.id}`)});
+
+        if (folder) {
+            recipe.saved = true;
+            console.log(recipe.saved);
+        } else {
+            recipe.saved = false;
+        }
+        console.log(recipe);
         var reviews = recipe.reviews;
         var reviewObjects;
         if (!reviews) {

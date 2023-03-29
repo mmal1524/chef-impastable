@@ -13,7 +13,7 @@ function RecipeCard(props) {
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id}})}}>
+            <CardActionArea data-test={props.index} onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id}})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 
@@ -21,7 +21,7 @@ function RecipeCard(props) {
                     <img src={props.recipe.image} alt="image of {props.recipe.title}" width={200} /> 
                 </CardMedia>           
                 <CardContent sx={{overflow: "auto"}}>
-                    {props.recipe.description}  
+                    {props.recipe.description}
                 </CardContent>
             </CardActionArea>
         <CardActions>

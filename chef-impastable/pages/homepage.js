@@ -8,25 +8,24 @@ import { useEffect } from 'react';
 import React from 'react';
 
 
-export default function HomePage({recipes}) {
+export default function HomePage({ recipes }) {
     return (
-        <> 
+        <>
             <div>
                 <Navbar />
             </div>
             <p></p>
             <div>
                 <Grid container spacing={3}>
-                    
-                    {recipes.map((recipe) => (                
+
+                    {recipes.map((recipe, index) => (
+                        // <p data-test={`Recipe-${index}`}>        
                         <Grid item key={recipe._id}>
-                            <RecipeCard recipe={recipe}/>
+                            <RecipeCard recipe={recipe} index={index} />
                         </Grid>
-                    )
-                        
-                    )}
+                    ))}
                 </Grid>
-            </div>   
+            </div>
         </>
     );
 }
@@ -42,11 +41,11 @@ export async function getServerSideProps() {
             .limit(20)
             .toArray();
         return {
-            props: {recipes: JSON.parse(JSON.stringify(recipes))},
+            props: { recipes: JSON.parse(JSON.stringify(recipes)) },
         };
     }
     catch (e) {
         console.error(e);
     }
-    
+
 }

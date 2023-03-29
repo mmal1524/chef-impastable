@@ -277,7 +277,7 @@ export default function Recipe({ recipe, reviews }) {
                         <AccordionDetails>
                             <Box sx={{ '& > :not(style)': { m: 1 } }}>
                                 {stateRecipeTags && stateRecipeTags.map((tag, index) => (
-                                    <Fab variant="extended" size="medium" color={(stateRecipeTags[index].exists) ? "primary" : ""} aria-label="add" onClick={async () => handleClick(index)} theme={theme} key={index + updateCount}>
+                                    <Fab data-test={`tag-${index}`} variant="extended" size="medium" color={(stateRecipeTags[index].exists) ? "primary" : ""} aria-label="add" onClick={async () => handleClick(index)} theme={theme} key={index + updateCount}>
                                         {tag.tag}
                                     </Fab>
                                 ))}

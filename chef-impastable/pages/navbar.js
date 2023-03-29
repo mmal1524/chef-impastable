@@ -149,6 +149,7 @@ const Navbar = () => {
                 }} 
             >
                 <Button 
+                    data-test="ShopList"
                     sx={{color: 'gray', ml: 1.5}}
                     startIcon={<ShoppingBasketIcon/>}
                     onClick={handleClickOpenShop}

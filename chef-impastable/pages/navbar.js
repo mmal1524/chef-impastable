@@ -128,10 +128,8 @@ const Navbar = () => {
                 </React.Fragment>
             </Grid>
             <Grid xs={9.0} 
-                sx={{ pt: 0.5, 
-                    //backgroundColor: 'lightblue' 
-                }
-            }>
+                sx={{ pt: 0.5, }}
+            >
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -251,7 +249,6 @@ const Navbar = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeViewOpenEdit}>
-                    {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
                         Edit
                     </Button>
                     <Button onClick={handleCloseShop}>

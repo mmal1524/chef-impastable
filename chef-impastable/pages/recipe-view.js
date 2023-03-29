@@ -311,7 +311,6 @@ export default function Recipe({ recipe, reviews }) {
                         }}
                     >
                         <Button 
-                            //justifyContent='left'
                             sx={{
                                 width: 200
                             }}

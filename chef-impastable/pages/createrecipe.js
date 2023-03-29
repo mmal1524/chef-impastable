@@ -31,6 +31,8 @@ export default function CreateRecipe({ ingredientOptions }) {
     const ingredientArr = ingredientOptions.map(a => a.ingredient);
     const [ingredientArr2, setIngredientArr2] = useState(ingredientArr)
     const [addIngr, setAddIngr] = useState("");
+    const [addQuantity, setAddQuantity] = useState("");
+    const [addUnit, setAddUnit] = useState("");
 
     const [username, setUsername] = useState("");
     useEffect(() => {
@@ -49,7 +51,7 @@ export default function CreateRecipe({ ingredientOptions }) {
     const [description, setdescription] = useState("");
     const [image, setImage] = useState("");
     const [ingredientList, setIngredientList] = useState([]);
-    var ingredients = useState([]);
+    const [finalIngredientList, setFinalIngredientList] = useState([]);
     const [instructions, setinstructions] = useState("");
     const [preptime, setpreptime] = useState("");
     const [title, settitle] = useState("");
@@ -112,8 +114,11 @@ export default function CreateRecipe({ ingredientOptions }) {
     const handleImage = e => {
         setImage(e.target.value)
     }
-    const handleIngredients = e => {
-        setIngredientList(e.target.value)
+    const handleQuantity = e => {
+        setAddQuantity(e.target.value)
+    }
+    const handleUnits = e => {
+        setAddUnit(e.target.value)
     }
     const handleInstructions = e => {
         setinstructions(e.target.value)
@@ -523,7 +528,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     sodium: sodium,
                     fat: fat,
                     unsaturatedFat: unsaturatedFat,
-                    username: username,
+                    author: username,
                     isUser: true
                 })
             })
@@ -556,33 +561,20 @@ export default function CreateRecipe({ ingredientOptions }) {
         }
     }
 
-    function displayIngredients(ingredientList) {
-        console.log("in displayIngredients")
-        console.log(ingredientList)
-        var i = 0;
-        if (ingredientList.length == 0) {
-            return (<><TableRow><TableCell> Add Ingredients </TableCell></TableRow></>);
-        } else {
-            return (
-                console.log("returning")
-                // ingredientList.map((ingredient) => (
-                //     displayIngredient(ingredient)
-                // ))
-            );
-        }
-    }
-
     function displayIngredients(ingredient) {
         return (
             <TableRow
-                key={"ingredient"}
+                key={ingredient + "content"}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell component="th" scope="row">
                     {ingredient}
                 </TableCell>
-                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" />}</TableCell>
-                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" />}</TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity} />}</TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
+                {console.log(ingredient)}
+                {console.log(addQuantity)}
+                {console.log(addUnit)}
             </TableRow>
         )
     }

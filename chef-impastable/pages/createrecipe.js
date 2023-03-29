@@ -23,11 +23,13 @@ import Router from "next/router";
 import { Autocomplete, Modal } from '@mui/material';
 import clientPromise from '../lib/mongodb_client';
 import { displayIngredient } from '../components/ingredient-card.js';
+import AddIcon from '@mui/icons-material/Add';
+import Tooltip from '@mui/material/Tooltip';
 
 
-export default function CreateRecipe( {ingredientOptions} ) {
+export default function CreateRecipe({ ingredientOptions }) {
     const ingredientArr = ingredientOptions.map(a => a.ingredient);
-    const [ingredientArr2, setIngredientArr2]  =useState(ingredientArr)
+    const [ingredientArr2, setIngredientArr2] = useState(ingredientArr)
     const [addIngr, setAddIngr] = useState("");
 
     const [username, setUsername] = useState("");
@@ -48,7 +50,6 @@ export default function CreateRecipe( {ingredientOptions} ) {
     const [image, setImage] = useState("");
     const [ingredientList, setIngredientList] = useState([]);
     var ingredients = useState([]);
-    console.log('back at top')
     const [instructions, setinstructions] = useState("");
     const [preptime, setpreptime] = useState("");
     const [title, settitle] = useState("");
@@ -67,6 +68,27 @@ export default function CreateRecipe( {ingredientOptions} ) {
     //popup if required fields are left blank
     const [open, setOpen] = React.useState(false);
     const [ingredientOpen, setIngredientOpen] = React.useState(false);
+    const [open2, setOpen2] = React.useState(false);
+    const [open3, setOpen3] = React.useState(false);
+    const [open4, setOpen4] = React.useState(false);
+    const handleClickOpenDoesntExist = () => {
+        setOpen4(true);
+    };
+    const handleCloseIngredientError = () => {
+        setOpen4(false);
+    };
+    const handleClickOpenExists = () => {
+        setOpen2(true);
+    };
+    const handleCloseIngredientExists = () => {
+        setOpen2(false);
+    };
+    const handleClickOpenEmptyString = () => {
+        setOpen3(true);
+    };
+    const handleCloseEmptyString = () => {
+        setOpen3(false);
+    };
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const handleClickOpen = () => {
@@ -135,7 +157,7 @@ export default function CreateRecipe( {ingredientOptions} ) {
     const handleUnsaturatedFat = e => {
         setUnsaturatedFat(e.target.value)
     }
-
+    var addButton;
     return (
         <div>
             <div className="App">
@@ -178,59 +200,78 @@ export default function CreateRecipe( {ingredientOptions} ) {
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
-                        <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
-                            Add Ingredient
-                        </Button>
-                        <Dialog
-                            open={ingredientOpen}
-                            onClose={handleIngredientClose}
-                        >
-                            <DialogTitle id="add-ingredients">
-                                {"Add an ingredient to your recipe."}
-                            </DialogTitle>
-                            <DialogContent>
-                                <Autocomplete
-                                    disablePortal
-                                    freeSolo
-                                    id="combo-box-demo"
-                                    options={ingredientArr2}
-                                    onInputChange={(e, new_val) => {setAddIngr(new_val)}}
-                                    renderInput={params => (
-                                        <TextField 
-                                            {...params} 
-                                            label="Search Ingredients to Add"
-                                            onChange={({ target }) => setAddIngr(target.value)} 
-                                        />
-                                    )}
-                                />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button 
-                                    type="submit" 
-                                    onClick={() => {
+                    <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
+                        Add Ingredient
+                    </Button>
+                    <Dialog
+                        open={ingredientOpen}
+                        onClose={handleIngredientClose}
+                    >
+                        <DialogTitle id="add-ingredients">
+                            {"Add an ingredient to your recipe."}
+                        </DialogTitle>
+                        <DialogContent>
+                            <Autocomplete
+                                disablePortal
+                                freeSolo
+                                id="combo-box-demo"
+                                options={ingredientArr2}
+                                onInputChange={(e, new_val) => { setAddIngr(new_val) }}
+                                renderInput={params => (
+                                    <TextField
+                                        {...params}
+                                        label="Search Ingredients to Add"
+                                        onChange={({ target }) => setAddIngr(target.value)}
+                                    />
+                                )}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                        <Tooltip title="Create Ingredient">
+                            <IconButton edge="end" aria-label="add" onClick={async () => {
+                                addButton = true;
+                                if (addIngr.localeCompare("") == 0) {
+                                    handleClickOpenEmptyString();
+                                } else {
+                                    var data = await addIngredient(addIngr, addButton)
+                                    console.log(data)
+                                    if (!data.success) {
+                                        handleClickOpenExists();
+                                    } else {
                                         setIngredientList([
                                             ...ingredientList, addIngr
                                         ])
-                                        console.log("hello")
-                                        console.log(ingredientList)
-                                        // var currList = ingredientList;
-                                        // console.log(typeof(currList))
-                                        // currList.push(addIngr)
-                                        // setIngredientList(currList)
-                                        // console.log("ingredient List")
-                                        // console.log(ingredientList)
-                                        // ingredients.push(addIngr)
-                                        // console.log(ingredients)
-                                        handleIngredientClose()
-                                    }}
-                                    > 
-                                    Add
-                                </Button>
-                                <Button onClick={handleIngredientClose} autoFocus>
-                                    Cancel
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
+                                        handleIngredientClose();
+                                    }
+                                }
+                            }}>
+                                <AddIcon />
+                            </IconButton>
+                        </Tooltip>
+                            <Button
+                                type="submit"
+                                onClick={async () => {
+                                    addButton = false;
+                                    var data = await addIngredient(addIngr, addButton);
+                                    if (!data.success) {
+                                        //if ingredient does not exist
+                                        handleClickOpenDoesntExist();
+                                    }
+                                    else {
+                                        setIngredientList([
+                                            ...ingredientList, addIngr
+                                        ])
+                                        handleIngredientClose();
+                                    }
+                                }}
+                            >
+                                Add
+                            </Button>
+                            <Button onClick={handleIngredientClose} autoFocus>
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                     &nbsp;
                     <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
                         <Table sx={{ maxWidth: 650 }} aria-label="simple table">
@@ -245,7 +286,7 @@ export default function CreateRecipe( {ingredientOptions} ) {
                                 ))}
                             </TableHead>
                             <TableBody>
-                                
+
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -357,7 +398,7 @@ export default function CreateRecipe( {ingredientOptions} ) {
                                     calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat);
                                 await AddTag(recipe.title, false);
                                 Router.push({
-                                    pathname: "/recipe-view/", 
+                                    pathname: "/recipe-view/",
                                     query: { id: recipe._id },
                                     state: { recipe }
                                 })
@@ -382,6 +423,71 @@ export default function CreateRecipe( {ingredientOptions} ) {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    //Dialog for when a user is trying to add an ingredient to the database that does not exists
+                    fullScreen={fullScreen}
+                    open={open4}
+                    onClose={handleCloseIngredientError}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Incorrect Ingredient"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            This ingredient does not currently exist. Please create the ingredient before trying to use it.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseIngredientError} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    //Dialog when the user is trying to add an ingredient to the database that already exists
+                    fullScreen={fullScreen}
+                    open={open2}
+                    onClose={handleCloseIngredientExists}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Ingredient Already Exists"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            This ingredient already exists, therefore you cannot create it.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseIngredientExists} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    //Dialog when the user is trying to add an empty string as an ingredient
+                    fullScreen={fullScreen}
+                    open={open3}
+                    onClose={handleCloseEmptyString}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Invalid Ingredient Name"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please type the name of the ingredient before trying to create it.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseEmptyString} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -455,7 +561,7 @@ export default function CreateRecipe( {ingredientOptions} ) {
         console.log(ingredientList)
         var i = 0;
         if (ingredientList.length == 0) {
-            return(<><TableRow><TableCell> Add Ingredients </TableCell></TableRow></>);
+            return (<><TableRow><TableCell> Add Ingredients </TableCell></TableRow></>);
         } else {
             return (
                 console.log("returning")
@@ -468,16 +574,16 @@ export default function CreateRecipe( {ingredientOptions} ) {
 
     function displayIngredients(ingredient) {
         return (
-        <TableRow
-            key={"ingredient"}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-            <TableCell component="th" scope="row">
-                {ingredient}
-            </TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined"  />}</TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined"  />}</TableCell>
-        </TableRow>
+            <TableRow
+                key={"ingredient"}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+                <TableCell component="th" scope="row">
+                    {ingredient}
+                </TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" />}</TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" />}</TableCell>
+            </TableRow>
         )
     }
 }
@@ -491,7 +597,7 @@ export async function getServerSideProps() {
             .find({})
             .toArray();
         return {
-            props: {ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))},
+            props: { ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions)) },
         };
     }
     catch (e) {
@@ -503,8 +609,8 @@ async function indexMatch(array, q) {
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
 
-async function addIngredient(ingredient, group, username) {
-    const res = await fetch('/api/addIngredientToFridge', {
+async function addIngredient(ingredient, addButton) {
+    const res = await fetch('/api/addIngredient', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -512,10 +618,10 @@ async function addIngredient(ingredient, group, username) {
         },
         body: JSON.stringify({
             ingredient: ingredient,
-            group: group,
-            username: username
+            addButton: addButton
         })
     })
     const data = await res.json();
+    console.log(JSON.stringify(data) + " data")
     return data;
 }

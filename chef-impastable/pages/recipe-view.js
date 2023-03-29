@@ -69,7 +69,6 @@ export default function Recipe({ recipe, reviews }) {
     function createRow(name, value) {
         return { name, value };
     }
-    console.log(JSON.stringify(recipe.nutrients.calories));
 
     var [open, setOpen] = useState(false);
     var [description, setDescription] = useState("");
@@ -158,17 +157,12 @@ export default function Recipe({ recipe, reviews }) {
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
         // adding review ID to user's reviewed recipes
         var userUpdated = await addReviewToUser(username, reviewid.reviewID);
-        console.log(userUpdated);
         localStorage.setItem('user', JSON.stringify(userUpdated));
         // reloading page
         router.reload();
     }
 
     async function createReview(recipeID, author, rating, description) {
-        console.log(recipeID);
-        console.log(author);
-        console.log(rating);
-        console.log(description);
         const res = await fetch('api/createReview', {
             method: 'POST',
             headers: {
@@ -183,7 +177,6 @@ export default function Recipe({ recipe, reviews }) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -204,8 +197,6 @@ export default function Recipe({ recipe, reviews }) {
     }
 
     async function addReviewToUser(username, reviewID) {
-        console.log(username);
-        console.log(reviewID);
         const res = await fetch('api/addReviewToUser', {
             method: 'PUT',
             headers: {
@@ -342,9 +333,13 @@ export default function Recipe({ recipe, reviews }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
+                    <p>Prep time: {recipe.prep_time} minutes, Cook time: {recipe.cook_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
                 <div>
+                    <h2> 
+                        Description
+                    </h2>
+                    {recipe.description}
                     <h2>
                         Instructions
                     </h2>
@@ -523,7 +518,6 @@ async function AddTag(title, tag, exists, isDefined) {
 }
 
 export async function getServerSideProps(context) {
-    console.log("query: " + context.query)
     try {
         const client = await clientPromise;
         const db = client.db("test");
@@ -537,11 +531,9 @@ export async function getServerSideProps(context) {
 
         if (folder) {
             recipe.saved = true;
-            console.log(recipe.saved);
         } else {
             recipe.saved = false;
         }
-        console.log(recipe);
         var reviews = recipe.reviews;
         var reviewObjects;
         if (!reviews) {

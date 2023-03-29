@@ -54,7 +54,7 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({besties, futureBesties, reviews, recipes}) {
+export default function ProfilePage({besties, futureBesties, reviews, recipes, createdRecipes}) {
 
     var friendsList = besties;
     var friendRequestsList = futureBesties;
@@ -226,7 +226,19 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                        Here is where created recipes will go
+                        {createdRecipes.length == 0 ? 
+                            "You have no created recipes" 
+                        : 
+                        <Grid container spacing ={3}>
+                        {createdRecipes.map((recipe, index) => (                
+                            <Grid item key={recipe._id}>
+                                <RecipeCard 
+                                    recipe={recipe}
+                                />
+                            </Grid>
+                            ))}
+                        </Grid>
+                        }
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <SavedRecipes></SavedRecipes>
@@ -358,8 +370,13 @@ export async function getServerSideProps(context) {
             }
         }
 
+        const createdRecipes = await db
+            .collection("recipes")
+            .find({author: context.query.username})
+            .toArray();
+
         return {
-            props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects},
+            props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects, createdRecipes: createdRecipes},
         };
     }
     catch (e) {

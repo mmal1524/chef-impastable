@@ -22,6 +22,8 @@ import Paper from '@mui/material/Paper';
 import Router from "next/router";
 import { Autocomplete, Modal } from '@mui/material';
 import clientPromise from '../lib/mongodb_client';
+import { displayIngredient } from '../components/ingredient-card.js';
+
 
 export default function CreateRecipe( {ingredientOptions} ) {
     const ingredientArr = ingredientOptions.map(a => a.ingredient);
@@ -44,7 +46,9 @@ export default function CreateRecipe( {ingredientOptions} ) {
     const [cookTime, setcookTime] = useState("");
     const [description, setdescription] = useState("");
     const [image, setImage] = useState("");
-    var ingredients = [];
+    const [ingredientList, setIngredientList] = useState([]);
+    var ingredients = useState([]);
+    console.log('back at top')
     const [instructions, setinstructions] = useState("");
     const [preptime, setpreptime] = useState("");
     const [title, settitle] = useState("");
@@ -85,6 +89,9 @@ export default function CreateRecipe( {ingredientOptions} ) {
     }
     const handleImage = e => {
         setImage(e.target.value)
+    }
+    const handleIngredients = e => {
+        setIngredientList(e.target.value)
     }
     const handleInstructions = e => {
         setinstructions(e.target.value)
@@ -172,14 +179,14 @@ export default function CreateRecipe( {ingredientOptions} ) {
                     &nbsp;
                     {/* put select ingredient UI here */}
                         <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
-                            Add Ingredients
+                            Add Ingredient
                         </Button>
                         <Dialog
                             open={ingredientOpen}
                             onClose={handleIngredientClose}
                         >
                             <DialogTitle id="add-ingredients">
-                                {"Add ingredients to your recipe."}
+                                {"Add an ingredient to your recipe."}
                             </DialogTitle>
                             <DialogContent>
                                 <Autocomplete
@@ -187,7 +194,7 @@ export default function CreateRecipe( {ingredientOptions} ) {
                                     freeSolo
                                     id="combo-box-demo"
                                     options={ingredientArr2}
-                                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                                    onInputChange={(e, new_val) => {setAddIngr(new_val)}}
                                     renderInput={params => (
                                         <TextField 
                                             {...params} 
@@ -200,24 +207,21 @@ export default function CreateRecipe( {ingredientOptions} ) {
                             <DialogActions>
                                 <Button 
                                     type="submit" 
-                                    onClick={async () => {
-                                        console.log(addIngr);
-                                        var ingredient = addIngr;
-                                        //     console.log(addIngr);
-                                        //search for appliance
-                                        // var idxx = await indexMatch(userIngr, addIngr);
-                                        // if (idxx == -1) {
-                                        //     var ingredient = addIngr;
-                                        //     console.log(addIngr);
-                                        //     // var data = await addIngredient(addIngr, searchGroups, username)
-                                        //     // localStorage.setItem('user', JSON.stringify(data));
-                                        //     // setAddIngr("")
-                                        //     // console.log(addIngr, searchGroups)
-                                        //     // setOpenSnackbar(true)
-                                        // }
-                                        // else {
-                                        //     setShowError(true)
-                                        // }
+                                    onClick={() => {
+                                        setIngredientList([
+                                            ...ingredientList, addIngr
+                                        ])
+                                        console.log("hello")
+                                        console.log(ingredientList)
+                                        // var currList = ingredientList;
+                                        // console.log(typeof(currList))
+                                        // currList.push(addIngr)
+                                        // setIngredientList(currList)
+                                        // console.log("ingredient List")
+                                        // console.log(ingredientList)
+                                        // ingredients.push(addIngr)
+                                        // console.log(ingredients)
+                                        handleIngredientClose()
                                     }}
                                     > 
                                     Add
@@ -227,6 +231,24 @@ export default function CreateRecipe( {ingredientOptions} ) {
                                 </Button>
                             </DialogActions>
                         </Dialog>
+                    &nbsp;
+                    <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
+                        <Table sx={{ maxWidth: 650 }} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Ingredients</TableCell>
+                                    <TableCell align="right">Quantity</TableCell>
+                                    <TableCell align="right">Unit</TableCell>
+                                </TableRow>
+                                {ingredientList.map((ingredient) => (
+                                    displayIngredients(ingredient)
+                                ))}
+                            </TableHead>
+                            <TableBody>
+                                
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     &nbsp;
                     <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
                         <Table sx={{ maxWidth: 650 }} aria-label="simple table">
@@ -426,6 +448,37 @@ export default function CreateRecipe( {ingredientOptions} ) {
         catch (error) {
             return error;
         }
+    }
+
+    function displayIngredients(ingredientList) {
+        console.log("in displayIngredients")
+        console.log(ingredientList)
+        var i = 0;
+        if (ingredientList.length == 0) {
+            return(<><TableRow><TableCell> Add Ingredients </TableCell></TableRow></>);
+        } else {
+            return (
+                console.log("returning")
+                // ingredientList.map((ingredient) => (
+                //     displayIngredient(ingredient)
+                // ))
+            );
+        }
+    }
+
+    function displayIngredients(ingredient) {
+        return (
+        <TableRow
+            key={"ingredient"}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        >
+            <TableCell component="th" scope="row">
+                {ingredient}
+            </TableCell>
+            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined"  />}</TableCell>
+            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined"  />}</TableCell>
+        </TableRow>
+        )
     }
 }
 

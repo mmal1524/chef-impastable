@@ -111,7 +111,7 @@ const Navbar = () => {
                 </IconButton>
             </Grid>
             <Grid xs={1}>
-                <Button
+                <Button data-test="ProfileIcon"
                     variant="text"
                     sx={{ color: 'black' }}
                     aria-controls={openNav ? 'navbar' : undefined}

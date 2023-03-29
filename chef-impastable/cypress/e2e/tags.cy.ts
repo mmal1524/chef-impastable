@@ -14,7 +14,7 @@ describe('Recipe Tag Page', () => {
 
   it("Selecting Vegan Tag", () => {
     cy.get("[data-test='tag-0']").as("tag")
-    cy.get("@tag").then(($btn) => {
+    cy.get("@tag", { timeout: 100 }).then(($btn) => {
       const btnColor = $btn.css('background-color')
       if (btnColor === 'rgb(224, 224, 224)') {
         //if the button is gray

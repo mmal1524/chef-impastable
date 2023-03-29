@@ -156,6 +156,13 @@ const Navbar = () => {
                         Dietary Restrictions
                     </MenuItem>
                     <MenuItem
+                         onClick={() => {
+                             router.push({pathname: "sharing-page", query: {username: username}});
+                         }}
+                    >
+                        Shared Recipes
+                    </MenuItem>
+                    <MenuItem
                         onClick={() => {
                             handleClickOpenPopup();
                             handleClose();

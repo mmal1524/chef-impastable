@@ -167,7 +167,7 @@ export default function SignUp() {
                                             if (data == null) {
                                                 handleClickOpenE();
                                             } else {
-                                                localStorage.setItem('user', JSON.stringify(user));
+                                                localStorage.setItem('user', JSON.stringify(data));
                                                 router.push("homepage");
                                             }
                                         } else {
@@ -299,7 +299,8 @@ export default function SignUp() {
                 reviewedPrivacy: "everyone",
                 fridge_grouped: {"general": []},
                 mealPlanPrivacy: "everyone",
-                dietaryTags: [],
+                dietaryTags: [], 
+                saved: [],
                 reviewedRecipes: []
             })
         })

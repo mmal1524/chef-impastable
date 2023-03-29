@@ -119,6 +119,7 @@ export default function FridgeKitchen({ingredientOptions}) {
                     </Grid>
                     <TabPanel value={value} index={0}>
                         <Fridge ingredientOptions={ingredientOptions}></Fridge>
+                        { /*search bar and enter button at the top*/ }
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         { /*search bar and edit button at the top*/ }
@@ -222,5 +223,4 @@ export async function getServerSideProps() {
     catch (e) {
         console.error(e);
     }
-    
 }

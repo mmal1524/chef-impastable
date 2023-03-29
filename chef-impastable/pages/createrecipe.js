@@ -20,8 +20,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Router from "next/router";
+import { Autocomplete, Modal } from '@mui/material';
+import clientPromise from '../lib/mongodb_client';
 
-export default function CreateRecipe() {
+export default function CreateRecipe( {ingredientOptions} ) {
+    const ingredientArr = ingredientOptions.map(a => a.ingredient);
+    const [ingredientArr2, setIngredientArr2]  =useState(ingredientArr)
+    const [addIngr, setAddIngr] = useState("");
+
     const [username, setUsername] = useState("");
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
@@ -38,7 +44,7 @@ export default function CreateRecipe() {
     const [cookTime, setcookTime] = useState("");
     const [description, setdescription] = useState("");
     const [image, setImage] = useState("");
-    //add ingredient
+    var ingredients = [];
     const [instructions, setinstructions] = useState("");
     const [preptime, setpreptime] = useState("");
     const [title, settitle] = useState("");
@@ -56,15 +62,21 @@ export default function CreateRecipe() {
 
     //popup if required fields are left blank
     const [open, setOpen] = React.useState(false);
+    const [ingredientOpen, setIngredientOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const handleIngredientClickOpen = () => {
+        setIngredientOpen(true);
+    };
     const handleClose = () => {
         setOpen(false);
     };
-
+    const handleIngredientClose = () => {
+        setIngredientOpen(false);
+    }
     const handleCookTime = e => {
         setcookTime(e.target.value)
     }
@@ -74,7 +86,6 @@ export default function CreateRecipe() {
     const handleImage = e => {
         setImage(e.target.value)
     }
-    //add ingredient
     const handleInstructions = e => {
         setinstructions(e.target.value)
     }
@@ -160,6 +171,62 @@ export default function CreateRecipe() {
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
+                        <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
+                            Add Ingredients
+                        </Button>
+                        <Dialog
+                            open={ingredientOpen}
+                            onClose={handleIngredientClose}
+                        >
+                            <DialogTitle id="add-ingredients">
+                                {"Add ingredients to your recipe."}
+                            </DialogTitle>
+                            <DialogContent>
+                                <Autocomplete
+                                    disablePortal
+                                    freeSolo
+                                    id="combo-box-demo"
+                                    options={ingredientArr2}
+                                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                                    renderInput={params => (
+                                        <TextField 
+                                            {...params} 
+                                            label="Search Ingredients to Add"
+                                            onChange={({ target }) => setAddIngr(target.value)} 
+                                        />
+                                    )}
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button 
+                                    type="submit" 
+                                    onClick={async () => {
+                                        console.log(addIngr);
+                                        var ingredient = addIngr;
+                                        //     console.log(addIngr);
+                                        //search for appliance
+                                        // var idxx = await indexMatch(userIngr, addIngr);
+                                        // if (idxx == -1) {
+                                        //     var ingredient = addIngr;
+                                        //     console.log(addIngr);
+                                        //     // var data = await addIngredient(addIngr, searchGroups, username)
+                                        //     // localStorage.setItem('user', JSON.stringify(data));
+                                        //     // setAddIngr("")
+                                        //     // console.log(addIngr, searchGroups)
+                                        //     // setOpenSnackbar(true)
+                                        // }
+                                        // else {
+                                        //     setShowError(true)
+                                        // }
+                                    }}
+                                    > 
+                                    Add
+                                </Button>
+                                <Button onClick={handleIngredientClose} autoFocus>
+                                    Cancel
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     &nbsp;
                     <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
                         <Table sx={{ maxWidth: 650 }} aria-label="simple table">
@@ -360,4 +427,42 @@ export default function CreateRecipe() {
             return error;
         }
     }
+}
+
+export async function getServerSideProps() {
+    try {
+        const client = await clientPromise;
+        const db = client.db("test");
+        const ingredientOptions = await db
+            .collection("ingredients")
+            .find({})
+            .toArray();
+        return {
+            props: {ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))},
+        };
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
+async function indexMatch(array, q) {
+    return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
+}
+
+async function addIngredient(ingredient, group, username) {
+    const res = await fetch('/api/addIngredientToFridge', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            ingredient: ingredient,
+            group: group,
+            username: username
+        })
+    })
+    const data = await res.json();
+    return data;
 }

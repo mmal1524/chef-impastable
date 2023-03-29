@@ -182,26 +182,26 @@ export default function CreateRecipe({ ingredientOptions }) {
                     }}
                 >
                     <Grid>
-                        <TextField required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Recipe Image URL" variant="outlined" onChange={handleImage} />
+                        <TextField data-test="RecipeTitle" required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeImage" required id="outlined-basic" label="Recipe Image URL" variant="outlined" onChange={handleImage} />
                     </Grid>
                     &nbsp;
                     <Grid>
-                        <TextField required id="outlined-basic" label="Prep Time" variant="outlined" onChange={handlePrepTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Cook Time" variant="outlined" onChange={handleCookTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Total Time" variant="outlined" onChange={handleTotalTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Yields" variant="outlined" onChange={handleYields} />
+                        <TextField data-test="RecipePrepTime" required id="outlined-basic" label="Prep Time" variant="outlined" onChange={handlePrepTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeCookTime" required id="outlined-basic" label="Cook Time" variant="outlined" onChange={handleCookTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeTotalTime" required id="outlined-basic" label="Total Time" variant="outlined" onChange={handleTotalTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeYields" required id="outlined-basic" label="Yields" variant="outlined" onChange={handleYields} />
                     </Grid>
                     &nbsp;
                     <Grid>
-                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Description" multiline maxRows={10} variant="outlined" onChange={handleDescription} />
+                        <TextField data-test="RecipeDescription" required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Description" multiline maxRows={10} variant="outlined" onChange={handleDescription} />
                     </Grid>
                     &nbsp;
                     <Grid>
                         <Typography component="h4" variant="body1">
                             For this section: Please separate instructions by pressing enter
                         </Typography>
-                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Instruction List" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
+                        <TextField data-test="RecipeInstructions" required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Instruction List" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
@@ -311,7 +311,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     <TableCell component="th" scope="row">
                                         {"Calories"}
                                     </TableCell>
-                                    <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCalories} />}</TableCell>
+                                    <TableCell data-test="RecipeCalories" align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCalories} />}</TableCell>
                                 </TableRow>
                                 <TableRow
                                     key={"Carbohydrate Content"}
@@ -388,7 +388,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Button size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                    <Button data-test="CreateRecipeButton" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                         onClick={async () => {
                             if (!title | !image | !preptime | !cookTime | !totalTime | !yields | !description | !instructions) {
                                 //if any of the required fields are empty, send an error
@@ -411,7 +411,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                         Create Recipe
                     </Button>
                 </Box>
-                <Dialog
+                <Dialog data-test="MissingInformationPopup"
                     fullScreen={fullScreen}
                     open={open}
                     onClose={handleClose}
@@ -426,7 +426,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} autoFocus>
+                        <Button data-test="CloseMissingInfoPopup" onClick={handleClose} autoFocus>
                             OK
                         </Button>
                     </DialogActions>

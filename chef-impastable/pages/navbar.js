@@ -162,7 +162,7 @@ const Navbar = () => {
                     >
                         Shared Recipes
                     </MenuItem>
-                    <MenuItem
+                    <MenuItem data-test="CreateRecipeNav"
                         onClick={() => {
                             router.push("createrecipe");
                         }}

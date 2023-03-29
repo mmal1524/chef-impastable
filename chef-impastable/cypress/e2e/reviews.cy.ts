@@ -26,10 +26,12 @@ describe('Reviews', () => {
     })
   })
 
+  // Checks the button to leave a review and clicks it
   it("Leave a review button", () => {
     cy.get("[data-test='LeaveAReview']").should("contain", "Leave a Review").click()
   })
 
+  // Checks that the UI popup exists and contains all necessary fields
   it("UI dialog popup", () => {
     cy.get("[role='dialog']").should("contain", "Leave a Review")
 
@@ -45,6 +47,13 @@ describe('Reviews', () => {
       .get("[data-test='Star5']").should("exist")
 
     cy.get("[data-test='description']").should("exist")
+  })
+
+  // Checks that the user can specify a star rating
+  it("Star rating", () => {
+    cy.get("[data-test='Stars']")
+    // checks the icon
+      .get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
   })
 
 

@@ -248,7 +248,7 @@ const Navbar = () => {
                     {"Shopping List:"}
                 </DialogTitle>
                 <DialogContent>
-                    <ShoppingList/>
+                    <ShoppingList data-test='ViewList'/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeViewOpenEdit}>

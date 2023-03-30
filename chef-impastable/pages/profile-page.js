@@ -19,7 +19,7 @@ import clientPromise from '../lib/mongodb_client';
 import SavedRecipes from '../components/savedRecipes';
 import { reviewCardButton } from '../components/review-card-button';
 import { ObjectId } from 'mongodb';
-
+import RecipeCard from '../components/recipe-card';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -34,7 +34,7 @@ function TabPanel(props) {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            <Box>{children}</Box>
           </Box>
         )}
       </div>
@@ -55,7 +55,6 @@ function a11yProps(index) {
 }
 
 export default function ProfilePage({besties, futureBesties, reviews, recipes, createdRecipes}) {
-
     var friendsList = besties;
     var friendRequestsList = futureBesties;
     var reviewsList = reviews;
@@ -227,7 +226,7 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
                     </Box>
                     <TabPanel value={value} index={0}>
                         {createdRecipes.length == 0 ? 
-                            "You have no created recipes" 
+                            <p>"You have no created recipes" </p>
                         : 
                         <Grid container spacing ={3}>
                         {createdRecipes.map((recipe, index) => (                
@@ -370,10 +369,12 @@ export async function getServerSideProps(context) {
             }
         }
 
-        const createdRecipes = await db
+        const createdRecipes = JSON.parse(JSON.stringify(await db
             .collection("recipes")
-            .find({author: context.query.username})
-            .toArray();
+            .find({author: context.query.username, isUser: true})
+            .toArray()));
+
+        console.log(createdRecipes)
 
         return {
             props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects, createdRecipes: createdRecipes},

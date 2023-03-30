@@ -4,8 +4,7 @@ import mongoose, { SchemaTypes } from "mongoose";
 const recipeSchema = new mongoose.Schema({
     author:{
         type:String,
-        required:true,
-        unique:true
+        required:false
     },
     canonical_url:{
         type:String, 
@@ -21,7 +20,7 @@ const recipeSchema = new mongoose.Schema({
     },
     description: {
         type:String,
-        required:true
+        required:false
     },
     host: {
         type:String,
@@ -33,14 +32,14 @@ const recipeSchema = new mongoose.Schema({
     },
     ingredients: {
         type:Array,
-        required:true,
+        required:false,
     },
     instructions: {
         type:String,
-        required:true
+        required:false
     },
     instructions_list: {
-        type:Array,
+        type:[String],
         required:false
     },
     language: {
@@ -52,11 +51,11 @@ const recipeSchema = new mongoose.Schema({
         required:false
     },
     prep_time: {
-        type: Number,
-        required:true
+        type:String,
+        required:false
     },
     ratings: {
-        type:Number,
+        type:String,
         required:false
     },
     site_name: {
@@ -68,7 +67,7 @@ const recipeSchema = new mongoose.Schema({
         reqiured:false
     },
     total_time: {
-        type:Number,
+        type:String,
         required:false
     },
     yields: {
@@ -90,7 +89,11 @@ const recipeSchema = new mongoose.Schema({
                 required:false
             }
         }
-    ]
+    ],
+    isUser: {
+        type:Boolean,
+        required:false
+    }
 });
 
 module.exports = mongoose.models.Recipe || mongoose.model('Recipe', recipeSchema);

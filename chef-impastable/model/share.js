@@ -7,7 +7,7 @@ const shareSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    reciever:{
+    receiver:{
         type:String,
         required:true
     }

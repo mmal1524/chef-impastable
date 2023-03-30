@@ -36,6 +36,7 @@ import { createTheme } from '@mui/material/styles';
 import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
+import AddToListDialog from '../components/add-ingredient-from-recipe';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
@@ -259,6 +260,11 @@ export default function Recipe({ recipe, reviews }) {
         await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
     };
 
+    const [addSLDialog, setAddSLDialog] = useState(false);
+    const handleOpenAddToShoppingList = () => {
+        setAddSLDialog(true);
+    } 
+
     return (
         <>
             <SaveRecipeDialog
@@ -296,10 +302,44 @@ export default function Recipe({ recipe, reviews }) {
 
                 </div>
                 <Grid container
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center">
-                    <h1>{recipe.title}</h1>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Grid item
+                        sx={{width: 200}}
+                    ></Grid>
+                    <Grid item
+                        //display="flex"
+                        //justifyContent="center"
+                        //alignItems="center"
+                    >
+                        <h1>{recipe.title}</h1>
+                    </Grid>
+                    <Grid item
+                        sx={{
+                            pt:2,
+                        }}
+                    >
+                        <Button 
+                            data-test='AddFromRButton'
+                            sx={{
+                                width: 200
+                            }}
+                            onClick={ async() => {
+                                console.log(recipe);
+                                console.log(recipe.ingredients)
+                                handleOpenAddToShoppingList();
+                            }}
+                        >
+                            Add to Shopping List
+                        </Button>
+                        {addSLDialog && (<AddToListDialog
+                            recipe={recipe}
+                            open={addSLDialog}
+                            onClose = {() => {setAddSLDialog(false)}}
+                        />)}
+                    </Grid>
                 </Grid>
                 <Grid container
                     display="flex"

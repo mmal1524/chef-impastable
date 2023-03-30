@@ -160,7 +160,7 @@ export default function ShoppingListEdit() {
                         <Grid container id="Item">
                             <Grid>
                                 <List data-test={`ListItem-${index}`}>
-                                    <ListItem
+                                    <ListItem 
                                         secondaryAction={
                                             <IconButton edge="end" aria-label="delete" data-test="DeleteButton"
                                             onClick={async () => {
@@ -175,7 +175,7 @@ export default function ShoppingListEdit() {
                                             </IconButton>
                                         }
                                     >
-                                        <ListItemText
+                                        <ListItemText data-test="ListText"
                                             sx={{display: 'flex', justifyContent: 'center'}}
                                             primary={item}
                                         />

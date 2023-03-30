@@ -37,10 +37,32 @@ describe('Shopping List', () => {
             .get("#PopulatedList").find('div.MuiBox-root.css-0').its('length').should('eq', 8)
     })
 
-    // delete one item from shopping list
+    // delete second item from shopping list
+    it ('Delete 2nd Item to Shopping List', () => {
+        cy.get("[data-test='EditList']").click()
+        cy.wait(1000)
+        cy.get("[data-test='EditDisplay']")
+            .get("[data-test='ListItem-1']")
+            .get("[data-test='DeleteButton']").click();
+        cy.wait(2000)
+        cy.get("[data-test='BackToView']").click()
+        // checks that the length of list is one less
+        cy.get("[data-test='ViewList']")
+            .get("#ViewDisplay")
+            .get("#PopulatedList").find('div.MuiBox-root.css-0').its('length').should('eq', 7)
+    })
 
     // add ingredients from recipe and confirm only added the one
+    it ('Adding Ingredients from Recipe Again', () => {
+        cy.get("[data-test='AddFromRButton']", {timeout: 60000}).click()
+        cy.get("[data-test='ConfirmAddButton']", {timeout: 6000}).click()
+        cy.wait(2000)
 
+        cy.get("[data-test='ShopList']").click()
+        cy.get("[data-test='ViewList']")
+            .get("#ViewDisplay")
+            .get("#PopulatedList").find('div.MuiBox-root.css-0').its('length').should('eq', 8)
+    })
 
     // add ingredient to fridge and clear shopping list
     // it ('Clear List with Items', () => {
@@ -55,7 +77,7 @@ describe('Shopping List', () => {
     // add ingredients from recipe, confirm didn't add item in fridge
 
     // close view shopping list
-    // it ('Click to Close Edit Shopping List UI', () => {
-    //     cy.get("[data-test='CloseEdit']", {timeout: 10000}).click()
-    // })
+    it ('Click to Close Edit Shopping List UI', () => {
+        cy.get("[data-test='CloseView']", {timeout: 10000}).click()
+    })
 })

@@ -18,10 +18,10 @@ describe('Shopping List', () => {
         cy.wait(2000)
     })
 
-    // naviate to fridge and confirm clear
-    it ('Navigate to Fridge and Clear', () => {
+    // // naviate to fridge and confirm clear
+    // it ('Navigate to Fridge and Clear', () => {
 
-    })
+    // })
 
     // adds item to shopping list
     it ('Add Item to Shopping List', () => {
@@ -39,8 +39,11 @@ describe('Shopping List', () => {
         cy.get("[data-test='EditList']").click()
         cy.get("[data-test='EditDisplay']")
             .get("[data-test='ListItem-0']")
-            .contains("buttermilk").get("['data-test='DeleteButton']").click();
-       //cy.get("['data-test='DeleteButton']").click()
+            .get("[data-test='ListText']")
+            .contains(/^buttermilk$/)
+        cy.get("[data-test='EditDisplay']")
+            .get("[data-test='ListItem-0']")
+            .get("[data-test='DeleteButton']").click();
         cy.wait(2000)
         cy.get("[data-test='BackToView']").click()
         cy.get("[data-test='ViewList']").contains("Empty")
@@ -54,7 +57,7 @@ describe('Shopping List', () => {
 
     // clear shopping list
     it ('Clear List with Items', () => {
-        //cy.get("[data-test='EditList']").click()
+        cy.get("[data-test='EditList']").click()
         cy.get("[data-test='ClearItem']").click()
         cy.wait(2000)
         // check empty
@@ -74,6 +77,6 @@ describe('Shopping List', () => {
 
     // close view shopping list
     it ('Click to Close Edit Shopping List UI', () => {
-        cy.get("[data-test='CloseEdit']", {timeout: 10000}).click()
+        cy.get("[data-test='CloseView']", {timeout: 10000}).click()
     })
 })

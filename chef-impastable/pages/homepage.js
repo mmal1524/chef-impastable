@@ -79,6 +79,7 @@ export default function HomePage({recipes}) {
                     {displayRecipes.map((recipe, index) => (                
                         <Grid item key={recipe._id}>
                             <RecipeCard 
+                                index={index}
                                 recipe={recipe}
                                 onSave={() => {
                                     if (!recipe.saved) {

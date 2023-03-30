@@ -68,175 +68,161 @@ describe('Reviews', () => {
       .should("contain", "Description/Comments")
 
     cy.get("[data-test='Stars']").should("exist")
-      .get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-      .get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-      .get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-      .get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-      .get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+      .get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+      .get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+      .get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+      .get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
     cy.get("[data-test='description']").should("exist")
   })
 
   // Checks that the user can specify a star rating from 0 to 5
 
-  it("Choose star rating = 1", () => {
+  it("Choose a star rating", () => {
+    // choose star 1
     cy.get("[data-test='Star1']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 2", () => {
+    // choose star 2
     cy.get("[data-test='Star2']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 3", () => {
+    // choose star 3
     cy.get("[data-test='Star3']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 4", () => {
+    // choose star 4
     cy.get("[data-test='Star4']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 5", () => {
+    // choose star 5
     cy.get("[data-test='Star5']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click().click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 1", () => {
+    // choose star 1
     cy.get("[data-test='Star1']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 2", () => {
+    // choose star 2
     cy.get("[data-test='Star2']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click().click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 3", () => {
+    // choose star 3
     cy.get("[data-test='Star3']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click().click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 4", () => {
+    // choose star 4
     cy.get("[data-test='Star4']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click().click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-  })
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-  it("Choose star rating = 5", () => {
+    // choose star 5
     cy.get("[data-test='Star5']").click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarIcon')
-  })
+    cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
 
-  it("Clear stars/zero stars", () => {
+    // choose zero stars
     cy.get("[data-test='Star1']").click().click()
-      .find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+      .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
 
-    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
-    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid').should('contain', 'StarOutlineIcon')
+    cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
+    cy.get("[data-test='Star5']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
   })
 
   it("Discard", () => {

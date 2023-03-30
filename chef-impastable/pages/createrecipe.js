@@ -662,7 +662,9 @@ export default function CreateRecipe({ ingredientOptions }) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell component="th" scope="row">
+                    <div data-test="CRingredient">
                     {ingredient}
+                    </div>
                 </TableCell>
                 <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity} />}</TableCell>
                 <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>

@@ -43,7 +43,7 @@ describe('Adding Ingredients to the Database', () => {
     it("Adding an Ingredient to the Databse", () => {
         cy.get("[data-test='CRIngredientsToAdd']").clear().type("made up ingredient")
         cy.get("[data-test='CRAddToDatabaseButton']").click();
-        cy.get("[data-test='CRingredient-0']").should("contain", "made up ingredient");
+        cy.get("[data-test='CRingredient']").should("contain", "made up ingredient");
     })
 
 

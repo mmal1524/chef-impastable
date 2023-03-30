@@ -160,9 +160,9 @@ export default function ShoppingListEdit() {
                         <Grid container>
                             <Grid>
                                 <List>
-                                    <ListItem
+                                    <ListItem data-test="ListItem" index={index}
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" 
+                                            <IconButton edge="end" aria-label="delete" data-test="DeleteButton"
                                             onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);

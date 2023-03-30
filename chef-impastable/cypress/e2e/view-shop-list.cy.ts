@@ -36,8 +36,8 @@ describe('Shopping List', () => {
   })
 
   // add something to the shopping list
-  it ('Click to View Edit Shopping List UI', () => {
-    cy.get("[data-test='EditList']", {timeout: 10000}).click()
+  it ('Add something to Shopping List and Confirm Display', () => {
+    cy.get("[data-test='EditList']", {timeout: 5000}).click()
     cy.get("#for-search").click()
     cy.get("#for-search").type("buttermilk").get("li[data-option-index='0']").click();
     cy.get("[data-test='AddItem']").click()
@@ -48,6 +48,6 @@ describe('Shopping List', () => {
 
   // close view shopping list
   it ('Click to Close Shopping List UI', () => {
-    cy.get("[data-test='CloseView']", {timeout: 60000}).click()
+    cy.get("[data-test='CloseView']", {timeout: 6000}).click()
   })
 })

@@ -19,9 +19,9 @@ export default function HomePage(props) {
             <div>
                 <Grid container spacing={3}>
                     
-                    {props.recipes.map((recipe) => (                
+                    {props.recipes.map((recipe, index) => (                
                         <Grid item key={recipe._id}>
-                            <RecipeCard recipe={recipe}/>
+                            <RecipeCard recipe={recipe} index={index}/>
                         </Grid>
                     )
                         

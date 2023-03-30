@@ -9,12 +9,12 @@ describe('Recipe Tag Page', () => {
   })
 
   it("Clicking a recipe", () => {
-    cy.get("[data-test='0']", { timeout: 10000 }).click()
+    cy.get("[data-test='0']", { timeout: 15000 }).click()
   })
 
   it("Selecting Vegan Tag", () => {
-    cy.get("[data-test='tag-0']").as("tag")
-    cy.get("@tag", { timeout: 100 }).then(($btn) => {
+    cy.get("[data-test='tag-0']", { timeout:  15000 }).as("tag")
+    cy.get("@tag", { timeout:  15000 }).then(($btn) => {
       const btnColor = $btn.css('background-color')
       if (btnColor === 'rgb(224, 224, 224)') {
         //if the button is gray

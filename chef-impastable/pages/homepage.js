@@ -77,6 +77,7 @@ export default function HomePage({recipes}) {
                         <Grid item key={recipe._id}>
                             <RecipeCard 
                                 recipe={recipe}
+                                index={index}
                                 onSave={() => {
                                     if (!recipe.saved) {
                                         setShowSaveOptions(true); 

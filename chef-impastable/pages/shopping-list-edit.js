@@ -157,10 +157,10 @@ export default function ShoppingListEdit() {
                     <Box>
                         <FormGroup row>
                         </FormGroup>
-                        <Grid container>
+                        <Grid container id="Item">
                             <Grid>
-                                <List>
-                                    <ListItem data-test="ListItem" index={index}
+                                <List data-test={`ListItem-${index}`}>
+                                    <ListItem
                                         secondaryAction={
                                             <IconButton edge="end" aria-label="delete" data-test="DeleteButton"
                                             onClick={async () => {

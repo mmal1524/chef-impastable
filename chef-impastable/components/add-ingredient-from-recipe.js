@@ -131,6 +131,7 @@ export default function AddToListDialog(props) {
                     Cancel
                 </Button>
                 <Button 
+                    data-test='ConfirmAddButton'
                     //disabled={disabled}
                     onClick={async() => {
                         console.log("clicked")

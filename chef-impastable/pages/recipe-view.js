@@ -319,7 +319,7 @@ export default function Recipe({ recipe, reviews }) {
                         }}
                     >
                         <Button 
-                            //justifyContent='left'
+                            data-test='AddFromRButton'
                             sx={{
                                 width: 200
                             }}

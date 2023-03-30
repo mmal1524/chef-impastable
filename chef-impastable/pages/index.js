@@ -131,7 +131,6 @@ export default function Home({
                         if (data.success == false) {
                             handleClickOpen();
                         } else {
-                            console.log(data.fridge_grouped)
                             localStorage.setItem('user', JSON.stringify(data));
                             router.push("/homepage");
                         }

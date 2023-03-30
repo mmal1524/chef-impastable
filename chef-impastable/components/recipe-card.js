@@ -100,6 +100,7 @@ function RecipeCard( props ) {
                 : <FavoriteBorderOutlinedIcon />}
             </IconButton>
             <IconButton
+                data-test="SendIcon"
                 onClick={handleClickOpen}>
                 <SendIcon />
             </IconButton>

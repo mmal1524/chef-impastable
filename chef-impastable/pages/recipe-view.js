@@ -36,6 +36,13 @@ import { createTheme } from '@mui/material/styles';
 import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
+import SendIcon from '@mui/icons-material/Send';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Checkbox from '@mui/material/Checkbox';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
@@ -53,6 +60,8 @@ export default function Recipe({ recipe, reviews }) {
     var recipe1 = recipe;
 
     const [username, setUsername] = useState("");
+    const [friends, setFriends] = useState([]);
+    var [sendList, setSendList] = useState([]);
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -61,9 +70,15 @@ export default function Recipe({ recipe, reviews }) {
                 get() {
                     return this.username
                 },
-            }
+            },
+            getFriends: {
+                get() {
+                    return this.friends
+                },
+            },
         });
-        setUsername(thisUser.getUsername)
+        setUsername(thisUser.getUsername);
+        setFriends(thisUser.getFriends);
     }, []);
 
     function createRow(name, value) {
@@ -72,6 +87,8 @@ export default function Recipe({ recipe, reviews }) {
     console.log(JSON.stringify(recipe.nutrients.calories));
 
     var [open, setOpen] = useState(false);
+    var [openShare, setOpenShare] = useState(false);
+    var [noFriendsOpen, setNoFriendsOpen] = React.useState(false);
     var [description, setDescription] = useState("");
     var [rating, setRating] = useState(0);
 
@@ -80,6 +97,14 @@ export default function Recipe({ recipe, reviews }) {
     var [thirdStar, setThirdStar] = useState(false);
     var [fourthStar, setFourthStar] = useState(false);
     var [fifthStar, setFifthStar] = useState(false);
+
+    const handleClickOpenShare = () => {
+        setOpenShare(true);
+    };
+
+    const handleCloseShare = () => {
+        setOpenShare(false);
+    };
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -90,6 +115,14 @@ export default function Recipe({ recipe, reviews }) {
         setDescription("");
         setRating(0);
     };
+
+    const handleClickNoFriends = () => {
+        setNoFriendsOpen(true);
+    }
+
+    const handleCloseNoFriends = () => {
+        setNoFriendsOpen(false);
+    }
 
     const handleChangeDescription = e => {
         setDescription(e.target.value);
@@ -336,6 +369,68 @@ export default function Recipe({ recipe, reviews }) {
                             <Favorite/>
                         : <FavoriteBorderOutlined />}
                     </IconButton>
+                    <IconButton
+                        onClick={handleClickOpenShare}>
+                        <SendIcon />
+                    </IconButton>
+                    <Dialog
+                            open={openShare}
+                            onClose={handleCloseShare}
+                        >
+                            <DialogTitle id="share-recipe">
+                                {"Share this recipe"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText id="share-recipe-description">
+                                    Select friends:
+                                    {displayFriends(friends)}
+
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button 
+                                    data-test="SendIcon"
+                                    onClick={ async () => {
+                                        console.log(sendList)
+                                        if (sendList.length == 0) {
+                                            handleClickNoFriends();
+                                        } else {
+                                            var i = 0;
+                                            for (i; i < sendList.length; i++) {
+                                                var share = await createShare(recipe._id, username, sendList[i])
+                                            }
+                                            //router.reload();
+                                            handleCloseShare();
+                                        }
+                                    }}
+                                    > 
+                                    Send
+                                </Button>
+                                <Button onClick={handleCloseShare} autoFocus>
+                                    Cancel
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            //Dialog for when a user is trying to share to no one
+                            open={noFriendsOpen}
+                            onClose={handleCloseNoFriends}
+                            aria-labelledby="responsive-dialog-title"
+                        >
+                            <DialogTitle id="responsive-dialog-title">
+                                {"No Friends Selected"}
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Please select a friend to share this recipe with.
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={handleCloseNoFriends} autoFocus>
+                                    OK
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                 </Grid>
 
                 <Grid container
@@ -496,6 +591,85 @@ export default function Recipe({ recipe, reviews }) {
                 </>
             )
         }
+    }
+
+    function displayFriends(friendsList) {
+        const [checked, setChecked] = React.useState([0]);
+
+        const handleToggle = (value) => () => {
+            const currentIndex = checked.indexOf(value);
+            const newChecked = [...checked];
+
+            if (currentIndex === -1) {
+                newChecked.push(value);
+            } else {
+                newChecked.splice(currentIndex, 1);
+            }
+
+            setChecked(newChecked);
+        };
+
+        var j = 0;
+        sendList = []
+        for (j; j < checked.length; j++) {
+            sendList.push(friendsList[checked[j]])
+        }
+
+        
+        if (friendsList.length == 0) {
+            return(<>You have no friends :(</>);
+        } else {
+            var friendListLength = new Array; 
+            var i = 0;
+            for (i; i < friendsList.length; i++) {
+                friendListLength.push(i);
+            }
+            return (
+                <List sx={{ width: '100%', maxWidth: 360, maxHeight: 200, bgcolor: 'background.paper' }}>
+                {friendListLength.map((value) => {
+                    const labelId = `checkbox-list-label-${value}`;
+            
+                    return (
+                    <ListItem
+                        key={value}
+                        disablePadding
+                    >
+                        <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                        <ListItemIcon>
+                            <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(value) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                        </ListItemIcon>
+                        <ListItemText id={labelId} primary={`${friendsList[value]}`} />
+                        </ListItemButton>
+                    </ListItem>
+                    );
+                })}
+                </List>
+            );
+        }
+    }
+
+    async function createShare(recipeID, sender, receiver) {
+        const res = await fetch('api/createShare', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                sender: sender,
+                receiver: receiver,
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
     }
 }
 

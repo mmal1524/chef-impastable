@@ -291,7 +291,7 @@ export default function Recipe({ recipe, reviews }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <h1>{recipe.title}</h1>
+                    <h1 data-test="RecipeTitle">{recipe.title}</h1>
                 </Grid>
                 <Grid container
                     display="flex"

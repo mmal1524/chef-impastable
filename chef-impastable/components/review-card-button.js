@@ -50,16 +50,18 @@ export function reviewCardButton(review, recipe, index) {
                 alignItems="stretch"
                 spacing={0}
             >
-                <Button 
+                <Button
+                    data-test="recipeButton" 
                     sx={{color: 'black', borderColor: 'black'}} 
                     style={{justifyContent: "flex-start", paddingLeft: 0}}
                     onClick={() => {
                         Router.push({pathname:"/recipe-view/", query: {id: recipe._id}})
                     }}
                 >
-                    <h3 className="recipeName">{recipe.title}</h3>
+                    <h3 data-test="recipeName" className="recipeName">{recipe.title}</h3>
                 </Button>
                 <Stack
+                    data-test="Stars"
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="center"
@@ -92,7 +94,7 @@ export function reviewCardButton(review, recipe, index) {
                     </Box>
                 </Stack>
                 <p></p>
-                <body2>{review.description}</body2>
+                <body2 data-test="description">{review.description}</body2>
 
             </Stack>
 

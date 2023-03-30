@@ -205,7 +205,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
-                    <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
+                    <Button data-test="CRAddIngredient" onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
                         Add Ingredient
                     </Button>
                     <Dialog
@@ -223,7 +223,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 options={ingredientArr2}
                                 onInputChange={(e, new_val) => { setAddIngr(new_val) }}
                                 renderInput={params => (
-                                    <TextField
+                                    <TextField data-test="CRIngredientsToAdd"
                                         {...params}
                                         label="Search Ingredients to Add"
                                         onChange={({ target }) => setAddIngr(target.value)}
@@ -233,7 +233,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                         </DialogContent>
                         <DialogActions>
                         <Tooltip title="Create Ingredient">
-                            <IconButton edge="end" aria-label="add" onClick={async () => {
+                            <IconButton data-test="CRAddToDatabaseButton" edge="end" aria-label="add" onClick={async () => {
                                 addButton = true;
                                 if (addIngr.localeCompare("") == 0) {
                                     handleClickOpenEmptyString();
@@ -252,7 +252,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 <AddIcon />
                             </IconButton>
                         </Tooltip>
-                            <Button
+                            <Button data-test="CREnterIngredient"
                                 type="submit"
                                 onClick={async () => {
                                     addButton = false;
@@ -442,12 +442,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Incorrect Ingredient"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test='CRIngredientDoesNotExitPopup'>
                             This ingredient does not currently exist. Please create the ingredient before trying to use it.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseIngredientError} autoFocus>
+                        <Button data-test="CRIngredientDoesNotExitPopupOk" onClick={handleCloseIngredientError} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -464,12 +464,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Ingredient Already Exists"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test="CRIngredientAlreadyExistsPopup">
                             This ingredient already exists, therefore you cannot create it.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseIngredientExists} autoFocus>
+                        <Button data-test="CRIngredientAlreadyExistsPopupOk" onClick={handleCloseIngredientExists} autoFocus>
                             OK
                         </Button>
                     </DialogActions>

@@ -300,7 +300,8 @@ export default function SignUp() {
                 reviewedPrivacy: "everyone",
                 fridge_grouped: {"general": []},
                 mealPlanPrivacy: "everyone",
-                dietaryTags: [],
+                dietaryTags: [], 
+                saved: [],
                 reviewedRecipes: []
             })
         })

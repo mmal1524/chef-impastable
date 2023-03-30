@@ -162,7 +162,6 @@ export async function getServerSideProps(context) {
             .collection("shares")
             .find({receiver: context.query.username, sender: context.query.friendusername}).toArray();
         
-        
         const sentRecipes = []
         var i = 0;
         for (i; i < sentShares.length; i++) {
@@ -181,10 +180,6 @@ export async function getServerSideProps(context) {
             receivedRecipes.push(currRecipe)
         }                
       
-        console.log("here")
-        console.log(currFriend)
-        console.log(sentRecipes)
-        console.log(receivedRecipes)
         return {
             props: {friend: JSON.parse(JSON.stringify(currFriend)), besties: friendObjects, sentRecipes: JSON.parse(JSON.stringify(sentRecipes)), receivedRecipes: JSON.parse(JSON.stringify(receivedRecipes))},
         };

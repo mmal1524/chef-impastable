@@ -6,6 +6,7 @@ describe('Reviews', () => {
 
   var numReviews;
   var avgRating;
+  var numReviewed;
 
   // Logs in
   it("Logging in", () => {
@@ -83,7 +84,6 @@ describe('Reviews', () => {
     // choose star 1
     cy.get("[data-test='Star1']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -92,7 +92,6 @@ describe('Reviews', () => {
     // choose star 2
     cy.get("[data-test='Star2']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -101,7 +100,6 @@ describe('Reviews', () => {
     // choose star 3
     cy.get("[data-test='Star3']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -110,7 +108,6 @@ describe('Reviews', () => {
     // choose star 4
     cy.get("[data-test='Star4']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
@@ -119,7 +116,6 @@ describe('Reviews', () => {
     // choose star 5
     cy.get("[data-test='Star5']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
@@ -128,7 +124,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click().click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -137,7 +132,6 @@ describe('Reviews', () => {
     // choose star 1
     cy.get("[data-test='Star1']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -146,7 +140,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -155,7 +148,6 @@ describe('Reviews', () => {
     // choose star 2
     cy.get("[data-test='Star2']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -164,7 +156,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click().click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -173,7 +164,6 @@ describe('Reviews', () => {
     // choose star 3
     cy.get("[data-test='Star3']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -182,7 +172,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click().click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -191,7 +180,6 @@ describe('Reviews', () => {
     // choose star 4
     cy.get("[data-test='Star4']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
@@ -200,7 +188,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click().click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -209,7 +196,6 @@ describe('Reviews', () => {
     // choose star 5
     cy.get("[data-test='Star5']").click()
       .find('svg').should('have.attr', 'data-testid', 'StarIcon')
-
     cy.get("[data-test='Star1']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarIcon')
@@ -218,7 +204,6 @@ describe('Reviews', () => {
     // choose zero stars
     cy.get("[data-test='Star1']").click().click()
       .find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
-
     cy.get("[data-test='Star2']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star3']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
     cy.get("[data-test='Star4']").find('svg').should('have.attr', 'data-testid', 'StarOutlineIcon')
@@ -230,9 +215,31 @@ describe('Reviews', () => {
     cy.get("[role='dialog']").should("not.exist")
   })
 
-  // Creating a 1 star review
-  it("Create one star review", () => {
-    cy.get("[data-test='LeaveAReview']").click()
-    cy.get("[data-test='Star1']").click()
+  // // Creating a 1 star review
+  // it("Create one star review", () => {
+  //   cy.get("[data-test='LeaveAReview']").click()
+  //   cy.get("[data-test='Star1']").click()
+  // })
+
+  it("Go to reviewed recipes in profile page", () => {
+    cy.get("[data-test='Navbar']")
+      .find("[data-test='Dropdown']")
+      .click()
+    cy.get("[data-test='Profile']").click()
+    cy.get("[data-test='tabs']", {timeout: 60000})
+      .find("[data-test='ReviewedRecipes']")
+      .click()
   })
+
+  it("Reviewed Recipes", () => {
+    cy.get("[data-test='reviews']").should('have.attr', 'number')
+    cy.get("[data-test='reviews']").then((curr) => {
+      numReviewed = curr.attr('number')
+      var i = 0;
+      for (i; i < numReviewed; i++) {
+        //TODO NEXT: Check that reviewed recipes are correctly displayed
+      }
+    })
+  })
+
 })

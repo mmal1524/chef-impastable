@@ -22,7 +22,6 @@ import Paper from '@mui/material/Paper';
 import Router from "next/router";
 import { Autocomplete, Modal } from '@mui/material';
 import clientPromise from '../lib/mongodb_client';
-import { displayIngredient } from '../components/ingredient-card.js';
 import AddIcon from '@mui/icons-material/Add';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -73,6 +72,7 @@ export default function CreateRecipe({ ingredientOptions }) {
     const [open2, setOpen2] = React.useState(false);
     const [open3, setOpen3] = React.useState(false);
     const [open4, setOpen4] = React.useState(false);
+    const [open5, setOpen5] = React.useState(false);
     const handleClickOpenDoesntExist = () => {
         setOpen4(true);
     };
@@ -91,6 +91,12 @@ export default function CreateRecipe({ ingredientOptions }) {
     const handleCloseEmptyString = () => {
         setOpen3(false);
     };
+    const handleClickOpenRepeat = () => {
+        setOpen5(true);
+    }
+    const handleCloseRepeat = () => {
+        setOpen5(false);
+    }
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const handleClickOpen = () => {
@@ -205,7 +211,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
-                    <Button onClick={handleIngredientClickOpen} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
+                    <Button onClick={ () => {
+                        handleIngredientClickOpen();
+                        setAddIngr("");
+                        setAddQuantity("");
+                        setAddUnit("");
+                        }} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200}}>
                         Add Ingredient
                     </Button>
                     <Dialog
@@ -219,17 +230,33 @@ export default function CreateRecipe({ ingredientOptions }) {
                             <Autocomplete
                                 disablePortal
                                 freeSolo
+                                sx={{height: 300}}
                                 id="combo-box-demo"
                                 options={ingredientArr2}
                                 onInputChange={(e, new_val) => { setAddIngr(new_val) }}
                                 renderInput={params => (
                                     <TextField
+                                        sx={{mt: 0.75}}
                                         {...params}
                                         label="Search Ingredients to Add"
                                         onChange={({ target }) => setAddIngr(target.value)}
                                     />
                                 )}
                             />
+                            <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
+                            <Table sx={{ maxWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Ingredient</TableCell>
+                                        <TableCell align="right">Quantity</TableCell>
+                                        <TableCell align="right">Unit</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                            <TableBody>
+                                {displayIngredient(addIngr)}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                         </DialogContent>
                         <DialogActions>
                         <Tooltip title="Create Ingredient">
@@ -242,10 +269,17 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     if (!data.success) {
                                         handleClickOpenExists();
                                     } else {
-                                        setIngredientList([
-                                            ...ingredientList, addIngr
-                                        ])
-                                        handleIngredientClose();
+                                        if (ingredientList.includes(addIngr)) {
+                                            handleClickOpenRepeat();
+                                        } else {
+                                            setIngredientList([
+                                                ...ingredientList, addIngr
+                                            ])
+                                            setFinalIngredientList([
+                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
+                                            ])
+                                            handleIngredientClose();
+                                        }
                                     }
                                 }
                             }}>
@@ -256,16 +290,27 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 type="submit"
                                 onClick={async () => {
                                     addButton = false;
+                                    if (addIngr.localeCompare("") == 0) {
+                                        handleClickOpenEmptyString();
+                                    } else {
                                     var data = await addIngredient(addIngr, addButton);
                                     if (!data.success) {
                                         //if ingredient does not exist
                                         handleClickOpenDoesntExist();
                                     }
                                     else {
-                                        setIngredientList([
-                                            ...ingredientList, addIngr
-                                        ])
-                                        handleIngredientClose();
+                                        if (ingredientList.includes(addIngr)) {
+                                            handleClickOpenRepeat();
+                                        } else {
+                                            setIngredientList([
+                                                ...ingredientList, addIngr
+                                            ])
+                                            setFinalIngredientList([
+                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
+                                            ])
+                                            handleIngredientClose();
+                                        }
+                                        }
                                     }
                                 }}
                             >
@@ -285,12 +330,11 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     <TableCell align="right">Quantity</TableCell>
                                     <TableCell align="right">Unit</TableCell>
                                 </TableRow>
-                                {ingredientList.map((ingredient) => (
-                                    displayIngredients(ingredient)
-                                ))}
                             </TableHead>
                             <TableBody>
-
+                                {finalIngredientList.map((ingredient) => (
+                                        displayIngredients(ingredient)
+                                    ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -398,7 +442,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 //add recipe to database
                                 //TODO: also send array of objects (of ingredients) in this call
                                 const list = instructions.split("\n")
-                                const recipe = await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, list,
+                                const recipe = await CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, finalIngredientList, list,
                                     calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username);
                                 await AddTag(recipe.title, false);
                                 Router.push({
@@ -431,6 +475,30 @@ export default function CreateRecipe({ ingredientOptions }) {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog
+                    //Dialog for when a user is trying to add an ingredient to the database that does not exists
+                    fullScreen={fullScreen}
+                    open={open5}
+                    onClose={handleCloseRepeat}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Duplicate Ingredient"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            This ingredient is already in your recipe. Choose a different ingredient to add.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseRepeat} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+
                 <Dialog
                     //Dialog for when a user is trying to add an ingredient to the database that does not exists
                     fullScreen={fullScreen}
@@ -487,7 +555,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Please type the name of the ingredient before trying to create it.
+                            Please type the name of a valid ingredient.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -500,7 +568,7 @@ export default function CreateRecipe({ ingredientOptions }) {
         </div>
     );
 
-    async function CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, instructions,
+    async function CreateRecipe(title, image, preptime, cookTime, totalTime, yields, description, ingredients, instructions,
         calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username) {
         try {
             const res = await fetch('/api/createNewRecipe', {
@@ -517,6 +585,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     totalTime: totalTime,
                     yields: yields,
                     description: description,
+                    ingredients: ingredients,
                     instructions: instructions,
                     calories: calories,
                     carbs: carbs,
@@ -560,21 +629,43 @@ export default function CreateRecipe({ ingredientOptions }) {
         }
     }
 
-    function displayIngredients(ingredient) {
+    function displayIngredients(ingrObject) {
+        var ingredient = ingrObject.ingredient;
+        var quantity = ingrObject.quantity;
+        var unit = ingrObject.unit;
+
         return (
             <TableRow
-                key={ingredient + "content"}
+                key={ingredient + " content"}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
                 <TableCell component="th" scope="row">
                     {ingredient}
                 </TableCell>
-                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity} />}</TableCell>
-                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
-                {console.log(ingredient)}
-                {console.log(addQuantity)}
-                {console.log(addUnit)}
+                <TableCell align="right" component="th" scope = "row"> 
+                    {quantity} 
+                </TableCell>
+                <TableCell align="right" component="th" scope = "row"> 
+                    {unit} 
+                </TableCell>                
+
+                
             </TableRow>
+        )
+    }
+
+    function displayIngredient(ingredient) {
+        return (
+        <TableRow
+            key={"ingredient"}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        >
+            <TableCell component="th" scope="row">
+                {ingredient}
+            </TableCell>
+            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity}  />}</TableCell>
+            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
+        </TableRow>
         )
     }
 }

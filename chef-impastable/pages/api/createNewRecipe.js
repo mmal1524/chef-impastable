@@ -6,7 +6,7 @@ mongoose.set('strictQuery', false);
 connect()
 
 export default async function handler(req, res) {
-    const { title, image, preptime, cookTime, totalTime, yields, description, instructions,
+    const { title, image, preptime, cookTime, totalTime, yields, description, ingredients, instructions,
         calories, carbs, cholesterol, fiber, protein, saturatedFat, sodium, fat, unsaturatedFat, username } = req.body;
     try {
         const nutritionFacts = {
@@ -28,6 +28,7 @@ export default async function handler(req, res) {
             total_time: totalTime, 
             yields: yields,
             description: description,
+            ingredients: ingredients,
             instructions_list: instructions,
             nutrients: nutritionFacts,
             author: username,

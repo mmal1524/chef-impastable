@@ -28,6 +28,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import CommentIcon from '@mui/icons-material/Comment';
 
+
 function RecipeCard( props ) {
     //https://nextjs.org/docs/api-reference/next/link
     //https://stackoverflow.com/questions/55182529/next-js-router-push-with-state
@@ -122,12 +123,14 @@ function RecipeCard( props ) {
                                 console.log(sendList)
                                 if (sendList.length == 0) {
                                     handleClickNoFriends();
+                                } else {
+                                    var i = 0;
+                                    for (i; i < sendList.length; i++) {
+                                        var share = await createShare(props.recipe._id, username, sendList[i])
+                                    }
+                                    //router.reload();
+                                    handleClose();
                                 }
-                                var i = 0;
-                                for (i; i < sendList.length; i++) {
-                                    var share = await createShare(props.recipe._id, username, sendList[i])
-                                }
-                                router.reload();
                             }}
                             > 
                             Send
@@ -138,8 +141,7 @@ function RecipeCard( props ) {
                     </DialogActions>
                 </Dialog>
                 <Dialog
-                    //Dialog for when a user is trying to add an ingredient to the database that does not exists
-                    fullScreen={fullScreen}
+                    //Dialog for when a user is trying to share to no one
                     open={noFriendsOpen}
                     onClose={handleCloseNoFriends}
                     aria-labelledby="responsive-dialog-title"

@@ -32,16 +32,6 @@ export function friendShared(friend) {
     const handleClose = () => {
         setOpen(false);
     };
-
-    const handleClickNoFriends = () => {
-        setNoFriendsOpen(true);
-    }
-
-    const handleCloseNoFriends = () => {
-        setNoFriendsOpen(false);
-    }
-
-
     
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -93,27 +83,6 @@ export function friendShared(friend) {
                 >
                     shared
                 </Button>
-                <Dialog
-                    //Dialog for when a user is trying to add an ingredient to the database that does not exists
-                    fullScreen={fullScreen}
-                    open={noFriendsOpen}
-                    onClose={handleCloseNoFriends}
-                    aria-labelledby="responsive-dialog-title"
-                >
-                    <DialogTitle id="responsive-dialog-title">
-                        {"No Friends Selected"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please select a friend to share this recipe with.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseNoFriends} autoFocus>
-                            OK
-                        </Button>
-                    </DialogActions>
-                </Dialog>
             </Stack> 
             <style jsx>{`
                 .displayName {

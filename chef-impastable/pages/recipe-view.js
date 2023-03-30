@@ -5,7 +5,7 @@ import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
 import Navbar from './navbar.js'
-import { Button, CardMedia } from "@mui/material";
+import { CardMedia } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import TextField from '@mui/material/TextField';
@@ -32,7 +33,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
-import AddToListDialog from '../components/add-ingredient-from-recipe';
 import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
@@ -53,6 +53,7 @@ export default function Recipe({ recipe, reviews }) {
     var recipe1 = recipe;
 
     const [username, setUsername] = useState("");
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -60,9 +61,9 @@ export default function Recipe({ recipe, reviews }) {
                 get() {
                     return this.username
                 },
-            },
+            }
         });
-        setUsername(thisUser.getUsername);
+        setUsername(thisUser.getUsername)
     }, []);
 
     function createRow(name, value) {
@@ -258,12 +259,6 @@ export default function Recipe({ recipe, reviews }) {
         await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
     };
 
-    const [addSLDialog, setAddSLDialog] = useState(false);
-    const handleOpenAddToShoppingList = () => {
-        setAddSLDialog(true);
-    } 
-    
-
     return (
         <>
             <SaveRecipeDialog
@@ -297,45 +292,14 @@ export default function Recipe({ recipe, reviews }) {
                             </Box>
                         </AccordionDetails>
                     </Accordion>
+
+
                 </div>
                 <Grid container
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}>
-                    <Grid item
-                        sx={{width: 200}}
-                    ></Grid>
-                    <Grid item
-                        //display="flex"
-                        //justifyContent="center"
-                        //alignItems="center"
-                    >
-                        <h1>{recipe.title}</h1>
-                    </Grid>
-                    <Grid item
-                        sx={{
-                            pt:2,
-                        }}
-                    >
-                        <Button 
-                            sx={{
-                                width: 200
-                            }}
-                            onClick={ async() => {
-                                console.log(recipe);
-                                console.log(recipe.ingredients)
-                                handleOpenAddToShoppingList();
-                            }}
-                        >
-                            Add to Shopping List
-                        </Button>
-                        {addSLDialog && (<AddToListDialog
-                            recipe={recipe}
-                            open={addSLDialog}
-                            onClose = {() => {setAddSLDialog(false)}}
-                        />)}
-                    </Grid>
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center">
+                    <h1>{recipe.title}</h1>
                 </Grid>
                 <Grid container
                     display="flex"

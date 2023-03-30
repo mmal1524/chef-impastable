@@ -285,9 +285,11 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
             return(<>No reviews, create one now!</>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCardButton(review, recipes[i++])
-                ))
+                <div data-test="reviews" number={reviews.length}>
+                {reviews.map((review, index) => (
+                    reviewCardButton(review, recipes[i++], index)
+                ))}
+                </div>
             );
         }
     }

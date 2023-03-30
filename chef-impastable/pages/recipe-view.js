@@ -411,8 +411,8 @@ export default function Recipe({ recipe, reviews }) {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handlePost}>Post</Button>
-                        <Button onClick={handleClose}>Discard</Button>
+                        <Button data-test="Post" onClick={handlePost}>Post</Button>
+                        <Button data-test="Discard" onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
                 <h2 data-test="NumReviews" className='reviews'>{reviews.length} Reviews</h2>
@@ -433,9 +433,11 @@ export default function Recipe({ recipe, reviews }) {
             return(<>No reviews, create one now!</>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCard(review)
-                ))
+                <div data-test="Reviews" number={reviews.length}>
+                    {reviews.map((review, index) => (
+                        reviewCard(review, index)
+                    ))}
+                </div>
             );
         }
     }
@@ -444,7 +446,7 @@ export default function Recipe({ recipe, reviews }) {
         if (reviews.length == 0) {
             return (
                 <>
-                    <div>Average Rating: N/A</div>
+                    <div data-test="AverageRating">Average Rating: N/A</div>
                     <p></p>
                 </>
             );
@@ -457,7 +459,7 @@ export default function Recipe({ recipe, reviews }) {
             var average = total/reviews.length;
             return (
                 <>
-                    <div>Average Rating: {average.toFixed(2)} stars</div>
+                    <div data-test="AverageRating">Average Rating: {average.toFixed(2)} stars</div>
                     <p></p>
                 </>
             )

@@ -6,7 +6,7 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import Button from '@mui/material/Button';
 import Router from "next/router";
 
-export function reviewCardButton(review, recipe) {
+export function reviewCardButton(review, recipe, index) {
 
     var firstStar = false;
     var secondStar = false;
@@ -43,7 +43,7 @@ export function reviewCardButton(review, recipe) {
     }
 
     return (
-        <Box sx={{margin: 2, padding: 1, border: 1}}>
+        <Box data-test={`Review-${index}`} sx={{margin: 2, padding: 1, border: 1}}>
             <Stack
                 direction="column"
                 justifyContent="flex-start"

@@ -84,10 +84,12 @@ function RecipeCard( props ) {
             <IconButton
                 onClick={() => {props.onSave()}}
             > 
-                {props.onSave && props.recipe.saved 
-                ? 
-                    <Favorite/>
-                : <FavoriteBorderOutlinedIcon />}
+                {props.onSave ? 
+                    props.recipe.saved 
+                    ? 
+                        <Favorite/>
+                    : <FavoriteBorderOutlinedIcon/>
+                : <></>}
             </IconButton>
             <IconButton
                 onClick={handleClickOpen}>

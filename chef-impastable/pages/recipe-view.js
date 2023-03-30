@@ -291,14 +291,14 @@ export default function Recipe({ recipe, reviews }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <h1>{recipe.title}</h1>
+                    <h1 data-test="RecipeViewTitle">{recipe.title}</h1>
                 </Grid>
                 <Grid container
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
                     <CardMedia>
-                        <img src={recipe.image} alt="image of {props.recipe.title}" width={300} />
+                        <img data-test="RecipeViewImage" src={recipe.image} alt="image of {props.recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
                 <Grid container

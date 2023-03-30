@@ -29,13 +29,18 @@ describe('Creating a Recipe', () => {
         cy.get("[data-test='RecipeDescription']").type("This deliciously cheesy Brussel sprout casserole is an excellent side dish to serve with your Thanksgiving or holiday dinner.")
         cy.get("[data-test='RecipeInstructions']")
         .type("Preheat the oven to 425°F.\nPlace brussel sprouts on a baking dish\nThese are example steps")
-        cy.get("[data-test='RecipeCalories']").type("143")
+        cy.get("[data-test='RecipeCalories']", { timeout: 15000 }).type("143")
         cy.get("[data-test='CreateRecipeButton']", { timeout: 15000 }).click()
     })
-    
+
     it("Clicking on Create Recipe From Profile", () => {
         cy.get("[data-test='ProfileIcon']", { timeout: 15000 }).click()
         cy.get("[data-test='CreateRecipeNav']", { timeout: 15000 }).click()
+    })
+
+    it("Verifying Recipe Was Created, Image is Visible", () => {
+        cy.get("[data-test='RecipeViewTitle']", { timeout: 25000 }).should("contain", "Brussel Sprout Casserole")
+        cy.get("[data-test='RecipeViewImage']").should("be.visible")
     })
   })
   

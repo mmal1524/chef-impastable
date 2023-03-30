@@ -247,15 +247,15 @@ const Navbar = () => {
                 <DialogTitle>
                     {"Shopping List:"}
                 </DialogTitle>
-                <DialogContent>
-                    <ShoppingList data-test='ViewList'/>
+                <DialogContent data-test='ViewList'>
+                    <ShoppingList />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeViewOpenEdit}>
+                    <Button data-test='EditList' onClick={closeViewOpenEdit}>
                     {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
                         Edit
                     </Button>
-                    <Button onClick={handleCloseShop}>
+                    <Button data-test='CloseView' onClick={handleCloseShop}>
                         Done
                     </Button>
                 </DialogActions>
@@ -276,10 +276,10 @@ const Navbar = () => {
                     <ShoppingListEdit></ShoppingListEdit>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeEditOpenView}>
+                    <Button data-test="BackToView"onClick={closeEditOpenView}>
                         Back to View
                     </Button>
-                    <Button onClick={handleCloseShopEdit}>
+                    <Button data-test='CloseEdit' onClick={handleCloseShopEdit}>
                         Done
                     </Button>
                 </DialogActions>

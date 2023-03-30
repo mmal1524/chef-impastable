@@ -98,6 +98,7 @@ export default function ShoppingListEdit() {
                 />
                 <Button
                     // Add Button
+                    data-test='AddItem'
                     type="submit" 
                     size="large" 
                     variant="contained"
@@ -130,6 +131,7 @@ export default function ShoppingListEdit() {
                 </Button>
                 <Button
                     // CLEAR button
+                    data-test='ClearItem'
                     type="submit" 
                     size="large" 
                     variant="outlined"
@@ -149,7 +151,7 @@ export default function ShoppingListEdit() {
             {/* <Grid container id="empty">
                 List is empty.
             </Grid> */}
-            <Grid containter>
+            <Grid containter data-test='EditDisplay'>
                 {/* {displayList(shoppingList)} */}
                 {shoppingList && shoppingList.map((item, index) => (
                     <Box>

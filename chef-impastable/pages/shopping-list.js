@@ -6,7 +6,7 @@ import { Grid, List, ListItemText, Typography } from '@mui/material';
 import { useState, useEffect } from "react";
 
 const ShoppingList = () => {
-    console.log(JSON.parse(localStorage.getItem('user')));
+    //console.log(JSON.parse(localStorage.getItem('user')));
     const [shoppingList, setShoppingList] = useState("");
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -23,7 +23,7 @@ const ShoppingList = () => {
     return (
         <>   
         <div >
-            <Grid containter>
+            <Grid containter id="ViewDisplay">
                 {displayList(shoppingList)}
                 {/* {shoppingList && shoppingList.map((item, index) => (
                     <Box>
@@ -53,7 +53,7 @@ export default ShoppingList;
 function displayList(shoppingList) {
     if (shoppingList.length > 0) {
         return (
-            <Grid>
+            <Grid id="PopulatedList">
                 {shoppingList && shoppingList.map((item, index) => (
                     <Box>
                         <FormGroup row>
@@ -74,7 +74,7 @@ function displayList(shoppingList) {
         );
     } else {
         return (
-            <Grid>
+            <Grid id="EmptyList">
                 <Typography>Your List is Empty, add something!</Typography>
                 <Typography>Add an ingredient by pressing edit or return choose a recipe to add to your list.</Typography>
             </Grid>

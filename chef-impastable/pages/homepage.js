@@ -164,7 +164,7 @@ export async function getServerSideProps() {
             .limit(20)
             .toArray();
         return {
-            props: {recipes: JSON.parse(JSON.stringify(recipes))}, 
+            props: {recipes: JSON.parse(JSON.stringify(recipes))},
         };
     }
     catch (e) {

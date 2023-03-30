@@ -19,9 +19,6 @@ import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from 
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import ShoppingList from './shopping-list';
-import ShoppingListEdit from './shopping-list-edit';
 
 
 const Navbar = () => {
@@ -66,30 +63,6 @@ const Navbar = () => {
         setOpen(false);
     };
 
-    const [shopListPopup, setShopListPopup] = React.useState(false);
-    const handleClickOpenShop = () => {
-        setShopListPopup(true);
-    };
-    const handleCloseShop = () => {
-        setShopListPopup(false);
-    };
-    const [shopListPopupEdit, setShopListPopupEdit] = React.useState(false);
-    const handleClickOpenShopEdit = () => {
-        setShopListPopupEdit(true);
-    };
-    const handleCloseShopEdit = () => {
-        setShopListPopupEdit(false);
-    };
-    const closeViewOpenEdit = () => {
-        setShopListPopup(false);
-        setShopListPopupEdit(true);
-    }
-    const closeEditOpenView = () => {
-        setShopListPopup(true);
-        setShopListPopupEdit(false);
-    }
-
-
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -127,9 +100,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={9.0} 
-                sx={{ pt: 0.5, }}
-            >
+            <Grid xs={10.7}>
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -138,21 +109,6 @@ const Navbar = () => {
                 >
                     <HomeIcon />
                 </IconButton>
-            </Grid>
-            <Grid xs={1.5} 
-                alignContent='center'
-                sx={{ 
-                    pt: 1, 
-                    //backgroundColor: 'greenyellow' 
-                }} 
-            >
-                <Button 
-                    sx={{color: 'gray', ml: 1.5}}
-                    startIcon={<ShoppingBasketIcon/>}
-                    onClick={handleClickOpenShop}
-                >
-                    Shopping List
-                </Button>
             </Grid>
             <Grid xs={1}>
                 <Button
@@ -227,7 +183,6 @@ const Navbar = () => {
             <Dialog
                 fullScreen={fullScreen}
                 open={openPopup}
-                scroll={'body'}
                 onClose={handleClosePopup}
                 aria-labelledby="responsive-dialog-title"
             >
@@ -248,55 +203,8 @@ const Navbar = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Dialog
-                fullScreen={fullScreen}
-                open={shopListPopup}
-
-                onClose={handleCloseShop}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle>
-                    {"Shopping List:"}
-                </DialogTitle>
-                <DialogContent>
-                    <ShoppingList/>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeViewOpenEdit}>
-                        Edit
-                    </Button>
-                    <Button onClick={handleCloseShop}>
-                        Done
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog
-                fullScreen={fullScreen}
-                open={shopListPopupEdit}
-                fullWidth={true}
-                maxWidth={'sm'}
-
-                onClose={handleCloseShop}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle>
-                    {"Edit Shopping List:"}
-                </DialogTitle>
-                <DialogContent>
-                    <ShoppingListEdit></ShoppingListEdit>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={closeEditOpenView}>
-                        Back to View
-                    </Button>
-                    <Button onClick={handleCloseShopEdit}>
-                        Done
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </Grid>
     );
 }
 export default Navbar;
-
 

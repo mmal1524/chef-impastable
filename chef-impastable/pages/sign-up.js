@@ -291,7 +291,6 @@ export default function SignUp() {
                 displayName: username,
                 fridge: [],
                 kitchen: [],
-                shoppingList: [],
                 avatar: "",
                 friends: [],
                 friendRequests: [],

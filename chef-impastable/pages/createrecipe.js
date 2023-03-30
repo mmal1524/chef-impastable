@@ -211,12 +211,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
-                    <Button data-test="CRAddIngredient" onClick={ () => {
+                    <Button data-test="CRAddIngredient" onClick={() => {
                         handleIngredientClickOpen();
                         setAddIngr("");
                         setAddQuantity("");
                         setAddUnit("");
-                        }} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200}}>
+                    }} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
                         Add Ingredient
                     </Button>
                     <Dialog
@@ -230,13 +230,13 @@ export default function CreateRecipe({ ingredientOptions }) {
                             <Autocomplete
                                 disablePortal
                                 freeSolo
-                                sx={{height: 300}}
+                                sx={{ height: 300 }}
                                 id="combo-box-demo"
                                 options={ingredientArr2}
                                 onInputChange={(e, new_val) => { setAddIngr(new_val) }}
                                 renderInput={params => (
                                     <TextField data-test="CRIngredientsToAdd"
-                                        sx={{mt: 0.75}}
+                                        sx={{ mt: 0.75 }}
                                         {...params}
                                         label="Search Ingredients to Add"
                                         onChange={({ target }) => setAddIngr(target.value)}
@@ -244,48 +244,48 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 )}
                             />
                             <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
-                            <Table sx={{ maxWidth: 650 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Ingredient</TableCell>
-                                        <TableCell align="right">Quantity</TableCell>
-                                        <TableCell align="right">Unit</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                            <TableBody>
-                                {displayIngredient(addIngr)}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                <Table sx={{ maxWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Ingredient</TableCell>
+                                            <TableCell align="right">Quantity</TableCell>
+                                            <TableCell align="right">Unit</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {displayIngredient(addIngr)}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </DialogContent>
                         <DialogActions>
-                        <Tooltip title="Create Ingredient">
-                            <IconButton data-test="CRAddToDatabaseButton" edge="end" aria-label="add" onClick={async () => {
-                                addButton = true;
-                                if (addIngr.localeCompare("") == 0) {
-                                    handleClickOpenEmptyString();
-                                } else {
-                                    var data = await addIngredient(addIngr, addButton)
-                                    if (!data.success) {
-                                        handleClickOpenExists();
+                            <Tooltip title="Create Ingredient">
+                                <IconButton data-test="CRAddToDatabaseButton" edge="end" aria-label="add" onClick={async () => {
+                                    addButton = true;
+                                    if (addIngr.localeCompare("") == 0) {
+                                        handleClickOpenEmptyString();
                                     } else {
-                                        if (ingredientList.includes(addIngr)) {
-                                            handleClickOpenRepeat();
+                                        var data = await addIngredient(addIngr, addButton)
+                                        if (!data.success) {
+                                            handleClickOpenExists();
                                         } else {
-                                            setIngredientList([
-                                                ...ingredientList, addIngr
-                                            ])
-                                            setFinalIngredientList([
-                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
-                                            ])
-                                            handleIngredientClose();
+                                            if (ingredientList.includes(addIngr)) {
+                                                handleClickOpenRepeat();
+                                            } else {
+                                                setIngredientList([
+                                                    ...ingredientList, addIngr
+                                                ])
+                                                setFinalIngredientList([
+                                                    ...finalIngredientList, { ingredient: addIngr, quantity: addQuantity, unit: addUnit }
+                                                ])
+                                                handleIngredientClose();
+                                            }
                                         }
                                     }
-                                }
-                            }}>
-                                <AddIcon />
-                            </IconButton>
-                        </Tooltip>
+                                }}>
+                                    <AddIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Button data-test="CREnterIngredient"
                                 type="submit"
                                 onClick={async () => {
@@ -293,23 +293,23 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     if (addIngr.localeCompare("") == 0) {
                                         handleClickOpenEmptyString();
                                     } else {
-                                    var data = await addIngredient(addIngr, addButton);
-                                    if (!data.success) {
-                                        //if ingredient does not exist
-                                        handleClickOpenDoesntExist();
-                                    }
-                                    else {
-                                        if (ingredientList.includes(addIngr)) {
-                                            handleClickOpenRepeat();
-                                        } else {
-                                            setIngredientList([
-                                                ...ingredientList, addIngr
-                                            ])
-                                            setFinalIngredientList([
-                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
-                                            ])
-                                            handleIngredientClose();
+                                        var data = await addIngredient(addIngr, addButton);
+                                        if (!data.success) {
+                                            //if ingredient does not exist
+                                            handleClickOpenDoesntExist();
                                         }
+                                        else {
+                                            if (ingredientList.includes(addIngr)) {
+                                                handleClickOpenRepeat();
+                                            } else {
+                                                setIngredientList([
+                                                    ...ingredientList, addIngr
+                                                ])
+                                                setFinalIngredientList([
+                                                    ...finalIngredientList, { ingredient: addIngr, quantity: addQuantity, unit: addUnit }
+                                                ])
+                                                handleIngredientClose();
+                                            }
                                         }
                                     }
                                 }}
@@ -333,8 +333,8 @@ export default function CreateRecipe({ ingredientOptions }) {
                             </TableHead>
                             <TableBody>
                                 {finalIngredientList.map((ingredient) => (
-                                        displayIngredients(ingredient)
-                                    ))}
+                                    displayIngredients(ingredient)
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -554,12 +554,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Invalid Ingredient Name"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test="CRIngredientEmptyString">
                             Please type the name of a valid ingredient.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseEmptyString} autoFocus>
+                        <Button data-test="CRIngredientEmptyStringOk" onClick={handleCloseEmptyString} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -634,6 +634,7 @@ export default function CreateRecipe({ ingredientOptions }) {
         var quantity = ingrObject.quantity;
         var unit = ingrObject.unit;
 
+
         return (
             <TableRow
                 key={ingredient + " content"}
@@ -642,30 +643,30 @@ export default function CreateRecipe({ ingredientOptions }) {
                 <TableCell component="th" scope="row">
                     {ingredient}
                 </TableCell>
-                <TableCell align="right" component="th" scope = "row"> 
-                    {quantity} 
+                <TableCell align="right" component="th" scope="row">
+                    {quantity}
                 </TableCell>
-                <TableCell align="right" component="th" scope = "row"> 
-                    {unit} 
-                </TableCell>                
+                <TableCell align="right" component="th" scope="row">
+                    {unit}
+                </TableCell>
 
-                
+
             </TableRow>
         )
     }
 
     function displayIngredient(ingredient) {
         return (
-        <TableRow
-            key={"ingredient"}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-            <TableCell component="th" scope="row">
-                {ingredient}
-            </TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity}  />}</TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
-        </TableRow>
+            <TableRow
+                key={"ingredient"}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+                <TableCell component="th" scope="row">
+                    {ingredient}
+                </TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity} />}</TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
+            </TableRow>
         )
     }
 }

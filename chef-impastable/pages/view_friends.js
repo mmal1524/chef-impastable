@@ -11,6 +11,8 @@ import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import clientPromise from '../lib/mongodb_client';
+import { reviewCardButton } from '../components/review-card-button.js';
+import { ObjectId } from 'mongodb';
 import RecipeCard from '../components/recipe-card.js';
 import SavedRecipes from '../components/savedRecipes.js';
 
@@ -30,7 +32,7 @@ function TabPanel(props) {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            <Box>{children}</Box>
           </Box>
         )}
       </div>
@@ -160,7 +162,7 @@ export default function ViewFriends(friend) {
                     {displaySaved(friendSavedPrivacy, friendUsername, friends)}
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    {displayReviewed(friendReviewedPrivacy, friendUsername, friends)}
+                    {displayReviewed(friendReviewedPrivacy, friendUsername, friends, friend.reviews, friend.recipes)}
                 </TabPanel>
                 <TabPanel value={value} index={3}>
                     {displayMealPlans(friendMealPlanPrivacy, friendUsername, friends)}
@@ -229,16 +231,38 @@ function displayCreated(privacy, target, myFriends, createdRecipes) {
     }
   }
 
-  function displayReviewed(privacy, target, myFriends) {
+  function displayReviewed(privacy, target, myFriends, reviews, recipes) {
     if (privacy == null) {
         return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>Everyone: This is where reviewed recipes will go!</>)
+        var i = 0;
+        if (!reviews || reviews.length == 0) {
+            return(<div data-test="reviews" number={0} >This user hasn't created any reviews!</div>);
+        } else {
+            return(
+                <div data-test="reviews" number={reviews.length}>
+                {reviews.map((review, index) => (
+                    reviewCardButton(review, recipes[i++], index)
+                ))}
+                </div>
+            );
+        }
     }
     if (privacy == "friends only") {
         if (myFriends.includes(target)) {
-            return (<>Friends: This is where reviewed recipes will go!</>);
+            var i = 0;
+        if (!reviews || reviews.length == 0) {
+            return(<div data-test="reviews" number={0} >This user hasn't created any reviews!</div>);
+        } else {
+            return(
+                <div data-test="reviews" number={reviews.length}>
+                {reviews.map((review, index) => (
+                    reviewCardButton(review, recipes[i++], index)
+                ))}
+                </div>
+            );
+        }
         } else {
             console.log(target in myFriends)
             return (<>Become friends to view this user's reviewed recipes!</>);
@@ -277,15 +301,49 @@ function displayCreated(privacy, target, myFriends, createdRecipes) {
         const viewfriend = await db
             .collection("users")
             .findOne({username: context.query.username});
-        
+    
+        var reviews = viewfriend.reviewedRecipes;
+        var reviewObjects;
+        if (!reviews) {
+            reviewObjects = [];
+        }
+        else {
+            reviewObjects = new Array(reviews.length);
+            var i = 0;
+            for (i; i < reviews.length; i++) {
+                var r = await db
+                    .collection("reviews")
+                    .find({_id: reviews[i]}).toArray();
+                reviewObjects[i] = JSON.parse(JSON.stringify(r[0]));
+            }
+        }
+
+        var recipeObjects;
+        if (!reviews) {
+            recipeObjects = [];
+        }
+        else {
+            var recipeids = new Array(reviewObjects.length);
+            var i = 0;
+            for (i; i < reviewObjects.length; i++) {
+                recipeids[i] = new ObjectId(reviewObjects[i].recipeID);
+            }
+            recipeObjects = new Array(reviews.length);
+            for (i = 0; i < reviewObjects.length; i++) {
+                var r = await db
+                    .collection("recipes")
+                    .find({_id: recipeids[i]}).toArray();
+                recipeObjects[i] = JSON.parse(JSON.stringify(r[0]));
+            }
+        }
+
         const createdRecipes = JSON.parse(JSON.stringify(await db
             .collection("recipes")
             .find({author: context.query.username, isUser: true})
             .toArray()));
-        console.log(createdRecipes)
 
         return {
-            props: { friend: JSON.parse(JSON.stringify(viewfriend)) , createdRecipes: createdRecipes},
+            props: { friend: JSON.parse(JSON.stringify(viewfriend)), reviews: reviewObjects, recipes: recipeObjects, createdRecipes: createdRecipes },
         };
     }
     catch (e) {

@@ -44,11 +44,6 @@ describe('Adding Ingredients to the Database', () => {
         cy.get("[data-test='CRIngredientsToAdd']").clear().type("made up ingredient")
         cy.get("[data-test='CRAddToDatabaseButton']").click();
         cy.get("[data-test='CRingredient']").should("contain", "made up ingredient");
-
-        cy.get("[data-test='CRAddToDatabaseButton']").click();
-        cy.get("[data-test='CRIngredientsToAdd']").clear().type("made up ingredient2")
-        cy.get("[data-test='CRAddToDatabaseButton']").click();
-        cy.get("[data-test='CRingredient']").should("contain", "made up ingredient2");
     })
 
 

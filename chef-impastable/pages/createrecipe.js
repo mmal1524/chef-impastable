@@ -188,7 +188,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                     }}
                 >
                     <Grid>
-                        <TextField data-test="RecipeTitle" required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="CRRecipeTitle" required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <TextField data-test="RecipeImage" required id="outlined-basic" label="Recipe Image URL" variant="outlined" onChange={handleImage} />
                     </Grid>
                     &nbsp;

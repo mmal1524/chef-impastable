@@ -14,7 +14,7 @@ describe('Creating a Recipe', () => {
     })
 
     it("Recipe With Missing Information", () => {
-        cy.get("[data-test='RecipeTitle']", { timeout: 15000 }).type("Brussel Sprout Casserole")
+        cy.get("[data-test='CRRecipeTitle']", { timeout: 15000 }).type("Brussel Sprout Casserole")
         cy.get("[data-test='RecipeImage']", { timeout: 15000 }).type("https://feelgoodfoodie.net/wp-content/uploads/2020/11/Brussel-Sprout-Casserole-5.jpg")
         cy.get("[data-test='CreateRecipeButton']").click()
         cy.get("[data-test='MissingInformationPopup']").should("contain", "One or more of the required fields are left blank. Please fill out all required information before creating the recipe.")
@@ -33,14 +33,16 @@ describe('Creating a Recipe', () => {
         cy.get("[data-test='CreateRecipeButton']", { timeout: 15000 }).click()
     })
 
-    it("Clicking on Create Recipe From Profile", () => {
-        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
-        cy.get("[data-test='CreateRecipeNav']", { timeout: 15000 }).click()
-    })
-//fix recipe titles?
     it("Verifying Recipe Was Created, Image is Visible", () => {
         cy.get("[data-test='RecipeTitle']", { timeout: 25000 }).should("contain", "Brussel Sprout Casserole")
         cy.get("[data-test='RecipeViewImage']").should("be.visible")
+    })
+
+    it("Checking if Created Recipe is in Profile", () => {
+        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
+        cy.get("[data-test='Profile']", { timeout: 15000 }).click()
+        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
+        cy.get("[data-test='RecipeTitle']", { timeout: 25000 }).should("contain", "Brussel Sprout Casserole")
     })
   })
   

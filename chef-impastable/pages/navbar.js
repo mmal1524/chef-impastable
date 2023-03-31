@@ -19,6 +19,9 @@ import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from 
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import ShoppingList from './shopping-list';
+import ShoppingListEdit from './shopping-list-edit';
 
 
 const Navbar = () => {
@@ -63,6 +66,29 @@ const Navbar = () => {
         setOpen(false);
     };
 
+    const [shopListPopup, setShopListPopup] = React.useState(false);
+    const handleClickOpenShop = () => {
+        setShopListPopup(true);
+    };
+    const handleCloseShop = () => {
+        setShopListPopup(false);
+    };
+    const [shopListPopupEdit, setShopListPopupEdit] = React.useState(false);
+    const handleClickOpenShopEdit = () => {
+        setShopListPopupEdit(true);
+    };
+    const handleCloseShopEdit = () => {
+        setShopListPopupEdit(false);
+    };
+    const closeViewOpenEdit = () => {
+        setShopListPopup(false);
+        setShopListPopupEdit(true);
+    }
+    const closeEditOpenView = () => {
+        setShopListPopup(true);
+        setShopListPopupEdit(false);
+    }
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -100,7 +126,10 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={10.7}>
+            <Grid xs={9.0} 
+                sx={{ pt: 0.5, 
+                }
+            }>
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -109,6 +138,21 @@ const Navbar = () => {
                 >
                     <HomeIcon />
                 </IconButton>
+            </Grid>
+            <Grid xs={1.5} 
+                alignContent='center'
+                sx={{ 
+                    pt: 1, 
+                }} 
+            >
+                <Button 
+                    data-test="ShopList"
+                    sx={{color: 'gray', ml: 1.5}}
+                    startIcon={<ShoppingBasketIcon/>}
+                    onClick={handleClickOpenShop}
+                >
+                    Shopping List
+                </Button>
             </Grid>
             <Grid xs={1}>
                 <Button
@@ -158,6 +202,20 @@ const Navbar = () => {
                         Dietary Restrictions
                     </MenuItem>
                     <MenuItem
+                         onClick={() => {
+                             router.push({pathname: "sharing-page", query: {username: username}});
+                         }}
+                    >
+                        Shared Recipes
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            router.push("createrecipe");
+                        }}
+                    >
+                        Create Recipe
+                    </MenuItem>
+                    <MenuItem
                         onClick={() => {
                             handleClickOpenPopup();
                             handleClose();
@@ -188,6 +246,53 @@ const Navbar = () => {
                     </Button>
                     <Button onClick={handleClosePopup} autoFocus>
                         No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={shopListPopup}
+
+                onClose={handleCloseShop}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle>
+                    {"Shopping List:"}
+                </DialogTitle>
+                <DialogContent data-test='ViewList'>
+                    <ShoppingList />
+                </DialogContent>
+                <DialogActions>
+                    <Button data-test='EditList' onClick={closeViewOpenEdit}>
+                    {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
+                        Edit
+                    </Button>
+                    <Button data-test='CloseView' onClick={handleCloseShop}>
+                        Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={shopListPopupEdit}
+                fullWidth={true}
+                maxWidth={'sm'}
+
+                onClose={handleCloseShop}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle>
+                    {"Edit Shopping List:"}
+                </DialogTitle>
+                <DialogContent>
+                    <ShoppingListEdit></ShoppingListEdit>
+                </DialogContent>
+                <DialogActions>
+                    <Button data-test="BackToView"onClick={closeEditOpenView}>
+                        Back to View
+                    </Button>
+                    <Button data-test='CloseEdit' onClick={handleCloseShopEdit}>
+                        Done
                     </Button>
                 </DialogActions>
             </Dialog>

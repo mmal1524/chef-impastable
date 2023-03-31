@@ -33,9 +33,15 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
+import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
+import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
+import SaveRecipeDialog from '../components/saveRecipeDialog';
+import AddToListDialog from '../components/add-ingredient-from-recipe';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
+    const [saved, setSaved] = useState(recipe.saved);
+    const [showSaveDialog, setShowSaveDialog] = useState(false);
 
     const theme = createTheme({
         palette: {
@@ -64,7 +70,6 @@ export default function Recipe({ recipe, reviews }) {
     function createRow(name, value) {
         return { name, value };
     }
-    console.log(JSON.stringify(recipe.nutrients.calories));
 
     var [open, setOpen] = useState(false);
     var [description, setDescription] = useState("");
@@ -153,17 +158,12 @@ export default function Recipe({ recipe, reviews }) {
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
         // adding review ID to user's reviewed recipes
         var userUpdated = await addReviewToUser(username, reviewid.reviewID);
-        console.log(userUpdated);
         localStorage.setItem('user', JSON.stringify(userUpdated));
         // reloading page
         router.reload();
     }
 
     async function createReview(recipeID, author, rating, description) {
-        console.log(recipeID);
-        console.log(author);
-        console.log(rating);
-        console.log(description);
         const res = await fetch('api/createReview', {
             method: 'POST',
             headers: {
@@ -178,7 +178,6 @@ export default function Recipe({ recipe, reviews }) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -199,8 +198,6 @@ export default function Recipe({ recipe, reviews }) {
     }
 
     async function addReviewToUser(username, reviewID) {
-        console.log(username);
-        console.log(reviewID);
         const res = await fetch('api/addReviewToUser', {
             method: 'PUT',
             headers: {
@@ -263,8 +260,25 @@ export default function Recipe({ recipe, reviews }) {
         await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
     };
 
+    const [addSLDialog, setAddSLDialog] = useState(false);
+    const handleOpenAddToShoppingList = () => {
+        setAddSLDialog(true);
+    } 
+
     return (
         <>
+            <SaveRecipeDialog
+                onSubmit = {async (folderName) => {
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id); 
+                    if (data) {
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }
+                    setShowSaveDialog(false);
+                    setSaved(true);
+                }}
+                show = {showSaveDialog}
+                onClose = {() => {setShowSaveDialog(false)}}
+            />
             <Grid>
                 <div className="App">
                     <Navbar />
@@ -288,26 +302,84 @@ export default function Recipe({ recipe, reviews }) {
 
                 </div>
                 <Grid container
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center">
-                    <h1 data-test="RecipeTitle">{recipe.title}</h1>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Grid item
+                        sx={{width: 200}}
+                    ></Grid>
+                    <Grid item
+                        //display="flex"
+                        //justifyContent="center"
+                        //alignItems="center"
+                    >
+                        <h1 data-test="RecipeTitle">{recipe.title}</h1>
+                    </Grid>
+                    <Grid item
+                        sx={{
+                            pt:2,
+                        }}
+                    >
+                        <Button 
+                            data-test='AddFromRButton'
+                            sx={{
+                                width: 200
+                            }}
+                            onClick={ async() => {
+                                console.log(recipe);
+                                console.log(recipe.ingredients)
+                                handleOpenAddToShoppingList();
+                            }}
+                        >
+                            Add to Shopping List
+                        </Button>
+                        {addSLDialog && (<AddToListDialog
+                            recipe={recipe}
+                            open={addSLDialog}
+                            onClose = {() => {setAddSLDialog(false)}}
+                        />)}
+                    </Grid>
                 </Grid>
                 <Grid container
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
+        
                     <CardMedia>
                         <img src={recipe.image} alt="image of {props.recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
+                <Grid container justifyContent="center">
+                    <IconButton
+                        onClick={() => {
+                            if (saved) {
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                setSaved(false);
+                            }
+                            else {
+                                setShowSaveDialog(true);
+                            }
+                        }}
+                    >
+                        {saved 
+                        ? 
+                            <Favorite/>
+                        : <FavoriteBorderOutlined />}
+                    </IconButton>
+                </Grid>
+
                 <Grid container
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
+                    <p>Prep time: {recipe.prep_time} minutes, Cook time: {recipe.cook_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
                 <div>
+                    <h2> 
+                        Description
+                    </h2>
+                    {recipe.description}
                     <h2>
                         Instructions
                     </h2>
@@ -491,7 +563,6 @@ async function AddTag(title, tag, exists, isDefined) {
 }
 
 export async function getServerSideProps(context) {
-    console.log("query: " + context.query)
     try {
         const client = await clientPromise;
         const db = client.db("test");
@@ -499,6 +570,15 @@ export async function getServerSideProps(context) {
             .collection("recipes")
             .findOne(new ObjectId(`${context.query.id}`));
 
+        const folder = await db
+            .collection("savedfolders")
+            .findOne({user: context.query.username, recipes: new ObjectId(`${context.query.id}`)});
+
+        if (folder) {
+            recipe.saved = true;
+        } else {
+            recipe.saved = false;
+        }
         var reviews = recipe.reviews;
         var reviewObjects;
         if (!reviews) {

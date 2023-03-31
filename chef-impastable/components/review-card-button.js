@@ -55,7 +55,7 @@ export function reviewCardButton(review, recipe, index) {
                     sx={{color: 'black', borderColor: 'black'}} 
                     style={{justifyContent: "flex-start", paddingLeft: 0}}
                     onClick={() => {
-                        Router.push({pathname:"/recipe-view/", query: {id: recipe._id}})
+                        Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})
                     }}
                 >
                     <h3 data-test="recipeName" className="recipeName">{recipe.title}</h3>

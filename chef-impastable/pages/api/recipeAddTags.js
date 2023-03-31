@@ -66,7 +66,6 @@ export default async function handler(req, res) {
         },
     ];
     try {
-        console.log(isDefined)
         if (!isDefined) {
             const recipe = await Recipe.findOneAndUpdate({ title: title },  { $push: { tags: { $each: recipeTags } } }, { new: true });
             return res.json({

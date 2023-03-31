@@ -102,7 +102,7 @@ const Navbar = () => {
 
 
     return (
-        <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
@@ -156,6 +156,7 @@ const Navbar = () => {
             </Grid>
             <Grid xs={1}>
                 <Button
+                    data-test="Dropdown"
                     variant="text"
                     sx={{ color: 'black' }}
                     aria-controls={openNav ? 'navbar' : undefined}
@@ -186,6 +187,7 @@ const Navbar = () => {
                     }}
                 >
                     <MenuItem
+                        data-test="Profile"
                         onClick={() => {
                             Router.push({pathname:"/profile-page/", query: {username: username}});
                         }}

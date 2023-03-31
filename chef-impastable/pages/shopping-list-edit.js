@@ -92,6 +92,7 @@ export default function ShoppingListEdit() {
                 />
                 <Button
                     // Add Button
+                    data-test='AddItem'
                     type="submit" 
                     size="large" 
                     variant="contained"
@@ -124,6 +125,7 @@ export default function ShoppingListEdit() {
                 </Button>
                 <Button
                     // CLEAR button
+                    data-test='ClearItem'
                     type="submit" 
                     size="large" 
                     variant="outlined"
@@ -139,17 +141,22 @@ export default function ShoppingListEdit() {
                     Clear
                 </Button>
             </Grid>
-            <Grid containter>
+            {/* <Grid container id="empty">
+                List is empty.
+            </Grid> */}
+            <Grid containter data-test='EditDisplay'>
+                {/* {displayList(shoppingList)} */}
                 {shoppingList && shoppingList.map((item, index) => (
                     <Box>
                         <FormGroup row>
                         </FormGroup>
-                        <Grid container>
+                        <Grid container id="Item">
                             <Grid>
-                                <List>
-                                    <ListItem
+                                <List data-test={`ListItem-${index}`}>
+                                    <ListItem 
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" 
+                                            <IconButton edge="end" aria-label="delete"
+                                            data-test={`DeleteButton-${index}`}
                                             onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);
@@ -160,7 +167,7 @@ export default function ShoppingListEdit() {
                                             </IconButton>
                                         }
                                     >
-                                        <ListItemText
+                                        <ListItemText data-test="ListText"
                                             sx={{display: 'flex', justifyContent: 'center'}}
                                             primary={item}
                                         />

@@ -360,7 +360,7 @@ export default function Fridge(props) {
                         <Box>
                             <FormGroup row>
                             </FormGroup>
-                            <Grid container>
+                            <Grid container id="FridgeItem">
                                 <Grid
                                     item xs={12}
                                     md={6}

@@ -43,7 +43,7 @@ describe('Shopping List', () => {
         cy.wait(1000)
         cy.get("[data-test='EditDisplay']")
             .get("[data-test='ListItem-1']")
-            .get("[data-test='DeleteButton']").click();
+            .get("[data-test='DeleteButton-1']").click();
         cy.wait(2000)
         cy.get("[data-test='BackToView']").click()
         // checks that the length of list is one less

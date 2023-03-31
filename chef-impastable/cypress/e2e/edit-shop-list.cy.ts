@@ -43,16 +43,74 @@ describe('Shopping List', () => {
             .contains(/^buttermilk$/)
         cy.get("[data-test='EditDisplay']")
             .get("[data-test='ListItem-0']")
-            .get("[data-test='DeleteButton']").click();
+            .get("[data-test='DeleteButton-0']").click();
         cy.wait(2000)
         cy.get("[data-test='BackToView']").click()
         cy.get("[data-test='ViewList']").contains("Empty")
     })
 
     // add several items to shopping list
+    it ('Add Multiple Items to Shopping List', () => {
+        cy.get("[data-test='EditList']").click()
+
+        cy.get("#for-search").click()
+        cy.wait(1000)
+        cy.get("#for-search").type("butter").get("li[data-option-index='0']", {timeout: 30000}).click();
+        cy.get("[data-test='AddItem']").click()
+        cy.wait(1000)
+
+        cy.get("#for-search").click()
+        cy.wait(1000)
+        cy.get("#for-search")
+            .type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}")
+            .type("salt")
+            .get("li[data-option-index='0']", {timeout: 30000}).click();
+        cy.get("[data-test='AddItem']").click()   
+        cy.wait(1000) 
+
+        cy.get("#for-search").click()
+        cy.wait(1000)
+        cy.get("#for-search")
+            .type("{backspace}{backspace}{backspace}{backspace}")
+            .type("milk").get("li[data-option-index='1']", {timeout: 30000}).click();
+        cy.get("[data-test='AddItem']").click()   
+        cy.wait(1000)  
+
+        cy.get("#for-search").click()
+        cy.wait(1000)
+        cy.get("#for-search")
+            .type("{backspace}{backspace}{backspace}{backspace}")
+            .type("paprika").get("li[data-option-index='0']", {timeout: 30000}).click();
+        cy.get("[data-test='AddItem']").click()   
+        cy.wait(1000)
+
+        // check added all 4 ingredients
+
+        cy.get("[data-test='EditDisplay']").find('div.MuiBox-root.css-0').its('length').should('eq', 4)
+        cy.get("[data-test='BackToView']").click()
+        cy.get("[data-test='ViewList']")
+            .get("#ViewDisplay")
+            .get("#PopulatedList").find('div.MuiBox-root.css-0').its('length').should('eq', 4)
+        cy.get("[data-test='ViewList']").contains("butter")
+        cy.get("[data-test='ViewList']").contains("salt")
+        cy.get("[data-test='ViewList']").contains("milk")
+        cy.get("[data-test='ViewList']").contains("paprika")
+    }) 
 
 
     // attempt to add item already in shopping list
+    it ('Try to add item already in shopping list', () => {
+        cy.get("[data-test='EditList']").click()
+        cy.get("#for-search").click()
+        cy.wait(50)
+        if (cy.get("#for-search").type("butter").should('eq', "butter")) {
+            
+        }
+        cy.get("#for-search").type("butter").should('eq', "butter").click();
+        cy.get("[data-test='AddItem']").click()
+        cy.wait(1000)
+
+    })
     // attempt to add already owned item to shopping list
 
     // clear shopping list

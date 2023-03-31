@@ -162,7 +162,8 @@ export default function ShoppingListEdit() {
                                 <List data-test={`ListItem-${index}`}>
                                     <ListItem 
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" data-test="DeleteButton"
+                                            <IconButton edge="end" aria-label="delete"
+                                            data-test={`DeleteButton-${index}`}
                                             onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);

@@ -9,7 +9,7 @@ describe('Adding Ingredients to the Database', () => {
     })
   
     it("Clicking on Create Recipe From Profile", () => {
-        cy.get("[data-test='ProfileIcon']", { timeout: 15000 }).click()
+        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
         cy.get("[data-test='CreateRecipeNav']", { timeout: 15000 }).click()
     })
 
@@ -44,6 +44,11 @@ describe('Adding Ingredients to the Database', () => {
         cy.get("[data-test='CRIngredientsToAdd']").clear().type("made up ingredient")
         cy.get("[data-test='CRAddToDatabaseButton']").click();
         cy.get("[data-test='CRingredient']").should("contain", "made up ingredient");
+
+        cy.get("[data-test='CRAddToDatabaseButton']").click();
+        cy.get("[data-test='CRIngredientsToAdd']").clear().type("made up ingredient2")
+        cy.get("[data-test='CRAddToDatabaseButton']").click();
+        cy.get("[data-test='CRingredient']").should("contain", "made up ingredient2");
     })
 
 

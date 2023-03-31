@@ -9,7 +9,7 @@ describe('Creating a Recipe', () => {
     })
 
     it("Clicking on Create Recipe From Profile", () => {
-        cy.get("[data-test='ProfileIcon']", { timeout: 15000 }).click()
+        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
         cy.get("[data-test='CreateRecipeNav']", { timeout: 15000 }).click()
     })
 
@@ -34,12 +34,12 @@ describe('Creating a Recipe', () => {
     })
 
     it("Clicking on Create Recipe From Profile", () => {
-        cy.get("[data-test='ProfileIcon']", { timeout: 15000 }).click()
+        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
         cy.get("[data-test='CreateRecipeNav']", { timeout: 15000 }).click()
     })
-
+//fix recipe titles?
     it("Verifying Recipe Was Created, Image is Visible", () => {
-        cy.get("[data-test='RecipeViewTitle']", { timeout: 25000 }).should("contain", "Brussel Sprout Casserole")
+        cy.get("[data-test='RecipeTitle']", { timeout: 25000 }).should("contain", "Brussel Sprout Casserole")
         cy.get("[data-test='RecipeViewImage']").should("be.visible")
     })
   })

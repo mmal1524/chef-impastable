@@ -9,7 +9,7 @@ describe('Recipe Tag Page', () => {
   })
 
   it("Clicking a recipe", () => {
-    cy.get("[data-test='0']", { timeout: 15000 }).click()
+    cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
   })
 
   it("Selecting Vegan Tag", () => {

@@ -89,7 +89,6 @@ const Navbar = () => {
         setShopListPopupEdit(false);
     }
 
-
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -103,7 +102,7 @@ const Navbar = () => {
 
 
     return (
-        <Grid container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
@@ -129,7 +128,6 @@ const Navbar = () => {
             </Grid>
             <Grid xs={9.0} 
                 sx={{ pt: 0.5, 
-                    //backgroundColor: 'lightblue' 
                 }
             }>
                 <IconButton 
@@ -145,7 +143,6 @@ const Navbar = () => {
                 alignContent='center'
                 sx={{ 
                     pt: 1, 
-                    //backgroundColor: 'greenyellow' 
                 }} 
             >
                 <Button 
@@ -159,6 +156,7 @@ const Navbar = () => {
             </Grid>
             <Grid xs={1}>
                 <Button
+                    data-test="Dropdown"
                     variant="text"
                     sx={{ color: 'black' }}
                     aria-controls={openNav ? 'navbar' : undefined}
@@ -189,6 +187,7 @@ const Navbar = () => {
                     }}
                 >
                     <MenuItem
+                        data-test="Profile"
                         onClick={() => {
                             Router.push({pathname:"/profile-page/", query: {username: username}});
                         }}
@@ -230,7 +229,6 @@ const Navbar = () => {
             <Dialog
                 fullScreen={fullScreen}
                 open={openPopup}
-                scroll={'body'}
                 onClose={handleClosePopup}
                 aria-labelledby="responsive-dialog-title"
             >
@@ -302,5 +300,4 @@ const Navbar = () => {
     );
 }
 export default Navbar;
-
 

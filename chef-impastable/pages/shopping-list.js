@@ -25,23 +25,6 @@ const ShoppingList = () => {
         <div >
             <Grid containter id="ViewDisplay">
                 {displayList(shoppingList)}
-                {/* {shoppingList && shoppingList.map((item, index) => (
-                    <Box>
-                        <FormGroup row>
-                        </FormGroup>
-                        <Grid container>
-                            <Grid>
-                                <List>
-                                    <ListItemText
-                                        sx={{display: 'flex', justifyContent: 'center'}}
-                                        primary={item}
-                                    />
-                                </List>
-                            </Grid>
-                        </Grid>
-                    </Box>
-                ))} */}
-                
             </Grid>
         </div>
         </>

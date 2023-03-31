@@ -68,8 +68,8 @@ function RecipeCard( props ) {
     }, []);
 
     return (
-        <Card data-test={`Recipe-${props.index}`} sx={{width:200}} variant="outlined">
-            <CardActionArea onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}>
+        <Card sx={{width:200}} variant="outlined">
+            <CardActionArea data-test={`Recipe-${props.index}`} onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}>
                 <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 
@@ -83,11 +83,13 @@ function RecipeCard( props ) {
         <CardActions>
             <IconButton
                 onClick={() => {props.onSave()}}
-            >
-                {props.recipe.saved 
-                ? 
-                    <Favorite/>
-                : <FavoriteBorderOutlinedIcon />}
+            > 
+                {props.onSave ? 
+                    props.recipe.saved 
+                    ? 
+                        <Favorite/>
+                    : <FavoriteBorderOutlinedIcon/>
+                : <></>}
             </IconButton>
             <IconButton
                 onClick={handleClickOpen}>

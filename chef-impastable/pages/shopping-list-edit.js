@@ -19,13 +19,12 @@ export default function ShoppingListEdit() {
     const [fridge, setFridge] = useState([]);
     const [addIngr, setAddIngr] = useState("");
 
-    const [ingrArr, setIngrArr] = useState([])
     const deleteByIndex = index => {
         setShoppingList(oldValues => {
             return oldValues.filter((_, i) => i !== index)
         })
     }
-
+    const [ingrArr, setIngrArr] = useState([]);
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -59,16 +58,11 @@ export default function ShoppingListEdit() {
     const [ingrArr2, setIngrArr2] = useState(ingrArr);
     useEffect(() => {
         setIngrArr2(ingrArr.filter(ing => shoppingList ? (!fridge.includes(ing.toLowerCase()) && !shoppingList.includes(ing.toLowerCase())) : true))
-        //console.log(ingrArr2)
     })
 
     // for messages
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    // unassigned
-    const [openS, setOpenS] = useState(false);
-    const handleClickOpenS = () => {setOpenS(true);};
-    const handleCloseS = () => {setOpenS(false);};
 
     return (
         <>   
@@ -142,7 +136,6 @@ export default function ShoppingListEdit() {
                         setShoppingList([]);
                         var data = await ClearList(username);
                         localStorage.setItem('user', JSON.stringify(data));
-                        //console.log("shopping list cleared"+ shoppingList)
                     }}
                 >
                     Clear
@@ -167,9 +160,7 @@ export default function ShoppingListEdit() {
                                             onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteListItem(username, item);
-                                                //console.log(localStorage.getItem('user'))
                                                 localStorage.setItem('user', JSON.stringify(data));
-                                                //console.log("item deleted" + shoppingList);
                                             }}
                                             >
                                                 <DeleteIcon />
@@ -189,31 +180,23 @@ export default function ShoppingListEdit() {
                 
             </Grid>
         </div>
-        <div>
-            {/* confirmation popup */}
-            <Dialog
-                fullScreen={fullScreen}
-                open={openS}
-                onClose={handleCloseS}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Success"}
-                </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            The ingredient was successfully added!
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseS} autoFocus>
-                            OK
-                        </Button>
-                    </DialogActions>
-            </Dialog>
-        </div>
         </>
     );
+}
+async function getIngr() {
+    const res = await fetch('/api/getIngrDatabase', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            getData: true,
+        })
+    })
+    const data = await res.json();
+    console.log(data);
+    return data;
 }
 
 async function DeleteListItem(username, item) {
@@ -255,25 +238,8 @@ async function ClearList(username) {
     }
 }
 
-async function getIngr() {
-    const res = await fetch('/api/getIngrDatabase', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            //user: user_id,
-            getData: true,
-        })
-    })
-    const data = await res.json();
-    console.log(data);
-    return data;
-}
-
 async function addIngredient(username, item) {
-    //try {
+    try {
         console.log(item);
         const res = await fetch('/api/addShoppingListItem', {
             method: 'POST',
@@ -289,82 +255,15 @@ async function addIngredient(username, item) {
         const data = await res.json();
         console.log(data);
         return data;
-    //} catch (error) {
+    } catch (error) {
     //    res.json(error);
     //    return res.status(405).end();
-    //}
+    }
 }
 
 async function indexMatch(array, q) {
     //console.log(array);
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
-
-
-// function displayList(shoppingList) {
-//     if (shoppingList.length > 0) {
-//         return (
-//             <Grid>
-//             {shoppingList && shoppingList.map((item, index) => (
-//                 <Box>
-//                     <FormGroup row>
-//                     </FormGroup>
-//                     <Grid container>
-//                         <Grid>
-//                             <List>
-//                                 <ListItem
-//                                     secondaryAction={
-//                                         <IconButton edge="end" aria-label="delete" 
-//                                         onClick={async () => {
-//                                             deleteByIndex(index);
-//                                             var data = await DeleteListItem(username, item);
-//                                             console.log(localStorage.getItem('user'))
-//                                             localStorage.setItem('user', JSON.stringify(data));
-//                                             console.log(localStorage.getItem('user'));
-//                                         }}
-//                                         >
-//                                             <DeleteIcon />
-//                                         </IconButton>
-//                                     }
-//                                 >
-//                                     <ListItemText
-//                                         sx={{display: 'flex', justifyContent: 'center'}}
-//                                         primary={item}
-//                                     />
-//                                 </ListItem>
-//                             </List>
-//                         </Grid>
-//                     </Grid>
-//                 </Box>
-//             ))}
-//             </Grid>
-//         );
-//     } else {
-//         return (<>Shopping List Empty</>);
-//     }
-// }
-
-// export async function getServerSideProps() {
-//     try {
-//         console.log("ss for shopping list")
-
-//         const client = await clientPromise;
-//         const db = client.db("test");
-
-//         const ingredients = await db
-//             .collection("ingredients")
-//             .find({})
-//             .toArray();
-//         // console.log(ingredients)
-//         return {
-//             props: {ingredients: JSON.parse(JSON.stringify(ingredients))},
-//         };
-//     }
-//     catch (e) {
-//         console.error(e);
-//     }
-    
-// }
-
 
 

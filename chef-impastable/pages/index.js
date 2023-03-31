@@ -98,14 +98,14 @@ export default function Home({
                         noValidate
                         autoComplete="off"
                     >
-                        <TextField data-test='UsernameField' sx={{ width: 400 }} value={usernameValue} id="username" label="Username" variant="outlined" onChange={handleChangeUser} />
+                        <TextField data-test="UsernameField" sx={{ width: 400 }} value={usernameValue} id="username" label="Username" variant="outlined" onChange={handleChangeUser} />
                     </Box>
                 </Grid>
                 <Grid>
                 <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                             <OutlinedInput
-                                data-test='PasswordField'
+                                data-test="PasswordField"
                                 id="password"
                                 type={showPassword ? "text" : "password"}
                                 endAdornment={

@@ -5,7 +5,7 @@ import clientPromise from '../lib/mongodb_client';
 import Grid from '@mui/material/Grid';
 import { ObjectId } from 'mongodb';
 import Navbar from './navbar.js'
-import { Button, CardMedia } from "@mui/material";
+import { CardMedia } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -13,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import TextField from '@mui/material/TextField';
@@ -53,6 +54,7 @@ export default function Recipe({ recipe, reviews }) {
     var recipe1 = recipe;
 
     const [username, setUsername] = useState("");
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -60,9 +62,9 @@ export default function Recipe({ recipe, reviews }) {
                 get() {
                     return this.username
                 },
-            },
+            }
         });
-        setUsername(thisUser.getUsername);
+        setUsername(thisUser.getUsername)
     }, []);
 
     function createRow(name, value) {
@@ -262,7 +264,6 @@ export default function Recipe({ recipe, reviews }) {
     const handleOpenAddToShoppingList = () => {
         setAddSLDialog(true);
     } 
-    
 
     return (
         <>
@@ -297,6 +298,8 @@ export default function Recipe({ recipe, reviews }) {
                             </Box>
                         </AccordionDetails>
                     </Accordion>
+
+
                 </div>
                 <Grid container
                     sx={{
@@ -311,7 +314,7 @@ export default function Recipe({ recipe, reviews }) {
                         //justifyContent="center"
                         //alignItems="center"
                     >
-                        <h1>{recipe.title}</h1>
+                        <h1 data-test="RecipeTitle">{recipe.title}</h1>
                     </Grid>
                     <Grid item
                         sx={{
@@ -422,6 +425,7 @@ export default function Recipe({ recipe, reviews }) {
                     </TableContainer>
                 </div>
                 <Button
+                    data-test="LeaveAReview"
                     sx={{margin: 4, backgroundColor:"orange", color:"black"}} 
                     variant="contained"
                     startIcon={<RateReviewIcon />}
@@ -431,35 +435,36 @@ export default function Recipe({ recipe, reviews }) {
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Leave a Review</DialogTitle>
-                    <DialogContent>
+                    <DialogContent data-test="ReviewUI">
                         <DialogContentText>Rating</DialogContentText>
                         <Stack
+                            data-test="Stars"
                             direction="row"
                             justifyContent="center"
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton size="large" onClick={handleFirstClick}>
+                            <IconButton data-test="Star1" size="large" onClick={handleFirstClick}>
                                 {firstStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleSecondClick}>
+                            <IconButton data-test="Star2" size="large" onClick={handleSecondClick}>
                                 {secondStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleThirdClick}>
+                            <IconButton data-test="Star3" size="large" onClick={handleThirdClick}>
                                 {thirdStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFourthClick}>
+                            <IconButton data-test="Star4" size="large" onClick={handleFourthClick}>
                                 {fourthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFifthClick}>
+                            <IconButton data-test="Star5" size="large" onClick={handleFifthClick}>
                                 {fifthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
@@ -467,6 +472,7 @@ export default function Recipe({ recipe, reviews }) {
                         </Stack>
                         <DialogContentText>Description/Comments</DialogContentText>
                         <TextField
+                            data-test="description"
                             id="description"
                             multiline
                             rows={10}
@@ -477,11 +483,11 @@ export default function Recipe({ recipe, reviews }) {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handlePost}>Post</Button>
-                        <Button onClick={handleClose}>Discard</Button>
+                        <Button data-test="Post" onClick={handlePost}>Post</Button>
+                        <Button data-test="Discard" onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
-                <h2 className='reviews'>{reviews.length} Reviews</h2>
+                <h2 data-test="NumReviews" className='reviews'>{reviews.length} Reviews</h2>
                 {averageRating(reviews)}
                 {displayReviews(reviews)}
             </Grid>
@@ -499,9 +505,11 @@ export default function Recipe({ recipe, reviews }) {
             return(<>No reviews, create one now!</>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCard(review)
-                ))
+                <div data-test="Reviews" number={reviews.length}>
+                    {reviews.map((review, index) => (
+                        reviewCard(review, index)
+                    ))}
+                </div>
             );
         }
     }
@@ -510,7 +518,7 @@ export default function Recipe({ recipe, reviews }) {
         if (reviews.length == 0) {
             return (
                 <>
-                    <div>Average Rating: N/A</div>
+                    <div data-test="AverageRating">Average Rating: N/A</div>
                     <p></p>
                 </>
             );
@@ -523,7 +531,7 @@ export default function Recipe({ recipe, reviews }) {
             var average = total/reviews.length;
             return (
                 <>
-                    <div>Average Rating: {average.toFixed(2)} stars</div>
+                    <div data-test="AverageRating">Average Rating: {average.toFixed(2)} stars</div>
                     <p></p>
                 </>
             )

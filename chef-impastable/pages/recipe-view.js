@@ -291,7 +291,7 @@ export default function Recipe({ recipe, reviews }) {
                         <AccordionDetails>
                             <Box sx={{ '& > :not(style)': { m: 1 } }}>
                                 {stateRecipeTags && stateRecipeTags.map((tag, index) => (
-                                    <Fab variant="extended" size="medium" color={(stateRecipeTags[index].exists) ? "primary" : ""} aria-label="add" onClick={async () => handleClick(index)} theme={theme} key={index + updateCount}>
+                                    <Fab data-test={`tag-${index}`} variant="extended" size="medium" color={(stateRecipeTags[index].exists) ? "primary" : ""} aria-label="add" onClick={async () => handleClick(index)} theme={theme} key={index + updateCount}>
                                         {tag.tag}
                                     </Fab>
                                 ))}
@@ -347,7 +347,7 @@ export default function Recipe({ recipe, reviews }) {
                     alignItems="center">
         
                     <CardMedia>
-                        <img src={recipe.image} alt="image of {props.recipe.title}" width={300} />
+                        <img data-test="RecipeViewImage" src={recipe.image} alt="image of {props.recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
                 <Grid container justifyContent="center">
@@ -604,5 +604,3 @@ export async function getServerSideProps(context) {
         console.error(e);
     }
 }
-
-

@@ -188,35 +188,35 @@ export default function CreateRecipe({ ingredientOptions }) {
                     }}
                 >
                     <Grid>
-                        <TextField required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Recipe Image URL" variant="outlined" onChange={handleImage} />
+                        <TextField data-test="CRRecipeTitle" required id="outlined-basic" label="Recipe Title" variant="outlined" onChange={handleTitle} />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeImage" required id="outlined-basic" label="Recipe Image URL" variant="outlined" onChange={handleImage} />
                     </Grid>
                     &nbsp;
                     <Grid>
-                        <TextField required id="outlined-basic" label="Prep Time" variant="outlined" onChange={handlePrepTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Cook Time" variant="outlined" onChange={handleCookTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Total Time" variant="outlined" onChange={handleTotalTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <TextField required id="outlined-basic" label="Yields" variant="outlined" onChange={handleYields} />
+                        <TextField data-test="RecipePrepTime" required id="outlined-basic" label="Prep Time" variant="outlined" onChange={handlePrepTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeCookTime" required id="outlined-basic" label="Cook Time" variant="outlined" onChange={handleCookTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeTotalTime" required id="outlined-basic" label="Total Time" variant="outlined" onChange={handleTotalTime} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <TextField data-test="RecipeYields" required id="outlined-basic" label="Yields" variant="outlined" onChange={handleYields} />
                     </Grid>
                     &nbsp;
                     <Grid>
-                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Description" multiline maxRows={10} variant="outlined" onChange={handleDescription} />
+                        <TextField data-test="RecipeDescription" required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Description" multiline maxRows={10} variant="outlined" onChange={handleDescription} />
                     </Grid>
                     &nbsp;
                     <Grid>
                         <Typography component="h4" variant="body1">
                             For this section: Please separate instructions by pressing enter
                         </Typography>
-                        <TextField required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Instruction List" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
+                        <TextField data-test="RecipeInstructions" required sx={{ width: 700 }} id="outlined-multiline-flexible" label="Instruction List" multiline maxRows={10} variant="outlined" onChange={handleInstructions} />
                     </Grid>
                     &nbsp;
                     {/* put select ingredient UI here */}
-                    <Button onClick={ () => {
+                    <Button data-test="CRAddIngredient" onClick={() => {
                         handleIngredientClickOpen();
                         setAddIngr("");
                         setAddQuantity("");
                         setAddUnit("");
-                        }} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200}}>
+                    }} size="large" variant="contained" sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}>
                         Add Ingredient
                     </Button>
                     <Dialog
@@ -230,13 +230,13 @@ export default function CreateRecipe({ ingredientOptions }) {
                             <Autocomplete
                                 disablePortal
                                 freeSolo
-                                sx={{height: 300}}
+                                sx={{ height: 300 }}
                                 id="combo-box-demo"
                                 options={ingredientArr2}
                                 onInputChange={(e, new_val) => { setAddIngr(new_val) }}
                                 renderInput={params => (
-                                    <TextField
-                                        sx={{mt: 0.75}}
+                                    <TextField data-test="CRIngredientsToAdd"
+                                        sx={{ mt: 0.75 }}
                                         {...params}
                                         label="Search Ingredients to Add"
                                         onChange={({ target }) => setAddIngr(target.value)}
@@ -244,72 +244,72 @@ export default function CreateRecipe({ ingredientOptions }) {
                                 )}
                             />
                             <TableContainer component={Paper} sx={{ maxWidth: 650 }}>
-                            <Table sx={{ maxWidth: 650 }} aria-label="simple table">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Ingredient</TableCell>
-                                        <TableCell align="right">Quantity</TableCell>
-                                        <TableCell align="right">Unit</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                            <TableBody>
-                                {displayIngredient(addIngr)}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                <Table sx={{ maxWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Ingredient</TableCell>
+                                            <TableCell align="right">Quantity</TableCell>
+                                            <TableCell align="right">Unit</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {displayIngredient(addIngr)}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </DialogContent>
                         <DialogActions>
-                        <Tooltip title="Create Ingredient">
-                            <IconButton edge="end" aria-label="add" onClick={async () => {
-                                addButton = true;
-                                if (addIngr.localeCompare("") == 0) {
-                                    handleClickOpenEmptyString();
-                                } else {
-                                    var data = await addIngredient(addIngr, addButton)
-                                    if (!data.success) {
-                                        handleClickOpenExists();
+                            <Tooltip title="Create Ingredient">
+                                <IconButton data-test="CRAddToDatabaseButton" edge="end" aria-label="add" onClick={async () => {
+                                    addButton = true;
+                                    if (addIngr.localeCompare("") == 0) {
+                                        handleClickOpenEmptyString();
                                     } else {
-                                        if (ingredientList.includes(addIngr)) {
-                                            handleClickOpenRepeat();
+                                        var data = await addIngredient(addIngr, addButton)
+                                        if (!data.success) {
+                                            handleClickOpenExists();
                                         } else {
-                                            setIngredientList([
-                                                ...ingredientList, addIngr
-                                            ])
-                                            setFinalIngredientList([
-                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
-                                            ])
-                                            handleIngredientClose();
+                                            if (ingredientList.includes(addIngr)) {
+                                                handleClickOpenRepeat();
+                                            } else {
+                                                setIngredientList([
+                                                    ...ingredientList, addIngr
+                                                ])
+                                                setFinalIngredientList([
+                                                    ...finalIngredientList, { ingredient: addIngr, quantity: addQuantity, unit: addUnit }
+                                                ])
+                                                handleIngredientClose();
+                                            }
                                         }
                                     }
-                                }
-                            }}>
-                                <AddIcon />
-                            </IconButton>
-                        </Tooltip>
-                            <Button
+                                }}>
+                                    <AddIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Button data-test="CREnterIngredient"
                                 type="submit"
                                 onClick={async () => {
                                     addButton = false;
                                     if (addIngr.localeCompare("") == 0) {
                                         handleClickOpenEmptyString();
                                     } else {
-                                    var data = await addIngredient(addIngr, addButton);
-                                    if (!data.success) {
-                                        //if ingredient does not exist
-                                        handleClickOpenDoesntExist();
-                                    }
-                                    else {
-                                        if (ingredientList.includes(addIngr)) {
-                                            handleClickOpenRepeat();
-                                        } else {
-                                            setIngredientList([
-                                                ...ingredientList, addIngr
-                                            ])
-                                            setFinalIngredientList([
-                                                ...finalIngredientList, {ingredient: addIngr, quantity: addQuantity, unit: addUnit}
-                                            ])
-                                            handleIngredientClose();
+                                        var data = await addIngredient(addIngr, addButton);
+                                        if (!data.success) {
+                                            //if ingredient does not exist
+                                            handleClickOpenDoesntExist();
                                         }
+                                        else {
+                                            if (ingredientList.includes(addIngr)) {
+                                                handleClickOpenRepeat();
+                                            } else {
+                                                setIngredientList([
+                                                    ...ingredientList, addIngr
+                                                ])
+                                                setFinalIngredientList([
+                                                    ...finalIngredientList, { ingredient: addIngr, quantity: addQuantity, unit: addUnit }
+                                                ])
+                                                handleIngredientClose();
+                                            }
                                         }
                                     }
                                 }}
@@ -333,8 +333,8 @@ export default function CreateRecipe({ ingredientOptions }) {
                             </TableHead>
                             <TableBody>
                                 {finalIngredientList.map((ingredient) => (
-                                        displayIngredients(ingredient)
-                                    ))}
+                                    displayIngredients(ingredient)
+                                ))}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -355,7 +355,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                                     <TableCell component="th" scope="row">
                                         {"Calories"}
                                     </TableCell>
-                                    <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCalories} />}</TableCell>
+                                    <TableCell data-test="RecipeCalories" align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCalories} />}</TableCell>
                                 </TableRow>
                                 <TableRow
                                     key={"Carbohydrate Content"}
@@ -432,7 +432,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Button size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                    <Button data-test="CreateRecipeButton" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                         onClick={async () => {
                             if (!title | !image | !preptime | !cookTime | !totalTime | !yields | !description | !instructions) {
                                 //if any of the required fields are empty, send an error
@@ -455,7 +455,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                         Create Recipe
                     </Button>
                 </Box>
-                <Dialog
+                <Dialog data-test="MissingInformationPopup"
                     fullScreen={fullScreen}
                     open={open}
                     onClose={handleClose}
@@ -470,7 +470,7 @@ export default function CreateRecipe({ ingredientOptions }) {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} autoFocus>
+                        <Button data-test="CloseMissingInfoPopup" onClick={handleClose} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -510,12 +510,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Incorrect Ingredient"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test='CRIngredientDoesNotExitPopup'>
                             This ingredient does not currently exist. Please create the ingredient before trying to use it.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseIngredientError} autoFocus>
+                        <Button data-test="CRIngredientDoesNotExitPopupOk" onClick={handleCloseIngredientError} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -532,12 +532,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Ingredient Already Exists"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test="CRIngredientAlreadyExistsPopup">
                             This ingredient already exists, therefore you cannot create it.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseIngredientExists} autoFocus>
+                        <Button data-test="CRIngredientAlreadyExistsPopupOk" onClick={handleCloseIngredientExists} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -554,12 +554,12 @@ export default function CreateRecipe({ ingredientOptions }) {
                         {"Invalid Ingredient Name"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
+                        <DialogContentText data-test="CRIngredientEmptyString">
                             Please type the name of a valid ingredient.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleCloseEmptyString} autoFocus>
+                        <Button data-test="CRIngredientEmptyStringOk" onClick={handleCloseEmptyString} autoFocus>
                             OK
                         </Button>
                     </DialogActions>
@@ -634,6 +634,7 @@ export default function CreateRecipe({ ingredientOptions }) {
         var quantity = ingrObject.quantity;
         var unit = ingrObject.unit;
 
+
         return (
             <TableRow
                 key={ingredient + " content"}
@@ -642,30 +643,32 @@ export default function CreateRecipe({ ingredientOptions }) {
                 <TableCell component="th" scope="row">
                     {ingredient}
                 </TableCell>
-                <TableCell align="right" component="th" scope = "row"> 
-                    {quantity} 
+                <TableCell align="right" component="th" scope="row">
+                    {quantity}
                 </TableCell>
-                <TableCell align="right" component="th" scope = "row"> 
-                    {unit} 
-                </TableCell>                
+                <TableCell align="right" component="th" scope="row">
+                    {unit}
+                </TableCell>
 
-                
+
             </TableRow>
         )
     }
 
     function displayIngredient(ingredient) {
         return (
-        <TableRow
-            key={"ingredient"}
-            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-        >
-            <TableCell component="th" scope="row">
-                {ingredient}
-            </TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity}  />}</TableCell>
-            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
-        </TableRow>
+            <TableRow
+                key={"ingredient"}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+                <TableCell component="th" scope="row">
+                    <div data-test="CRingredient">
+                    {ingredient}
+                    </div>
+                </TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Quantity" variant="outlined" onChange={handleQuantity} />}</TableCell>
+                <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Add Unit" variant="outlined" onChange={handleUnits} />}</TableCell>
+            </TableRow>
         )
     }
 }

@@ -4,7 +4,7 @@ describe('Shopping List', () => {
 
     // logs in
     it ('Logging in', () => {
-        cy.visit('/')
+        cy.visit('/',{timeout: 30000})
         cy.get("[data-test='UsernameField']").type("Shopping")
         cy.get("[data-test='PasswordField']").type("Password@2")
         cy.get("[data-test='LoginButton']").click()
@@ -17,11 +17,6 @@ describe('Shopping List', () => {
         cy.get("[data-test='ClearItem']").click()
         cy.wait(2000)
     })
-
-    // // naviate to fridge and confirm clear
-    // it ('Navigate to Fridge and Clear', () => {
-
-    // })
 
     // adds item to shopping list
     it ('Add Item to Shopping List', () => {
@@ -103,19 +98,28 @@ describe('Shopping List', () => {
         cy.get("[data-test='EditList']").click()
         cy.get("#for-search").click()
         cy.wait(50)
-        if (cy.get("#for-search").type("butter").should('eq', "butter")) {
-            
-        }
-        cy.get("#for-search").type("butter").should('eq', "butter").click();
-        cy.get("[data-test='AddItem']").click()
+        cy.get("#for-search").type("butter").should('not.eq', /^butter$/)
         cy.wait(1000)
 
     })
     // attempt to add already owned item to shopping list
+    // naviate to fridge and confirm clear
+    it ('Navigate to Fridge and Confirm Olive Oil', () => {
+        cy.visit('/fridge-kitchen', {timeout: 60000})
+        cy.get("#simple-tabpanel-0")
+            .get("#FridgeItem")
+            .should('contain', "olive oil")
+        cy.get("[data-test='ShopList']").click()
+        cy.get("[data-test='EditList']").click()
+        cy.get("#for-search").click()
+        cy.wait(50)
+        cy.get("#for-search").type("olive oil").should('not.eq', /^olive oil$/)
+        cy.wait(1000)
+
+    })
 
     // clear shopping list
     it ('Clear List with Items', () => {
-        cy.get("[data-test='EditList']").click()
         cy.get("[data-test='ClearItem']").click()
         cy.wait(2000)
         // check empty

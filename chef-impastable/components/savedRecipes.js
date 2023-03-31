@@ -9,7 +9,7 @@ import React from 'react';
 import { Add } from '@mui/icons-material';
 import SaveRecipeDialog from './saveRecipeDialog';
 
-export default function SavedRecipes() {
+export default function SavedRecipes(props) {
     const [folders, setFolders] = useState([]);
     const [currFolder, setCurrFolder] = useState({name: "", recipes: []});
 
@@ -21,11 +21,11 @@ export default function SavedRecipes() {
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
 
+    const username = props.user ? props.user : JSON.parse(localStorage.getItem("user")).username;
+
     useEffect(() => {
-        var thisUser = JSON.parse(localStorage.getItem("user"))
-        var saved = thisUser.saved
         async function getSavedFolders() {
-            var f = await getFolders(thisUser.username)
+            var f = await getFolders(username)
             setFolders(f)
             // var fNames = [];
             f.forEach((folder, index) => {
@@ -46,13 +46,13 @@ export default function SavedRecipes() {
         <SaveRecipeDialog
             title = "Unsave or Choose New Folder"
             unsave = {async () => {
-                await unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipeID);
+                await unsaveRecipe(username, recipeID);
                 setUpdate(update + 1);
                 setShowSaveOptions(false);
             }}
             onSubmit = {async (folderName) => {
-                await unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipeID);
-                var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID); 
+                await unsaveRecipe(username, recipeID);
+                var data = await saveRecipe(username, folderName, recipeID); 
                 if (data) {
                     localStorage.setItem('user', JSON.stringify(data));
                 }
@@ -83,7 +83,7 @@ export default function SavedRecipes() {
                         mt: 1,
                     }}
                     onClick={async () => {
-                            var data = await addFolder(JSON.parse(localStorage.getItem("user")).username, newFolder);
+                            var data = await addFolder(username, newFolder);
                             if (data) {
                                 localStorage.setItem('user', JSON.stringify(data));
                             }
@@ -111,13 +111,15 @@ export default function SavedRecipes() {
                     }
 
                 })}
+                {props.user ? <></> :
                 <Grid item key = {-1}>
                     <IconButton
                         data-test="AddSavedRecipeFolderButton"
                         onClick = {() => {setAddFolder(true)}}>
                         <Add></Add>
                     </IconButton>
-                    </Grid>
+                </Grid>
+                }
             </Grid>
             :
             <Button variant = "outlined"
@@ -129,15 +131,23 @@ export default function SavedRecipes() {
             <Grid data-test="SavedRecipesView" container spacing ={3}>
             {currFolder.recipes.map((recipe, index) => (                
                 <Grid item key={recipe._id}>
-                    <RecipeCard 
-                        index = {index}
-                        recipe={recipe}
-                        onSave={() => {
-                            console.log("show save dialog"); 
-                            setShowSaveOptions(true); 
-                            setRecipeID(recipe._id); 
-                        }}
-                    />
+                    {props.user ? 
+                        <RecipeCard 
+                            index = {index}
+                            recipe={recipe}
+                        /> 
+                    :
+                        <RecipeCard 
+                            index = {index}
+                            recipe={recipe}
+                            onSave={() => {
+                                console.log("show save dialog"); 
+                                setShowSaveOptions(true); 
+                                setRecipeID(recipe._id); 
+                                
+                            }}
+                        />
+                    }
                 </Grid>
                 ))}
             </Grid>

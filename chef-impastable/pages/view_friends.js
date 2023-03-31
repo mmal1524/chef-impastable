@@ -14,6 +14,7 @@ import clientPromise from '../lib/mongodb_client';
 import { reviewCardButton } from '../components/review-card-button.js';
 import { ObjectId } from 'mongodb';
 import RecipeCard from '../components/recipe-card.js';
+import SavedRecipes from '../components/savedRecipes.js';
 
 
 import { useRouter } from "next/router";
@@ -214,11 +215,12 @@ function displayCreated(privacy, target, myFriends, createdRecipes) {
         return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>Everyone: This is where saved recipes will go!</>)
+        console.log(target)
+      return (<SavedRecipes user={target} />)
     }
     if (privacy == "friends only") {
         if (myFriends.includes(target)) {
-            return (<>Friends: This is where saved recipes will go!</>);
+            return (<SavedRecipes user={target} />);
         } else {
             console.log(target in myFriends)
             return (<>Become friends to view this user's saved recipes!</>);

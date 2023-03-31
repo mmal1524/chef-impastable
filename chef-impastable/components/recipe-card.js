@@ -77,7 +77,7 @@ function RecipeCard( props ) {
                     <img src={props.recipe.image} alt="image of {props.recipe.title}" width={200} /> 
                 </CardMedia>           
                 <CardContent sx={{overflow: "auto"}}>
-                    {props.recipe.description}  
+                    {props.recipe.description}
                 </CardContent>
             </CardActionArea>
         <CardActions>

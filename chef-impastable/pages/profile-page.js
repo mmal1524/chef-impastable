@@ -232,6 +232,7 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
                         {createdRecipes.map((recipe, index) => (                
                             <Grid item key={recipe._id}>
                                 <RecipeCard 
+                                    index={index}
                                     recipe={recipe}
                                 />
                             </Grid>

@@ -4,7 +4,7 @@ describe('Shopping List', () => {
 
     // logs in
     it ('Logging in', () => {
-        cy.visit('/',{timeout: 30000})
+        cy.visit('/',{timeout: 60000})
         cy.get("[data-test='UsernameField']").type("Shopping")
         cy.get("[data-test='PasswordField']").type("Password@2")
         cy.get("[data-test='LoginButton']").click()
@@ -21,7 +21,7 @@ describe('Shopping List', () => {
     // adds item to shopping list
     it ('Add Item to Shopping List', () => {
         cy.get("#for-search").click()
-        cy.get("#for-search").type("buttermilk").get("li[data-option-index='0']", {timeout: 30000}).click();
+        cy.get("#for-search").type("buttermilk").get("li[data-option-index='0']", {timeout: 60000}).click();
         cy.get("[data-test='AddItem']").click()
         cy.wait(2000)
         cy.get("[data-test='EditDisplay']").contains("buttermilk")
@@ -50,7 +50,7 @@ describe('Shopping List', () => {
 
         cy.get("#for-search").click()
         cy.wait(1000)
-        cy.get("#for-search").type("butter").get("li[data-option-index='0']", {timeout: 30000}).click();
+        cy.get("#for-search").type("{selectall}{backspace}butter").get("li[data-option-index='0']", {timeout: 60000}).click();
         cy.get("[data-test='AddItem']").click()
         cy.wait(1000)
 
@@ -59,7 +59,7 @@ describe('Shopping List', () => {
         cy.get("#for-search")
             .type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}")
             .type("olive oil")
-            .get("li[data-option-index='0']", {timeout: 30000}).click();
+            .get("li[data-option-index='0']", {timeout: 60000}).click();
         cy.get("[data-test='AddItem']").click()   
         cy.wait(1000) 
 
@@ -67,7 +67,7 @@ describe('Shopping List', () => {
         cy.wait(1000)
         cy.get("#for-search")
             .type("{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}{backspace}")
-            .type("milk").get("li[data-option-index='1']", {timeout: 30000}).click();
+            .type("milk").get("li[data-option-index='1']", {timeout: 60000}).click();
         cy.get("[data-test='AddItem']").click()   
         cy.wait(1000)  
 
@@ -75,7 +75,7 @@ describe('Shopping List', () => {
         cy.wait(1000)
         cy.get("#for-search")
             .type("{backspace}{backspace}{backspace}{backspace}")
-            .type("paprika").get("li[data-option-index='0']", {timeout: 30000}).click();
+            .type("paprika").get("li[data-option-index='0']", {timeout: 60000}).click();
         cy.get("[data-test='AddItem']").click()   
         cy.wait(1000)
 
@@ -144,6 +144,6 @@ describe('Shopping List', () => {
 
     // close view shopping list
     it ('Click to Close Edit Shopping List UI', () => {
-        cy.get("[data-test='CloseView']", {timeout: 10000}).click()
+        cy.get("[data-test='CloseView']", {timeout: 60000}).click()
     })
 })

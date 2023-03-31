@@ -68,10 +68,13 @@ export default function SavedRecipes() {
             <DialogTitle>Add Folder</DialogTitle>
             <DialogContent>
                 <TextField
+                    data-test="AddFolderTextField"
                     label="New Folder Name"
                     onChange={({ target }) => setNewFolder(target.value)} 
                 />
                 <Button 
+                    data-test="AddFolderSubmitButton"
+                    disabled={newFolder.length == 0 || folders.map(f => f.name.toLowerCase()).includes(newFolder.toLowerCase())}
                     type="submit" 
                     size="large"
                     variant="contained"
@@ -94,11 +97,13 @@ export default function SavedRecipes() {
         </Dialog>
         {!inFolder
         ?
-            <Grid container spacing ={3}>
+            <Grid data-test="SavedRecipeFolderView" container spacing ={3}>
                 {folders.map((folder, index) => {
                     if (folder.name != "none") {
                         return <Grid item key = {index}>
-                            <Button variant = "outlined"
+                            <Button 
+                                data-test={`SavedRecipeFolder-${index}`}
+                                variant = "outlined"
                                 onClick = {() => {setInFolder(true); setCurrFolder(folder)}}>
                                 {folder.name}
                             </Button>
@@ -108,6 +113,7 @@ export default function SavedRecipes() {
                 })}
                 <Grid item key = {-1}>
                     <IconButton
+                        data-test="AddSavedRecipeFolderButton"
                         onClick = {() => {setAddFolder(true)}}>
                         <Add></Add>
                     </IconButton>
@@ -115,14 +121,16 @@ export default function SavedRecipes() {
             </Grid>
             :
             <Button variant = "outlined"
+                data-test="ExitFolderButton"
                 onClick = {() => {setInFolder(false); setCurrFolder(folders[noneIndex])}}>
                 Back
             </Button>
         }   
-            <Grid container spacing ={3}>
+            <Grid data-test="SavedRecipesView" container spacing ={3}>
             {currFolder.recipes.map((recipe, index) => (                
                 <Grid item key={recipe._id}>
                     <RecipeCard 
+                        index = {index}
                         recipe={recipe}
                         onSave={() => {
                             console.log("show save dialog"); 

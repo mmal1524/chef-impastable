@@ -19,7 +19,7 @@ import clientPromise from '../lib/mongodb_client';
 import SavedRecipes from '../components/savedRecipes';
 import { reviewCardButton } from '../components/review-card-button';
 import { ObjectId } from 'mongodb';
-
+import RecipeCard from '../components/recipe-card';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -34,7 +34,7 @@ function TabPanel(props) {
       >
         {value === index && (
           <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
+            <Box>{children}</Box>
           </Box>
         )}
       </div>
@@ -54,8 +54,7 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfilePage({besties, futureBesties, reviews, recipes}) {
-
+export default function ProfilePage({besties, futureBesties, reviews, recipes, createdRecipes}) {
     var friendsList = besties;
     var friendRequestsList = futureBesties;
     var reviewsList = reviews;
@@ -217,16 +216,28 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
 
 
                 <Box sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Box data-test="tabs" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="Created Recipes" {...a11yProps(0)} />
-                            <Tab label="Saved Recipes" {...a11yProps(1)} />
-                            <Tab label="Reviewed Recipes" {...a11yProps(2)} />
+                            <Tab label="Saved Recipes" {...a11yProps(1)}  data-test="ProfileSavedTab"/>
+                            <Tab data-test="ReviewedRecipes" label="Reviewed Recipes" {...a11yProps(2)} />
                             <Tab label="Meal Plans" {...a11yProps(3)} />
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                        Here is where created recipes will go
+                        {createdRecipes.length == 0 ? 
+                            <p>"You have no created recipes" </p>
+                        : 
+                        <Grid container spacing ={3}>
+                        {createdRecipes.map((recipe, index) => (                
+                            <Grid item key={recipe._id}>
+                                <RecipeCard 
+                                    recipe={recipe}
+                                />
+                            </Grid>
+                            ))}
+                        </Grid>
+                        }
                     </TabPanel>
                     <TabPanel value={value} index={1}>
                         <SavedRecipes></SavedRecipes>
@@ -283,12 +294,14 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes}) 
     function displayReviews(reviews) {
         var i = 0;
         if (!reviews || reviews.length == 0) {
-            return(<>No reviews, create one now!</>);
+            return(<div data-test="reviews" number={0} >No reviews, create one now!</div>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCardButton(review, recipes[i++])
-                ))
+                <div data-test="reviews" number={reviews.length}>
+                {reviews.map((review, index) => (
+                    reviewCardButton(review, recipes[i++], index)
+                ))}
+                </div>
             );
         }
     }
@@ -358,8 +371,15 @@ export async function getServerSideProps(context) {
             }
         }
 
+        const createdRecipes = JSON.parse(JSON.stringify(await db
+            .collection("recipes")
+            .find({author: context.query.username, isUser: true})
+            .toArray()));
+
+        console.log(createdRecipes)
+
         return {
-            props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects},
+            props: {besties: friendObjects, futureBesties: friendRequestsObjects, reviews: reviewObjects, recipes: recipeObjects, createdRecipes: createdRecipes},
         };
     }
     catch (e) {

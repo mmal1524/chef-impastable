@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-export function reviewCard(review) {
+export function reviewCard(review, index) {
 
     var firstStar = false;
     var secondStar = false;
@@ -41,7 +41,7 @@ export function reviewCard(review) {
     }
 
     return (
-        <Box sx={{margin: 2, padding: 1, border: 1}}>
+        <Box data-test={`Review-${index}`} sx={{margin: 2, padding: 1, border: 1}}>
             <Stack
                 direction="column"
                 justifyContent="flex-start"
@@ -49,6 +49,7 @@ export function reviewCard(review) {
                 spacing={0}
             >
                 <Stack
+                    data-test="Stars"
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="center"
@@ -80,9 +81,9 @@ export function reviewCard(review) {
                             : <StarOutlineIcon sx={{width: 20, height: 20}}/>}
                     </Box>
                 </Stack>
-                <h4 className="author">author: {review.author}</h4>
+                <h4 data-test="author" className="author">author: {review.author}</h4>
                 <p></p>
-                <body2>{review.description}</body2>
+                <body2 data-test="description">{review.description}</body2>
 
             </Stack>
 

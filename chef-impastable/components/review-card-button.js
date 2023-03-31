@@ -6,7 +6,7 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import Button from '@mui/material/Button';
 import Router from "next/router";
 
-export function reviewCardButton(review, recipe) {
+export function reviewCardButton(review, recipe, index) {
 
     var firstStar = false;
     var secondStar = false;
@@ -43,23 +43,25 @@ export function reviewCardButton(review, recipe) {
     }
 
     return (
-        <Box sx={{margin: 2, padding: 1, border: 1}}>
+        <Box data-test={`Review-${index}`} sx={{margin: 2, padding: 1, border: 1}}>
             <Stack
                 direction="column"
                 justifyContent="flex-start"
                 alignItems="stretch"
                 spacing={0}
             >
-                <Button 
+                <Button
+                    data-test="recipeButton" 
                     sx={{color: 'black', borderColor: 'black'}} 
                     style={{justifyContent: "flex-start", paddingLeft: 0}}
                     onClick={() => {
                         Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})
                     }}
                 >
-                    <h3 className="recipeName">{recipe.title}</h3>
+                    <h3 data-test="recipeName" className="recipeName">{recipe.title}</h3>
                 </Button>
                 <Stack
+                    data-test="Stars"
                     direction="row"
                     justifyContent="flex-start"
                     alignItems="center"
@@ -92,7 +94,7 @@ export function reviewCardButton(review, recipe) {
                     </Box>
                 </Stack>
                 <p></p>
-                <body2>{review.description}</body2>
+                <body2 data-test="description">{review.description}</body2>
 
             </Stack>
 

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import clientPromise from '../lib/mongodb_client';
 import RecipeCard from '../components/recipe-card.js';
+import SavedRecipes from '../components/savedRecipes.js';
 
 
 import { useRouter } from "next/router";
@@ -212,7 +213,8 @@ function displayCreated(privacy, target, myFriends, createdRecipes) {
         return (<>error: there's something missing in this user</>)
     }
     if (privacy == "everyone") {
-      return (<>Everyone: This is where saved recipes will go!</>)
+        console.log(target)
+      return (<SavedRecipes user={target} />)
     }
     if (privacy == "friends only") {
         if (myFriends.includes(target)) {

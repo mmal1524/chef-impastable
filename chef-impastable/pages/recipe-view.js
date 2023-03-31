@@ -352,6 +352,7 @@ export default function Recipe({ recipe, reviews }) {
                 </Grid>
                 <Grid container justifyContent="center">
                     <IconButton
+                        data-test="SaveRecipe"
                         onClick={() => {
                             if (saved) {
                                 unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);

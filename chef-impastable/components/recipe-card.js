@@ -81,7 +81,7 @@ function RecipeCard( props ) {
                 </CardContent>
             </CardActionArea>
         <CardActions>
-            <IconButton
+            <IconButton data-test={`SaveRecipe-${props.index}`}
                 onClick={() => {props.onSave()}}
             > 
                 {props.onSave ? 

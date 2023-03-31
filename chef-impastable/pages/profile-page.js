@@ -219,7 +219,7 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
                     <Box data-test="tabs" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="Created Recipes" {...a11yProps(0)} />
-                            <Tab label="Saved Recipes" {...a11yProps(1)} />
+                            <Tab label="Saved Recipes" {...a11yProps(1)}  data-test="ProfileSavedTab"/>
                             <Tab data-test="ReviewedRecipes" label="Reviewed Recipes" {...a11yProps(2)} />
                             <Tab label="Meal Plans" {...a11yProps(3)} />
                         </Tabs>

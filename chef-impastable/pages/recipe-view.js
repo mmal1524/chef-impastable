@@ -344,6 +344,26 @@ export default function Recipe({ recipe, reviews }) {
                         <img data-test="RecipeViewImage" src={recipe.image} alt="image of {props.recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
+                <Grid container justifyContent="center">
+                    <IconButton
+                        data-test="SaveRecipe"
+                        onClick={() => {
+                            if (saved) {
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                setSaved(false);
+                            }
+                            else {
+                                setShowSaveDialog(true);
+                            }
+                        }}
+                    >
+                        {saved 
+                        ? 
+                            <Favorite/>
+                        : <FavoriteBorderOutlined />}
+                    </IconButton>
+                </Grid>
+
                 <Grid container
                     display="flex"
                     justifyContent="center"

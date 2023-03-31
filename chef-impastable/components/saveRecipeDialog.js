@@ -13,7 +13,7 @@ export default function SaveRecipeDialog(props) {
     const [folders, setFolders] = useState([]);
     
     useEffect(() => {
-        debugger;
+        // debugger;
         //console.log(recipes)
         var thisUser = JSON.parse(localStorage.getItem("user"))
         // var saved = thisUser.saved
@@ -27,12 +27,12 @@ export default function SaveRecipeDialog(props) {
     }, [props.show])
 
     return (
-        <Dialog open={props.show} onClose={props.onClose}>
+        <Dialog data-test="SaveDialog" open={props.show} onClose={props.onClose}>
             <DialogTitle>{props.title ? props.title : "Save Recipe"}</DialogTitle>
             <DialogContent>
                 {props.unsave ? 
                 <>
-                    <Button onClick={props.unsave}>
+                    <Button data-test="SaveDialogUnsaveButton" onClick={props.unsave}>
                         Unsave
                     </Button>
                     <Typography>
@@ -41,6 +41,7 @@ export default function SaveRecipeDialog(props) {
                 </>
                 : null}
                 <Autocomplete
+                    data-test="SaveDialogAuto"
                     disablePortal
                     id="combo-box-demo"
                     freeSolo
@@ -50,13 +51,15 @@ export default function SaveRecipeDialog(props) {
                     //sx={{ width: windowSize[0]/3 }}
                     renderInput={params => (
                         <TextField 
+                            data-test="SaveDialogTextField"
                             {...params} 
                             label="New or Existing Folder Name"
                             onChange={({ target }) => setFolder(target.value)} 
                         />
                     )}
                 />
-                <Button 
+                <Button
+                    data-test="SaveDialogSubmit"
                     type="submit" 
                     size="large"
                     variant="contained"
@@ -64,7 +67,11 @@ export default function SaveRecipeDialog(props) {
                         mx: 3,
                         mt: 1,
                     }}
-                    onClick={() => {props.onSubmit(folder)}}
+                    onClick={() => {
+                        if (folder.length == 0) {
+                            setFolder("none");
+                        }
+                        props.onSubmit(folder)}}
                 >
                     Save
                 </Button>

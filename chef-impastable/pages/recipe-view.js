@@ -36,6 +36,7 @@ import { createTheme } from '@mui/material/styles';
 import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
+import AddToListDialog from '../components/add-ingredient-from-recipe';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
@@ -69,7 +70,6 @@ export default function Recipe({ recipe, reviews }) {
     function createRow(name, value) {
         return { name, value };
     }
-    console.log(JSON.stringify(recipe.nutrients.calories));
 
     var [open, setOpen] = useState(false);
     var [description, setDescription] = useState("");
@@ -158,17 +158,12 @@ export default function Recipe({ recipe, reviews }) {
         var recipeUpdated = await addReviewToRecipe(recipe1._id, reviewid.reviewID);
         // adding review ID to user's reviewed recipes
         var userUpdated = await addReviewToUser(username, reviewid.reviewID);
-        console.log(userUpdated);
         localStorage.setItem('user', JSON.stringify(userUpdated));
         // reloading page
         router.reload();
     }
 
     async function createReview(recipeID, author, rating, description) {
-        console.log(recipeID);
-        console.log(author);
-        console.log(rating);
-        console.log(description);
         const res = await fetch('api/createReview', {
             method: 'POST',
             headers: {
@@ -183,7 +178,6 @@ export default function Recipe({ recipe, reviews }) {
             })
         });
         const data = await res.json();
-        console.log(data);
         return data;
     }
 
@@ -204,8 +198,6 @@ export default function Recipe({ recipe, reviews }) {
     }
 
     async function addReviewToUser(username, reviewID) {
-        console.log(username);
-        console.log(reviewID);
         const res = await fetch('api/addReviewToUser', {
             method: 'PUT',
             headers: {
@@ -268,6 +260,11 @@ export default function Recipe({ recipe, reviews }) {
         await AddTag(recipe.title, updatedTag.tag, updatedTag.exists, true);
     };
 
+    const [addSLDialog, setAddSLDialog] = useState(false);
+    const handleOpenAddToShoppingList = () => {
+        setAddSLDialog(true);
+    } 
+
     return (
         <>
             <SaveRecipeDialog
@@ -305,10 +302,44 @@ export default function Recipe({ recipe, reviews }) {
 
                 </div>
                 <Grid container
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center">
-                    <h1>{recipe.title}</h1>
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Grid item
+                        sx={{width: 200}}
+                    ></Grid>
+                    <Grid item
+                        //display="flex"
+                        //justifyContent="center"
+                        //alignItems="center"
+                    >
+                        <h1 data-test="RecipeTitle">{recipe.title}</h1>
+                    </Grid>
+                    <Grid item
+                        sx={{
+                            pt:2,
+                        }}
+                    >
+                        <Button 
+                            data-test='AddFromRButton'
+                            sx={{
+                                width: 200
+                            }}
+                            onClick={ async() => {
+                                console.log(recipe);
+                                console.log(recipe.ingredients)
+                                handleOpenAddToShoppingList();
+                            }}
+                        >
+                            Add to Shopping List
+                        </Button>
+                        {addSLDialog && (<AddToListDialog
+                            recipe={recipe}
+                            open={addSLDialog}
+                            onClose = {() => {setAddSLDialog(false)}}
+                        />)}
+                    </Grid>
                 </Grid>
                 <Grid container
                     display="flex"
@@ -343,9 +374,13 @@ export default function Recipe({ recipe, reviews }) {
                     display="flex"
                     justifyContent="center"
                     alignItems="center">
-                    <p>Prep time: {recipe.prep_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
+                    <p>Prep time: {recipe.prep_time} minutes, Cook time: {recipe.cook_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
                 <div>
+                    <h2> 
+                        Description
+                    </h2>
+                    {recipe.description}
                     <h2>
                         Instructions
                     </h2>
@@ -391,6 +426,7 @@ export default function Recipe({ recipe, reviews }) {
                     </TableContainer>
                 </div>
                 <Button
+                    data-test="LeaveAReview"
                     sx={{margin: 4, backgroundColor:"orange", color:"black"}} 
                     variant="contained"
                     startIcon={<RateReviewIcon />}
@@ -400,35 +436,36 @@ export default function Recipe({ recipe, reviews }) {
                 </Button>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Leave a Review</DialogTitle>
-                    <DialogContent>
+                    <DialogContent data-test="ReviewUI">
                         <DialogContentText>Rating</DialogContentText>
                         <Stack
+                            data-test="Stars"
                             direction="row"
                             justifyContent="center"
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton size="large" onClick={handleFirstClick}>
+                            <IconButton data-test="Star1" size="large" onClick={handleFirstClick}>
                                 {firstStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleSecondClick}>
+                            <IconButton data-test="Star2" size="large" onClick={handleSecondClick}>
                                 {secondStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleThirdClick}>
+                            <IconButton data-test="Star3" size="large" onClick={handleThirdClick}>
                                 {thirdStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFourthClick}>
+                            <IconButton data-test="Star4" size="large" onClick={handleFourthClick}>
                                 {fourthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
                             </IconButton>
-                            <IconButton size="large" onClick={handleFifthClick}>
+                            <IconButton data-test="Star5" size="large" onClick={handleFifthClick}>
                                 {fifthStar ? 
                                     <StarIcon sx={{width: 50, height: 50}}/> 
                                     : <StarOutlineIcon sx={{width: 50, height: 50}}/>}
@@ -436,6 +473,7 @@ export default function Recipe({ recipe, reviews }) {
                         </Stack>
                         <DialogContentText>Description/Comments</DialogContentText>
                         <TextField
+                            data-test="description"
                             id="description"
                             multiline
                             rows={10}
@@ -446,11 +484,11 @@ export default function Recipe({ recipe, reviews }) {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handlePost}>Post</Button>
-                        <Button onClick={handleClose}>Discard</Button>
+                        <Button data-test="Post" onClick={handlePost}>Post</Button>
+                        <Button data-test="Discard" onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
-                <h2 className='reviews'>{reviews.length} Reviews</h2>
+                <h2 data-test="NumReviews" className='reviews'>{reviews.length} Reviews</h2>
                 {averageRating(reviews)}
                 {displayReviews(reviews)}
             </Grid>
@@ -468,9 +506,11 @@ export default function Recipe({ recipe, reviews }) {
             return(<>No reviews, create one now!</>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCard(review)
-                ))
+                <div data-test="Reviews" number={reviews.length}>
+                    {reviews.map((review, index) => (
+                        reviewCard(review, index)
+                    ))}
+                </div>
             );
         }
     }
@@ -479,7 +519,7 @@ export default function Recipe({ recipe, reviews }) {
         if (reviews.length == 0) {
             return (
                 <>
-                    <div>Average Rating: N/A</div>
+                    <div data-test="AverageRating">Average Rating: N/A</div>
                     <p></p>
                 </>
             );
@@ -492,7 +532,7 @@ export default function Recipe({ recipe, reviews }) {
             var average = total/reviews.length;
             return (
                 <>
-                    <div>Average Rating: {average.toFixed(2)} stars</div>
+                    <div data-test="AverageRating">Average Rating: {average.toFixed(2)} stars</div>
                     <p></p>
                 </>
             )
@@ -524,7 +564,6 @@ async function AddTag(title, tag, exists, isDefined) {
 }
 
 export async function getServerSideProps(context) {
-    console.log("query: " + context.query)
     try {
         const client = await clientPromise;
         const db = client.db("test");
@@ -538,11 +577,9 @@ export async function getServerSideProps(context) {
 
         if (folder) {
             recipe.saved = true;
-            console.log(recipe.saved);
         } else {
             recipe.saved = false;
         }
-        console.log(recipe);
         var reviews = recipe.reviews;
         var reviewObjects;
         if (!reviews) {

@@ -174,6 +174,9 @@ export default function Fridge(props) {
                             //search for appliance
                             var idxx = await indexMatch(userIngr, addIngr);
                             //console.log(idxx)
+                            if (addIngr.localeCompare("") == 0) {
+                                handleClickOpenEmptyString();
+                            } else {
                             if (idxx == -1) {
                                 addButton = false;
                                 var data = await addIngredient(addIngr, searchGroups, username, addButton)
@@ -190,6 +193,7 @@ export default function Fridge(props) {
                             else {
                                 setShowError(true)
                             }
+                        }
                             //console.log("right after set, idx val:",idx);
                         }}
                     >
@@ -274,7 +278,7 @@ export default function Fridge(props) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                           Please type the name of the ingredient before trying to create it. 
+                        Please type the name of a valid ingredient. 
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

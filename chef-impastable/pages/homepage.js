@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
 
-export default function HomePage({recipes}) {    
+export default function HomePage({ recipes }) {
     const [displayRecipes, setDisplayRecipes] = useState(recipes);
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
@@ -32,7 +32,7 @@ export default function HomePage({recipes}) {
             displayRecipes.forEach(recipe => {
                 // console.log(recipe)
                 recipe.saved = false;
-                
+
                 f.forEach(sf => {
                     if (sf.recipes.includes(recipe._id)) {
                         recipe.saved = true
@@ -46,10 +46,10 @@ export default function HomePage({recipes}) {
     }, [])
     //  debugger;
     return (
-        <> 
+        <>
             <SaveRecipeDialog
-                onSubmit = {async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID); 
+                onSubmit={async (folderName) => {
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID);
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }
@@ -62,9 +62,9 @@ export default function HomePage({recipes}) {
                     setShowSaveOptions(false);
                     setRecipeID("");
                 }}
-                show = {showSaveOption}
-                options = {folderNames}
-                onClose = {() => {setShowSaveOptions(false)}}
+                show={showSaveOption}
+                options={folderNames}
+                onClose={() => { setShowSaveOptions(false) }}
             />
             <div>
                 <Navbar />
@@ -72,15 +72,16 @@ export default function HomePage({recipes}) {
             <p></p>
             <div>
                 <Grid container spacing={3}>
-                    
-                    {displayRecipes.map((recipe, index) => (                
+
+                    {displayRecipes.map((recipe, index) => (
                         <Grid item key={recipe._id}>
-                            <RecipeCard 
+                            <RecipeCard
                                 recipe={recipe}
+                                index={index}
                                 onSave={() => {
                                     if (!recipe.saved) {
-                                        setShowSaveOptions(true); 
-                                        setRecipeID(recipe._id); 
+                                        setShowSaveOptions(true);
+                                        setRecipeID(recipe._id);
                                         setRecipeIndex(index);
                                     }
                                     else {
@@ -90,7 +91,7 @@ export default function HomePage({recipes}) {
                                         setRecipeID(recipe._id);
                                     }
                                 }}
-                             index={index} />
+                            />
                         </Grid>
                     ))}
                 </Grid>

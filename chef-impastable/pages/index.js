@@ -104,7 +104,8 @@ export default function Home({
                 <Grid>
                 <FormControl sx={{ mt: 1, width: 400 }} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                            <OutlinedInput data-test="PasswordField"
+                            <OutlinedInput
+                                data-test="PasswordField"
                                 id="password"
                                 type={showPassword ? "text" : "password"}
                                 endAdornment={
@@ -125,7 +126,8 @@ export default function Home({
                 </FormControl>
                 </Grid>
                 <Button
-                    data-test="LoginButton" type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
+                    data-test="LoginButton"
+                    type="Login" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200 }}
                     onClick={ async () => {
                         var data = await LoginUser(usernameValue, passwordValue);
                         if (data.success == false) {

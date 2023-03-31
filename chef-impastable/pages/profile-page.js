@@ -216,11 +216,11 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
 
 
                 <Box sx={{ width: '100%' }}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <Box data-test="tabs" sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={value} onChange={handleChange}>
                             <Tab label="Created Recipes" {...a11yProps(0)} />
                             <Tab label="Saved Recipes" {...a11yProps(1)} />
-                            <Tab label="Reviewed Recipes" {...a11yProps(2)} />
+                            <Tab data-test="ReviewedRecipes" label="Reviewed Recipes" {...a11yProps(2)} />
                             <Tab label="Meal Plans" {...a11yProps(3)} />
                         </Tabs>
                     </Box>
@@ -294,12 +294,14 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
     function displayReviews(reviews) {
         var i = 0;
         if (!reviews || reviews.length == 0) {
-            return(<>No reviews, create one now!</>);
+            return(<div data-test="reviews" number={0} >No reviews, create one now!</div>);
         } else {
             return(
-                reviews.map((review) => (
-                    reviewCardButton(review, recipes[i++])
-                ))
+                <div data-test="reviews" number={reviews.length}>
+                {reviews.map((review, index) => (
+                    reviewCardButton(review, recipes[i++], index)
+                ))}
+                </div>
             );
         }
     }

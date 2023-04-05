@@ -47,6 +47,9 @@ const userSchema = new mongoose.Schema({
         type:[SchemaTypes.ObjectId],
         required:false
     },
+    households: {
+        type:[ObjectID],
+    },
     success: {
         type:Boolean,
         required:false

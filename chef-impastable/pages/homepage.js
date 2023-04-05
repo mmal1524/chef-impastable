@@ -7,6 +7,8 @@ import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
+import { useRouter } from "next/router";
+
 
 export default function HomePage({ recipes }) {
     const [displayRecipes, setDisplayRecipes] = useState(recipes);
@@ -15,6 +17,25 @@ export default function HomePage({ recipes }) {
     const [folders, setFolders] = useState([]);
     const [folderNames, setFolderNames] = useState([]);
     const [recipeIndex, setRecipeIndex] = useState(-1);
+    const router = useRouter();
+    const [recipeResults, setRecipeResults] = useState([]);
+
+    async function fetchdata(searchTerm) {
+        const recipes = await SearchRecipe(searchTerm);
+        setRecipeResults(recipes);
+    }
+
+    useEffect(() => {
+        //if the user searches something, update display with those recipes
+        //else, display default recipes.
+        if (router.query.searchTerm) {
+            const searchTerm = router.query.searchTerm;
+            fetchdata(searchTerm);
+        }
+        else {
+            setRecipeResults(recipes);
+        }
+      }, [router.query.searchTerm]);
 
     useEffect(() => {
         // debugger;
@@ -72,9 +93,10 @@ export default function HomePage({ recipes }) {
             <p></p>
             <div>
                 <Grid container spacing={3}>
-
-                    {displayRecipes.map((recipe, index) => (
+                    {/* display recipes */}
+                    { recipeResults && recipeResults.map((recipe, index) => (
                         <Grid item key={recipe._id}>
+                            {console.log("here")}
                             <RecipeCard
                                 recipe={recipe}
                                 index={index}
@@ -169,5 +191,22 @@ export async function getServerSideProps() {
     catch (e) {
         console.error(e);
     }
-
+}
+async function SearchRecipe(search) {
+    try {
+        const res = await fetch('/api/searchRecipe', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                search: search
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        return error
+    }
 }

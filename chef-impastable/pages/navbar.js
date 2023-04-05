@@ -16,19 +16,26 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
-import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField } from '@mui/material';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
-
+import SearchBar from "material-ui-search-bar";
 
 const Navbar = () => {
 
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
     const [username, setUsername] = useState("");
+    const [searchValue, setSearchValue] = useState("");
+    const [recipeResults, setRecipeResults] = useState([]);
+    
+    const handleChangeSearch = e => {
+        setSearchValue(e.target.value)
+    }
+
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -98,8 +105,22 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
+    const handleSearch = async (searchValue) => {
+        try {
+          //const recipes = await SearchRecipe(search);
+          router.push({
+            pathname: "homepage",
+            query: { searchTerm:  searchValue },
+          });
+          //setRecipeResults(recipes);
+          //console.log(JSON.stringify(recipes));
+          
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
     return (
         <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
@@ -126,11 +147,12 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={9.0} 
-                sx={{ pt: 0.5, 
+            <Grid xs={1.0}
+                sx={{
+                    pt: 0.5,
                 }
-            }>
-                <IconButton 
+                }>
+                <IconButton
                     aria-label="home button"
                     onClick={() => {
                         router.push("homepage");
@@ -139,16 +161,34 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            <Grid xs={1.5} 
+
+            <Grid xs={8.0}
                 alignContent='center'
-                sx={{ 
-                    pt: 1, 
-                }} 
+                sx={{
+                    pt: 1,
+                    display: 'inline-block'
+                }}>
+                <TextField type="search" id="search" label="Search" sx={{ width: 600 }} onChange={handleChangeSearch} />
+                <Button
+                    onClick={async () => {
+                        //const recipes = await SearchRecipes(searchValue);
+                        handleSearch(searchValue);
+                    }}
+                >
+                    Search
+                </Button>
+            </Grid>
+
+            <Grid xs={1.5}
+                alignContent='center'
+                sx={{
+                    pt: 1,
+                }}
             >
-                <Button 
+                <Button
                     data-test="ShopList"
-                    sx={{color: 'gray', ml: 1.5}}
-                    startIcon={<ShoppingBasketIcon/>}
+                    sx={{ color: 'gray', ml: 1.5 }}
+                    startIcon={<ShoppingBasketIcon />}
                     onClick={handleClickOpenShop}
                 >
                     Shopping List
@@ -189,7 +229,7 @@ const Navbar = () => {
                     <MenuItem
                         data-test="Profile"
                         onClick={() => {
-                            Router.push({pathname:"/profile-page/", query: {username: username}});
+                            Router.push({ pathname: "/profile-page/", query: { username: username } });
                         }}
                     >
                         Profile
@@ -202,9 +242,9 @@ const Navbar = () => {
                         Dietary Restrictions
                     </MenuItem>
                     <MenuItem
-                         onClick={() => {
-                             router.push({pathname: "sharing-page", query: {username: username}});
-                         }}
+                        onClick={() => {
+                            router.push({ pathname: "sharing-page", query: { username: username } });
+                        }}
                     >
                         Shared Recipes
                     </MenuItem>
@@ -264,7 +304,7 @@ const Navbar = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button data-test='EditList' onClick={closeViewOpenEdit}>
-                    {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
+                        {/* <Button onClick={function(event){handleCloseShop; handleClickOpenShopEdit;}}> */}
                         Edit
                     </Button>
                     <Button data-test='CloseView' onClick={handleCloseShop}>
@@ -288,7 +328,7 @@ const Navbar = () => {
                     <ShoppingListEdit></ShoppingListEdit>
                 </DialogContent>
                 <DialogActions>
-                    <Button data-test="BackToView"onClick={closeEditOpenView}>
+                    <Button data-test="BackToView" onClick={closeEditOpenView}>
                         Back to View
                     </Button>
                     <Button data-test='CloseEdit' onClick={handleCloseShopEdit}>
@@ -300,4 +340,23 @@ const Navbar = () => {
     );
 }
 export default Navbar;
+async function SearchRecipe(search) {
+    try {
+        const res = await fetch('/api/searchRecipe', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                search: search
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        return error
+    }
+}
+
 

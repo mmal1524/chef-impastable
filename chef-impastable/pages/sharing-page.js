@@ -86,7 +86,6 @@ export default function SharingPage( {friend, besties, sentRecipes, receivedReci
         if (username == "") {
             return (<>Select a friend to view your received recipes</>)
         }
-        console.log(username)
         if (recipeList.length == 0) {
             return (<>You have not received any recipes from {username}</>)
         } else {

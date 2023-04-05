@@ -15,16 +15,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
-import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, InputLabel, OutlinedInput, IconButton } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
-import SearchBar from "material-ui-search-bar";
 import SearchIcon from '@mui/icons-material/Search';
-import FormControl from '@mui/material/FormControl';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const Navbar = () => {
 
@@ -166,26 +165,8 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-
-            {/* search bar 
-            <Grid xs={8.0}
-                alignContent='center'
-                sx={{
-                    pt: 1,
-                    display: 'inline-block'
-                }}>
-                <TextField type="search" id="search" label="Search" sx={{ width: 600 }} onChange={handleChangeSearch} />
-                <Button
-                    onClick={async () => {
-                        //const recipes = await SearchRecipes(searchValue);
-                        handleSearch(searchValue);
-                    }}
-                >
-                    Search
-                </Button>
-            </Grid>
-            */}
-
+            
+            {/* Search Bar */}
             <Grid xs={8.0}
                 alignContent='center'
                 sx={{
@@ -202,6 +183,10 @@ const Navbar = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
+                                <IconButton aria-label="clear" onClick={async () => {setSearchValue("")}} edge="end">
+                                    <ClearIcon />
+                                </IconButton>
+                                
                                 <IconButton aria-label="search" onClick={async () => {handleSearch(searchValue)}} edge="end">
                                     <SearchIcon />
                                 </IconButton>

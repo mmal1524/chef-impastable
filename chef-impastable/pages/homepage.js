@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import RecipeCard from '../components/recipe-card';
 import Grid from '@mui/material/Grid';
-import { ImageList, ImageListItem } from '@mui/material'
+import { ImageList, ImageListItem, Dialog, Button } from '@mui/material'
 import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
 import { useRouter } from "next/router";
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 export default function HomePage({ recipes }) {
@@ -20,10 +26,26 @@ export default function HomePage({ recipes }) {
     const router = useRouter();
     const [recipeResults, setRecipeResults] = useState([]);
 
+    //dialog handlers for when there are no results from a search
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     //api call to get results of search when requested
     async function fetchdata(searchTerm) {
         const recipes = await SearchRecipe(searchTerm);
-        setRecipeResults(recipes);
+        if (recipes.length === 0) {
+            handleClickOpen();
+        }
+        else {
+            setRecipeResults(recipes);
+        }
     }
 
     useEffect(() => {
@@ -97,7 +119,6 @@ export default function HomePage({ recipes }) {
                     {/* display recipes */}
                     { recipeResults && recipeResults.map((recipe, index) => (
                         <Grid item key={recipe._id}>
-                            {console.log("here")}
                             <RecipeCard
                                 recipe={recipe}
                                 index={index}
@@ -118,6 +139,26 @@ export default function HomePage({ recipes }) {
                         </Grid>
                     ))}
                 </Grid>
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"No Results Found"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            No recipes were found from your search. Please try a different keyword.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );

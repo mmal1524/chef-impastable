@@ -20,6 +20,7 @@ export default function HomePage({ recipes }) {
     const router = useRouter();
     const [recipeResults, setRecipeResults] = useState([]);
 
+    //api call to get results of search when requested
     async function fetchdata(searchTerm) {
         const recipes = await SearchRecipe(searchTerm);
         setRecipeResults(recipes);

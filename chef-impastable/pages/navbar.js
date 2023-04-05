@@ -14,15 +14,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { IconButton } from '@mui/material';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
-import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, InputLabel, OutlinedInput, IconButton } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
 import SearchBar from "material-ui-search-bar";
+import SearchIcon from '@mui/icons-material/Search';
+import FormControl from '@mui/material/FormControl';
 
 const Navbar = () => {
 
@@ -31,7 +33,7 @@ const Navbar = () => {
     const [username, setUsername] = useState("");
     const [searchValue, setSearchValue] = useState("");
     const [recipeResults, setRecipeResults] = useState([]);
-    
+
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
     }
@@ -95,6 +97,9 @@ const Navbar = () => {
         setShopListPopup(true);
         setShopListPopupEdit(false);
     }
+    const handleMouseDownSearch = (event) => {
+        event.preventDefault();
+    };
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -109,18 +114,18 @@ const Navbar = () => {
 
     const handleSearch = async (searchValue) => {
         try {
-          //const recipes = await SearchRecipe(search);
-          router.push({
-            pathname: "homepage",
-            query: { searchTerm:  searchValue },
-          });
-          //setRecipeResults(recipes);
-          //console.log(JSON.stringify(recipes));
-          
+            //const recipes = await SearchRecipe(search);
+            router.push({
+                pathname: "homepage",
+                query: { searchTerm: searchValue },
+            });
+            //setRecipeResults(recipes);
+            //console.log(JSON.stringify(recipes));
+
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      };
+    };
 
     return (
         <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
@@ -162,6 +167,7 @@ const Navbar = () => {
                 </IconButton>
             </Grid>
 
+            {/* search bar 
             <Grid xs={8.0}
                 alignContent='center'
                 sx={{
@@ -178,11 +184,37 @@ const Navbar = () => {
                     Search
                 </Button>
             </Grid>
+            */}
+
+            <Grid xs={8.0}
+                alignContent='center'
+                sx={{
+                    pt: 0.5,
+                    display: 'inline-block'
+                }}>
+                <TextField
+                    sx={{ minWidth: 800}}
+                    size="small"
+                    label="Search"
+                    variant="outlined"
+                    value={searchValue}
+                    onChange={handleChangeSearch}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton aria-label="search" onClick={async () => {handleSearch(searchValue)}} edge="end">
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            </Grid>
 
             <Grid xs={1.5}
                 alignContent='center'
                 sx={{
-                    pt: 1,
+                    pt: 0.5,
                 }}
             >
                 <Button

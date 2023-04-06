@@ -1,17 +1,17 @@
 import { modalUnstyledClasses } from "@mui/material";
 import { ObjectID } from "bson";
-import mongoose from "mongoose";
+import mongoose, { SchemaTypes } from "mongoose";
 
 const householdSchema = new mongoose.Schema({
+    householdId:SchemaTypes.ObjectId,
     name:{
         type:String,
-        required:true,
     },
     fridge: {
         type:[String]
     },
     members: {
-        type:[ObjectID]
+        type:[String],
     },
     saved: {
         type:[ObjectID],

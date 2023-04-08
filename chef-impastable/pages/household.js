@@ -7,8 +7,7 @@ import Typography from '@mui/material/Typography';
 import { TextField, Grid } from '@mui/material';
 import Navbar from './navbar.js'
 import Button from '@mui/material/Button';
-// import List from '@mui/material/List';
-// import ListItemText from '@mui/material/ListItemText';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, Checkbox} from '@mui/material';
 // import FormGroup from '@mui/material/FormGroup';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
@@ -63,6 +62,7 @@ export default function Household() {
     const [username, setUsername] = useState([]);
     //local storage household info
     const [userHouses, setUserHouses] = useState([]);
+    const [friends, setFriends] = useState([]);
 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
@@ -72,8 +72,20 @@ export default function Household() {
                     return this.username
                 }
             },
+            getFriends: {
+                get() {
+                    return this.friends
+                }
+            },
+            getHouses: {
+                get() {
+                    return this.households
+                }
+            }
         });
         setUsername(thisUser.getName);
+        setFriends(thisUser.getFriends);
+        setUserHouses(thisUser.getHouses);
     }, [])
 
 
@@ -96,28 +108,52 @@ export default function Household() {
         setValue(newValue);
     };
 
+    // create new Household popup
     const [openPopup, setOpen] = React.useState(false);
     const handleClickOpenPopup = () => {
         setOpen(true);
     };
     const handleClosePopup = () => {
+        setNewHouseName("");
         setOpen(false);
     };
 
+    // error creating household (no inputted name)
+    const [openNameError, setNameError] = React.useState(false);
+    const handleClickOpenNameError = () => {
+        setNameError(true);
+    };
+    const handleCloseNameError = () => {
+        setNameError(false);
+    };
+
+    var [sendList, setSendList] = useState([]);
+
     const handleCreate = async () => {
-        // creating a household object
-        var newHouseID = await CreateHouse(newHouseName);
-        console.log(newHouseID);
+        if (newHouseName != "") {
+            setNewHouseName("");
+            // creating a household object
+            var newHouseID = await CreateHouse(newHouseName);
+            console.log(newHouseID);
 
-        // adding user to household
-        var householdUpdated = await AddUsertoHousehold(newHouseID.householdID, username);
-        console.log(householdUpdated)
-        // adding householdID to user's household
-        var userUpdated = await AddHouseholdtoUser(username, newHouseID.householdID);
-        console.log(userUpdated);
-        localStorage.setItem('user', JSON.stringify(userUpdated));
+            // adding user to household
+            var householdUpdated = await AddUsertoHousehold(newHouseID.householdID, username);
+            console.log(householdUpdated)
+            // adding householdID to user's household
+            var userUpdated = await AddHouseholdtoUser(username, newHouseID.householdID);
+            console.log(userUpdated);
+            localStorage.setItem('user', JSON.stringify(userUpdated));
 
-        handleClosePopup();
+            for (let i = 0; i < sendList.length; i++) {
+                var addUser = await AddUsertoHousehold(newHouseID.householdID, sendList[i]);
+                var addHouse = await AddHouseholdtoUser(sendList[i], newHouseID.householdID);
+            }
+
+            handleClosePopup();
+        } else {
+            handleClickOpenNameError()
+        }
+        
     }
     async function CreateHouse(name) {
         const res = await fetch('api/createNewHousehold', {
@@ -227,19 +263,105 @@ export default function Household() {
                         value={newHouseName} 
                         onChange={handleChangeNHN} 
                     />
+                    <DialogContentText>
+                        Select friends:
+                        {displayFriends(friends)}
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClosePopup} autoFocus>
                         Cancel
                     </Button>
-                    <Button 
-                        // makee sure that there is a name before can click
-                    onClick={handleCreate}>Create</Button>
+                    <Button onClick={handleCreate}>Create</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                fullWidth={true}
+                maxWidth={'sm'}
+                open={openNameError}
+                onClose={handleCloseNameError}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Error: No Name"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please input a name for your household.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseNameError} autoFocus>
+                        Ok
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             </div>
         </>
     );
+
+    function displayFriends(friendsList) {
+        const [checked, setChecked] = React.useState([0]);
+
+        const handleToggle = (value) => () => {
+            const currentIndex = checked.indexOf(value);
+            const newChecked = [...checked];
+
+            if (currentIndex === -1) {
+                newChecked.push(value);
+            } else {
+                newChecked.splice(currentIndex, 1);
+            }
+
+            setChecked(newChecked);
+        };
+
+        var j = 0;
+        sendList = []
+        for (j; j < checked.length; j++) {
+            sendList.push(friendsList[checked[j]])
+        }
+
+        
+        if (friendsList.length == 0) {
+            return(<>You have no friends :(</>);
+        } else {
+            var friendListLength = new Array; 
+            var i = 0;
+            for (i; i < friendsList.length; i++) {
+                friendListLength.push(i);
+            }
+            return (
+                <List sx={{ width: '100%', maxWidth: 360, maxHeight: 200, bgcolor: 'background.paper' }}>
+                {friendListLength.map((value) => {
+                    const labelId = `checkbox-list-label-${value}`;
+            
+                    return (
+                    <ListItem
+                        key={value}
+                        disablePadding
+                    >
+                        <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                        <ListItemIcon>
+                            <Checkbox
+                            edge="start"
+                            checked={checked.indexOf(value) !== -1}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                        </ListItemIcon>
+                        <ListItemText id={labelId} primary={`${friendsList[value]}`} />
+                        </ListItemButton>
+                    </ListItem>
+                    );
+                })}
+                </List>
+            );
+        }
+    }
 }
 
 

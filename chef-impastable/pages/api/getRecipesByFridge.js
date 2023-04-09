@@ -20,14 +20,19 @@ export default async function getRecipesByFridge(req,res){
             [
             {
                 $addFields: {
-                    matches: {
-                        $filter: {
-                            input: "$ingredients",
-                            as: "ingredient",
-                            cond: { $in: ["$$ingredient.ingredient", ["paprika"]]}
+                    matches: { 
+                        $size: {
+                            $filter: {
+                                input: "$ingredients",
+                                as: "ingredient",
+                                cond: { $in: ["$$ingredient.ingredient", user.fridge]}
+                            }
                         }
                     }
                 }
+            },
+            {
+                $sort: {matches: -1}
             }
         ]).limit(20);
 

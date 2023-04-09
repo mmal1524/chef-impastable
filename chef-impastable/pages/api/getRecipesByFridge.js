@@ -9,6 +9,7 @@ connect()
 export default async function getRecipesByFridge(req,res){
     try {
         const username=req.body.username;
+        const page = req.body.page;
         // get the user and their fridge
         // aggregate and get recipes by unwinding the ingredients
         // check if the ingredent is in the user's fridge
@@ -34,7 +35,9 @@ export default async function getRecipesByFridge(req,res){
             {
                 $sort: {matches: -1}
             }
-        ]).limit(20);
+        ])
+        .skip((page-1)*20)
+        .limit(20);
 
         /*
         var data = await Recipe.find({

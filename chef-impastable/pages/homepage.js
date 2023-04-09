@@ -25,6 +25,7 @@ export default function HomePage({ recipes }) {
     const [recipeIndex, setRecipeIndex] = useState(-1);
     const router = useRouter();
     const [recipeResults, setRecipeResults] = useState([]);
+    const [page, setPage] = useState(1);
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -58,7 +59,7 @@ export default function HomePage({ recipes }) {
         }
         else {
             async function getDefaultRecipes() {
-                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username);
+                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
                 if (defaultRecipes.status != null) {
                     setRecipeResults(recipes)
                     return;
@@ -67,7 +68,7 @@ export default function HomePage({ recipes }) {
             }
             getDefaultRecipes();
         }
-      }, [router.query.searchTerm]);
+      }, [router.query.searchTerm, page]);
 
     useEffect(() => {
         // debugger;
@@ -124,6 +125,21 @@ export default function HomePage({ recipes }) {
             </div>
             <p></p>
             <div>
+                <Grid container spacing = {3}>
+                    {page != 1 ?
+                        <Grid item key={"back"}>
+                            <Button onClick={() => {setPage(page - 1)}}>
+                                Previous Page
+                            </Button>
+                        </Grid>
+                        : <></>
+                    }
+                    <Grid item key={"next"}>
+                        <Button onClick={() => {setPage(page + 1)}}>
+                            Next Page
+                        </Button>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={3}>
                     {/* display recipes */}
                     { recipeResults && recipeResults.map((recipe, index) => (
@@ -266,7 +282,7 @@ async function SearchRecipe(search) {
         return error
     }
 }
-async function getDefault(username) {
+async function getDefault(username, page) {
     
     try {
         const res = await fetch('/api/getRecipesByFridge', {
@@ -276,7 +292,8 @@ async function getDefault(username) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username
+                username: username,
+                page: page
             })
         })
         const data = await res.json();

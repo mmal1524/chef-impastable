@@ -44,6 +44,7 @@ export default function HomePage({ recipes }) {
             handleClickOpen();
         }
         else {
+            setDisplayRecipes(recipes);
             setRecipeResults(recipes);
         }
     }
@@ -56,6 +57,7 @@ export default function HomePage({ recipes }) {
             fetchdata(searchTerm);
         }
         else {
+            setDisplayRecipes(recipes);
             setRecipeResults(recipes);
         }
       }, [router.query.searchTerm]);
@@ -117,7 +119,7 @@ export default function HomePage({ recipes }) {
             <div>
                 <Grid container spacing={3}>
                     {/* display recipes */}
-                    { recipeResults && recipeResults.map((recipe, index) => (
+                    { displayRecipes && displayRecipes.map((recipe, index) => (
                         <Grid item key={recipe._id}>
                             <RecipeCard
                                 recipe={recipe}

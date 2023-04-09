@@ -24,7 +24,7 @@ import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-const Navbar = () => {
+const Navbar = ({notifications}) => {
 
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
@@ -107,6 +107,8 @@ const Navbar = () => {
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
     const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
+
+    console.log(notifications);
 
 
     return (
@@ -341,5 +343,31 @@ const Navbar = () => {
         </Grid>
     );
 }
+
+export async function getServerSideProps(context) {
+    try {
+        console.log("in server")
+        const client = await clientPromise;
+        const db = client.db("test");
+
+        const currFriend = await db
+            .collection("users")
+            .findOne({username: "kendalyn"});
+
+        console.log(currFriend);
+
+        const notifications = await db
+            .collection("notifications")
+            .find({}).toArray();
+        console.log(notifications)
+        return {
+            props: {notifications: JSON.parse(JSON.stringify(notifications))},
+        };
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
+
 export default Navbar;
 

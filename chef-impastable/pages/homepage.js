@@ -43,12 +43,13 @@ export default function HomePage({ recipes }) {
         if (recipes.length === 0) {
             handleClickOpen();
         }
-        else {
-            setRecipeResults(recipes);
-        }
+        // else {
+        //     setRecipeResults(recipes);
+        // }
     }
 
     useEffect(() => {
+        debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
         if (router.query.searchTerm) {
@@ -56,7 +57,15 @@ export default function HomePage({ recipes }) {
             fetchdata(searchTerm);
         }
         else {
-            setRecipeResults(recipes);
+            async function getDefaultRecipes() {
+                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username);
+                if (defaultRecipes.status != null) {
+                    setRecipeResults(recipes)
+                    return;
+                }
+                setRecipeResults(defaultRecipes);
+            }
+            getDefaultRecipes();
         }
       }, [router.query.searchTerm]);
 
@@ -224,9 +233,9 @@ export async function getServerSideProps() {
         const recipes = await db
             .collection("recipes")
             .find({
-                $where: function() {
-                        return test == "hello";
-                    },
+                // $where: function() {
+                //         return test == "hello";
+                //     },
                 }
             )
             .limit(20)
@@ -249,6 +258,25 @@ async function SearchRecipe(search) {
             },
             body: JSON.stringify({
                 search: search
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        return error
+    }
+}
+async function getDefault(username) {
+    
+    try {
+        const res = await fetch('/api/getRecipesByFridge', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username
             })
         })
         const data = await res.json();

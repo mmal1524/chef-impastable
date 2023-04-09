@@ -1,5 +1,6 @@
 import connect from "../../lib/mongodb"
 import Recipe from "../../model/recipe";
+import User from "../../model/user"
 
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
@@ -7,27 +8,29 @@ connect()
 
 export default async function getRecipesByFridge(req,res){
     try {
-        const username=req.body.user;
+        const username=req.body.username;
         // get the user and their fridge
         // aggregate and get recipes by unwinding the ingredients
         // check if the ingredent is in the user's fridge
         // count how many times the each recipes has a match in the fridge
         // sort by match count
         const user = await User.findOne({username})
-        
-        var data = await Recipe.aggregate([
+        console.log(user.fridge);
+        var data = await Recipe.aggregate(
+            [
             {
-                $project: {
+                $addFields: {
                     matches: {
                         $filter: {
                             input: "$ingredients",
                             as: "ingredient",
-                            cond: { $in: ["$$item", user.fridge]}
+                            cond: { $in: ["$$ingredient.ingredient", ["paprika"]]}
                         }
                     }
                 }
             }
-        ])
+        ]).limit(20);
+
         /*
         var data = await Recipe.find({
             $expr: {$function: {
@@ -40,8 +43,9 @@ export default async function getRecipesByFridge(req,res){
             }}
         });
               */   
+        return res.status(200).json(data);
     } catch (error) {
-        res.status(400).json({status:'Not able to find folders'});
-        console.log('error');
+        res.status(400).json({status:'Not able to find matches'});
+        console.log('error with ingredient matching');
     }
 }

@@ -220,10 +220,15 @@ export async function getServerSideProps() {
     try {
         const client = await clientPromise;
         const db = client.db("test");
-
+        var test = "hi";
         const recipes = await db
             .collection("recipes")
-            .find({})
+            .find({
+                $where: function() {
+                        return test == "hello";
+                    },
+                }
+            )
             .limit(20)
             .toArray();
         return {

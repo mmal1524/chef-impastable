@@ -35,6 +35,7 @@ function RecipeCard( props ) {
     // const [isSaved, setSaved] = useState(false);
 
     const [open, setOpen] = React.useState(false);
+    const [noFriendsOpen, setNoFriendsOpen] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -43,6 +44,14 @@ function RecipeCard( props ) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const handleClickNoFriends = () => {
+        setNoFriendsOpen(true);
+    }
+
+    const handleCloseNoFriends = () => {
+        setNoFriendsOpen(false);
+    }
 
     const [username, setUsername] = useState("");
     var [friends, setFriends] = useState([]);
@@ -112,18 +121,42 @@ function RecipeCard( props ) {
                     <DialogActions>
                         <Button 
                             onClick={ async () => {
-                                console.log(sendList)
-                                var i = 0;
-                                for (i; i < sendList.length; i++) {
-                                    var share = await createShare(props.recipe._id, username, sendList[i])
+                                if (sendList.length == 0) {
+                                    handleClickNoFriends();
+                                } else {
+                                    var i = 0;
+                                    for (i; i < sendList.length; i++) {
+                                        var share = await createShare(props.recipe._id, username, sendList[i])
+                                    }
+                                    //router.reload();
+                                    handleClose();
                                 }
-                                router.reload();
                             }}
                             > 
                             Send
                         </Button>
                         <Button onClick={handleClose} autoFocus>
                             Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    //Dialog for when a user is trying to share to no one
+                    open={noFriendsOpen}
+                    onClose={handleCloseNoFriends}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"No Friends Selected"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please select a friend to share this recipe with.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseNoFriends} autoFocus>
+                            OK
                         </Button>
                     </DialogActions>
                 </Dialog>

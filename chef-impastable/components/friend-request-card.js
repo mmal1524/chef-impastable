@@ -131,5 +131,4 @@ export function friendRequestCard(friendRequest) {
         const data = await res.json();
         return data;
     }
-
 }

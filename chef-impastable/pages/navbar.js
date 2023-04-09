@@ -22,7 +22,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const Navbar = () => {
 
@@ -89,6 +89,14 @@ const Navbar = () => {
         setShopListPopupEdit(false);
     }
 
+    const [notifOpen, setNotifOpen] = React.useState(false);
+    const handleNotifOpen = () => {
+        setNotifOpen(true);
+    }
+    const closeNotif = () => {
+        setNotifOpen(false);
+    }
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -126,7 +134,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={9.0} 
+            <Grid xs={8.8} 
                 sx={{ pt: 0.5, 
                 }
             }>
@@ -139,7 +147,7 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            <Grid xs={1.5} 
+            <Grid xs={1.4} 
                 alignContent='center'
                 sx={{ 
                     pt: 1, 
@@ -152,6 +160,20 @@ const Navbar = () => {
                     onClick={handleClickOpenShop}
                 >
                     Shopping List
+                </Button>
+            </Grid>
+            <Grid xs={0.5} 
+                alignContent='center'
+                sx={{ 
+                    pt: 1, 
+                }} 
+            >
+                <Button 
+                    data-test="Notification"
+                    sx={{color: 'gray', ml: 1.5}}
+                    startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
+                    onClick={handleNotifOpen}
+                >
                 </Button>
             </Grid>
             <Grid xs={1}>
@@ -293,6 +315,26 @@ const Navbar = () => {
                     </Button>
                     <Button data-test='CloseEdit' onClick={handleCloseShopEdit}>
                         Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={notifOpen}
+                onClose={closeNotif}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"View Notifications"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Friend requests and shared recipes:
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeNotif} autoFocus>
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>

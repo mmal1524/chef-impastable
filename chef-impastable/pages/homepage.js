@@ -1,12 +1,20 @@
 import Link from 'next/link';
 import RecipeCard from '../components/recipe-card';
 import Grid from '@mui/material/Grid';
-import { ImageList, ImageListItem } from '@mui/material'
+import { ImageList, ImageListItem, Dialog, Button } from '@mui/material'
 import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
+import { useRouter } from "next/router";
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 export default function HomePage({ recipes }) {
     const [displayRecipes, setDisplayRecipes] = useState(recipes);
@@ -15,6 +23,44 @@ export default function HomePage({ recipes }) {
     const [folders, setFolders] = useState([]);
     const [folderNames, setFolderNames] = useState([]);
     const [recipeIndex, setRecipeIndex] = useState(-1);
+    const router = useRouter();
+    const [recipeResults, setRecipeResults] = useState([]);
+
+    //dialog handlers for when there are no results from a search
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    //api call to get results of search when requested
+    async function fetchdata(searchTerm) {
+        const recipes = await SearchRecipe(searchTerm);
+        if (recipes.length === 0) {
+            handleClickOpen();
+        }
+        else {
+            setDisplayRecipes(recipes);
+            setRecipeResults(recipes);
+        }
+    }
+
+    useEffect(() => {
+        //if the user searches something, update display with those recipes
+        //else, display default recipes.
+        if (router.query.searchTerm) {
+            const searchTerm = router.query.searchTerm;
+            fetchdata(searchTerm);
+        }
+        else {
+            setDisplayRecipes(recipes);
+            setRecipeResults(recipes);
+        }
+      }, [router.query.searchTerm]);
 
     useEffect(() => {
         // debugger;
@@ -72,8 +118,8 @@ export default function HomePage({ recipes }) {
             <p></p>
             <div>
                 <Grid container spacing={3}>
-
-                    {displayRecipes.map((recipe, index) => (
+                    {/* display recipes */}
+                    { displayRecipes && displayRecipes.map((recipe, index) => (
                         <Grid item key={recipe._id}>
                             <RecipeCard
                                 recipe={recipe}
@@ -95,6 +141,26 @@ export default function HomePage({ recipes }) {
                         </Grid>
                     ))}
                 </Grid>
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"No Results Found"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            No recipes were found from your search. Please try a different keyword.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );
@@ -169,5 +235,22 @@ export async function getServerSideProps() {
     catch (e) {
         console.error(e);
     }
-
+}
+async function SearchRecipe(search) {
+    try {
+        const res = await fetch('/api/searchRecipe', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                search: search
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        return error
+    }
 }

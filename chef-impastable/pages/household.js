@@ -14,8 +14,8 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
+//import clientPromise from '../lib/mongodb_client.js';
 // import Fridge from '../components/fridge.js';
-// import clientPromise from '../lib/mongodb_client.js';
 
 
 function TabPanel(props) {
@@ -51,7 +51,10 @@ function a11yProps(index) {
     };
 }
 
-export default function Household() {
+export default function Household(props) {
+    //console.log(props);
+    var currID = props.id;
+    //console.log(currID);
 
     const [username, setUsername] = useState("");
     //local storage household info
@@ -82,7 +85,17 @@ export default function Household() {
         setUserHouses(thisUser.getHouses);
     }, [])
 
+    // create new Household popup
+    const [openCreate, setOpenCreate] = useState(false);
+    const handleClickOpenCreate = () => {
+        setOpenCreate(true);
+    };
+
     // for the tabs
+    // console.log(household);
+    // var currHouse = household;
+    // console.log(currHouse);
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [value, setValue] = useState(0);
@@ -90,25 +103,50 @@ export default function Household() {
     const [windowSize, setWindowSize] = useState([1400,0,]);
     useEffect(() => {
         const handleWindowResize = () => {
-          setWindowSize([window.innerWidth, window.innerHeight]);
+            setWindowSize([window.innerWidth, window.innerHeight]);
         };
         window.addEventListener('resize', handleWindowResize);
         return () => {
-          window.removeEventListener('resize', handleWindowResize);
+            window.removeEventListener('resize', handleWindowResize);
         };
     });
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    // create new Household popup
-    const [openCreate, setOpenCreate] = useState(false);
-    const handleClickOpenCreate = () => {
-        setOpenCreate(true);
-    };
-
     // Chosen household to display
-    const [chosenName, setChosenName] = useState("")
+    const [currHouse, setCurrHouse] = useState();
+    const [currMembers, setCurrMembers] = useState([]);
+    const [currFridge, setCurrFridge] = useState([]);
+    const handleDisplayChosen = async () => {
+        //console.log("in handle")
+        var house = await getHouseholdFromID(currID);
+        //console.log(house);
+        setCurrHouse(house);
+        setCurrMembers(house.members);
+        setCurrFridge(house.fridge);
+        //console.log(currHouse);
+    }
+    handleDisplayChosen();
+    //console.log(currHouse);
+
+    async function getHouseholdFromID(id) {
+        //console.log(id);
+        const res = await fetch('/api/getHouseholds', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                _id: id,
+                getData: true,
+            })
+        })
+        const data = await res.json();
+        //console.log(data);
+        return data;
+    }
 
     return (
         <>
@@ -116,21 +154,25 @@ export default function Household() {
                 <Navbar />
             </div>
             <div>
-                <Grid>
-                    <Typography>This is where you select each household to view</Typography>
-                    <Grid container spacing={3}>
-                    {userHouses.map((householdId, index) => (
-                        <Grid item 
-                            //key={recipe._id}
-                        >
-                            <HouseholdCard
-                                householdId={householdId}
-                                index={index}
-                            />
-                        </Grid>
-                    ))}
+                <Box sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={3} sx={{width: '100vw'}}>
+                        {userHouses.map((householdId, index) => (
+                            <Grid xs item 
+                                //key={recipe._id}
+                                sx={{
+                                    border: 4,
+                                    borderColor: householdId == currID ? 'greenyellow' : 'white',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <HouseholdCard
+                                    householdId={householdId}
+                                    index={index}
+                                />
+                            </Grid>
+                        ))}
                     </Grid>
-                </Grid>
+                </Box>
                 <Grid>
                     <Button
                         onClick={() => {
@@ -150,55 +192,65 @@ export default function Household() {
                 </Grid>
             </div>
             <div>
-                {displayHousehold(chosenName)}
+                <Grid container sx={{ width: '100%' }}>
+                <Grid 
+                    justifyContent='center'
+                    sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
+                >
+                    <Tabs value={value} onChange={handleChange} variant="fullWidth">
+                        <Tab label="Members" {...a11yProps(0)} />
+                        <Tab label="Shared Fridge" {...a11yProps(1)} />
+                        <Tab label="Saved Recipes" {...a11yProps(2)} />
+                    </Tabs>
+                </Grid>
+                <TabPanel value={value} index={0}>
+                    {displayHouseholdMembers(currMembers)}
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                    {displayHouseholdFridge(currFridge)}
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                    {displayHouseholdSaved(currHouse)}
+                </TabPanel>
+            </Grid>
             </div>
         </>
     );
 
-    function displayHousehold(chosenName) {
-        if (chosenName == "") {
-            <Grid container sx={{ width: '100%' }}>
-                <Grid 
-                    justifyContent='center'
-                    sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
-                >
-                    <Tabs value={value} onChange={handleChange} variant="fullWidth">
-                        <Tab label="Members" {...a11yProps(0)} />
-                        <Tab label="Shared Fridge" {...a11yProps(1)} />
-                        <Tab label="Saved Recipes" {...a11yProps(2)} />
-                    </Tabs>
-                </Grid>
-                <TabPanel value={value} index={0}>
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                </TabPanel>
-            </Grid>
+    function displayHouseholdMembers(members) {
+        if (members == null) {
+            return (<div>Choose a household to view</div>)
         } else {
-            <Grid container sx={{ width: '100%' }}>
-                <Grid 
-                    justifyContent='center'
-                    sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
-                >
-                    <Tabs value={value} onChange={handleChange} variant="fullWidth">
-                        <Tab label="Members" {...a11yProps(0)} />
-                        <Tab label="Shared Fridge" {...a11yProps(1)} />
-                        <Tab label="Saved Recipes" {...a11yProps(2)} />
-                    </Tabs>
-                </Grid>
-                <TabPanel value={value} index={0}>
-                    Choose a Household to View.
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Choose a Household to View.
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    Choose a Household to View.
-                </TabPanel>
-            </Grid>
+            return (<div>Something will show up.</div>)
         }
+    }
 
+    function displayHouseholdFridge(fridge) {
+        if (fridge == null) {
+            return (<div>Choose a household to view</div>)
+        } else {
+            return (<div>Something will show up.</div>)
+        }
+    }
+
+    function displayHouseholdSaved(saved) {
+        if (saved == null) {
+            return (<div>Choose a household to view</div>)
+        } else {
+            return (<div>Something will show up.</div>)
+        }
+    }
+}
+
+export async function getServerSideProps(context) {
+    console.log(context.query.id)
+    if (context.query.id == null) {
+        return {props: {id: null}}
+    } else {
+        const id = context.query.id;
+        return {
+            props: {id: JSON.parse(JSON.stringify(id))}
+        }
     }
 }
 

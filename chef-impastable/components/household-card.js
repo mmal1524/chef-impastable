@@ -49,12 +49,10 @@ function HouseCard( props ) {
 
     return (
         <Card sx={{width:200}} variant="outlined">
-            <CardActionArea data-test={`Recipe-${props.index}`} 
-                //onClick={() => {Router.push({pathname:"/household/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}
+            <CardActionArea data-test={`Household-${props.index}`} 
+                onClick={() => {Router.push({pathname:"/household/", query: {id: household._id}})}}
             >
-                <CardHeader title={household.name} sx={{fontSize:10}}>
-                </CardHeader>
-                      
+                <CardHeader title={household.name} sx={{fontSize:8}}></CardHeader>   
                 <CardContent sx={{overflow: "auto"}}>
                     {household.members}
                 </CardContent>

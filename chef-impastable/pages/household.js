@@ -10,8 +10,10 @@ import Button from '@mui/material/Button';
 // import FormGroup from '@mui/material/FormGroup';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
+import {FormGroup, List, ListItemText } from '@mui/material';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
 //import clientPromise from '../lib/mongodb_client.js';
@@ -148,6 +150,21 @@ export default function Household(props) {
         return data;
     }
 
+    // members tab
+    //confirm leave household popup
+    const [openLeaveConf, setOpenLeaveConf] = useState(false);
+    const handleClickOpenLeave = () => {
+        setOpenLeaveConf(true);
+    };
+    const handleCloseLeave = () => {
+        setOpenLeaveConf(false);
+    };
+    const leave = () => {
+        // remove user from household
+        // update local storage
+        // if household empty, delete household
+    }
+
     return (
         <>
             <div>
@@ -193,26 +210,52 @@ export default function Household(props) {
             </div>
             <div>
                 <Grid container sx={{ width: '100%' }}>
-                <Grid 
-                    justifyContent='center'
-                    sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
-                >
-                    <Tabs value={value} onChange={handleChange} variant="fullWidth">
-                        <Tab label="Members" {...a11yProps(0)} />
-                        <Tab label="Shared Fridge" {...a11yProps(1)} />
-                        <Tab label="Saved Recipes" {...a11yProps(2)} />
-                    </Tabs>
+                    <Grid 
+                        justifyContent='center'
+                        sx={{ borderBottom: 1, borderColor: 'divider', width: windowSize[0] }}
+                    >
+                        <Tabs value={value} onChange={handleChange} variant="fullWidth">
+                            <Tab label="Members" {...a11yProps(0)} />
+                            <Tab label="Shared Fridge" {...a11yProps(1)} />
+                            <Tab label="Saved Recipes" {...a11yProps(2)} />
+                        </Tabs>
+                    </Grid>
+                    <TabPanel value={value} index={0}>
+                        {displayHouseholdMembers(currMembers)}
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                        {displayHouseholdFridge(currFridge)}
+                    </TabPanel>
+                    <TabPanel value={value} index={2}>
+                        {displayHouseholdSaved(currHouse)}
+                    </TabPanel>
                 </Grid>
-                <TabPanel value={value} index={0}>
-                    {displayHouseholdMembers(currMembers)}
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    {displayHouseholdFridge(currFridge)}
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    {displayHouseholdSaved(currHouse)}
-                </TabPanel>
-            </Grid>
+            </div>
+            <div>
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={openLeaveConf}
+                    onClose={handleCloseLeave}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Leave Household"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to leave this household?
+                            If you are the only member of the household, the household will be deleted.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={leave} autoFocus>
+                            Yes
+                        </Button>
+                        <Button onClick={handleCloseLeave} autoFocus>
+                            No
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </>
     );
@@ -221,7 +264,36 @@ export default function Household(props) {
         if (members == null) {
             return (<div>Choose a household to view</div>)
         } else {
-            return (<div>Something will show up.</div>)
+            return (
+            <Box sx={{flexGrow: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', width: '100vw'}}>
+                <Grid>
+                    {members.map((user, index) => (
+                        <Box>
+                            <FormGroup row>
+                            </FormGroup>
+                            <Grid container>
+                                <Grid 
+                                    item xs={12} 
+                                    sx={{justifyContent: 'center'}}
+                                >
+                                    <List>
+                                        <ListItemText sx={{display:'flex', justifyContent:'center'}} primary={user}/>
+                                    </List>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    ))}
+                </Grid>
+                <Grid sx={{justifyContent: 'center', display: 'grid', gap: 2, gridTemplateRows: 'repeat(2, 1fr)'}}>
+                    <Button onClick={()=> {}}>
+                        Add Friend to the Household.
+                    </Button>
+                    <Button variant='outlined' color='error' onClick={()=> {handleClickOpenLeave()}}>
+                        Leave the Household.
+                    </Button>
+                </Grid>
+            </Box>
+            );
         }
     }
 

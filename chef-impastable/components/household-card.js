@@ -54,7 +54,7 @@ function HouseCard( props ) {
             >
                 <CardHeader title={household.name} sx={{fontSize:8}}></CardHeader>   
                 <CardContent sx={{overflow: "auto"}}>
-                    {household.members}
+                    {household.members.join(', ')}
                 </CardContent>
             </CardActionArea>
     </Card>

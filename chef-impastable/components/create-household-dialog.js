@@ -188,17 +188,15 @@ export default function CreateHouseholdDialog(props) {
 
             setChecked(newChecked);
         };
-
-        var j = 0;
-        sendList = []
-        for (j; j < checked.length; j++) {
-            sendList.push(friendsList[checked[j]])
-        }
-
-        
+      
         if (friendsList.length == 0) {
             return(<>You have no friends :(</>);
         } else {
+            var j = 0;
+            sendList = []
+            for (j; j < checked.length; j++) {
+                sendList.push(friendsList[checked[j]])
+            }
             var friendListLength = new Array; 
             var i = 0;
             for (i; i < friendsList.length; i++) {

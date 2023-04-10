@@ -16,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
+import LeaveHouseholdDialog from '../components/leave-household-dialog.js';
 //import clientPromise from '../lib/mongodb_client.js';
 // import Fridge from '../components/fridge.js';
 
@@ -159,11 +160,6 @@ export default function Household(props) {
     const handleCloseLeave = () => {
         setOpenLeaveConf(false);
     };
-    const leave = () => {
-        // remove user from household
-        // update local storage
-        // if household empty, delete household
-    }
 
     return (
         <>
@@ -232,30 +228,13 @@ export default function Household(props) {
                 </Grid>
             </div>
             <div>
-                <Dialog
-                    fullScreen={fullScreen}
+                <LeaveHouseholdDialog
+                    username={username}
+                    householdId={currID}
+                    members={currMembers}
                     open={openLeaveConf}
-                    onClose={handleCloseLeave}
-                    aria-labelledby="responsive-dialog-title"
-                >
-                    <DialogTitle id="responsive-dialog-title">
-                        {"Leave Household"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Are you sure you want to leave this household?
-                            If you are the only member of the household, the household will be deleted.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={leave} autoFocus>
-                            Yes
-                        </Button>
-                        <Button onClick={handleCloseLeave} autoFocus>
-                            No
-                        </Button>
-                    </DialogActions>
-                </Dialog>
+                    onClose = {() => {setOpenLeaveConf(false)}}
+                />
             </div>
         </>
     );

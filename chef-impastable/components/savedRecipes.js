@@ -56,13 +56,12 @@ export default function SavedRecipes(props) {
                 if (data) {
                     localStorage.setItem('user', JSON.stringify(data));
                 }
-                console.log("submit button clicked"); 
                 setShowSaveOptions(false);
                 setUpdate(update + 1);
             }}
             show = {showSaveOption}
             options = {folders.map(folder => folder.name)}
-            onClose = {() => {console.log("hide save recipe"); setShowSaveOptions(false)}}
+            onClose = {() => {setShowSaveOptions(false)}}
         />
         <Dialog open={showAddFolder} onClose={() => {setAddFolder(false)}}>
             <DialogTitle>Add Folder</DialogTitle>
@@ -141,7 +140,6 @@ export default function SavedRecipes(props) {
                             index = {index}
                             recipe={recipe}
                             onSave={() => {
-                                console.log("show save dialog"); 
                                 setShowSaveOptions(true); 
                                 setRecipeID(recipe._id); 
                                 
@@ -156,7 +154,6 @@ export default function SavedRecipes(props) {
 }
 
 async function addFolder(username, folder) {
-    console.log({username, folder});
     const res = await fetch('/api/addSavedFolder', {
         method: 'POST',
         headers: {
@@ -169,12 +166,10 @@ async function addFolder(username, folder) {
         })
     })
     const data = await res.json();
-    console.log(data);
     return data;
 }
 
 async function saveRecipe(username, folder, recipeID) {
-    console.log({username, folder, recipeID});
     const res = await fetch('/api/saveRecipe', {
         method: 'POST',
         headers: {
@@ -188,12 +183,10 @@ async function saveRecipe(username, folder, recipeID) {
         })
     })
     const data = await res.json();
-    console.log(data);
     return data;
 }
 
 async function unsaveRecipe(username, recipeID) {
-    console.log({username, recipeID});
     const res = await fetch('/api/unsaveRecipe', {
         method: 'POST',
         headers: {
@@ -211,7 +204,6 @@ async function unsaveRecipe(username, recipeID) {
 }
 
 async function getFolders(user_id) {
-    console.log(user_id);
     const res = await fetch('/api/getSavedRecipes', {
         method: 'POST',
         headers: {
@@ -224,6 +216,5 @@ async function getFolders(user_id) {
         })
     })
     const data = await res.json();
-    console.log(data);
     return data;
 }

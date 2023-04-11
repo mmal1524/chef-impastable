@@ -21,6 +21,7 @@ export default function LeaveHouseholdDialog(props) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const members= useState(props.members)
+    //console.log(props.householdId);
 
     const handleLeave = async () => {
         // remove user from household

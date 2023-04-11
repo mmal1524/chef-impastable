@@ -55,16 +55,16 @@ function a11yProps(index) {
 }
 
 export default function Household(props) {
-    //console.log(props);
     var currID = props.id;
-    //console.log(currID);
 
     const [username, setUsername] = useState("");
     //local storage household info
     const [userHouses, setUserHouses] = useState([]);
     const [friends, setFriends] = useState([]);
     const [update, setUpdate] = useState(0);
-
+    useEffect(() => {
+        setUpdate(update + 1);
+    }, [currID])
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -87,7 +87,7 @@ export default function Household(props) {
         setUsername(thisUser.getName);
         setFriends(thisUser.getFriends);
         setUserHouses(thisUser.getHouses);
-        //handleDisplayChosen();
+        handleDisplayChosen();
     }, [update])
     //console.log(userHouses)
 
@@ -103,9 +103,7 @@ export default function Household(props) {
     // console.log(currHouse);
 
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [value, setValue] = useState(0);
-    const router = useRouter();
     const [windowSize, setWindowSize] = useState([1400,0,]);
     useEffect(() => {
         const handleWindowResize = () => {
@@ -126,13 +124,10 @@ export default function Household(props) {
     const [currFridge, setCurrFridge] = useState([]);
     const handleDisplayChosen = async () => {
         var house = await getHouseholdFromID(currID);
-        //console.log(house);
         setCurrHouse(house);
         setCurrMembers(house.members);
         setCurrFridge(house.fridge);
     }
-    handleDisplayChosen();
-    //console.log(currHouse);
 
     async function getHouseholdFromID(id) {
         //console.log(id);
@@ -182,6 +177,7 @@ export default function Household(props) {
                                 <HouseholdCard
                                     householdId={householdId}
                                     index={index}
+                                    update={update}
                                 />
                             </Grid>
                         ))}

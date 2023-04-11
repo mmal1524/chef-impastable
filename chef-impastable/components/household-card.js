@@ -21,14 +21,19 @@ function HouseCard( props ) {
     const [household, setHousehold] = useState({name: "", members: []});
 
     useEffect(() => {
-        //console.log(props.householdId)
+        console.log(props.householdId)
+        console.log(props.update)
         async function getHouse() {
             var i = await getHouseholdFromID(props.householdId);
             setHousehold(i);
         }
         getHouse();
-    }, []);
-
+    }, [props.update]);
+    // async function getHouse() {
+    //     var i = await getHouseholdFromID(props.householdId);
+    //     setHousehold(i);
+    // }
+    // getHouse();
     async function getHouseholdFromID(householdID) {
         //console.log(user_id);
         const res = await fetch('/api/getHouseholds', {
@@ -54,11 +59,22 @@ function HouseCard( props ) {
             >
                 <CardHeader title={household.name} sx={{fontSize:8}}></CardHeader>   
                 <CardContent sx={{overflow: "auto"}}>
-                    {household.members.join(', ')}
+                    {displayMembers(household.members)}
                 </CardContent>
             </CardActionArea>
     </Card>
     );
+
+    function displayMembers(members) {
+        if (members == null) {
+            return;
+        }
+        else {
+            return (
+                <div>{members.join(', ')}</div>
+            );
+        }
+    }
 
 }
 

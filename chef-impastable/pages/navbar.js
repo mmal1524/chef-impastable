@@ -15,7 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
-import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton, FormControlLabel } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
@@ -24,9 +24,9 @@ import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import Checkbox from '@mui/material/Checkbox';
 
 const Navbar = () => {
-
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
     const [username, setUsername] = useState("");
@@ -96,9 +96,6 @@ const Navbar = () => {
         setShopListPopup(true);
         setShopListPopupEdit(false);
     }
-    const handleMouseDownSearch = (event) => {
-        event.preventDefault();
-    };
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -108,24 +105,46 @@ const Navbar = () => {
     }
     const router = useRouter();
 
+    const recipeTagOptions = [
+        { value: "Vegan"},
+        { value: "Vegetarian"},
+        { value: "Keto"},
+        { value: "Kosher"},
+        { value: "Paleo"},
+        { value: "Pescetarian"},
+        { value: "Halal"},
+        { value: "Dairy Free"},
+        { value: "Gluten Free"},
+        { value: "Nut Free"},
+        { value: "Wheat free"},
+        { value: "Fish free"},
+        { value: "Shellfish free"},
+        { value: "Egg free"}]
+
+    const [openDiet, setDiet] = React.useState(false);
+    const handleClickOpenDiet = () => {
+        setDiet(true);
+    };
+    const handleCloseDiet = () => {
+        setDiet(false);
+    };
+    const [checkedItems, setCheckedItems] = useState([]);
+
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
     const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
     const handleSearch = async (searchValue) => {
         try {
-            //const recipes = await SearchRecipe(search);
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue },
+                query: { searchTerm: searchValue, filters: checkedItems },
             });
-            //setRecipeResults(recipes);
-            //console.log(JSON.stringify(recipes));
-
+            //filter recipes :(
         } catch (error) {
             console.log(error);
         }
     };
-
+ 
     return (
         <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
@@ -165,8 +184,8 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            
-            {/* Search Bar */}
+
+            {/* Search Bar, npm i react-select */} 
             <Grid xs={8.0}
                 alignContent='center'
                 sx={{
@@ -174,7 +193,7 @@ const Navbar = () => {
                     display: 'inline-block'
                 }}>
                 <TextField
-                    sx={{ minWidth: 800}}
+                    sx={{ minWidth: 800 }}
                     size="small"
                     label="Search"
                     variant="outlined"
@@ -183,19 +202,27 @@ const Navbar = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton aria-label="clear" onClick={async () => {setSearchValue("")}} edge="end">
+                                <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
                                     <ClearIcon />
                                 </IconButton>
-                                
-                                <IconButton aria-label="search" onClick={async () => {handleSearch(searchValue)}} edge="end">
+
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue) }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
                         )
+                    }} 
+                    />
+                    &nbsp;
+                <Button
+                    type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                    onClick={() => {
+                        handleClickOpenDiet();
                     }}
-                />
+                >Add Filters
+                </Button>
             </Grid>
-
+            
             <Grid xs={1.5}
                 alignContent='center'
                 sx={{
@@ -283,6 +310,52 @@ const Navbar = () => {
                     </MenuItem>
                 </Menu>
             </Grid>
+
+            {/* Dietary Filters popup */}
+            <Dialog
+                fullScreen={fullScreen}
+                open={openDiet}
+                onClose={handleCloseDiet}
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Filter by Dietary Restrictions"}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container>
+                        {recipeTagOptions.map((item) => (
+                            <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={checkedItems.includes(item.value)}
+                                        onChange={(event) => {
+                                            if (event.target.checked) {
+                                                setCheckedItems([...checkedItems, item.value]);
+                                            } else {
+                                                setCheckedItems(
+                                                    checkedItems.filter((value) => value !== item.value)
+                                                );
+                                            }
+                                        }}
+                                        name={item.value}
+                                        color="primary"
+                                    />
+                                }
+                                label={item.value}
+                            />
+                            </Grid>
+                        ))}
+                    </Grid>
+                    <DialogContentText>
+                        Shit bruhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDiet} autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Dialog
                 fullScreen={fullScreen}
                 open={openPopup}

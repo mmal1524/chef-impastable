@@ -38,8 +38,8 @@ export default function HomePage({ recipes }) {
     };
 
     //api call to get results of search when requested
-    async function fetchdata(searchTerm) {
-        const recipes = await SearchRecipe(searchTerm);
+    async function fetchdata(searchTerm, filters) {
+        const recipes = await SearchRecipe(searchTerm, filters);
         if (recipes.length === 0) {
             handleClickOpen();
         }
@@ -54,13 +54,14 @@ export default function HomePage({ recipes }) {
         //else, display default recipes.
         if (router.query.searchTerm) {
             const searchTerm = router.query.searchTerm;
-            fetchdata(searchTerm);
+            const filters = router.query.filters;
+            fetchdata(searchTerm, filters);
         }
         else {
             setDisplayRecipes(recipes);
             setRecipeResults(recipes);
         }
-      }, [router.query.searchTerm]);
+      }, [router.query.searchTerm, router.query.filters]);
 
     useEffect(() => {
         // debugger;
@@ -236,7 +237,7 @@ export async function getServerSideProps() {
         console.error(e);
     }
 }
-async function SearchRecipe(search) {
+async function SearchRecipe(search, filters) {
     try {
         const res = await fetch('/api/searchRecipe', {
             method: 'DELETE',
@@ -245,7 +246,8 @@ async function SearchRecipe(search) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                search: search
+                search: search,
+                filters: filters
             })
         })
         const data = await res.json();

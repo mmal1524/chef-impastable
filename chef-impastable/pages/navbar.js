@@ -89,6 +89,14 @@ const Navbar = () => {
         setShopListPopupEdit(false);
     }
 
+    const [notifOpen, setNotifOpen] = React.useState(false);
+    const handleNotifOpen = () => {
+        setNotifOpen(true);
+    }
+    const closeNotif = () => {
+        setNotifOpen(false);
+    }
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -163,9 +171,7 @@ const Navbar = () => {
                     data-test="Notification"
                     sx={{color: 'gray', ml: 1.5}}
                     startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
-                    onClick={() => {
-                        router.push("notifications_page");
-                    }}
+                    onClick={handleNotifOpen}
                 >
                 </Button>
             </Grid>
@@ -308,6 +314,32 @@ const Navbar = () => {
                     </Button>
                     <Button data-test='CloseEdit' onClick={handleCloseShopEdit}>
                         Done
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={notifOpen}
+                onClose={closeNotif}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"View Notifications"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Friend requests and shared recipes:
+                    </DialogContentText>
+                    <DialogContentText>
+                        New:
+                    </DialogContentText>
+                    <DialogContentText>
+                        Older:
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeNotif} autoFocus>
+                        Close
                     </Button>
                 </DialogActions>
             </Dialog>

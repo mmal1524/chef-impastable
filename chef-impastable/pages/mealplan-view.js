@@ -95,7 +95,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(sundayRecipeIds[j])});
-                sundayRecipes[j] = recipe;
+                sundayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][0] = sundayRecipes;
 
@@ -103,7 +103,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(mondayRecipeIds[j])});
-                mondayRecipes[j] = recipe;
+                mondayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][1] = mondayRecipes;
 
@@ -111,7 +111,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(tuesdayRecipeIds[j])});
-                tuesdayRecipes[j] = recipe;
+                tuesdayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][2] = tuesdayRecipes;
 
@@ -119,7 +119,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(wednesdayRecipeIds[j])});
-                wednesdayRecipes[j] = recipe;
+                wednesdayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][3] = wednesdayRecipes;
 
@@ -127,7 +127,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(thursdayRecipeIds[j])});
-                thursdayRecipes[j] = recipe;
+                thursdayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][4] = thursdayRecipes;
 
@@ -135,7 +135,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(fridayRecipeIds[j])});
-                fridayRecipes[j] = recipe;
+                fridayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][5] = fridayRecipes;
 
@@ -143,7 +143,7 @@ export async function getServerSideProps(context) {
                 var recipe = await db
                     .collection("recipes")
                     .findOne({_id: new ObjectId(saturdayRecipeIds[j])});
-                saturdayRecipes[j] = recipe;
+                saturdayRecipes[j] = JSON.parse(JSON.stringify(recipe));
             }
             recipes[i][6] = saturdayRecipes;
         }

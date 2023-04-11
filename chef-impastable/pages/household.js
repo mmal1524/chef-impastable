@@ -63,6 +63,7 @@ export default function Household(props) {
     //local storage household info
     const [userHouses, setUserHouses] = useState([]);
     const [friends, setFriends] = useState([]);
+    const [update, setUpdate] = useState(0);
 
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
@@ -86,7 +87,9 @@ export default function Household(props) {
         setUsername(thisUser.getName);
         setFriends(thisUser.getFriends);
         setUserHouses(thisUser.getHouses);
-    }, [])
+        //handleDisplayChosen();
+    }, [update])
+    //console.log(userHouses)
 
     // create new Household popup
     const [openCreate, setOpenCreate] = useState(false);
@@ -122,13 +125,11 @@ export default function Household(props) {
     const [currMembers, setCurrMembers] = useState([]);
     const [currFridge, setCurrFridge] = useState([]);
     const handleDisplayChosen = async () => {
-        //console.log("in handle")
         var house = await getHouseholdFromID(currID);
         //console.log(house);
         setCurrHouse(house);
         setCurrMembers(house.members);
         setCurrFridge(house.fridge);
-        //console.log(currHouse);
     }
     handleDisplayChosen();
     //console.log(currHouse);
@@ -187,20 +188,14 @@ export default function Household(props) {
                     </Grid>
                 </Box>
                 <Grid>
-                    <Button
-                        onClick={() => {
-                            handleClickOpenCreate();
-                            console.log(openCreate)
-                        }}
-                    >
+                    <Button onClick={() => {handleClickOpenCreate()}}>
                         Create a New Household
                     </Button>
                     <CreateHouseholdDialog
                         username={username}
-                        households={userHouses}
                         friends={friends}
                         open={openCreate}
-                        onClose = {() => {setOpenCreate(false)}}
+                        onClose = {() => {setOpenCreate(false); setUpdate(update + 1);}}
                     />
                 </Grid>
             </div>
@@ -233,7 +228,7 @@ export default function Household(props) {
                     householdId={currID}
                     members={currMembers}
                     open={openLeaveConf}
-                    onClose = {() => {setOpenLeaveConf(false)}}
+                    onClose = {() => {setOpenLeaveConf(false); setUpdate(update + 1);}}
                 />
             </div>
         </>

@@ -22,10 +22,13 @@ export default function CreateHouseholdDialog(props) {
     const handleChangeNHN = e => {
         setNewHouseName(e.target.value)
     }
-    const [username, setUsername] = useState(props.username);
-    //local storage household info
-    const [userHouses, setUserHouses] = useState(props.userHouses);
-    const [friends, setFriends] = useState(props.friends);
+    const [username, setUsername] = useState("");
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        setUsername(props.username);
+        setFriends(props.friends);
+    });
 
     // for the tabs
     const theme = useTheme();
@@ -188,15 +191,16 @@ export default function CreateHouseholdDialog(props) {
 
             setChecked(newChecked);
         };
+
+        var j = 0;
+        sendList = []
+        for (j; j < checked.length; j++) {
+            sendList.push(friendsList[checked[j]])
+        }
       
         if (friendsList.length == 0) {
             return(<>You have no friends :(</>);
         } else {
-            var j = 0;
-            sendList = []
-            for (j; j < checked.length; j++) {
-                sendList.push(friendsList[checked[j]])
-            }
             var friendListLength = new Array; 
             var i = 0;
             for (i; i < friendsList.length; i++) {

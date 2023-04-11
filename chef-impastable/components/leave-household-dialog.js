@@ -28,8 +28,9 @@ export default function LeaveHouseholdDialog(props) {
         var userUpdated = await DeleteHouseholdFromUser(props.username, props.householdId);
         // update local storage
         localStorage.setItem('user', JSON.stringify(userUpdated));
+
         // if household empty, delete household
-        console.log(members.length)
+        //console.log(members.length)
         if (members[0].length <= 1) {
             var success = await DeleteHousehold(props.householdId)
         }

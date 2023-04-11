@@ -84,26 +84,27 @@ export default function MealPlan({mealPlans, recipes}) {
                             <Grid 
                                 container 
                                 spacing={0}
-                                columns={8} 
+                                columns={14} 
                                 direction="row"
                                 justifyContent="flex-start"
                                 alignItems="stretch"
+                                sx={{borderRight: 1}}
                             >
                                 {daysOfWeek.map((day, i) => (
                                     <>
-                                        <Grid item xs={2} sx={{border: 1, padding: 1}}>
+                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1}}>
                                             <Box sx={{borderBottom: 1, borderColor: 'black'}}>
-                                                <h4 align="center">{day}</h4>
+                                                <h4 align="center" >{day}</h4>
                                             </Box>
                                             {recipes.at(index).at(i).map((recipe) => (
                                                 <div>
                                                     <p className='name'>{recipe.title}</p>
                                                     <Divider textAlign='right'>
                                                         <IconButton sx={{padding: 1}}>
-                                                            <DeleteIcon sx={{fontSize: 20, color: red[200]}}/>
+                                                            <SyncAltIcon sx={{fontSize: 20, color: blue[400]}}/>
                                                         </IconButton>
                                                         <IconButton sx={{padding: 1}}>
-                                                            <SyncAltIcon sx={{fontSize: 20, color: blue[300]}}/>
+                                                            <DeleteIcon sx={{fontSize: 20, color: red[300]}}/>
                                                         </IconButton>
                                                     </Divider>
                                                     <style jsx>{`

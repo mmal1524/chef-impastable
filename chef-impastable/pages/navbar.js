@@ -346,9 +346,6 @@ const Navbar = () => {
                             </Grid>
                         ))}
                     </Grid>
-                    <DialogContentText>
-                        Shit bruhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDiet} autoFocus>

@@ -21,19 +21,15 @@ function HouseCard( props ) {
     const [household, setHousehold] = useState({name: "", members: []});
 
     useEffect(() => {
-        console.log(props.householdId)
-        console.log(props.update)
+        //console.log(props.householdId)
+        //console.log(props.update)
         async function getHouse() {
             var i = await getHouseholdFromID(props.householdId);
             setHousehold(i);
         }
         getHouse();
     }, [props.update]);
-    // async function getHouse() {
-    //     var i = await getHouseholdFromID(props.householdId);
-    //     setHousehold(i);
-    // }
-    // getHouse();
+
     async function getHouseholdFromID(householdID) {
         //console.log(user_id);
         const res = await fetch('/api/getHouseholds', {

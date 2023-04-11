@@ -16,6 +16,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
+import AddHouseholdDialog from '../components/add-user-to-household-dialog.js';
 import LeaveHouseholdDialog from '../components/leave-household-dialog.js';
 //import clientPromise from '../lib/mongodb_client.js';
 // import Fridge from '../components/fridge.js';
@@ -156,6 +157,12 @@ export default function Household(props) {
     const handleCloseLeave = () => {
         setOpenLeaveConf(false);
     };
+    // choose which friends to add
+    const [openAddFriend, setOpenAddFriend] = useState(false);
+    const handleClickOpenAddF = async () => {
+        await handleDisplayChosen();
+        setOpenAddFriend(true);
+    };
 
     return (
         <>
@@ -187,12 +194,6 @@ export default function Household(props) {
                     <Button onClick={() => {handleClickOpenCreate()}}>
                         Create a New Household
                     </Button>
-                    <CreateHouseholdDialog
-                        username={username}
-                        friends={friends}
-                        open={openCreate}
-                        onClose = {() => {setOpenCreate(false); setUpdate(update + 1);}}
-                    />
                 </Grid>
             </div>
             <div>
@@ -219,6 +220,20 @@ export default function Household(props) {
                 </Grid>
             </div>
             <div>
+                <CreateHouseholdDialog
+                    username={username}
+                    friends={friends}
+                    open={openCreate}
+                    onClose = {() => {setOpenCreate(false); setUpdate(update + 1);}}
+                /> 
+                <AddHouseholdDialog
+                    //username={username}
+                    householdId={currID}
+                    friends={friends}
+                    members={currMembers}
+                    open={openAddFriend}
+                    onClose= {() => {setOpenAddFriend(false); setUpdate(update + 1);}}
+                />
                 <LeaveHouseholdDialog
                     username={username}
                     householdId={currID}
@@ -255,7 +270,7 @@ export default function Household(props) {
                     ))}
                 </Grid>
                 <Grid sx={{justifyContent: 'center', display: 'grid', gap: 2, gridTemplateRows: 'repeat(2, 1fr)'}}>
-                    <Button onClick={()=> {}}>
+                    <Button onClick={()=> {handleClickOpenAddF()}}>
                         Add Friend to the Household.
                     </Button>
                     <Button variant='outlined' color='error' onClick={()=> {handleClickOpenLeave()}}>

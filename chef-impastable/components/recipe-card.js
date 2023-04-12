@@ -161,7 +161,9 @@ function RecipeCard( props ) {
                 open={mealPlanOpen}
                 onClose={handleMealPlanClose}
             >
-                <DialogTitle>Choose Meal Plan</DialogTitle>
+                <Box sx={{backgroundColor: "orange"}}>
+                    <DialogTitle textAlign={"center"}>Choose Meal Plan</DialogTitle>
+                </Box>
                 <List sx={{ pt: 0 }}>
                     {/* Displaying meal plans */}
                     {mealPlans && mealPlans.map((mealPlan) => (
@@ -178,11 +180,11 @@ function RecipeCard( props ) {
                             onClick={handleNewMealPlanOpen}
                         >
                             <ListItemAvatar>
-                                <Avatar>
-                                    <AddIcon />
+                                <Avatar sx={{backgroundColor: "orange"}}>
+                                    <AddIcon sx={{color: "black"}}/>
                                 </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary="Create Meal Plan" />
+                            <ListItemText primary="Create New Meal Plan" />
                         </ListItemButton>
                     </ListItem>
                 </List>
@@ -208,8 +210,9 @@ function RecipeCard( props ) {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleNewMealPlanClose}>Cancel</Button>
+                    <Button sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
                     <Button 
+                        sx={{color: "black"}}
                         onClick={async () => {
                             var data = await createMealPlan(username, newMealPlanName);
                             var user = await addMealPlanToUser(username, data.name)
@@ -227,23 +230,26 @@ function RecipeCard( props ) {
                 open={dayOpen}
                 onClose={handleDayClose}
             >
-                <DialogTitle>Add {props.recipe.title} to: </DialogTitle>
                 <Box sx={{width: 300}}>
-                <List>
-                    {daysOfWeek.map((day) => (
-                        <ListItem disableGutters>
-                            <ListItemButton onClick={async () => {
-                                var mealPlan = await addRecipeToMealPlan(username, chosenMealPlan, day, props.recipe._id);
-                                setDayOpen(false);
-                                setMealPlanOpen(false);
-                                setChosenMealPlan("");
-                                setDayOpen("");
-                            }}>
-                                <ListItemText primary={day} sx={{textAlign: "center"}}/>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
+                    <Box sx={{backgroundColor: "orange"}}>
+                    <DialogTitle>{chosenMealPlan}</DialogTitle>
+                    </Box>
+                    <DialogTitle>Add {props.recipe.title} to: </DialogTitle>
+                    <List>
+                        {daysOfWeek.map((day) => (
+                            <ListItem disableGutters>
+                                <ListItemButton onClick={async () => {
+                                    var mealPlan = await addRecipeToMealPlan(username, chosenMealPlan, day, props.recipe._id);
+                                    setDayOpen(false);
+                                    setMealPlanOpen(false);
+                                    setChosenMealPlan("");
+                                    setDayOpen("");
+                                }}>
+                                    <ListItemText primary={day} sx={{textAlign: "center"}}/>
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
                 </Box>
             </Dialog>
 

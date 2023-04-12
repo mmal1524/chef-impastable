@@ -179,14 +179,9 @@ export async function getServerSideProps(context) {
             .collection("users")
             .findOne({username: context.query.username});
 
-        console.log("USER:")
-        console.log(user);
 
         // obtaining names of user's meal plans
         var mealPlanNames = user.mealPlans;
-
-        console.log("MEAL PLAN NAMES:");
-        console.log(mealPlanNames);
 
         // obtaining meal plan objects from meal plan names
         var mealPlans = new Array(mealPlanNames.length);
@@ -197,16 +192,13 @@ export async function getServerSideProps(context) {
                 .findOne({name: mealPlanNames[i], user: context.query.username})
             mealPlans[i] = JSON.parse(JSON.stringify(mealPlan))
         }
-        console.log("MEAL PLANS:");
-        console.log(mealPlans);
 
         // obtaining recipes objects from recipe id's within each meal plan
         // recipes[i][j] = meal plan i, day j
         var recipes = new Array(mealPlanNames.length);  
         for (i = 0; i < mealPlanNames.length; i++) {
             recipes[i] = new Array(7);  //
-        }                                              
-        console.log(recipes);
+        }                       
 
         for (i = 0; i < mealPlanNames.length; i++) {
             var sundayRecipeIds = mealPlans[i].Sunday;
@@ -282,8 +274,6 @@ export async function getServerSideProps(context) {
             }
             recipes[i][6] = saturdayRecipes;
         }
-
-        console.log(recipes);
 
         return {
             props: { mealPlans: mealPlans, recipes: recipes },

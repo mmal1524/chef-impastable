@@ -98,7 +98,7 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", {pathname:"/mealplan-view", query:{username: username}}, "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
 
 
     return (

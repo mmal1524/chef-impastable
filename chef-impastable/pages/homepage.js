@@ -45,6 +45,7 @@ export default function HomePage({ recipes }) {
             handleClickOpen();
         }
         // else {
+        //     setDisplayRecipes(recipes);
         //     setRecipeResults(recipes);
         // }
     }
@@ -65,6 +66,7 @@ export default function HomePage({ recipes }) {
                     return;
                 }
                 setRecipeResults(defaultRecipes);
+                setDisplayRecipes(displayRecipes);
             }
             getDefaultRecipes();
         }
@@ -142,7 +144,7 @@ export default function HomePage({ recipes }) {
                 </Grid>
                 <Grid container spacing={3}>
                     {/* display recipes */}
-                    { recipeResults && recipeResults.map((recipe, index) => (
+                    { displayRecipes && displayRecipes.map((recipe, index) => (
                         <Grid item key={recipe._id}>
                             <RecipeCard
                                 recipe={recipe}

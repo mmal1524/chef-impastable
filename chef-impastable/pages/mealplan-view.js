@@ -18,6 +18,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import DialogActions from '@mui/material';
+import DialogContent from '@mui/material';
+import DialogContentText from '@mui/material';
+import Button from '@mui/material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -155,19 +159,36 @@ export default function MealPlan() {
     }, []);
 
     const [changeDayOpen, setChangeDayOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
     var [chooseMealPlan, setChooseMealPlan] = useState("");
     var [chooseRecipe, setChooseRecipe] = useState("");
+    var [indexOfRecipe, setIndexOfRecipe] = useState(0);
+    var [oldDay, setOldDay] = useState("");
 
 
-    const handleChangeDayOpen = (mealPlan, recipe) => {
+    const handleChangeDayOpen = (mealPlan, recipe, i, oldDay) => {
         setChangeDayOpen(true);
         setChooseMealPlan(mealPlan);
         setChooseRecipe(recipe);
+        setIndexOfRecipe(i);
+        setOldDay(oldDay);
     };
 
     const handleChangeDayClose = () => {
         setChangeDayOpen(false);
-    }
+    };
+
+    const handleDeleteOpen = (mealPlan, recipe, i, oldDay) => {
+        setDeleteOpen(true);
+        setChooseMealPlan(mealPlan);
+        setChooseRecipe(recipe);
+        setIndexOfRecipe(i);
+        setOldDay(oldDay);
+    };
+
+    const handleDeleteClose = () => {
+        setDeleteOpen(false);
+    };
 
     return (
         <>
@@ -207,20 +228,20 @@ export default function MealPlan() {
                                             <Box sx={{borderBottom: 1, borderColor: 'black'}}>
                                                 <h4 align="center" >{day}</h4>
                                             </Box>
-                                            {recipes && recipes.at(index) && recipes.at(index).at(i) && recipes.at(index).at(i).map((recipe) => (
+                                            {recipes && recipes.at(index) && recipes.at(index).at(i) && recipes.at(index).at(i).map((recipe, i) => (
                                                 <div>
                                                     <p className='name'>{recipe.title}</p>
                                                     <Divider textAlign='right'>
                                                         <IconButton 
                                                             sx={{padding: 1}}
-                                                            onClick={() => handleChangeDayOpen(mealPlan, recipe)}
-                                                            // onClick={async () => {
-                                                            //     var m = await addRecipeToMealPlan(username, mealPlan, day, recipe._id)
-                                                            // }}
+                                                            onClick={() => handleChangeDayOpen(mealPlan, recipe, i, day)}
                                                         >
                                                             <SyncAltIcon sx={{fontSize: 20, color: blue[400]}}/>
                                                         </IconButton>
-                                                        <IconButton sx={{padding: 1}}>
+                                                        <IconButton 
+                                                            sx={{padding: 1}}
+                                                            onClick={() => handleDeleteOpen(mealPlan, recipe, i, day)}
+                                                        >
                                                             <DeleteIcon sx={{fontSize: 20, color: red[300]}}/>
                                                         </IconButton>
                                                     </Divider>
@@ -247,7 +268,7 @@ export default function MealPlan() {
                 >
                     <Box sx={{width: 300}}>
                         <Box sx={{backgroundColor: "orange"}}>
-                        <DialogTitle>{chooseMealPlan.name}</DialogTitle>
+                            <DialogTitle>{chooseMealPlan.name}</DialogTitle>
                         </Box>
                         <DialogTitle>Switch {chooseRecipe.title} to: </DialogTitle>
                         <List>
@@ -255,18 +276,25 @@ export default function MealPlan() {
                                 <ListItem disableGutters>
                                     <ListItemButton onClick={async () => {
                                         var index = mealPlans.indexOf(chooseMealPlan);
-                                        console.log(index);
+
                                         var mealPlan = await addRecipeToMealPlan(username, chooseMealPlan.name, day, chooseRecipe._id);
-                                        mealPlans[index] = mealPlan;
-                                        
+
                                         var indexDay = daysOfWeek.indexOf(day);
+                                        
                                         recipes[index][indexDay].push(chooseRecipe);
 
+                                        var mealPlan = await deleteRecipeFromMealPlan(username, chooseMealPlan.name, oldDay, chooseRecipe._id, indexOfRecipe)
+                                        indexDay = daysOfWeek.indexOf(oldDay);
                                         
+                                        recipes[index][indexDay].splice(indexOfRecipe, 1);
+
+                                        mealPlans[index] = mealPlan;
 
                                         setChangeDayOpen(false);
                                         setChooseMealPlan("");
                                         setChooseRecipe("");
+                                        setOldDay("");
+                                        setIndexOfRecipe(0);
                                     }}>
                                         <ListItemText primary={day} sx={{textAlign: "center"}}/>
                                     </ListItemButton>
@@ -274,7 +302,41 @@ export default function MealPlan() {
                             ))}
                         </List>
                     </Box>
+                </Dialog>
 
+                <Dialog
+                    open={deleteOpen}
+                    onClose={handleDeleteClose}
+                >
+                    
+                        <Box sx={{backgroundColor: "orange"}}>
+                            <DialogTitle>{chooseMealPlan.name}</DialogTitle>
+                        </Box>
+                        <DialogTitle>Delete?</DialogTitle>
+                        <DialogActions>
+                            <Button onClick={handleDeleteClose}>Disagree</Button>
+                            <Button 
+                                onClick={async () => {
+                                    console.log(chooseMealPlan)
+                                    var index = mealPlans.indexOf(chooseMealPlan);
+                                    var mealPlan = await deleteRecipeFromMealPlan(username, chooseMealPlan.name, oldDay, chooseRecipe._id, indexOfRecipe)
+                                    var indexDay = daysOfWeek.indexOf(oldDay);
+
+                                    recipes[index][indexDay].splice(indexOfRecipe, 1);
+
+                                    mealPlans[index] = mealPlan;
+
+                                    setDeleteOpen(false);
+                                    setChooseMealPlan("");
+                                    setChooseRecipe("");
+                                    setOldDay("");
+                                    setIndexOfRecipe(0);
+                                }} 
+                            >
+                                delete
+                            </Button>
+                        </DialogActions>
+                    
                 </Dialog>
             </Box>
         </>
@@ -313,7 +375,7 @@ export default function MealPlan() {
                 },
                 body: JSON.stringify({
                     username: username,
-                    mealPlan: mealPlan,
+                    plan: mealPlan,
                     day: day,
                     recipeID: recipeID,
                     index: index

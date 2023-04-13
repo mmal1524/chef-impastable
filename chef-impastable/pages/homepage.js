@@ -26,6 +26,8 @@ export default function HomePage({ /*recipes*/ }) {
     const router = useRouter();
     const [recipeResults, setRecipeResults] = useState([]);
     const [page, setPage] = useState(1);
+    const [pageChanged, setPageChanged] = useState(false);
+    const [next, setNext] = useState(true);
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -40,7 +42,9 @@ export default function HomePage({ /*recipes*/ }) {
 
     //api call to get results of search when requested
     async function fetchdata(searchTerm, page) {
-        const recipes = await SearchRecipe(searchTerm, JSON.parse(localStorage.getItem("user")).username, page);
+        debugger;
+        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, JSON.parse(localStorage.getItem("user")).username, page);
+        setNext(hasNext)
         if (recipes.length === 0) {
             handleClickOpen();
         }
@@ -51,6 +55,8 @@ export default function HomePage({ /*recipes*/ }) {
     }
 
     useEffect(() => {
+        debugger;
+        setPageChanged(!pageChanged);
         setPage(1);
       }, [router.query.searchTerm]);
 
@@ -99,7 +105,7 @@ export default function HomePage({ /*recipes*/ }) {
             }
             getDefaultRecipes();
         }
-      }, [page]);
+      }, [page, pageChanged]);
 
     // useEffect(() => {
     //     // debugger;
@@ -165,11 +171,14 @@ export default function HomePage({ /*recipes*/ }) {
                         </Grid>
                         : <></>
                     }
+                    {next ? 
                     <Grid item key={"next"}>
                         <Button onClick={() => {setPage(page + 1)}}>
                             Next Page
                         </Button>
                     </Grid>
+                    : <></>
+                    }
                 </Grid>
                 <Grid container spacing={3}>
                     {/* display recipes */}

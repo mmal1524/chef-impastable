@@ -40,16 +40,23 @@ export default async function handler(req, res) {
                         $sort: {matches: -1}
                     }
             ])
-            .skip((page-1)*20)
-            .limit(20);
+            // .skip((page-1)*20)
+            // .limit(20);
         }
         else {
-            recipes = await Recipe.find({title: {$regex: new RegExp(search, 'i')}}).skip((page-1)*20).limit(20)
+            recipes = await Recipe.find({title: {$regex: new RegExp(search, 'i')}})
+            // .skip((page-1)*20).limit(20)
         }
-        recipes.forEach((recipe) => {
-            console.log(recipe.title); // print the title of each matching recipe
-          });
-        res.json(recipes);
+        var hasNext = false;
+        if (recipes.length >= (page*20)) {
+            hasNext = true;
+        }
+
+        recipes = recipes.slice((page-1)*20, page*20);
+        // recipes.forEach((recipe) => {
+        //     console.log(recipe.title); // print the title of each matching recipe
+        //   });
+        res.json([recipes, hasNext]);
     } catch (error) {
         res.status(400).json()
         console.log('error');

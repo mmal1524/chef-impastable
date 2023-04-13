@@ -17,7 +17,7 @@ export default async function getRecipesByFridge(req,res){
         // sort by match count
         const user = await User.findOne({username})
         console.log(user.fridge);
-        var data = await Recipe.aggregate(
+        var recipes = await Recipe.aggregate(
             [
             {
                 $addFields: {
@@ -36,9 +36,14 @@ export default async function getRecipesByFridge(req,res){
                 $sort: {matches: -1}
             }
         ])
-        .skip((page-1)*20)
-        .limit(20);
+        // .skip((page-1)*20)
+        // .limit(20);
+        var hasNext = false;
+        if (recipes.length >= (page*20)) {
+            hasNext = true;
+        }
 
+        recipes = recipes.slice((page-1)*20, page*20);
         /*
         var data = await Recipe.find({
             $expr: {$function: {
@@ -51,7 +56,7 @@ export default async function getRecipesByFridge(req,res){
             }}
         });
               */   
-        return res.status(200).json(data);
+        return res.status(200).json(recipes);
     } catch (error) {
         res.status(400).json({status:'Not able to find matches'});
         console.log('error with ingredient matching');

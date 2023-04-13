@@ -14,6 +14,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+// import ImageList from '@mui/material/ImageList';
+// import ImageListItem from '@mui/material/ImageListItem';
+import Masonry from '@mui/lab/Masonry';
 
 
 export default function HomePage({ /*recipes*/ }) {
@@ -180,6 +183,27 @@ export default function HomePage({ /*recipes*/ }) {
                     : <></>
                     }
                 </Grid>
+                <Masonry>
+                    { displayRecipes && displayRecipes.map((recipe, index) => (
+                            <RecipeCard
+                                recipe={recipe}
+                                index={index}
+                                onSave={() => {
+                                    if (!recipe.saved) {
+                                        setShowSaveOptions(true);
+                                        setRecipeID(recipe._id);
+                                        setRecipeIndex(index);
+                                    }
+                                    else {
+                                        unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
+                                        displayRecipes[index].saved = !displayRecipes[index].saved;
+                                        setDisplayRecipes(displayRecipes);
+                                        setRecipeID(recipe._id);
+                                    }
+                                }}
+                            />
+                    ))}
+                </Masonry>
                 <Grid container spacing={3}>
                     {/* display recipes */}
                     { displayRecipes && displayRecipes.map((recipe, index) => (

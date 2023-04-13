@@ -25,6 +25,8 @@ export default function AddHouseholdFriendDialog(props) {
     // array of object houses that user is not a member
     const [availHouses, setAvailHouses] = useState([]);
     //console.log(props);
+    // after first render
+    const [after, setAfter] = useState(false)
 
     //first render get households
     useEffect(() => {
@@ -39,7 +41,8 @@ export default function AddHouseholdFriendDialog(props) {
             //handleGetHouses();
             createHouseList();
         }
-        if (props.open == false) {
+        if (props.open == false && after == true) {
+            console.log("clearing")
             ClearArray(houseArr);
         }
         //createHouseList();
@@ -63,7 +66,8 @@ export default function AddHouseholdFriendDialog(props) {
         console.log(availHouses);
         console.log(availHousesID);
         console.log(houseArr)
-        for (let i = 0; i < houses.length; i++) {
+        
+        for (let i = 0; i < houseArr.length; i++) {
             //console.log(houseArr[i].members);
             var idx = await indexMatch(houseArr[i].members, props.friend);
             var idxx = await indexMatchNum(availHousesID, houses[i]);
@@ -98,7 +102,7 @@ export default function AddHouseholdFriendDialog(props) {
             // var idx = await indexMatch(availFriends, sendList[i]);
             // deleteByIndex(idx);
         }
-        props.onClose();
+        closeAction();
     }
     
     async function getHouseholdFromID(id) {
@@ -151,6 +155,11 @@ export default function AddHouseholdFriendDialog(props) {
         return data;
     }
 
+    const closeAction = () => {
+        props.onClose();
+        setAfter(true);
+    }
+
     return (
         <>
             <Dialog
@@ -169,7 +178,7 @@ export default function AddHouseholdFriendDialog(props) {
                     {displayHouses(availHouses)}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.onClose} autoFocus>
+                    <Button onClick={closeAction} autoFocus>
                         Cancel
                     </Button>
                     <Button disabled={availHouses.length == 0 ? true : false}
@@ -209,7 +218,6 @@ export default function AddHouseholdFriendDialog(props) {
         for (let j = 0; j < checked.length; j++) {
             sendList.push(houseList[checked[j]])
         }
-        console.log(sendList);
       
         if (houseList.length == 0) {
             return(<>You have no available households to add this friend to.</>);

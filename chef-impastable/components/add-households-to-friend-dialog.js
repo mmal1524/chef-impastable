@@ -26,22 +26,23 @@ export default function AddHouseholdFriendDialog(props) {
     const [availHouses, setAvailHouses] = useState([]);
     //console.log(props);
     // after first render
-    const [after, setAfter] = useState(false)
+    const [after, setAfter] = useState(false);
 
-    //first render get households
     useEffect(() => {
         setHouses(props.households); 
-        //handleGetHouses();
     })
 
     // render for every household
     useEffect(() => {
         handleGetHouses();
+        console.log(houseArr);
         if (props.open == true) {
+            console.log("opened");
+            console.log(houses);
             //handleGetHouses();
             createHouseList();
         }
-        if (props.open == false && after == true) {
+        if (props.open == false) {
             console.log("clearing")
             ClearArray(houseArr);
         }
@@ -55,7 +56,7 @@ export default function AddHouseholdFriendDialog(props) {
         //ClearArray(houseArr);
         for (let i = 0; i < houses.length; i++) {
             var house = await getHouseholdFromID(houses[i]);
-            setHouseArr(houseArr => [...houseArr, house])
+            setHouseArr(houseArr => [...houseArr, house]);
         }
         console.log(houseArr);
     }
@@ -157,7 +158,7 @@ export default function AddHouseholdFriendDialog(props) {
 
     const closeAction = () => {
         props.onClose();
-        setAfter(true);
+        //setAfter(true);
     }
 
     return (

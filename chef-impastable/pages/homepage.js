@@ -55,7 +55,9 @@ export default function HomePage({ recipes }) {
         if (router.query.searchTerm) {
             const searchTerm = router.query.searchTerm;
             const filters = router.query.filters;
-            fetchdata(searchTerm, filters);
+            setTimeout(() => {
+                fetchdata(searchTerm, filters);
+            }, 0);
         }
         else {
             setDisplayRecipes(recipes);
@@ -153,7 +155,7 @@ export default function HomePage({ recipes }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            No recipes were found from your search. Please try a different keyword.
+                            No recipes were found from your search. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

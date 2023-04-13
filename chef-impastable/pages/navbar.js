@@ -32,6 +32,7 @@ const Navbar = () => {
     const [username, setUsername] = useState("");
     const [searchValue, setSearchValue] = useState("");
     const [recipeResults, setRecipeResults] = useState([]);
+    const [tagValue, setUserTags] = useState("");
 
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
@@ -50,11 +51,17 @@ const Navbar = () => {
                     return this.avatar
                 }
             },
+            getTags: {
+                get() {
+                    return this.dietaryTags
+                },
+            },
         });
 
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
         setUsername(thisUser.username);
+        setUserTags(thisUser.getTags);
     }, []);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
@@ -106,6 +113,7 @@ const Navbar = () => {
     const router = useRouter();
 
     const recipeTagOptions = [
+        { value: "My Preferences"},
         { value: "Vegan"},
         { value: "Vegetarian"},
         { value: "Keto"},
@@ -139,7 +147,6 @@ const Navbar = () => {
                 pathname: "homepage",
                 query: { searchTerm: searchValue, filters: checkedItems },
             });
-            //filter recipes :(
         } catch (error) {
             console.log(error);
         }
@@ -327,16 +334,32 @@ const Navbar = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={checkedItems.includes(item.value)}
-                                        onChange={(event) => {
-                                            if (event.target.checked) {
-                                                setCheckedItems([...checkedItems, item.value]);
-                                            } else {
-                                                setCheckedItems(
-                                                    checkedItems.filter((value) => value !== item.value)
-                                                );
-                                            }
-                                        }}
+                                            /* bug: if use my preferences outside home page, doesn't work */
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue) && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                                            onChange={(event) => {
+                                                if (event.target.checked) {
+                                                    if (item.value === "My Preferences") {
+                                                        setCheckedItems([
+                                                            ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
+                                                            ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
+                                                                .map(item => item.value)
+                                                        ]);
+                                                    }
+                                                    else {
+                                                        setCheckedItems([...checkedItems, item.value]);
+                                                    }
+                                                } else {
+                                                    if (item.value === "My Preferences") {
+                                                        setCheckedItems(
+                                                            checkedItems.filter(item => !tagValue.includes(item) && item !== "My Preferences") // remove selected tags from tagValue and "My Preferences" from the array
+                                                        );
+                                                    } else {
+                                                        setCheckedItems(
+                                                            checkedItems.filter((value) => value !== item.value)
+                                                        );
+                                                    }
+                                                }
+                                            }}
                                         name={item.value}
                                         color="primary"
                                     />

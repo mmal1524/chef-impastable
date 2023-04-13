@@ -302,7 +302,8 @@ export default function SignUp() {
                 dietaryTags: [], 
                 saved: [],
                 reviewedRecipes: [],
-                mealPlans: []
+                mealPlans: [],
+                currentMealPlan: ""
             })
         })
         const data = await res.json();

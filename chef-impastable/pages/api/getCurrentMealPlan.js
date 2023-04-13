@@ -6,17 +6,17 @@ let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
 connect()
 
-export default async function getMealPlans(req,res){
+export default async function getCurrentMealPlan(req,res){
     try {
-        const {username} =req.body;
+        const {username, mealPlan} =req.body;
 
-        var mealPlans = await MealPlan.find({user: username});
+        var mealPlan = await MealPlan.findOne({user: username, name: mealPlan});
 
-        if (!mealPlans) {
-            res.status(400).json({status: "Not able to find meal plans"});
+        if (!mealPlan) {
+            res.json({success: "fail"});
         }
         else {
-            return res.json(mealPlans);
+            return res.json(mealPlan);
         }
     } catch (error) {
         res.status(400).json({status:'Not able to find mealPlans'});

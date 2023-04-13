@@ -50,6 +50,9 @@ const userSchema = new mongoose.Schema({
     mealPlans: {
         type:[String]
     },
+    currentMealPlan: {
+        type: String
+    },
     success: {
         type:Boolean,
         required:false

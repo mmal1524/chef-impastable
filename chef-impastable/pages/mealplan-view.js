@@ -22,6 +22,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
+import StarIcon from '@mui/icons-material/Star';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -68,6 +69,8 @@ export default function MealPlan() {
 
     const [username, setUsername] = useState("");
     var [mealPlans, setMealPlans] = useState([]);
+    var [currentMealPlan, setCurrentMealPlan] = useState("");
+    var [currentMealPlanIndex, setCurrentMealPlanIndex] = useState(0);
     var [recipes, setRecipes] = useState([]);
 
 
@@ -82,8 +85,31 @@ export default function MealPlan() {
         });
 
         async function getMealPlans() {
+
             var plans = await getMeals(thisUser.username);
             setMealPlans(plans);
+
+            var current = await getCurrentMealPlan(thisUser.username, thisUser.currentMealPlan);
+            console.log(current);
+            var index = 0;
+            var x = 0;
+            for (x = 0; x < plans.length; x++) {
+                if (plans[x].name == current) {
+                    index = x;
+                }
+            }
+            if (current.success == "fail") {
+                updateCurrentMealPlan(thisUser.username, plans[0].name)
+                setCurrentMealPlan(plans[0]);
+                localStorage.setItem('user', JSON.stringify({
+                    ...thisUser, 
+                    "currentMealPlan": plans[0].name
+                }))
+            } else {
+                setCurrentMealPlan(plans[index]);
+            }
+    
+            setCurrentMealPlanIndex(index);
 
             var recipeObjects = new Array(plans.length);
 
@@ -194,6 +220,17 @@ export default function MealPlan() {
         setDeleteOpen(false);
     };
 
+    if (mealPlans.length == 0) {
+        return (
+            <>
+                <div className="App">
+                    <Navbar />
+                </div>
+                <h4 align="center">No Meal Plans, create one now!</h4>
+            </>
+        )
+    };
+
     return (
         <>
             <div className="App">
@@ -210,13 +247,85 @@ export default function MealPlan() {
                     aria-label="Vertical tabs example"
                     sx={{ borderRight: 1, borderColor: 'divider', width: 150 }}
                 >
+                    <Tab icon={<StarIcon sx={{color: "orange"}} />} label="Current Meal Plan" {...a11yProps(0)} />
                     {mealPlans.map((mealPlan, index) => (
-                        <Tab label={mealPlan.name} {...a11yProps(index)}/>
+                        index == currentMealPlanIndex ? 
+                            <Tab icon={<StarIcon sx={{width: 10, height: 10}} />} iconPosition="start" label={mealPlan.name} {...a11yProps(index + 1)}/> 
+                            : 
+                            <Tab label={mealPlan.name} {...a11yProps(index + 1)}/>
                     ))}
                 </Tabs>
                 <Box sx={{width: '100%'}}>
+
+                    {/* Current meal plan */}
+
+                    <TabPanel value={tabs} index={0} >
+                        <Button></Button>
+                        <Grid 
+                            container 
+                            spacing={0}
+                            columns={14} 
+                            direction="row"
+                            justifyContent="flex-start"
+                            alignItems="stretch"
+                            sx={{borderRight: 1}}
+                        >
+                            {daysOfWeek.map((day, i) => (
+                                <>
+                                    <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 550}}>
+                                        <Box sx={{borderBottom: 1, borderColor: 'black'}}>
+                                                <h4 align="center" >{day}</h4>
+                                        </Box>
+                                        {recipes && recipes.at(currentMealPlanIndex) && recipes.at(currentMealPlanIndex).at(i) && recipes.at(currentMealPlanIndex).at(i).map((recipe, i) => (
+                                            <div>
+                                                <p className='name'>{recipe.title}</p>
+                                                <Divider textAlign='right'>
+                                                    <IconButton 
+                                                        sx={{padding: 1}}
+                                                        onClick={() => handleChangeDayOpen(currentMealPlan, recipe, i, day)}
+                                                    >
+                                                        <SyncAltIcon sx={{fontSize: 20, color: blue[400]}}/>
+                                                    </IconButton>
+                                                    <IconButton 
+                                                        sx={{padding: 1}}
+                                                        onClick={() => handleDeleteOpen(currentMealPlan, recipe, i, day)}
+                                                    >
+                                                        <DeleteIcon sx={{fontSize: 20, color: red[300]}}/>
+                                                    </IconButton>
+                                                </Divider>
+                                                <style jsx>{`
+                                                    .name {
+                                                        margin-bottom: 0px;
+                                                    }
+                                                `}</style>
+                                            </div>
+                                        ))}
+                                    </Grid>
+                                </>
+                            ))}
+                        </Grid>
+                    </TabPanel>  
+
+                    {/* All other meal plans */}
                     {mealPlans.map((mealPlan, index) => (
-                        <TabPanel value={tabs} index={index} >
+                        <TabPanel value={tabs} index={index + 1} >
+                            {(index == currentMealPlanIndex) ? 
+                                <IconButton><StarIcon sx={{width: 30, height: 30, padding: 0, color: "orange"}}/></IconButton>
+                                :
+                                <IconButton
+                                    onClick={async () => {
+                                        updateCurrentMealPlan(username, mealPlan);
+                                        setCurrentMealPlan(mealPlan);
+                                        setCurrentMealPlanIndex(index);
+                                        var user = JSON.parse(localStorage.getItem('user'));
+                                        localStorage.setItem('user', JSON.stringify({
+                                            ...user, 
+                                            "currentMealPlan": mealPlan.name
+                                        }));
+                                    }}
+                                >
+                                    <StarIcon sx={{width: 30, height: 30, padding: 0}}/>
+                                </IconButton>}
                             <Grid 
                                 container 
                                 spacing={0}
@@ -228,7 +337,7 @@ export default function MealPlan() {
                             >
                                 {daysOfWeek.map((day, i) => (
                                     <>
-                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1}}>
+                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 550}}>
                                             <Box sx={{borderBottom: 1, borderColor: 'black'}}>
                                                 <h4 align="center" >{day}</h4>
                                             </Box>
@@ -280,6 +389,11 @@ export default function MealPlan() {
                                 <ListItem disableGutters>
                                     <ListItemButton onClick={async () => {
                                         var index = mealPlans.indexOf(chooseMealPlan);
+                                        console.log(username);
+                                        console.log(chooseMealPlan);
+                                        console.log(chooseMealPlan.name);
+                                        console.log(day);
+                                        console.log(chooseRecipe._id);
 
                                         var mealPlan = await addRecipeToMealPlan(username, chooseMealPlan.name, day, chooseRecipe._id);
 
@@ -294,6 +408,9 @@ export default function MealPlan() {
 
                                         mealPlans[index] = mealPlan;
 
+                                        if (currentMealPlan == chooseMealPlan) {
+                                            setCurrentMealPlan(mealPlan);
+                                        }
                                         setChangeDayOpen(false);
                                         setChooseMealPlan("");
                                         setChooseRecipe("");
@@ -334,6 +451,9 @@ export default function MealPlan() {
 
                                     mealPlans[index] = mealPlan;
 
+                                    if (currentMealPlan == chooseMealPlan) {
+                                        setCurrentMealPlan(mealPlan);
+                                    }
                                     setDeleteOpen(false);
                                     setChooseMealPlan("");
                                     setChooseRecipe("");
@@ -397,6 +517,40 @@ export default function MealPlan() {
         }
     }
 
+    async function updateCurrentMealPlan(username, mealPlan) {
+        console.log(username);
+        console.log(mealPlan);
+        const res = await fetch('/api/updateCurrentMealPlan', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                mealPlan: mealPlan
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
+
+}
+
+async function getCurrentMealPlan(username, mealPlan) {
+    const res = await fetch('/api/getCurrentMealPlan', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            mealPlan: mealPlan
+        })
+    })
+    const data = await res.json();
+    return data;
 }
 
 async function getMeals(username) {

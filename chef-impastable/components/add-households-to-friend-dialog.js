@@ -34,32 +34,48 @@ export default function AddHouseholdFriendDialog(props) {
     // render for every household
     useEffect(() => {
         handleGetHouses();
-        createHouseList();
+        if (props.open == true) {
+            handleGetHouses();
+            createHouseList();
+        }
+        if (props.open == false) {
+            ClearArray(houseArr);
+        }
+        //createHouseList();
         //console.log(availHouses);
     },[props]);
 
     //console.log(availFriends);
 
     const handleGetHouses = async () => {
+        //ClearArray(houseArr);
         for (let i = 0; i < houses.length; i++) {
             var house = await getHouseholdFromID(houses[i]);
             setHouseArr(houseArr => [...houseArr, house])
         }
+        console.log(houseArr);
     }
 
     const createHouseList = async () => {
-        for (let j = 0; j < availHouses.length; j++) {
-            console.log("deleting")
-            deleteByIndex(j);
-        }
-        // setAvailHousesID([]);
-        // setAvailHouses([]);
+        // for (let j = 0; j < availHouses.length; j++) {
+        //     console.log("deleting")
+        //     deleteByIndex(j);
+        // }
+        //setAvailHousesID([]);
+        //availHousesID.length = 0;
+        //setAvailHouses([]);
+        //availHouses.length = 0;
+        ClearArray(availHouses);
+        ClearArray(availHousesID);
         console.log(availHouses);
         console.log(availHousesID);
-        for (let i = 0; i < houseArr.length; i++) {
+        console.log(houseArr)
+        for (let i = 0; i < houses.length; i++) {
             console.log(houseArr[i].members);
             var idx = await indexMatch(houseArr[i].members, props.friend);
+            //console.log(houseArr[i].members);
             var idxx = await indexMatchNum(availHousesID, houses[i]);
+            console.log(availHousesID);
             if (idx == -1 && idxx == -1) {
                 console.log("added")
                 setAvailHousesID(availHousesID => [...availHousesID, houses[i]])
@@ -67,13 +83,17 @@ export default function AddHouseholdFriendDialog(props) {
             }
         }
     }
-    const deleteByIndex = index => {
-        setAvailHouses(oldValues => {
-            return oldValues.filter((_, i) => i !== index)
-        })
-        setAvailHousesID(oldValues => {
-            return oldValues.filter((_, i) => i !== index)
-        })
+    // const ClearArray = () => {
+    //     while (availHouses.length > 0) {
+    //         houseArr.pop();
+    //         availHouses.pop();
+    //         availHousesID.pop();
+    //     }
+    // }
+    function ClearArray(array) {
+        while (array.length > 0) {
+            array.pop();
+        }
     }
 
     // for the tabs
@@ -159,6 +179,7 @@ export default function AddHouseholdFriendDialog(props) {
                     {"Choose Friends to Add to Household"}
                 </DialogTitle>
                 <DialogContent>
+                    {/* {displayLoading(houseArr, availHouses)} */}
                     {displayHouses(availHouses)}
                 </DialogContent>
                 <DialogActions>
@@ -172,6 +193,15 @@ export default function AddHouseholdFriendDialog(props) {
             </Dialog>
         </>
     );
+
+    function displayLoading(houseArr, availHouses) {
+        if (houseArr.length == 0) {
+            return (<div>Loading...</div>);
+        }
+        else {
+            return (<div>{displayHouses(availHouses)}</div>);
+        }
+    }
 
     function displayHouses(houseList) {
         const [checked, setChecked] = React.useState([0]);

@@ -39,7 +39,7 @@ export default function HomePage({ /*recipes*/ }) {
     };
 
     //api call to get results of search when requested
-    async function fetchdata(searchTerm) {
+    async function fetchdata(searchTerm, page) {
         const recipes = await SearchRecipe(searchTerm, JSON.parse(localStorage.getItem("user")).username, page);
         if (recipes.length === 0) {
             handleClickOpen();
@@ -51,13 +51,16 @@ export default function HomePage({ /*recipes*/ }) {
     }
 
     useEffect(() => {
+        setPage(1);
+      }, [router.query.searchTerm]);
+
+      useEffect(() => {
         debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
         if (router.query.searchTerm) {
             const searchTerm = router.query.searchTerm;
-            fetchdata(searchTerm);
-            setPage(0);
+            fetchdata(searchTerm, page);
         }
         else {
             async function getDefaultRecipes() {
@@ -96,7 +99,7 @@ export default function HomePage({ /*recipes*/ }) {
             }
             getDefaultRecipes();
         }
-      }, [router.query.searchTerm, page]);
+      }, [page]);
 
     // useEffect(() => {
     //     // debugger;

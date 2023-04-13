@@ -2,7 +2,7 @@ import Link from 'next/link';
 import RecipeCard from '../components/recipe-card';
 import Grid from '@mui/material/Grid';
 import { ImageList, ImageListItem, Dialog, Button } from '@mui/material'
-import clientPromise from "../lib/mongodb_client";
+// import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -16,8 +16,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 
-export default function HomePage({ recipes }) {
-    const [displayRecipes, setDisplayRecipes] = useState(recipes);
+export default function HomePage({ /*recipes*/ }) {
+    const [displayRecipes, setDisplayRecipes] = useState([]);
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
     const [folders, setFolders] = useState([]);
@@ -40,14 +40,14 @@ export default function HomePage({ recipes }) {
 
     //api call to get results of search when requested
     async function fetchdata(searchTerm) {
-        const recipes = await SearchRecipe(searchTerm);
+        const recipes = await SearchRecipe(searchTerm, JSON.parse(localStorage.getItem("user")).username, page);
         if (recipes.length === 0) {
             handleClickOpen();
         }
-        // else {
-        //     setDisplayRecipes(recipes);
-        //     setRecipeResults(recipes);
-        // }
+        else {
+            setDisplayRecipes(recipes);
+            setRecipeResults(recipes);
+        }
     }
 
     useEffect(() => {
@@ -57,49 +57,75 @@ export default function HomePage({ recipes }) {
         if (router.query.searchTerm) {
             const searchTerm = router.query.searchTerm;
             fetchdata(searchTerm);
+            setPage(0);
         }
         else {
             async function getDefaultRecipes() {
                 const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
-                if (defaultRecipes.status != null) {
-                    setRecipeResults(recipes)
-                    return;
-                }
+                // if (defaultRecipes.status != null) {
+                //     setRecipeResults(recipes)
+                //     return;
+                // }
                 setRecipeResults(defaultRecipes);
-                setDisplayRecipes(displayRecipes);
+                setDisplayRecipes(defaultRecipes);
+
+                var thisUser = JSON.parse(localStorage.getItem("user"))
+                async function getSavedFolders() {
+                    var f = await getFolders(thisUser.username)
+                    setFolders(f)
+                    var fNames = [];
+                    f.forEach(folder => {
+                        fNames.push(folder.name);
+                    });
+                    setFolderNames(fNames);
+                    // console.log(displayRecipes);
+                    defaultRecipes.forEach(recipe => {
+                        // console.log(recipe)
+                        recipe.saved = false;
+
+                        f.forEach(sf => {
+                            if (sf.recipes.includes(recipe._id)) {
+                                recipe.saved = true
+                            }
+                        });
+                    });
+                    // console.log(recipes);
+                    
+                }
+                getSavedFolders();
             }
             getDefaultRecipes();
         }
       }, [router.query.searchTerm, page]);
 
-    useEffect(() => {
-        // debugger;
-        //console.log(recipes)
-        var thisUser = JSON.parse(localStorage.getItem("user"))
-        var saved = thisUser.saved
-        async function getSavedFolders() {
-            var f = await getFolders(thisUser.username)
-            setFolders(f)
-            var fNames = [];
-            f.forEach(folder => {
-                fNames.push(folder.name);
-            });
-            setFolderNames(fNames);
-            displayRecipes.forEach(recipe => {
-                // console.log(recipe)
-                recipe.saved = false;
+    // useEffect(() => {
+    //     // debugger;
+    //     //console.log(recipes)
+    //     var thisUser = JSON.parse(localStorage.getItem("user"))
+    //     var saved = thisUser.saved
+    //     async function getSavedFolders() {
+    //         var f = await getFolders(thisUser.username)
+    //         setFolders(f)
+    //         var fNames = [];
+    //         f.forEach(folder => {
+    //             fNames.push(folder.name);
+    //         });
+    //         setFolderNames(fNames);
+    //         displayRecipes.forEach(recipe => {
+    //             // console.log(recipe)
+    //             recipe.saved = false;
 
-                f.forEach(sf => {
-                    if (sf.recipes.includes(recipe._id)) {
-                        recipe.saved = true
-                    }
-                });
-            });
-            // console.log(recipes);
-            setDisplayRecipes(recipes);
-        }
-        getSavedFolders();
-    }, [])
+    //             f.forEach(sf => {
+    //                 if (sf.recipes.includes(recipe._id)) {
+    //                     recipe.saved = true
+    //                 }
+    //             });
+    //         });
+    //         // console.log(recipes);
+    //         setDisplayRecipes(recipes);
+    //     }
+    //     getSavedFolders();
+    // }, [])
     //  debugger;
     return (
         <>
@@ -243,30 +269,50 @@ async function unsaveRecipe(username, recipeID) {
 }
 
 
-export async function getServerSideProps() {
-    try {
-        const client = await clientPromise;
-        const db = client.db("test");
-        var test = "hi";
-        const recipes = await db
-            .collection("recipes")
-            .find({
-                // $where: function() {
-                //         return test == "hello";
-                //     },
-                }
-            )
-            .limit(20)
-            .toArray();
-        return {
-            props: { recipes: JSON.parse(JSON.stringify(recipes)) },
-        };
-    }
-    catch (e) {
-        console.error(e);
-    }
-}
-async function SearchRecipe(search) {
+// export async function getServerSideProps() {
+//     try {
+//         // const client = await clientPromise;
+//         // const db = client.db("test");
+//         // var recipes = await db.collection('recipes')
+//         //     .aggregate(
+//         //     [
+//         //     {
+//         //         $addFields: {
+//         //             matches: { 
+//         //                 $size: {
+//         //                     $filter: {
+//         //                         input: "$ingredients",
+//         //                         as: "ingredient",
+//         //                         cond: { $in: ["$$ingredient.ingredient", user.fridge]}
+//         //                     }
+//         //                 }
+//         //             }
+//         //         }
+//         //     },
+//         //     {
+//         //         $sort: {matches: -1}
+//         //     }
+//         // ])
+//         // .limit(20);
+//         // const recipes = await db
+//         //     .collection("recipes")
+//         //     .find({
+//         //         // $where: function() {
+//         //         //         return test == "hello";
+//         //         //     },
+//         //         }
+//         //     )
+//         //     .limit(20)
+//         //     .toArray();
+//         return {
+//             props: { recipes: JSON.parse(JSON.stringify(recipes)) },
+//         };
+//     }
+//     catch (e) {
+//         console.error(e);
+//     }
+// }
+async function SearchRecipe(search, username, page) {
     try {
         const res = await fetch('/api/searchRecipe', {
             method: 'DELETE',
@@ -275,13 +321,16 @@ async function SearchRecipe(search) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                search: search
+                search: search,
+                username: username,
+                byFridge: false,
+                page: page
             })
         })
         const data = await res.json();
         return data;
     } catch {
-        return error
+        console.log("error");
     }
 }
 async function getDefault(username, page) {

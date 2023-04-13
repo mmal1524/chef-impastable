@@ -18,10 +18,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import DialogActions from '@mui/material';
-import DialogContent from '@mui/material';
-import DialogContentText from '@mui/material';
-import Button from '@mui/material';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Button from '@mui/material/Button';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -179,6 +179,10 @@ export default function MealPlan() {
     };
 
     const handleDeleteOpen = (mealPlan, recipe, i, oldDay) => {
+        console.log(mealPlan);
+        console.log(recipe);
+        console.log(i);
+        console.log(oldDay);
         setDeleteOpen(true);
         setChooseMealPlan(mealPlan);
         setChooseRecipe(recipe);
@@ -308,19 +312,23 @@ export default function MealPlan() {
                     open={deleteOpen}
                     onClose={handleDeleteClose}
                 >
-                    
                         <Box sx={{backgroundColor: "orange"}}>
                             <DialogTitle>{chooseMealPlan.name}</DialogTitle>
                         </Box>
-                        <DialogTitle>Delete?</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>Delete {chooseRecipe.title}?</DialogContentText>
+                        </DialogContent>
                         <DialogActions>
-                            <Button onClick={handleDeleteClose}>Disagree</Button>
+                            <Button onClick={handleDeleteClose} sx={{color: "gray"}}>Cancel</Button>
                             <Button 
+                                sx={{color: "red"}}
                                 onClick={async () => {
-                                    console.log(chooseMealPlan)
                                     var index = mealPlans.indexOf(chooseMealPlan);
+                                    console.log(index);
                                     var mealPlan = await deleteRecipeFromMealPlan(username, chooseMealPlan.name, oldDay, chooseRecipe._id, indexOfRecipe)
+                                    console.log(oldDay);
                                     var indexDay = daysOfWeek.indexOf(oldDay);
+                                    console.log(indexDay)
 
                                     recipes[index][indexDay].splice(indexOfRecipe, 1);
 

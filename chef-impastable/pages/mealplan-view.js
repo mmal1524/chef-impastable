@@ -23,6 +23,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
 import StarIcon from '@mui/icons-material/Star';
+import ButtonBase from '@mui/material/ButtonBase';
+import Router from "next/router";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -272,13 +274,19 @@ export default function MealPlan() {
                         >
                             {daysOfWeek.map((day, i) => (
                                 <>
-                                    <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 550}}>
+                                    <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
                                         <Box sx={{borderBottom: 1, borderColor: 'black'}}>
                                                 <h4 align="center" >{day}</h4>
                                         </Box>
                                         {recipes && recipes.at(currentMealPlanIndex) && recipes.at(currentMealPlanIndex).at(i) && recipes.at(currentMealPlanIndex).at(i).map((recipe, i) => (
                                             <div>
-                                                <p className='name'>{recipe.title}</p>
+                                                <ButtonBase
+                                                    onClick={() => {
+                                                        Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: username}})
+                                                    }}
+                                                >
+                                                    <p className='name'>{recipe.title}</p>
+                                                </ButtonBase>
                                                 <Divider textAlign='right'>
                                                     <IconButton 
                                                         sx={{padding: 1}}
@@ -337,13 +345,19 @@ export default function MealPlan() {
                             >
                                 {daysOfWeek.map((day, i) => (
                                     <>
-                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 550}}>
+                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
                                             <Box sx={{borderBottom: 1, borderColor: 'black'}}>
                                                 <h4 align="center" >{day}</h4>
                                             </Box>
                                             {recipes && recipes.at(index) && recipes.at(index).at(i) && recipes.at(index).at(i).map((recipe, i) => (
                                                 <div>
-                                                    <p className='name'>{recipe.title}</p>
+                                                    <ButtonBase
+                                                        onClick={() => {
+                                                            Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: username}})
+                                                        }}
+                                                    >
+                                                        <p className='name'>{recipe.title}</p>
+                                                    </ButtonBase>
                                                     <Divider textAlign='right'>
                                                         <IconButton 
                                                             sx={{padding: 1}}

@@ -14,6 +14,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import AddHouseholdFriendDialog from '../components/add-households-to-friend-dialog.js'
+
+// for add friend to households
+import {House} from '@mui/icons-material';
  
 export function friendCardTwo(friend) {
 
@@ -25,11 +29,15 @@ export function friendCardTwo(friend) {
     const [avatar, setAvatar] = useState("");
     const [friends, setFriends] = useState([]);
     const [friendRequests, setFriendRequests] = useState("");
+    const [households, setHouseholds] = useState([]);
     var [createdPrivacy, setCreatedPrivacy] = useState("");
     var [savedPrivacy, setSavedPrivacy] = useState("");
     var [reviewedPrivacy, setReviewedPrivacy] = useState("");
     var [mealPlanPrivacy, setMealPlanPrivacy] = useState("");
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+
+    const [openAddH, setOpenAddH] = useState(false);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -46,9 +54,15 @@ export function friendCardTwo(friend) {
                 get() {
                     return this.username
                 },
+            },
+            getHouses: {
+                get() {
+                    return this.households
+                }
             }
         });
         setUsername(thisUser.getUsername)
+        setHouseholds(thisUser.getHouses)
     }, []);
 
     return (
@@ -58,7 +72,7 @@ export function friendCardTwo(friend) {
                 direction="row"
                 justifyContent="flex-start"
                 alignItems="center"
-                spacing={3}
+                spacing={2}
             >
                 {/* Profile Picture, if no url, displays user's initials */}
                 <Avatar 
@@ -133,6 +147,22 @@ export function friendCardTwo(friend) {
                 >
                     View
                 </Button>
+                <AddHouseholdFriendDialog
+                    username={username}
+                    friend={friend.username}
+                    households={households}
+                    open={openAddH}
+                    onClose={() => {setOpenAddH(false)}}
+                />
+                <Button 
+                    variant="outlined" 
+                    sx={{color:'gray', borderColor:'gray'}}
+                    endIcon={<House />}
+                    onClick={() => {setOpenAddH(true)}}
+                >
+                    Add to Households
+                </Button>
+
             </Stack> 
             <style jsx>{`
                 .displayName {

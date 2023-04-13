@@ -40,10 +40,7 @@ export default function AddHouseholdDialog(props) {
     //console.log(availFriends);
 
     const createFriendList = async () => {
-        for (let j = 0; j < availFriends.length; j++) {
-            console.log("deleting")
-            deleteByIndex(j);
-        }
+        ClearArray(availFriends);
         for (let i = 0; i < friends.length; i++) {
             //console.log(friends[i])
             //console.log(members)
@@ -63,6 +60,11 @@ export default function AddHouseholdDialog(props) {
         setAvailFriends(oldValues => {
             return oldValues.filter((_, i) => i !== index)
         })
+    }
+    function ClearArray(array) {
+        while (array.length > 0) {
+            array.pop();
+        }
     }
 
     // for the tabs

@@ -29,13 +29,14 @@ export default function AddHouseholdFriendDialog(props) {
     //first render get households
     useEffect(() => {
         setHouses(props.households); 
+        //handleGetHouses();
     })
 
     // render for every household
     useEffect(() => {
         handleGetHouses();
         if (props.open == true) {
-            handleGetHouses();
+            //handleGetHouses();
             createHouseList();
         }
         if (props.open == false) {
@@ -57,25 +58,16 @@ export default function AddHouseholdFriendDialog(props) {
     }
 
     const createHouseList = async () => {
-        // for (let j = 0; j < availHouses.length; j++) {
-        //     console.log("deleting")
-        //     deleteByIndex(j);
-        // }
-        //setAvailHousesID([]);
-        //availHousesID.length = 0;
-        //setAvailHouses([]);
-        //availHouses.length = 0;
         ClearArray(availHouses);
         ClearArray(availHousesID);
         console.log(availHouses);
         console.log(availHousesID);
         console.log(houseArr)
         for (let i = 0; i < houses.length; i++) {
-            console.log(houseArr[i].members);
-            var idx = await indexMatch(houseArr[i].members, props.friend);
             //console.log(houseArr[i].members);
+            var idx = await indexMatch(houseArr[i].members, props.friend);
             var idxx = await indexMatchNum(availHousesID, houses[i]);
-            console.log(availHousesID);
+            //console.log(availHousesID);
             if (idx == -1 && idxx == -1) {
                 console.log("added")
                 setAvailHousesID(availHousesID => [...availHousesID, houses[i]])
@@ -83,13 +75,7 @@ export default function AddHouseholdFriendDialog(props) {
             }
         }
     }
-    // const ClearArray = () => {
-    //     while (availHouses.length > 0) {
-    //         houseArr.pop();
-    //         availHouses.pop();
-    //         availHousesID.pop();
-    //     }
-    // }
+
     function ClearArray(array) {
         while (array.length > 0) {
             array.pop();
@@ -102,18 +88,18 @@ export default function AddHouseholdFriendDialog(props) {
 
     var [sendList, setSendList] = useState([]);
 
-    // const handleAdd = async () => {
-    //     console.log(sendList)
-    //     for (let i = 0; i < sendList.length; i++) {
-    //         var addUser = await AddUsertoHousehold(props.householdId, sendList[i]);
-    //         console.log(addUser)
-    //         var addHouse = await AddHouseholdtoUser(sendList[i], props.householdId);
-    //         console.log(addHouse)
-    //         var idx = await indexMatch(availFriends, sendList[i]);
-    //         deleteByIndex(idx);
-    //     }
-    //     props.onClose();
-    // }
+    const handleAdd = async () => {
+        console.log(sendList)
+        for (let i = 0; i < sendList.length; i++) {
+            var addUser = await AddUsertoHousehold(sendList[i]._id, props.friend);
+            console.log(addUser)
+            var addHouse = await AddHouseholdtoUser(props.friend, sendList[i]._id);
+            console.log(addHouse)
+            // var idx = await indexMatch(availFriends, sendList[i]);
+            // deleteByIndex(idx);
+        }
+        props.onClose();
+    }
     
     async function getHouseholdFromID(id) {
         //console.log(id);
@@ -187,7 +173,7 @@ export default function AddHouseholdFriendDialog(props) {
                         Cancel
                     </Button>
                     <Button disabled={availHouses.length == 0 ? true : false}
-                    //onClick={handleAdd}
+                        onClick={handleAdd}
                         >Add</Button>
                 </DialogActions>
             </Dialog>
@@ -223,6 +209,7 @@ export default function AddHouseholdFriendDialog(props) {
         for (let j = 0; j < checked.length; j++) {
             sendList.push(houseList[checked[j]])
         }
+        console.log(sendList);
       
         if (houseList.length == 0) {
             return(<>You have no available households to add this friend to.</>);

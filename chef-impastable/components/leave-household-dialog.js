@@ -25,15 +25,17 @@ export default function LeaveHouseholdDialog(props) {
 
     const handleLeave = async () => {
         // remove user from household
+        console.log(members.length);
         var householdUpdated = await DeleteUserFromHousehold(props.householdId, props.username);
         var userUpdated = await DeleteHouseholdFromUser(props.username, props.householdId);
         // update local storage
         localStorage.setItem('user', JSON.stringify(userUpdated));
 
-        // if household empty, delete household
-        //console.log(members.length)
-        if (members[0].length <= 1) {
-            var success = await DeleteHousehold(props.householdId)
+        //if household empty, delete household
+        console.log(members.length)
+        if (members.length <= 1) {
+            console.log("entered");
+            var success = await DeleteHousehold(props.householdId);
         }
         props.onClose();
         router.push("/household");

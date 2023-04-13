@@ -20,7 +20,7 @@ export default function AddHouseholdDialog(props) {
     const [members, setMembers] = useState([]);
     const [friends, setFriends] = useState([]);
     const [availFriends, setAvailFriends] = useState([])
-    console.log(props);
+    //console.log(props);
 
     //first render
     useEffect(() => {
@@ -29,31 +29,20 @@ export default function AddHouseholdDialog(props) {
 
     // render for every household
     useEffect(() => {
-        //console.log(props.householdId);
         setMembers(props.members);
-        //console.log("props", props.members)
-        //console.log(members);
         createFriendList();
-        console.log(availFriends);
+        //console.log(availFriends);
     },[props]);
-
-    //console.log(availFriends);
 
     const createFriendList = async () => {
         ClearArray(availFriends);
         for (let i = 0; i < friends.length; i++) {
-            //console.log(friends[i])
-            //console.log(members)
             var idx = await indexMatch(members, friends[i]);
-            //console.log(idx);
-            //console.log(availFriends)
             var idxx = await indexMatch(availFriends, friends[i]);
-            //console.log(idxx);
-            if (idx == -1 && idxx == -1) {
-                //availFriends.push(friends[i]);
-                console.log("added")
-                setAvailFriends(availFriends => [...availFriends, friends[i]]);
-            }
+            // if (idx == -1 && idxx == -1) {
+            //     //console.log("added")
+            //     setAvailFriends(availFriends => [...availFriends, friends[i]]);
+            // }
         }
     }
     const deleteByIndex = index => {
@@ -74,12 +63,12 @@ export default function AddHouseholdDialog(props) {
     var [sendList, setSendList] = useState([]);
 
     const handleAdd = async () => {
-        console.log(sendList)
+        //console.log(sendList)
         for (let i = 0; i < sendList.length; i++) {
             var addUser = await AddUsertoHousehold(props.householdId, sendList[i]);
-            console.log(addUser)
+            //console.log(addUser)
             var addHouse = await AddHouseholdtoUser(sendList[i], props.householdId);
-            console.log(addHouse)
+            //console.log(addHouse)
             var idx = await indexMatch(availFriends, sendList[i]);
             deleteByIndex(idx);
         }

@@ -141,8 +141,8 @@ export default function CreateHouseholdDialog(props) {
                     />
                     <DialogContentText>
                         Select friends:
-                        {displayFriends(friends)}
                     </DialogContentText>
+                        {displayFriends(friends)}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={props.onClose} autoFocus>

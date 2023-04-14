@@ -24,7 +24,6 @@ export default function HomePage({ recipes }) {
     const [folderNames, setFolderNames] = useState([]);
     const [recipeIndex, setRecipeIndex] = useState(-1);
     const router = useRouter();
-    const [recipeResults, setRecipeResults] = useState([]);
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -42,26 +41,25 @@ export default function HomePage({ recipes }) {
         const recipes = await SearchRecipe(searchTerm, filters);
         if (recipes.length === 0) {
             handleClickOpen();
+            setDisplayRecipes([]);
         }
         else {
             setDisplayRecipes(recipes);
-            setRecipeResults(recipes);
         }
     }
 
     useEffect(() => {
         //if the user searches something, update display with those recipes
         //else, display default recipes.
-        if (router.query.searchTerm) {
-            const searchTerm = router.query.searchTerm;
-            const filters = router.query.filters;
+        const searchTerm = router.query.searchTerm;
+        const filters = router.query.filters;
+        if (searchTerm) {
             setTimeout(() => {
                 fetchdata(searchTerm, filters);
-            }, 0);
+            }, 200);
         }
         else {
             setDisplayRecipes(recipes);
-            setRecipeResults(recipes);
         }
       }, [router.query.searchTerm, router.query.filters]);
 
@@ -155,7 +153,7 @@ export default function HomePage({ recipes }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            No recipes were found from your search. Please try a different keyword or filter.
+                            No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

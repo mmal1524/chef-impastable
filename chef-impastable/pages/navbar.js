@@ -14,7 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add, Fullscreen } from '@mui/icons-material';
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton, FormControlLabel } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
@@ -33,6 +33,7 @@ const Navbar = () => {
     const [searchValue, setSearchValue] = useState("");
     const [recipeResults, setRecipeResults] = useState([]);
     const [tagValue, setUserTags] = useState("");
+    const [checkedItems, setCheckedItems] = useState([]);
 
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
@@ -63,6 +64,7 @@ const Navbar = () => {
         setUsername(thisUser.username);
         setUserTags(thisUser.getTags);
     }, []);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -136,7 +138,6 @@ const Navbar = () => {
     const handleCloseDiet = () => {
         setDiet(false);
     };
-    const [checkedItems, setCheckedItems] = useState([]);
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
     const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
@@ -226,7 +227,7 @@ const Navbar = () => {
                     onClick={() => {
                         handleClickOpenDiet();
                     }}
-                >Add Filters
+                >Add Dietary Filters
                 </Button>
             </Grid>
             
@@ -334,8 +335,8 @@ const Navbar = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                            /* bug: if use my preferences outside home page, doesn't work */
-                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue) && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
+                                             && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
                                                 if (event.target.checked) {
                                                     if (item.value === "My Preferences") {
@@ -344,9 +345,18 @@ const Navbar = () => {
                                                             ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
                                                                 .map(item => item.value)
                                                         ]);
+                                                        if (localStorage.getItem("user")) {
+                                                            const dietaryTags = JSON.parse(localStorage.getItem("user")).dietaryTags;
+                                                            if (Array.isArray(dietaryTags) && dietaryTags.length > 0) {
+                                                                setUserTags(dietaryTags);
+                                                                setCheckedItems((prev) => [
+                                                                    ...new Set([...prev, ...dietaryTags]),
+                                                                ]);
+                                                            }
+                                                        }
                                                     }
                                                     else {
-                                                        setCheckedItems([...checkedItems, item.value]);
+                                                        setCheckedItems((prev) => [...new Set([...prev, item.value])]);
                                                     }
                                                 } else {
                                                     if (item.value === "My Preferences") {
@@ -450,23 +460,9 @@ const Navbar = () => {
     );
 }
 export default Navbar;
-async function SearchRecipe(search) {
-    try {
-        const res = await fetch('/api/searchRecipe', {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                search: search
-            })
-        })
-        const data = await res.json();
-        return data;
-    } catch {
-        return error
-    }
+
+function checked1() {
+    
 }
 
 

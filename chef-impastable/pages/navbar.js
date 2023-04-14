@@ -461,8 +461,4 @@ const Navbar = () => {
 }
 export default Navbar;
 
-function checked1() {
-    
-}
-
 

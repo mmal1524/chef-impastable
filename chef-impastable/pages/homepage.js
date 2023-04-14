@@ -100,12 +100,18 @@ export default function HomePage({ recipes }) {
                 show={showSaveHouse}
                 onClose={() => {setShowSaveHouse(false)}}
                 onSubmit = {async (house) => {
-                    var data = await saveRecipeHouse(JSON.parse(localStorage.getItem("user")).username, house, recipeID)
+                    console.log(house);
+
+                    setShowSaveHouse(false);
+                    house.forEach(async (h) => {
+                        var data = await saveRecipe(h, "none", recipeID, true);
+                    })
+                    
                 }}
             />
             <SaveRecipeDialog
                 onSubmit={async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID);
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID, false);
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }
@@ -149,6 +155,8 @@ export default function HomePage({ recipes }) {
                                 }}
                                 onSaveHouse={() => {
                                     setShowSaveHouse(true);
+                                    setRecipeID(recipe._id);
+                                    setRecipeIndex(index);
                                 }}
                             />
                         </Grid>
@@ -178,23 +186,23 @@ export default function HomePage({ recipes }) {
         </>
     );
 }
-async function saveRecipeHouse(user_id, house, recipe_id) {
-    const res = await fetch('/api/getHouseholds', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            user: user_id,
-            house: house,
-            recipe: recipe_id
-        })
-    })
-    const data = await res.json();
-    console.log(data);
-    return data;
-}
+// async function saveRecipeHouse(user_id, house, recipe_id) {
+//     const res = await fetch('/api/getHouseholds', {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             user: user_id,
+//             house: house,
+//             recipe: recipe_id
+//         })
+//     })
+//     const data = await res.json();
+//     console.log(data);
+//     return data;
+// }
 // async function getFolders(user_id) {
 //     const res = await fetch('/api/getSavedRecipes', {
 //         method: 'POST',

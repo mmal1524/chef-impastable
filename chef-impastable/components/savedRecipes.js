@@ -54,7 +54,7 @@ export default function SavedRecipes(props) {
             }}
             onSubmit = {async (folderName) => {
                 await unsaveRecipe(username, recipeID);
-                var data = await saveRecipe(username, folderName, recipeID); 
+                var data = await saveRecipe(username, folderName, recipeID, false); 
                 if (data) {
                     localStorage.setItem('user', JSON.stringify(data));
                 }

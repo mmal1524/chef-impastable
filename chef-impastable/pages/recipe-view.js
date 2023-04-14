@@ -269,7 +269,7 @@ export default function Recipe({ recipe, reviews }) {
         <>
             <SaveRecipeDialog
                 onSubmit = {async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id); 
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id, false); 
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }

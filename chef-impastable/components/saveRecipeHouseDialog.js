@@ -9,6 +9,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Chip from '@mui/material/Chip';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Box from '@mui/material/Box';
+
 
 export default function SaveRecipeHouseDialog(props) {
     // const folderOptions = [props.options];
@@ -16,6 +20,7 @@ export default function SaveRecipeHouseDialog(props) {
     const [folder, setFolder] = useState("none")
     const [folders, setFolders] = useState([]);
     const [houses, setHouses] = useState([]);
+    const [houseIds, setHouseIds] = useState([]);
 
     useEffect(() => {
         async function getHouses() {
@@ -27,6 +32,7 @@ export default function SaveRecipeHouseDialog(props) {
             setHouses(h);
         }
         getHouses();
+        setHouse([]);
     }, [props.show])
 
     // useEffect(() => {
@@ -42,7 +48,10 @@ export default function SaveRecipeHouseDialog(props) {
     // }, [house])
 
     return (
-        <Dialog data-test="SaveHouseDialog" open={props.show} onClose={props.onClose}>
+        <Dialog data-test="SaveHouseDialog" open={props.show} onClose={props.onClose}
+            fullWidth={true}
+            maxWidth={'sm'}
+        >
             <DialogTitle>{props.title ? props.title : "Save Recipe to Household"}</DialogTitle>
             <DialogContent>
                 {/* {props.unsave ? 
@@ -55,19 +64,34 @@ export default function SaveRecipeHouseDialog(props) {
                     </Typography>
                 </>
                 : null} */}
-                <FormControl>
+                <FormControl sx = {{m: 1, width:400}}>
                     <InputLabel>Household</InputLabel>
                     <Select
+                        //chip design: https://mui.com/material-ui/react-select/
+                        input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                        renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {selected.map((value) => (
+                                <Chip key={value} label={value} />
+                              ))}
+                            </Box>
+                          )}
                         value={house}
                         multiple
-                        onChange={(event) => {setHouse(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)}}
+                        onChange={(event) => {
+                            //setHouse(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)
+                            const newHouseArr = event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+                            setHouse(newHouseArr);
+                            //const newHouseIds = event.target.value.map((tempH, index) => typeof tempH === 'string' ? tempH : houses[tempH]._id)
+                            //setHouseIds(newHouseIds);
+                        }}
                         label="Household"
                         >
                             {houses.map((h, index) => (
                                 <MenuItem
                                     key={index}
-                                    value={h.name}
-                                >{h.name}</MenuItem>  
+                                    value={`${h.name}: ${h.members.toString()}`}
+                                >{`${h.name}: ${h.members.toString()}`}</MenuItem>  
                             ))}
                         </Select>
                 </FormControl>
@@ -93,6 +117,7 @@ export default function SaveRecipeHouseDialog(props) {
                         data-test="SaveHouseDialogSubmit"
                         type="submit" 
                         size="large"
+                        disabled={house.length == 0}
                         variant="contained"
                         sx={{
                             mx: 3,

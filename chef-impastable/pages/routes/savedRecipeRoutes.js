@@ -16,7 +16,7 @@ export async function getFolders(user_id, getData) {
     return data;
 }
 
-export async function saveRecipe(username, folder, recipeID) {
+export async function saveRecipe(username, folder, recipeID, isHouse) {
     console.log({username, folder, recipeID});
     const res = await fetch('/api/saveRecipe', {
         method: 'POST',
@@ -25,9 +25,10 @@ export async function saveRecipe(username, folder, recipeID) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username: username,
+            id: username,
             folder: folder,
-            recipeID: recipeID
+            recipeID: recipeID,
+            isHouse: isHouse
         })
     })
     const data = await res.json();

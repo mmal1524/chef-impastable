@@ -105,6 +105,7 @@ export default function Home() {
                     value={tagValue}
                     onChange={handleAddTag}
                     label="Dietary Restrictions"
+                    data-test='DietSelect'
                 >
                     <MenuItem value="">
                         <em>None</em>
@@ -114,20 +115,20 @@ export default function Home() {
                     <MenuItem value={"Keto"}>Keto</MenuItem>
                     <MenuItem value={"Kosher"}>Kosher</MenuItem>
                     <MenuItem value={"Paleo"}>Paleo</MenuItem>
-                    <MenuItem value={"Pescetarian"}>Pescetarian</MenuItem>
-                    <MenuItem value={"Halal"}>Halal</MenuItem>
+                    <MenuItem value={"Pescetarian"} data-test='Pescetarian'>Pescetarian</MenuItem>
+                    <MenuItem value={"Halal"} data-test='Halal'>Halal</MenuItem>
                     <MenuItem value={"Dairy Free"}>Dairy Free</MenuItem>
                     <MenuItem value={"Gluten Free"}>Gluten Free</MenuItem>
                     <MenuItem value={"Nut Free"}>Nut Free</MenuItem>
                     <MenuItem value={"Wheat free"}>Wheat free</MenuItem>
                     <MenuItem value={"Fish free"}>Fish free</MenuItem>
                     <MenuItem value={"Shellfish free"}>Shellfish free</MenuItem>
-                    <MenuItem value={"Egg free"}>Egg free</MenuItem>
+                    <MenuItem value={"Egg free"} data-test='EggFree'>Egg free</MenuItem>
                 </Select>
             </FormControl>
             
             <Button
-                type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200, maxHeight: '35px' }}
+                data-test='AddTag' type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200, maxHeight: '35px' }}
                 onClick={async () => {
                     setUserTags(userTags => [...userTags, tagValue]);
                     var data = await AddTag(username, tagValue);

@@ -24,7 +24,6 @@ export default function HomePage({ recipes }) {
     const [folderNames, setFolderNames] = useState([]);
     const [recipeIndex, setRecipeIndex] = useState(-1);
     const router = useRouter();
-    const [recipeResults, setRecipeResults] = useState([]);
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -38,29 +37,31 @@ export default function HomePage({ recipes }) {
     };
 
     //api call to get results of search when requested
-    async function fetchdata(searchTerm) {
-        const recipes = await SearchRecipe(searchTerm);
+    async function fetchdata(searchTerm, filters) {
+        const recipes = await SearchRecipe(searchTerm, filters);
         if (recipes.length === 0) {
             handleClickOpen();
+            setDisplayRecipes([]);
         }
         else {
             setDisplayRecipes(recipes);
-            setRecipeResults(recipes);
         }
     }
 
     useEffect(() => {
         //if the user searches something, update display with those recipes
         //else, display default recipes.
-        if (router.query.searchTerm) {
-            const searchTerm = router.query.searchTerm;
-            fetchdata(searchTerm);
+        const searchTerm = router.query.searchTerm;
+        const filters = router.query.filters;
+        if (searchTerm) {
+            setTimeout(() => {
+                fetchdata(searchTerm, filters);
+            }, 200);
         }
         else {
             setDisplayRecipes(recipes);
-            setRecipeResults(recipes);
         }
-      }, [router.query.searchTerm]);
+      }, [router.query.searchTerm, router.query.filters]);
 
     useEffect(() => {
         // debugger;
@@ -152,7 +153,7 @@ export default function HomePage({ recipes }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            No recipes were found from your search. Please try a different keyword.
+                            No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -236,7 +237,7 @@ export async function getServerSideProps() {
         console.error(e);
     }
 }
-async function SearchRecipe(search) {
+async function SearchRecipe(search, filters) {
     try {
         const res = await fetch('/api/searchRecipe', {
             method: 'DELETE',
@@ -245,7 +246,8 @@ async function SearchRecipe(search) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                search: search
+                search: search,
+                filters: filters
             })
         })
         const data = await res.json();

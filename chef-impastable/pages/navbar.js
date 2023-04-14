@@ -23,6 +23,8 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationEdit from '../components/notification_edit';
+import NotificationView from '../components/notification_view';
 
 const Navbar = () => {
 
@@ -324,18 +326,10 @@ const Navbar = () => {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {"View Notifications"}
+                    {"Notifications"}
                 </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Friend requests and shared recipes:
-                    </DialogContentText>
-                    <DialogContentText>
-                        New:
-                    </DialogContentText>
-                    <DialogContentText>
-                        Older:
-                    </DialogContentText>
+                <DialogContent data-test='ViewNotifications'>
+                    <NotificationView />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeNotif} autoFocus>

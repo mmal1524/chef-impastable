@@ -8,8 +8,8 @@ connect()
 export default async function handler(req,res){
     try {
         // get passed a receiver username and then find all of the notifications that they received to display.
-        const {username}=req.body;
-        const notification = await Notification.findOne({username});
+        const {receiver}=req.body;
+        const notification = await Notification.find({receiver: receiver});
         
         if (notification == null) {
             return res.json({success: false});

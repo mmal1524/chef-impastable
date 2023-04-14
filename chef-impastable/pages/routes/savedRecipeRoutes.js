@@ -1,4 +1,4 @@
-export async function getFolders(user_id) {
+export async function getFolders(user_id, getData) {
     console.log(user_id);
     const res = await fetch('/api/getSavedRecipes', {
         method: 'POST',
@@ -8,7 +8,7 @@ export async function getFolders(user_id) {
         },
         body: JSON.stringify({
             user: user_id,
-            getData: false
+            getData: getData
         })
     })
     const data = await res.json();

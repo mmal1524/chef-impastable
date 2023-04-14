@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import React from 'react';
 import { Add } from '@mui/icons-material';
 import SaveRecipeDialog from './saveRecipeDialog';
+import { getFolders, saveRecipe, unsaveRecipe } from '../pages/routes/savedRecipeRoutes';
 
 export default function SavedRecipes(props) {
     const [folders, setFolders] = useState([]);
@@ -24,8 +25,9 @@ export default function SavedRecipes(props) {
     const username = props.user ? props.user : JSON.parse(localStorage.getItem("user")).username;
 
     useEffect(() => {
+        debugger;
         async function getSavedFolders() {
-            var f = await getFolders(username)
+            var f = await getFolders(username, true)
             setFolders(f)
             // var fNames = [];
             f.forEach((folder, index) => {
@@ -169,52 +171,52 @@ async function addFolder(username, folder) {
     return data;
 }
 
-async function saveRecipe(username, folder, recipeID) {
-    const res = await fetch('/api/saveRecipe', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            folder: folder,
-            recipeID: recipeID
-        })
-    })
-    const data = await res.json();
-    return data;
-}
+// async function saveRecipe(username, folder, recipeID) {
+//     const res = await fetch('/api/saveRecipe', {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             username: username,
+//             folder: folder,
+//             recipeID: recipeID
+//         })
+//     })
+//     const data = await res.json();
+//     return data;
+// }
 
-async function unsaveRecipe(username, recipeID) {
-    const res = await fetch('/api/unsaveRecipe', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            recipeID: recipeID
-        })
-    })
-    const data = await res.json();
-    // console.log(data);
-    return data;
-}
+// async function unsaveRecipe(username, recipeID) {
+//     const res = await fetch('/api/unsaveRecipe', {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             username: username,
+//             recipeID: recipeID
+//         })
+//     })
+//     const data = await res.json();
+//     // console.log(data);
+//     return data;
+// }
 
-async function getFolders(user_id) {
-    const res = await fetch('/api/getSavedRecipes', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            user: user_id,
-            getData: true,
-        })
-    })
-    const data = await res.json();
-    return data;
-}
+// async function getFolders(user_id) {
+//     const res = await fetch('/api/getSavedRecipes', {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//             user: user_id,
+//             getData: true,
+//         })
+//     })
+//     const data = await res.json();
+//     return data;
+// }

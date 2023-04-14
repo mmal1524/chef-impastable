@@ -17,7 +17,7 @@ export default function SaveRecipeDialog(props) {
         var thisUser = JSON.parse(localStorage.getItem("user"))
         // var saved = thisUser.saved
         async function getSavedFolders() {
-            var f = await getFolders(thisUser.username)
+            var f = await getFolders(thisUser.username, false)
             setFolders(f.map((sf => sf.name)))
         }
         getSavedFolders();

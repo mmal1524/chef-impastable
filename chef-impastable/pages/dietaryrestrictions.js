@@ -109,16 +109,20 @@ export default function Home() {
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    <MenuItem value={"Lactose"}>Lactose</MenuItem>
-                    <MenuItem value={"Gluten"}>Gluten</MenuItem>
-                    <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
                     <MenuItem value={"Vegan"}>Vegan</MenuItem>
-                    <MenuItem value={"Dairy"}>Dairy</MenuItem>
-                    <MenuItem value={"Nuts"}>Nuts</MenuItem>
-                    <MenuItem value={"Peanuts"}>Peanuts</MenuItem>
-                    <MenuItem value={"Wheat"}>Wheat</MenuItem>
-                    <MenuItem value={"Shellfish"}>Shellfish</MenuItem>
-                    <MenuItem value={"Fish"}>Fish</MenuItem>
+                    <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
+                    <MenuItem value={"Keto"}>Keto</MenuItem>
+                    <MenuItem value={"Kosher"}>Kosher</MenuItem>
+                    <MenuItem value={"Paleo"}>Paleo</MenuItem>
+                    <MenuItem value={"Pescetarian"}>Pescetarian</MenuItem>
+                    <MenuItem value={"Halal"}>Halal</MenuItem>
+                    <MenuItem value={"Dairy Free"}>Dairy Free</MenuItem>
+                    <MenuItem value={"Gluten Free"}>Gluten Free</MenuItem>
+                    <MenuItem value={"Nut Free"}>Nut Free</MenuItem>
+                    <MenuItem value={"Wheat free"}>Wheat free</MenuItem>
+                    <MenuItem value={"Fish free"}>Fish free</MenuItem>
+                    <MenuItem value={"Shellfish free"}>Shellfish free</MenuItem>
+                    <MenuItem value={"Egg free"}>Egg free</MenuItem>
                 </Select>
             </FormControl>
             

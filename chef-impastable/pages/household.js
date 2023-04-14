@@ -18,8 +18,8 @@ import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
 import AddHouseholdDialog from '../components/add-user-to-household-dialog.js';
 import LeaveHouseholdDialog from '../components/leave-household-dialog.js';
-//import clientPromise from '../lib/mongodb_client.js';
-// import Fridge from '../components/fridge.js';
+import clientPromise from '../lib/mongodb_client.js';
+import Fridge from '../components/fridge-house.js';
 
 
 function TabPanel(props) {
@@ -123,11 +123,13 @@ export default function Household(props) {
     const [currHouse, setCurrHouse] = useState();
     const [currMembers, setCurrMembers] = useState([]);
     const [currFridge, setCurrFridge] = useState([]);
+    const [currFridgeGroup, setCurrFridgeGroup] = useState({});
     const handleDisplayChosen = async () => {
         var house = await getHouseholdFromID(currID);
         setCurrHouse(house);
         setCurrMembers(house.members);
         setCurrFridge(house.fridge);
+        setCurrFridgeGroup(house.fridge_grouped);
     }
 
     async function getHouseholdFromID(id) {
@@ -154,15 +156,15 @@ export default function Household(props) {
     const handleClickOpenLeave = () => {
         setOpenLeaveConf(true);
     };
-    const handleCloseLeave = () => {
-        setOpenLeaveConf(false);
-    };
     // choose which friends to add
     const [openAddFriend, setOpenAddFriend] = useState(false);
     const handleClickOpenAddF = async () => {
         await handleDisplayChosen();
         setOpenAddFriend(true);
     };
+
+    // fridge tab
+    const ingredientArr = props.ingredientOptions.map(a => a.ingredient);
 
     return (
         <>
@@ -212,7 +214,7 @@ export default function Household(props) {
                         {displayHouseholdMembers(currMembers)}
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        {displayHouseholdFridge(currFridge)}
+                        {displayHouseholdFridge(ingredientArr, currFridge, currFridgeGroup)}
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         {displayHouseholdSaved(currHouse)}
@@ -282,11 +284,18 @@ export default function Household(props) {
         }
     }
 
-    function displayHouseholdFridge(fridge) {
+    function displayHouseholdFridge(ingrArr,fridge, fridge_g) {
         if (fridge == null) {
             return (<div>Choose a household to view</div>)
         } else {
-            return (<div>Something will show up.</div>)
+            return (
+                <Fridge 
+                    //username={username}
+                    ingr={ingrArr}
+                    fridge={fridge}
+                    fridge_grouped={fridge_g}
+                />
+            );
         }
     }
 
@@ -301,12 +310,22 @@ export default function Household(props) {
 
 export async function getServerSideProps(context) {
     console.log(context.query.id)
+
+    const client = await clientPromise;
+        const db = client.db("test");
+        const ingredientOptions = await db
+            .collection("ingredients")
+            .find({})
+            .toArray();
+
     if (context.query.id == null) {
-        return {props: {id: null}}
+        return {
+            props: {id: null, ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))}
+        }
     } else {
         const id = context.query.id;
         return {
-            props: {id: JSON.parse(JSON.stringify(id))}
+            props: {id: JSON.parse(JSON.stringify(id)), ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))}
         }
     }
 }

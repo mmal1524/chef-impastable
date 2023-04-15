@@ -15,7 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { IconButton } from '@mui/material';
-import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add, NotificationsNone } from '@mui/icons-material';
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box } from '@mui/material';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
@@ -53,6 +53,24 @@ const Navbar = () => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
+    const [notificationList, setNotificationList] = React.useState([]);
+
+    async function findNotifications(username) {
+        const res = await fetch('/api/findNotifications', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                getData: true,
+            })
+        })
+        const data = await res.json();
+        console.log(data);
+        setNotificationList(data);
+        return data;
+    }
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -173,7 +191,12 @@ const Navbar = () => {
                     data-test="Notification"
                     sx={{color: 'gray', ml: 1.5}}
                     startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
-                    onClick={handleNotifOpen}
+                    onClick={async ()=> {
+                            //var find = findNotifications(username);
+                            console.log(notificationList);
+                            handleNotifOpen();
+                        }
+                    }
                 >
                 </Button>
             </Grid>
@@ -329,7 +352,7 @@ const Navbar = () => {
                     {"Notifications"}
                 </DialogTitle>
                 <DialogContent data-test='ViewNotifications'>
-                    <NotificationView />
+                    <NotificationEdit />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeNotif} autoFocus>
@@ -342,4 +365,3 @@ const Navbar = () => {
 }
 
 export default Navbar;
-

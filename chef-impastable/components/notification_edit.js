@@ -12,7 +12,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
-export default function NotificationEdit() {
+export default function NotificationEdit(notificationList) {
 
     const [username, setUsername] = useState("");
 
@@ -27,7 +27,8 @@ export default function NotificationEdit() {
         });
         setUsername(thisUser.getUsername);
     }, []);
-
+    console.log(username)
+    
     // for messages
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -47,14 +48,13 @@ export default function NotificationEdit() {
                     // CLEAR button that gets rid of all notifications
                     data-test='ClearItem'
                     type="submit" 
-                    size="large" 
+                    size="small" 
                     variant="outlined"
-                    color="error"
                     startIcon={<ClearIcon/>}
-                    sx={{width: 110}}
+                    sx={{width: 110, color:'red', borderColor:'red'}}
                     onClick={async () => {
-                        setShoppingList([]);
-                        var data = await ClearList(username);
+                        setNotificationList([]);
+                        var data = await clearNotifications(username);
                         localStorage.setItem('user', JSON.stringify(data));
                     }}
                 >
@@ -66,7 +66,7 @@ export default function NotificationEdit() {
             </Grid> */}
             <Grid containter data-test='EditDisplay'>
                 {/* {displayList(shoppingList)} */}
-                {shoppingList && shoppingList.map((item, index) => (
+                {/*notificationList && notificationList.map((item, index) => (
                     <Box>
                         <FormGroup row>
                         </FormGroup>
@@ -96,14 +96,14 @@ export default function NotificationEdit() {
                             </Grid>
                         </Grid>
                     </Box>
-                ))}
+                                    )) */}
                 
             </Grid>
         </div>
         </>
     );
 }
-async function findNotifications() {
+async function findNotifications(username) {
     const res = await fetch('/api/findNotifications', {
         method: 'POST',
         headers: {
@@ -161,5 +161,3 @@ async function indexMatch(array, q) {
     //console.log(array);
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
-
-

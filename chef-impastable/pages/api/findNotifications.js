@@ -9,8 +9,10 @@ export default async function handler(req,res){
     try {
         // get passed a receiver username and then find all of the notifications that they received to display.
         const {receiver}=req.body;
-        const notification = await Notification.find({receiver: receiver});
-        
+        console.log("receiver")
+        console.log(receiver)
+        const notification = await Notification.find({receiver: receiver}).Array();
+        console.log(notification)
         if (notification == null) {
             return res.json({success: false});
         } 

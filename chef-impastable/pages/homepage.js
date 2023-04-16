@@ -43,6 +43,28 @@ export default function HomePage({ /*recipes*/ }) {
         setOpen(false);
     };
 
+    async function getSavedFolders(recipes) {
+        var f = await getFolders(JSON.parse(localStorage.getItem("user")).username)
+        setFolders(f)
+        var fNames = [];
+        f.forEach(folder => {
+            fNames.push(folder.name);
+        });
+        setFolderNames(fNames);
+        recipes.forEach(recipe => {
+            // console.log(recipe)
+            recipe.saved = false;
+
+            f.forEach(sf => {
+                if (sf.recipes.includes(recipe._id)) {
+                    recipe.saved = true
+                }
+            });
+        });
+        // console.log(recipes);
+        setDisplayRecipes(recipes);
+    }
+
     //api call to get results of search when requested
     async function fetchdata(searchTerm, filters, page) {
         debugger;
@@ -50,11 +72,14 @@ export default function HomePage({ /*recipes*/ }) {
         setNext(hasNext)
         if (recipes.length === 0) {
             handleClickOpen();
-            setDisplayRecipes([]);
+            // setDisplayRecipes([]);
+            await getSavedFolders([]);
         }
         else {
-            setDisplayRecipes(recipes);
+            // setDisplayRecipes(recipes);
+            await getSavedFolders(recipes);
         }
+        // await getSavedFolders();
     }
 
     useEffect(() => {
@@ -70,9 +95,9 @@ export default function HomePage({ /*recipes*/ }) {
         const searchTerm = router.query.searchTerm;
         const filters = router.query.filters;
         if (searchTerm) {
-            setTimeout(() => {
-                fetchdata(searchTerm, filters, page);
-            }, 200);
+            // setTimeout(() => {
+            fetchdata(searchTerm, filters, page);
+            // }, 200);
         }
         else {
             async function getDefaultRecipes() {
@@ -81,33 +106,34 @@ export default function HomePage({ /*recipes*/ }) {
                 //     setRecipeResults(recipes)
                 //     return;
                 // }
-                setRecipeResults(defaultRecipes);
-                setDisplayRecipes(defaultRecipes);
+                // setRecipeResults(defaultRecipes);
+                // setDisplayRecipes(defaultRecipes);
+                await getSavedFolders(defaultRecipes);
             
-                var thisUser = JSON.parse(localStorage.getItem("user"))
-                async function getSavedFolders() {
-                    var f = await getFolders(thisUser.username)
-                    setFolders(f)
-                    var fNames = [];
-                    f.forEach(folder => {
-                        fNames.push(folder.name);
-                    });
-                    setFolderNames(fNames);
-                    // console.log(displayRecipes);
-                    defaultRecipes.forEach(recipe => {
-                        // console.log(recipe)
-                        recipe.saved = false;
+                // var thisUser = JSON.parse(localStorage.getItem("user"))
+                // async function getSavedFolders() {
+                //     var f = await getFolders(thisUser.username)
+                //     setFolders(f)
+                //     var fNames = [];
+                //     f.forEach(folder => {
+                //         fNames.push(folder.name);
+                //     });
+                //     setFolderNames(fNames);
+                //     // console.log(displayRecipes);
+                //     defaultRecipes.forEach(recipe => {
+                //         // console.log(recipe)
+                //         recipe.saved = false;
 
-                        f.forEach(sf => {
-                            if (sf.recipes.includes(recipe._id)) {
-                                recipe.saved = true
-                            }
-                        });
-                    });
+                //         f.forEach(sf => {
+                //             if (sf.recipes.includes(recipe._id)) {
+                //                 recipe.saved = true
+                //             }
+                //         });
+                //     });
                     // console.log(recipes);
                     
-                }
-                getSavedFolders();
+                // }
+                // getSavedFolders();
             }
             getDefaultRecipes();
         }
@@ -137,10 +163,12 @@ export default function HomePage({ /*recipes*/ }) {
     //             });
     //         });
     //         // console.log(recipes);
-    //         setDisplayRecipes(recipes);
+    //         setDisplayRecipes(displayRecipes);
     //     }
-    //     getSavedFolders();
-    // }, [])
+    //     if (recipes) {
+    //         getSavedFolders();
+    //     }
+    // }, [displayRecipes])
     //  debugger;
     return (
         <>

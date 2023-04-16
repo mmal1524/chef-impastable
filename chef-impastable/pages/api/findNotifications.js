@@ -11,7 +11,7 @@ export default async function handler(req,res){
         const {receiver}=req.body;
         console.log("receiver")
         console.log(receiver)
-        const notification = await Notification.find({receiver: receiver}).Array();
+        const notification = await Notification.find({receiver: receiver});
         console.log(notification)
         if (notification == null) {
             return res.json({success: false});

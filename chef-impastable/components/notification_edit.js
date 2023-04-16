@@ -111,7 +111,7 @@ async function findNotifications(username) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            getData: true,
+            receiver: username,
         })
     })
     const data = await res.json();

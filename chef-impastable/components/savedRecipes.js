@@ -9,6 +9,7 @@ import React from 'react';
 import { Add } from '@mui/icons-material';
 import SaveRecipeDialog from './saveRecipeDialog';
 import { getFolders, saveRecipe, unsaveRecipe } from '../pages/routes/savedRecipeRoutes';
+import SaveRecipeHouseDialog from './saveRecipeHouseDialog';
 
 export default function SavedRecipes(props) {
     const [folders, setFolders] = useState([]);
@@ -21,6 +22,7 @@ export default function SavedRecipes(props) {
     const [update, setUpdate] = useState(0);
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
+    const [showSaveHouse, setShowSaveHouse] = useState(false);
 
     const username = props.user ? props.user : JSON.parse(localStorage.getItem("user")).username;
 
@@ -71,6 +73,19 @@ export default function SavedRecipes(props) {
             options = {folders.map(folder => folder.name)}
             onClose = {() => {setShowSaveOptions(false)}}
         />
+        <SaveRecipeHouseDialog 
+                show={showSaveHouse}
+                onClose={() => {setShowSaveHouse(false)}}
+                onSubmit = {async (house) => {
+                    console.log(house);
+
+                    setShowSaveHouse(false);
+                    house.forEach(async (h) => {
+                        var data = await saveRecipe(h, "none", recipeID, true);
+                    })
+                    
+                }}
+            />
         <Dialog open={showAddFolder} onClose={() => {setAddFolder(false)}}>
             <DialogTitle>Add Folder</DialogTitle>
             <DialogContent>
@@ -142,7 +157,13 @@ export default function SavedRecipes(props) {
                         <RecipeCard 
                             index = {index}
                             recipe={recipe}
+                            onSaveHouse={() => {
+                                debugger;
+                                setShowSaveHouse(true);
+                                setRecipeID(recipe._id);
+                            }}
                         /> 
+                        
                     :
                         <RecipeCard 
                             index = {index}
@@ -151,6 +172,11 @@ export default function SavedRecipes(props) {
                                 setShowSaveOptions(true); 
                                 setRecipeID(recipe._id); 
                                 
+                            }}
+                            onSaveHouse={() => {
+                                debugger;
+                                setShowSaveHouse(true);
+                                setRecipeID(recipe._id);
                             }}
                         />
                     }

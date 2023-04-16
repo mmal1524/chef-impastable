@@ -291,6 +291,7 @@ export default function Household(props) {
         } else {
             return (
                 <Fridge 
+                    onSubmit={() =>{setUpdate(update + 1);}}
                     id={id}
                     ingr={ingrArr}
                     fridge={fridge}

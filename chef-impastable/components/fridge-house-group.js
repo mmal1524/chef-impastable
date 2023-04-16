@@ -21,6 +21,7 @@ function FridgeGroup(props) {
                                         //localStorage.setItem('user', JSON.stringify(data));
                                         //debugger;
                                         props.delete();
+                                        props.onSubmit();
                                     }}>
                                         <DeleteIcon />
                                     </IconButton>

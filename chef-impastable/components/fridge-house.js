@@ -68,7 +68,8 @@ export default function Fridge(props) {
         setFridge(props.fridge)
         setFridgeGrouped(props.fridge_grouped)
         setIngredientArr2(ingredientArr.filter(ing => fridge ? !fridge.includes(ing.toLowerCase()) : true))
-    }, [openSnackbar, showDeleted])
+        console.log(fridge);
+    }, [openSnackbar, showDeleted, fridge])
 
     // for search bars
     const [searchFridge, setSearchFridge] = useState("");
@@ -153,8 +154,10 @@ export default function Fridge(props) {
                                 } else {
                                     //localStorage.setItem('user',JSON.stringify(data));
                                     setAddIngr("")
-                                    console.log(addIngr, searchGroups)
+                                    setFridge(fridge => [...fridge, addIngr]);
+                                    //console.log(addIngr, searchGroups)
                                     setOpenSnackbar(true)
+                                    props.onSubmit(addIngr);
                                 }
                             }
                             else {
@@ -173,15 +176,16 @@ export default function Fridge(props) {
                                 handleClickOpenEmptyString();
                             } else {
                             var data = await addIngredient(addIngr, searchGroups, id, addButton)
-                            console.log(data)
+                            console.log(data);
                             if (!data.success) {
                                 handleClickOpenExists();
                             } else {
-                                localStorage.setItem('user',
-                                    JSON.stringify(data));
+                                //localStorage.setItem('user',JSON.stringify(data));
                                 setAddIngr("")
+                                setFridge(fridge => [...fridge, addIngr]);
                                 console.log(addIngr, searchGroups)
                                 setOpenSnackbar(true)
+                                props.onSubmit();
                             }
                         }
                     }}>
@@ -316,7 +320,7 @@ export default function Fridge(props) {
                     <Grid container>
                         {fridgeGrouped ? Object.keys(fridgeGrouped).map((group) => (
                             <Grid item key={group}>
-                                <FridgeGroup id={id} name={group} ingredients={fridgeGrouped[group]} delete={() => setShowDeleted(true)} />
+                                <FridgeGroup onSubmit={()=>{props.onSubmit()} } id={id} name={group} ingredients={fridgeGrouped[group]} delete={() => setShowDeleted(true)} />
                             </Grid>
                         )) : <div></div>}
                     </Grid>

@@ -20,6 +20,10 @@ const householdSchema = new mongoose.Schema({
     saved: {
         type:[ObjectID],
     },
+    success: {
+        type:Boolean,
+        required:false
+    }
 });
 
 module.exports = mongoose.models.Household || mongoose.model('Household', householdSchema);

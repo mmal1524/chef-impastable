@@ -22,7 +22,6 @@ export default async function handler(req,res){
             //ingredient should not be added to database
             return res.json({success: false});
         } else if ( (!addButton && !ingredientRet)) {
-            console.log("here part 2") 
             return res.json({success: false});
         }
         if(!ingredientRet){
@@ -30,7 +29,6 @@ export default async function handler(req,res){
             console.log("creating")
             Ingredient.create({ingredient: ingredient})
         }
-        console.log("here 2.5")
         // Check if group is already in the household's fridge groups
         if (!house.fridge_grouped.get(group)) {
             console.log("check if in group already")
@@ -42,7 +40,6 @@ export default async function handler(req,res){
             fridge_group.push(ingredient)
             house.fridge_grouped.set(group, fridge_group)
         }
-        console.log("here pt 3")
         house.fridge.push(ingredient)
         house.save()
         house.success = true;

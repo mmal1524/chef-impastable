@@ -56,7 +56,8 @@ function a11yProps(index) {
 }
 
 export default function Household(props) {
-    var currID = props.id;
+    // var currID = props.id;
+    const [currID, setCurrID] = useState(props.id)
 
     const [username, setUsername] = useState("");
     //local storage household info
@@ -64,8 +65,9 @@ export default function Household(props) {
     const [friends, setFriends] = useState([]);
     const [update, setUpdate] = useState(0);
     useEffect(() => {
+        setCurrID(props.id);
         setUpdate(update + 1);
-    }, [currID])
+    }, [props.id])
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -129,7 +131,6 @@ export default function Household(props) {
         var house = await getHouseholdFromID(currID);
         setCurrHouse(house);
         setCurrMembers(house.members);
-        console.log(currMembers);
         setCurrFridge(house.fridge);
         setCurrFridgeGroup(house.fridge_grouped);
         setCurrName(house.name)
@@ -326,6 +327,7 @@ export default function Household(props) {
             return (<div>Choose a household to view</div>)
         } else {
             return (
+                <>
                 <Fridge 
                     onSubmit={() =>{setUpdate(update + 1);}}
                     id={id}
@@ -333,6 +335,7 @@ export default function Household(props) {
                     fridge={fridge}
                     fridge_grouped={fridge_g}
                 />
+                </>
             );
         }
     }

@@ -69,7 +69,7 @@ export default function Fridge(props) {
         setFridgeGrouped(props.fridge_grouped)
         setIngredientArr2(ingredientArr.filter(ing => fridge ? !fridge.includes(ing.toLowerCase()) : true))
         console.log(fridge);
-    }, [openSnackbar, showDeleted, fridge])
+    }, [openSnackbar, showDeleted, props])
 
     // for search bars
     const [searchFridge, setSearchFridge] = useState("");
@@ -341,6 +341,8 @@ export default function Fridge(props) {
                                         backgroundColor: index === idx ? 'greenyellow' : 'white',
                                     }}
                                 >
+                                    {console.log(id)}
+                                    {console.log(fridge)}
                                     <List>
                                         <ListItemText
                                             sx={{ display: 'flex', justifyContent: 'center' }}

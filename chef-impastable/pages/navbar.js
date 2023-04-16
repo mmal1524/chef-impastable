@@ -114,6 +114,8 @@ const Navbar = () => {
     }
     const router = useRouter();
 
+    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
+    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
         { value: "My Preferences"},
         { value: "Vegan"},
@@ -138,9 +140,6 @@ const Navbar = () => {
     const handleCloseDiet = () => {
         setDiet(false);
     };
-
-    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
     const handleSearch = async (searchValue) => {
         try {

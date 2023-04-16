@@ -68,7 +68,7 @@ export default function HomePage({ /*recipes*/ }) {
     //api call to get results of search when requested
     async function fetchdata(searchTerm, filters, page) {
         debugger;
-        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, filters, JSON.parse(localStorage.getItem("user")).username, page);
+        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, filters, JSON.parse(localStorage.getItem("user")).username, page, router.query.byFridge);
         setNext(hasNext)
         if (recipes.length === 0) {
             handleClickOpen();
@@ -86,7 +86,7 @@ export default function HomePage({ /*recipes*/ }) {
         debugger;
         setPageChanged(!pageChanged);
         setPage(1);
-      }, [router.query.searchTerm, router.query.filters]);
+      }, [router.query.searchTerm, router.query.filters, router.query.byFridge]);
 
       useEffect(() => {
         debugger;
@@ -378,7 +378,7 @@ async function unsaveRecipe(username, recipeID) {
 //         console.error(e);
 //     }
 // }
-async function SearchRecipe(search, filters, username, page) {
+async function SearchRecipe(search, filters, username, page, byFridge) {
     try {
         const res = await fetch('/api/searchRecipe', {
             method: 'POST',
@@ -390,7 +390,7 @@ async function SearchRecipe(search, filters, username, page) {
                 search: search,
                 filters: filters,
                 username: username,
-                byFridge: false,
+                byFridge: byFridge,
                 page: page
             })
         })

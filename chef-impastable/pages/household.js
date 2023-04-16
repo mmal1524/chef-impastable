@@ -132,6 +132,7 @@ export default function Household(props) {
         console.log(currMembers);
         setCurrFridge(house.fridge);
         setCurrFridgeGroup(house.fridge_grouped);
+        setCurrName(house.name)
     }
 
     async function getHouseholdFromID(id) {
@@ -202,7 +203,7 @@ export default function Household(props) {
                 </Grid>
             </div>
             <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
-                <h2>Displaying: {currName}</h2>
+                <h2>{currName}</h2>
             </div>
             <div>
                 <Grid container sx={{ width: '100%' }}>
@@ -254,8 +255,9 @@ export default function Household(props) {
     );
 
     function displayHouseCards(houses) {
-        if (houses == null) {
-            return (<div>You are not part of any household. Create one!</div>)
+        console.log(houses);
+        if (houses == null || houses.length == 0) {
+            return (<div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>You are not part of any household. Create one!</div>)
         } else {
             return (
                 <Box sx={{ flexGrow: 1 }}>
@@ -273,7 +275,6 @@ export default function Household(props) {
                                     householdId={householdId}
                                     index={index}
                                     update={update}
-                                    onSubmit={async (name) => {setCurrName(name)}}
                                 />
                             </Grid>
                         ))}

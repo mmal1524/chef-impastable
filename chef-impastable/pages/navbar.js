@@ -129,8 +129,8 @@ const Navbar = () => {
     const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
     return (
-        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
-            <Grid xs={0.3}>
+        <Grid data-test="Navbar" container spacing={0} columns={30} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+            <Grid xs={1}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
@@ -153,10 +153,11 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={8.8} 
-                sx={{ pt: 0.5, 
-                }
-            }>
+            <Grid xs
+            //     sx={{ pt: 0.5, 
+            //     }
+            // }
+            >
                 <IconButton 
                     aria-label="home button"
                     onClick={() => {
@@ -166,7 +167,7 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            <Grid xs={1.4} 
+            <Grid xs={1} 
                 alignContent='center'
                 sx={{ 
                     pt: 1, 
@@ -175,13 +176,12 @@ const Navbar = () => {
                 <Button 
                     data-test="ShopList"
                     sx={{color: 'gray', ml: 1.5}}
-                    startIcon={<ShoppingBasketIcon/>}
+                    startIcon={<ShoppingBasketIcon style={{width:'25px', height: "25px"}}/>}
                     onClick={handleClickOpenShop}
                 >
-                    Shopping List
                 </Button>
             </Grid>
-            <Grid xs={0.5} 
+            <Grid xs={1} 
                 alignContent='center'
                 sx={{ 
                     pt: 1, 

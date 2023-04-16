@@ -47,6 +47,12 @@ const userSchema = new mongoose.Schema({
         type:[SchemaTypes.ObjectId],
         required:false
     },
+    mealPlans: {
+        type:[String]
+    },
+    currentMealPlan: {
+        type: String
+    },
     success: {
         type:Boolean,
         required:false

@@ -25,6 +25,18 @@ import Button from '@mui/material/Button';
 import StarIcon from '@mui/icons-material/Star';
 import ButtonBase from '@mui/material/ButtonBase';
 import Router from "next/router";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import ClearIcon from '@mui/icons-material/Clear';
+import CheckIcon from '@mui/icons-material/Check';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -75,6 +87,15 @@ export default function MealPlan() {
     var [currentMealPlanIndex, setCurrentMealPlanIndex] = useState(0);
     var [recipes, setRecipes] = useState([]);
 
+    const [calories, setCalories] = useState("");
+    const [carbs, setCarbs] = useState("");
+    const [cholesterol, setCholesterol] = useState("");
+    const [fiber, setFiber] = useState("");
+    const [protein, setProtein] = useState("");
+    const [saturatedFat, setSaturatedFat] = useState("");
+    const [sodium, setSodium] = useState("");
+    const [fat, setFat] = useState("");
+    const [unsaturatedFat, setUnsaturatedFat] = useState("");
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -93,6 +114,47 @@ export default function MealPlan() {
 
             var current = await getCurrentMealPlan(thisUser.username, thisUser.currentMealPlan);
             console.log(current);
+
+            var currCalories = 0;
+            var currCarbs = 0;
+            var currCholesterol = 0;
+            var currFiber = 0;
+            var currProtein = 0;
+            var currSaturatedFat = 0;
+            var currSodium = 0;
+            var currFat = 0;
+            var currUnsaturatedFat = 0;
+
+            function calculateNutrients(recipe) {
+                if (recipe.nutrients.calories) {
+                    currCalories += Number(recipe.nutrients.calories.split(" ")[0]);
+                }
+                if (recipe.nutrients.carbohydrateContent) {
+                    currCarbs += Number(recipe.nutrients.carbohydrateContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.cholesterolContent) {
+                    currCholesterol += Number(recipe.nutrients.cholesterolContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.fiberContent) {
+                    currFiber += Number(recipe.nutrients.fiberContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.proteinContent) {
+                    currProtein += Number(recipe.nutrients.proteinContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.saturatedFatContent) {
+                    currSaturatedFat += Number(recipe.nutrients.saturatedFatContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.sodiumContent) {
+                    currSodium += Number(recipe.nutrients.sodiumContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.fatContent) {
+                    currFat += Number(recipe.nutrients.fatContent.split(" ")[0]);
+                }
+                if (recipe.nutrients.unsaturatedFatContent) {
+                    currUnsaturatedFat += Number(recipe.nutrients.unsaturatedFatContent.split(" ")[0])
+                }
+            }
+
             var index = 0;
             var x = 0;
             for (x = 0; x < plans.length; x++) {
@@ -139,46 +201,62 @@ export default function MealPlan() {
                 var j = 0;
                 for (j = 0; j < sundayRecipeIds.length; j++) {
                     var recipe = await getRecipe(sundayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     sundayRecipes[j] = recipe;
                 }
                 recipeObjects[i][0] = sundayRecipes;
 
                 for (j = 0; j < mondayRecipeIds.length; j++) {
                     var recipe = await getRecipe(mondayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     mondayRecipes[j] = recipe;
                 }
                 recipeObjects[i][1] = mondayRecipes;
 
                 for (j = 0; j < tuesdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(tuesdayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     tuesdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][2] = tuesdayRecipes;
 
                 for (j = 0; j < wednesdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(wednesdayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     wednesdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][3] = wednesdayRecipes;
 
                 for (j = 0; j < thursdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(thursdayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     thursdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][4] = thursdayRecipes;
 
                 for (j = 0; j < fridayRecipeIds.length; j++) {
                     var recipe = await getRecipe(fridayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     fridayRecipes[j] = recipe;
                 }
                 recipeObjects[i][5] = fridayRecipes;
 
                 for (j = 0; j < saturdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(saturdayRecipeIds[j]);
+                    calculateNutrients(recipe);
                     saturdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][6] = saturdayRecipes;
 
+                setCalories(currCalories);
+                setCarbs(currCarbs);
+                setCholesterol(currCholesterol);
+                setFiber(currFiber);
+                setProtein(currProtein);
+                setSaturatedFat(currSaturatedFat);
+                setSodium(currSodium);
+                setFat(currFat);
+                setSaturatedFat(currSaturatedFat);
                 setRecipes(recipeObjects);
             }
         }
@@ -192,7 +270,24 @@ export default function MealPlan() {
     var [chooseRecipe, setChooseRecipe] = useState("");
     var [indexOfRecipe, setIndexOfRecipe] = useState(0);
     var [oldDay, setOldDay] = useState("");
-
+    const [caloriesUpper, setCaloriesUpper] = useState("");
+    const [carbsUpper, setCarbsUpper] = useState("");
+    const [cholesterolUpper, setCholesterolUpper] = useState("");
+    const [fiberUpper, setFiberUpper] = useState("");
+    const [proteinUpper, setProteinUpper] = useState("");
+    const [saturatedFatUpper, setSaturatedFatUpper] = useState("");
+    const [sodiumUpper, setSodiumUpper] = useState("");
+    const [fatUpper, setFatUpper] = useState("");
+    const [unsaturatedFatUpper, setUnsaturatedFatUpper] = useState("");
+    const [caloriesLower, setCaloriesLower] = useState("");
+    const [carbsLower, setCarbsLower] = useState("");
+    const [cholesterolLower, setCholesterolLower] = useState("");
+    const [fiberLower, setFiberLower] = useState("");
+    const [proteinLower, setProteinLower] = useState("");
+    const [saturatedFatLower, setSaturatedFatLower] = useState("");
+    const [sodiumLower, setSodiumLower] = useState("");
+    const [fatLower, setFatLower] = useState("");
+    const [unsaturatedFatLower, setUnsaturatedFatLower] = useState("");
 
     const handleChangeDayOpen = (mealPlan, recipe, i, oldDay) => {
         setChangeDayOpen(true);
@@ -221,6 +316,96 @@ export default function MealPlan() {
     const handleDeleteClose = () => {
         setDeleteOpen(false);
     };
+
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const [failOpen, setFailOpen] = React.useState(false);
+
+    const handleSuccessOpen = () => {
+        setSuccessOpen(true);
+    }
+    const handleSuccesClose = () => {
+        setSuccessOpen(false);
+    }
+    const handleFailOpen = () => {
+        setFailOpen(true);
+    }
+    const handleFailClose = () => {
+        setFailOpen(false);
+    }
+
+    const handleCaloriesUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setCaloriesUpper(upperNum)
+    }
+    const handleCarbsUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setCarbsUpper(upperNum)
+    }
+    const handleCholesterolUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setCholesterolUpper(upperNum)
+    }
+    const handleFiberUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setFiberUpper(upperNum)
+    }
+    const handleProteinUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setProteinUpper(upperNum)
+    }
+    const handleSaturatedFatUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setSaturatedFatUpper(upperNum)
+    }
+    const handleSodiumUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setSodiumUpper(upperNum)
+    }
+    const handleFatUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setFatUpper(upperNum)
+    }
+    const handleUnsaturatedFatUpper = e => {
+        var upperNum = Number((e.target.value).split(" ")[0]);
+        setUnsaturatedFatUpper(upperNum)
+    }
+
+    const handleCaloriesLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setCaloriesLower(lowerNum)
+    }
+    const handleCarbsLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setCarbsLower(lowerNum)
+    }
+    const handleCholesterolLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setCholesterolLower(lowerNum)
+    }
+    const handleFiberLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setFiberLower(lowerNum)
+    }
+    const handleProteinLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setProteinLower(lowerNum)
+    }
+    const handleSaturatedFatLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setSaturatedFatLower(lowerNum)
+    }
+    const handleSodiumLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setSodiumLower(lowerNum)
+    }
+    const handleFatLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setFatLower(lowerNum)
+    }
+    const handleUnsaturatedFatLower = e => {
+        var lowerNum = Number((e.target.value).split(" ")[0]);
+        setUnsaturatedFatLower(lowerNum)
+    }
 
     if (mealPlans.length == 0) {
         return (
@@ -311,6 +496,168 @@ export default function MealPlan() {
                                     </Grid>
                                 </>
                             ))}
+                        </Grid>
+                        &nbsp;
+                        <Grid>
+                            <TableContainer component={Paper} sx={{ maxWidth: 1163 }}>
+                                <Table sx={{ maxWidth: 1163 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Set your goals here:</TableCell>
+                                            <TableCell align="right">Lower bound</TableCell>
+                                            <TableCell align="right">Upper bound</TableCell>
+                                            <TableCell align="right">Status</TableCell>
+                                            <TableCell align="right">View more</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        <TableRow
+                                            key={"Calories"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Calories"}
+                                            </TableCell>
+                                            <TableCell data-test="GoalCaloriesLower" align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCaloriesLower} />}</TableCell>
+                                            <TableCell data-test="GoalsCaloriesUpper" align="right">{<TextField size="small" id="outlined-basic" label="Calories (kcal)" variant="outlined" onChange={handleCaloriesUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(calories, caloriesLower, caloriesUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Carbohydrate Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Carbohydrate Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Carbohydrate Content (g)" variant="outlined" onChange={handleCarbsLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Carbohydrate Content (g)" variant="outlined" onChange={handleCarbsUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(carbs, carbsLower, carbsUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Cholesterol Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Cholesterol Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Cholesterol Content (mg)" variant="outlined" onChange={handleCholesterolLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Cholesterol Content (mg)" variant="outlined" onChange={handleCholesterolUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(cholesterol, cholesterolLower, cholesterolUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Fiber Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Fiber Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Fiber Content (g)" variant="outlined" onChange={handleFiberLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Fiber Content (g)" variant="outlined" onChange={handleFiberUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(fiber, fiberLower, fiberUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Protein Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Protein Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Protein Content (g)" variant="outlined" onChange={handleProteinLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Protein Content (g)" variant="outlined" onChange={handleProteinUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(protein, proteinLower, proteinUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Saturated Fat Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Saturated Fat Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Saturated Fat Content (g)" variant="outlined" onChange={handleSaturatedFatLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Saturated Fat Content (g)" variant="outlined" onChange={handleSaturatedFatUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(saturatedFat, saturatedFatLower, saturatedFatUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Sodium Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Sodium Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Sodium Content (mg)" variant="outlined" onChange={handleSodiumLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Sodium Content (mg)" variant="outlined" onChange={handleSodiumUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(sodium, sodiumLower, sodiumUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Fat Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Fat Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Fat Content (g)" variant="outlined" onChange={handleFatLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Fat Content (g)" variant="outlined" onChange={handleFatUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(fat, fatLower, fatUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                        <TableRow
+                                            key={"Unsaturated Fat Content"}
+                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                            <TableCell component="th" scope="row">
+                                                {"Unsaturated Fat Content"}
+                                            </TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Unsaturated Fat Content (g)" variant="outlined" onChange={handleUnsaturatedFatLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label="Unsaturated Fat Content (g)" variant="outlined" onChange={handleUnsaturatedFatUpper} />}</TableCell>
+                                            <TableCell align="right">{determineStatus(unsaturatedFat, unsaturatedFatLower, unsaturatedFatUpper)}</TableCell>
+                                            <TableCell align="right">{<Button 
+                                                sx={{color:'grey'}}
+                                                endIcon={<MoreHorizIcon />}
+                                            >
+                                            </Button>}</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
                         </Grid>
                     </TabPanel>  
 
@@ -484,6 +831,41 @@ export default function MealPlan() {
         </>
     );
 
+    function determineStatus(amount, lower, upper) {
+        console.log(amount)
+
+        if (amount >= lower && amount <= upper) {
+            return (
+                <div>
+                  <CheckIcon
+                    sx={{color:'green'}}
+                    >
+                    </CheckIcon>  
+                </div>
+            )
+        }
+        if (amount < lower || amount > upper) {
+            return (
+                <div>
+                    <ClearIcon 
+                        sx={{color:'red'}}
+                    >
+                    </ClearIcon>
+                </div>
+            )
+        }
+        if (lowerNum == 0 && upperNum == 0) {
+            return (
+                <div>
+                    <HorizontalRuleIcon 
+                        sx={{color:'grey'}}
+                    >
+                    </HorizontalRuleIcon>
+                </div>
+            )
+        }
+    }
+
     async function addRecipeToMealPlan(username, mealPlan, day, recipeID) {
         try {
             const res = await fetch('/api/addRecipeToMealPlan', {
@@ -596,4 +978,3 @@ async function getRecipe(recipeID) {
     const data = await res.json();
     return data;
 }
-

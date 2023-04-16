@@ -10,6 +10,10 @@ import { Add } from '@mui/icons-material';
 import SaveRecipeDialog from './saveRecipeDialog';
 import { getFolders, saveRecipe, unsaveRecipe } from '../pages/routes/savedRecipeRoutes';
 import SaveRecipeHouseDialog from './saveRecipeHouseDialog';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContentText from '@mui/material/DialogContentText';
 
 export default function SavedRecipes(props) {
     const [folders, setFolders] = useState([]);
@@ -23,6 +27,9 @@ export default function SavedRecipes(props) {
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
     const [showSaveHouse, setShowSaveHouse] = useState(false);
+    const [showConfirmUnsave, setShowConfirmUnsave] = useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const username = props.user ? props.user : JSON.parse(localStorage.getItem("user")).username;
 
@@ -53,6 +60,29 @@ export default function SavedRecipes(props) {
 
     return (
         <>
+        <Dialog
+            fullScreen={fullScreen}
+            open={showConfirmUnsave}
+            onClose={() => {setShowConfirmUnsave(false)}}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">
+                {"Unsave from Household Confirmation"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Are you sure you want to unsave this recipe from the household?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={async () => {await unsaveRecipe(props.houseID, recipeID, true); setUpdate(update + 1); setShowConfirmUnsave(false)}} autoFocus>
+                    Yes
+                </Button>
+                <Button onClick={() => {setShowConfirmUnsave(false)}} autoFocus>
+                    No
+                </Button>
+            </DialogActions>
+        </Dialog>
         <SaveRecipeDialog
             title = "Unsave or Choose New Folder"
             unsave = {async () => {
@@ -133,7 +163,7 @@ export default function SavedRecipes(props) {
                     }
 
                 })}
-                {props.user ? <></> :
+                {props.user || props.houseID? <></> :
                 <Grid item key = {-1}>
                     <IconButton
                         data-test="AddSavedRecipeFolderButton"
@@ -157,10 +187,16 @@ export default function SavedRecipes(props) {
                         <RecipeCard 
                             index = {index}
                             recipe={recipe}
-                            onSaveHouse={() => {
+                            onSaveHouse={async () => {
                                 debugger;
-                                setShowSaveHouse(true);
-                                setRecipeID(recipe._id);
+                                if (props.houseID) {
+                                    setShowConfirmUnsave(true);
+                                    setRecipeID(recipe._id);
+                                }
+                                else {
+                                    setShowSaveHouse(true);
+                                    setRecipeID(recipe._id);
+                                }
                             }}
                         /> 
                         

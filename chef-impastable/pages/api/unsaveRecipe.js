@@ -16,7 +16,7 @@ export default async function handler(req,res){
         console.log(username, recipeID);
         var folder
         if (isHouse) {
-            folder = await SavedFolder.findById(username);
+            folder = await SavedFolder.findOne({household: username, recipes: recipeID});
         } 
         else {
             folder = await SavedFolder.findOne({user: username, recipes: recipeID});

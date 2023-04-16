@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema({
         required:false
     },
     households: {
-        type:[ObjectID],
+        type:[ObjectID]
+    },
     mealPlans: {
         type:[String]
     },

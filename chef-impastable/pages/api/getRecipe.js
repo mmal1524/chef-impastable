@@ -5,10 +5,10 @@ let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
 connect()
 
-export default async function get_recipe_by_id(req,res){
+export default async function getRecipe(req,res){
     try {
-        const id=req.body.id
-        const recipe = await Recipe.findById(id)
+        const {id} = req.body;
+        const recipe = await Recipe.findOne({_id: id})
         if (!recipe) {
             return null;
         }

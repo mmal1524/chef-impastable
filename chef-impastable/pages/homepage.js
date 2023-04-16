@@ -197,7 +197,6 @@ async function saveRecipe(username, folder, recipeID) {
         })
     })
     const data = await res.json();
-    console.log(data);
     return data;
 }
 

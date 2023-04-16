@@ -44,16 +44,16 @@ export default function HomePage({ /*recipes*/ }) {
     };
 
     //api call to get results of search when requested
-    async function fetchdata(searchTerm, page) {
+    async function fetchdata(searchTerm, filters, page) {
         debugger;
-        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, JSON.parse(localStorage.getItem("user")).username, page);
+        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, filters, JSON.parse(localStorage.getItem("user")).username, page);
         setNext(hasNext)
         if (recipes.length === 0) {
             handleClickOpen();
+            setDisplayRecipes([]);
         }
         else {
             setDisplayRecipes(recipes);
-            setRecipeResults(recipes);
         }
     }
 
@@ -61,15 +61,18 @@ export default function HomePage({ /*recipes*/ }) {
         debugger;
         setPageChanged(!pageChanged);
         setPage(1);
-      }, [router.query.searchTerm]);
+      }, [router.query.searchTerm, router.query.filters]);
 
       useEffect(() => {
         debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
-        if (router.query.searchTerm) {
-            const searchTerm = router.query.searchTerm;
-            fetchdata(searchTerm, page);
+        const searchTerm = router.query.searchTerm;
+        const filters = router.query.filters;
+        if (searchTerm) {
+            setTimeout(() => {
+                fetchdata(searchTerm, filters, page);
+            }, 200);
         }
         else {
             async function getDefaultRecipes() {
@@ -80,7 +83,7 @@ export default function HomePage({ /*recipes*/ }) {
                 // }
                 setRecipeResults(defaultRecipes);
                 setDisplayRecipes(defaultRecipes);
-
+            
                 var thisUser = JSON.parse(localStorage.getItem("user"))
                 async function getSavedFolders() {
                     var f = await getFolders(thisUser.username)
@@ -239,7 +242,7 @@ export default function HomePage({ /*recipes*/ }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            No recipes were found from your search. Please try a different keyword.
+                            No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -348,16 +351,17 @@ async function unsaveRecipe(username, recipeID) {
 //         console.error(e);
 //     }
 // }
-async function SearchRecipe(search, username, page) {
+async function SearchRecipe(search, filters, username, page) {
     try {
         const res = await fetch('/api/searchRecipe', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 search: search,
+                filters: filters,
                 username: username,
                 byFridge: false,
                 page: page

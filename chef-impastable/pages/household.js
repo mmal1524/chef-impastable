@@ -121,6 +121,7 @@ export default function Household(props) {
 
     // Chosen household to display
     const [currHouse, setCurrHouse] = useState();
+    const [currName, setCurrName] = useState("");
     const [currMembers, setCurrMembers] = useState([]);
     const [currFridge, setCurrFridge] = useState([]);
     const [currFridgeGroup, setCurrFridgeGroup] = useState({});
@@ -173,7 +174,8 @@ export default function Household(props) {
                 <Navbar />
             </div>
             <div>
-                <Box sx={{ flexGrow: 1 }}>
+                {displayHouseCards(userHouses)}
+                {/* <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={3} sx={{width: '100vw'}}>
                         {userHouses.map((householdId, index) => (
                             <Grid xs item 
@@ -192,12 +194,15 @@ export default function Household(props) {
                             </Grid>
                         ))}
                     </Grid>
-                </Box>
+                </Box> */}
                 <Grid>
                     <Button onClick={() => {handleClickOpenCreate()}}>
                         Create a New Household
                     </Button>
                 </Grid>
+            </div>
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
+                <h2>Displaying: {currName}</h2>
             </div>
             <div>
                 <Grid container sx={{ width: '100%' }}>
@@ -247,6 +252,36 @@ export default function Household(props) {
             </div>
         </>
     );
+
+    function displayHouseCards(houses) {
+        if (houses == null) {
+            return (<div>You are not part of any household. Create one!</div>)
+        } else {
+            return (
+                <Box sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={3} sx={{width: '100vw'}}>
+                        {houses.map((householdId, index) => (
+                            <Grid xs item 
+                                //key={recipe._id}
+                                sx={{
+                                    //border: 4,
+                                    //borderColor: householdId == currID ? 'greenyellow' : 'white',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <HouseholdCard
+                                    householdId={householdId}
+                                    index={index}
+                                    update={update}
+                                    onSubmit={async (name) => {setCurrName(name)}}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            );
+        }
+    }
 
     function displayHouseholdMembers(members) {
         if (members == null) {

@@ -51,7 +51,10 @@ function HouseCard( props ) {
     return (
         <Card sx={{width:200}} variant="outlined">
             <CardActionArea data-test={`Household-${props.index}`} 
-                onClick={() => {Router.push({pathname:"/household/", query: {id: household._id}})}}
+                onClick={() => {
+                    Router.push({pathname:"/household/", query: {id: household._id}})
+                    props.onSubmit(household.name)
+                }}
             >
                 <CardHeader title={household.name} sx={{fontSize:8}}></CardHeader>   
                 <CardContent sx={{overflow: "auto"}}>

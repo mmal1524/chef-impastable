@@ -141,9 +141,6 @@ const Navbar = () => {
         setDiet(false);
     };
 
-    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
-
     const handleSearch = async (searchValue, byFridge) => {
         try {
             router.push({

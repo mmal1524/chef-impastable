@@ -142,11 +142,11 @@ const Navbar = () => {
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
     const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/profile-page", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
 
-    const handleSearch = async (searchValue) => {
+    const handleSearch = async (searchValue, byFridge) => {
         try {
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue, filters: checkedItems },
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
             });
         } catch (error) {
             console.log(error);
@@ -214,7 +214,11 @@ const Navbar = () => {
                                     <ClearIcon />
                                 </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue) }} edge="end">
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                    <Kitchen />
+                                </IconButton>
+
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>

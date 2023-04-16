@@ -128,6 +128,7 @@ export default function Household(props) {
         var house = await getHouseholdFromID(currID);
         setCurrHouse(house);
         setCurrMembers(house.members);
+        console.log(currMembers);
         setCurrFridge(house.fridge);
         setCurrFridgeGroup(house.fridge_grouped);
     }
@@ -214,7 +215,7 @@ export default function Household(props) {
                         {displayHouseholdMembers(currMembers)}
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        {displayHouseholdFridge(ingredientArr, currFridge, currFridgeGroup)}
+                        {displayHouseholdFridge(currID, ingredientArr, currFridge, currFridgeGroup)}
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         {displayHouseholdSaved(currHouse)}
@@ -284,13 +285,13 @@ export default function Household(props) {
         }
     }
 
-    function displayHouseholdFridge(ingrArr,fridge, fridge_g) {
+    function displayHouseholdFridge(id, ingrArr,fridge, fridge_g) {
         if (fridge == null) {
             return (<div>Choose a household to view</div>)
         } else {
             return (
                 <Fridge 
-                    //username={username}
+                    id={id}
                     ingr={ingrArr}
                     fridge={fridge}
                     fridge_grouped={fridge_g}

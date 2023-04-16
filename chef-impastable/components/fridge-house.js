@@ -15,7 +15,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { LocalConvenienceStoreOutlined } from '@mui/icons-material';
 import { Snackbar, Alert } from '@mui/material';
-import FridgeGroup from './fridge-group';
+import FridgeGroup from './fridge-house-group';
 import Tooltip from '@mui/material/Tooltip';
 
 
@@ -27,7 +27,6 @@ export default function Fridge(props) {
     const [addIngr, setAddIngr] = useState("");
     const [searchGroups, setSearchGroup] = useState("");
     const [showError, setShowError] = useState(false);
-    const [username, setUsername] = useState("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
     //Dialog popups for errors when adding ingredients to a fridge
@@ -56,6 +55,7 @@ export default function Fridge(props) {
     };
 
     //local storage fridge info
+    const [id, setId] = useState("");
     const [fridge, setFridge] = useState([]);
     const [fridgeGrouped, setFridgeGrouped] = useState({})
 
@@ -64,10 +64,9 @@ export default function Fridge(props) {
     const [showDeleted, setShowDeleted] = useState(false)
     // 
     useEffect(() => {
+        setId(props.id)
         setFridge(props.fridge)
         setFridgeGrouped(props.fridge_grouped)
-        setUsername(props.username)
-        console.log(fridge);
         setIngredientArr2(ingredientArr.filter(ing => fridge ? !fridge.includes(ing.toLowerCase()) : true))
     }, [openSnackbar, showDeleted])
 
@@ -137,14 +136,8 @@ export default function Fridge(props) {
                             />
                         )}
                     />
-                    <Button
-                        type="submit"
-                        size="large"
-                        variant="contained"
-                        sx={{
-                            mx: 3,
-                            mt: 1,
-                        }}
+                    <Button type="submit" size="large" variant="contained"
+                        sx={{ mx: 3, mt: 1,}}
                         onClick={async () => {
                             //search for appliance
                             var idxx = await indexMatch(fridge, addIngr);
@@ -154,12 +147,11 @@ export default function Fridge(props) {
                             } else {
                             if (idxx == -1) {
                                 addButton = false;
-                                var data = await addIngredient(addIngr, searchGroups, username, addButton)
+                                var data = await addIngredient(addIngr, searchGroups, id, addButton)
                                 if (!data.success) {
                                     handleClickOpen();
                                 } else {
-                                    localStorage.setItem('user',
-                                        JSON.stringify(data));
+                                    //localStorage.setItem('user',JSON.stringify(data));
                                     setAddIngr("")
                                     console.log(addIngr, searchGroups)
                                     setOpenSnackbar(true)
@@ -180,7 +172,7 @@ export default function Fridge(props) {
                             if (addIngr.localeCompare("") == 0) {
                                 handleClickOpenEmptyString();
                             } else {
-                            var data = await addIngredient(addIngr, searchGroups, username, addButton)
+                            var data = await addIngredient(addIngr, searchGroups, id, addButton)
                             console.log(data)
                             if (!data.success) {
                                 handleClickOpenExists();
@@ -324,7 +316,7 @@ export default function Fridge(props) {
                     <Grid container>
                         {fridgeGrouped ? Object.keys(fridgeGrouped).map((group) => (
                             <Grid item key={group}>
-                                <FridgeGroup username={username} name={group} ingredients={fridgeGrouped[group]} delete={() => setShowDeleted(true)} />
+                                <FridgeGroup id={id} name={group} ingredients={fridgeGrouped[group]} delete={() => setShowDeleted(true)} />
                             </Grid>
                         )) : <div></div>}
                     </Grid>
@@ -367,9 +359,9 @@ async function indexMatch(array, q) {
     return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }
 
-async function addIngredient(ingredient, group, username, addButton) {
+async function addIngredient(ingredient, group, id, addButton) {
     //try {
-    const res = await fetch('/api/addIngredientToFridge', {
+    const res = await fetch('/api/addIngredientToHouseholdFridge', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -378,10 +370,10 @@ async function addIngredient(ingredient, group, username, addButton) {
         body: JSON.stringify({
             ingredient: ingredient,
             group: group,
-            username: username,
+            id: id,
             addButton: addButton
         })
-    })
+    });
     const data = await res.json();
     console.log(data);
     return data;

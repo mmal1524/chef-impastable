@@ -20,8 +20,10 @@ export default function LeaveHouseholdDialog(props) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const members= useState(props.members)
-    //console.log(props.householdId);
+    const [members, setMembers] = useState([]);
+    useEffect(() => {
+        setMembers(props.members);
+    });
 
     const handleLeave = async () => {
         // remove user from household
@@ -32,9 +34,8 @@ export default function LeaveHouseholdDialog(props) {
         localStorage.setItem('user', JSON.stringify(userUpdated));
 
         //if household empty, delete household
-        console.log(members.length)
+        console.log(members.length);
         if (members.length <= 1) {
-            console.log("entered");
             var success = await DeleteHousehold(props.householdId);
         }
         props.onClose();

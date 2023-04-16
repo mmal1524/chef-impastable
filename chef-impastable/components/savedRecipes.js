@@ -27,7 +27,13 @@ export default function SavedRecipes(props) {
     useEffect(() => {
         debugger;
         async function getSavedFolders() {
-            var f = await getFolders(username, true)
+            var f;
+            if (props.isHouse) {
+                f = await getFolders(props.houseID, true, props.isHouse)
+            }
+            else {
+                f = await getFolders(username, true, false)
+            }
             setFolders(f)
             // var fNames = [];
             f.forEach((folder, index) => {
@@ -48,12 +54,12 @@ export default function SavedRecipes(props) {
         <SaveRecipeDialog
             title = "Unsave or Choose New Folder"
             unsave = {async () => {
-                await unsaveRecipe(username, recipeID);
+                await unsaveRecipe(username, recipeID, false);
                 setUpdate(update + 1);
                 setShowSaveOptions(false);
             }}
             onSubmit = {async (folderName) => {
-                await unsaveRecipe(username, recipeID);
+                await unsaveRecipe(username, recipeID, false);
                 var data = await saveRecipe(username, folderName, recipeID, false); 
                 if (data) {
                     localStorage.setItem('user', JSON.stringify(data));
@@ -132,7 +138,7 @@ export default function SavedRecipes(props) {
             <Grid data-test="SavedRecipesView" container spacing ={3}>
             {currFolder.recipes.map((recipe, index) => (                
                 <Grid item key={recipe._id}>
-                    {props.user ? 
+                    {props.user || props.houseID ? 
                         <RecipeCard 
                             index = {index}
                             recipe={recipe}

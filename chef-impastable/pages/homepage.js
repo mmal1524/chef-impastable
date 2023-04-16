@@ -71,7 +71,7 @@ export default function HomePage({ recipes }) {
         var thisUser = JSON.parse(localStorage.getItem("user"))
         var saved = thisUser.saved
         async function getSavedFolders() {
-            var f = await getFolders(thisUser.username, false)
+            var f = await getFolders(thisUser.username, false, false)
             setFolders(f)
             var fNames = [];
             f.forEach(folder => {
@@ -147,7 +147,7 @@ export default function HomePage({ recipes }) {
                                         setRecipeIndex(index);
                                     }
                                     else {
-                                        unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
+                                        unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id, false);
                                         displayRecipes[index].saved = !displayRecipes[index].saved;
                                         setDisplayRecipes(displayRecipes);
                                         setRecipeID(recipe._id);

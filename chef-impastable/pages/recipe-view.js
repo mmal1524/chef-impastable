@@ -355,7 +355,7 @@ export default function Recipe({ recipe, reviews }) {
                         data-test="SaveRecipe"
                         onClick={() => {
                             if (saved) {
-                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id, false);
                                 setSaved(false);
                             }
                             else {

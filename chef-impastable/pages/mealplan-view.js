@@ -101,12 +101,14 @@ export default function MealPlan() {
                 }
             }
             if (current.success == "fail") {
-                updateCurrentMealPlan(thisUser.username, plans[0].name)
-                setCurrentMealPlan(plans[0]);
-                localStorage.setItem('user', JSON.stringify({
-                    ...thisUser, 
-                    "currentMealPlan": plans[0].name
-                }))
+                if (plans.length != 0) {
+                    updateCurrentMealPlan(thisUser.username, plans[0].name)
+                    setCurrentMealPlan(plans[0]);
+                    localStorage.setItem('user', JSON.stringify({
+                        ...thisUser, 
+                        "currentMealPlan": plans[0].name
+                    }))
+                }
             } else {
                 setCurrentMealPlan(plans[index]);
             }

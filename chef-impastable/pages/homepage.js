@@ -153,7 +153,7 @@ export default function HomePage({ recipes }) {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText data-test='FailedSearch'>
-                            No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.
+                            No recipes that match your search term and/or dietary filters were found. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

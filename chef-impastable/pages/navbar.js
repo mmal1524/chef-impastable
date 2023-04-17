@@ -82,6 +82,12 @@ const Navbar = () => {
     const handleClosePopup = () => {
         setOpen(false);
     };
+    const handleClickSearchError = () => {
+        setOpen(true);
+    };
+    const handleCloseSearchError = () => {
+        setOpen(false);
+    };
 
     const [shopListPopup, setShopListPopup] = React.useState(false);
     const handleClickOpenShop = () => {
@@ -214,7 +220,14 @@ const Navbar = () => {
                                     <ClearIcon />
                                 </IconButton>
 
-                                <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { handleSearch(searchValue) }} edge="end">
+                                <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { 
+                                        if (searchValue.length === 0) {
+                                            handleClickSearchError();
+                                        }
+                                        else {
+                                            handleSearch(searchValue)
+                                        }
+                                     }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
@@ -336,7 +349,7 @@ const Navbar = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox data-test='checkbox'
-                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && tagValue.length > 0 && Array.isArray(tagValue)
                                              && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
                                                 if (event.target.checked) {
@@ -407,6 +420,26 @@ const Navbar = () => {
                     </Button>
                     <Button onClick={handleClosePopup} autoFocus>
                         No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={openPopup}
+                onClose={handleCloseSearchError}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Invalid Search"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please type in text before searching
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClosePopup} autoFocus>
+                        Ok
                     </Button>
                 </DialogActions>
             </Dialog>

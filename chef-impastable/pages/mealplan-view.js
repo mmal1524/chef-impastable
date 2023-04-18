@@ -190,6 +190,7 @@ export default function MealPlan() {
 
     const [changeDayOpen, setChangeDayOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [deletePlanOpen, setDeletePlanOpen] = useState(false);
     var [chooseMealPlan, setChooseMealPlan] = useState("");
     var [chooseRecipe, setChooseRecipe] = useState("");
     var [indexOfRecipe, setIndexOfRecipe] = useState(0);
@@ -209,10 +210,6 @@ export default function MealPlan() {
     };
 
     const handleDeleteOpen = (mealPlan, recipe, i, oldDay) => {
-        console.log(mealPlan);
-        console.log(recipe);
-        console.log(i);
-        console.log(oldDay);
         setDeleteOpen(true);
         setChooseMealPlan(mealPlan);
         setChooseRecipe(recipe);
@@ -222,6 +219,15 @@ export default function MealPlan() {
 
     const handleDeleteClose = () => {
         setDeleteOpen(false);
+    };
+
+    const handleDeletePlanOpen = (mealPlan) => {
+        setDeletePlanOpen(true);
+        setChooseMealPlan(mealPlan);
+    };
+
+    const handleDeletePlanClose = () => {
+        setDeletePlanOpen(false);
     };
 
     if (mealPlans.length == 0) {
@@ -384,6 +390,13 @@ export default function MealPlan() {
                                         </Grid>
                                     </>
                                 ))}
+                                <Button 
+                                    startIcon={<DeleteIcon sx={{color: "red"}}/>}
+                                    sx={{margin: 4, color: 'black'}}
+                                    onClick={() => handleDeletePlanOpen(mealPlan)}
+                                >
+                                    Delete Meal Plan
+                                </Button>
                                 
                             </Grid>
                             
@@ -445,42 +458,87 @@ export default function MealPlan() {
                     open={deleteOpen}
                     onClose={handleDeleteClose}
                 >
-                        <Box sx={{backgroundColor: "orange"}}>
-                            <DialogTitle>{chooseMealPlan.name}</DialogTitle>
-                        </Box>
-                        <DialogContent>
-                            <DialogContentText>Delete {chooseRecipe.title}?</DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleDeleteClose} sx={{color: "gray"}}>Cancel</Button>
-                            <Button 
-                                sx={{color: "red"}}
-                                onClick={async () => {
-                                    var index = mealPlans.indexOf(chooseMealPlan);
-                                    console.log(index);
-                                    var mealPlan = await deleteRecipeFromMealPlan(username, chooseMealPlan.name, oldDay, chooseRecipe._id, indexOfRecipe)
-                                    console.log(oldDay);
-                                    var indexDay = daysOfWeek.indexOf(oldDay);
-                                    console.log(indexDay)
+                    <Box sx={{backgroundColor: "orange"}}>
+                        <DialogTitle>{chooseMealPlan.name}</DialogTitle>
+                    </Box>
+                    <DialogContent>
+                        <DialogContentText>Delete {chooseRecipe.title}?</DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDeleteClose} sx={{color: "gray"}}>Cancel</Button>
+                        <Button 
+                            sx={{color: "red"}}
+                            onClick={async () => {
+                                var index = mealPlans.indexOf(chooseMealPlan);
+                                console.log(index);
+                                var mealPlan = await deleteRecipeFromMealPlan(username, chooseMealPlan.name, oldDay, chooseRecipe._id, indexOfRecipe)
+                                console.log(oldDay);
+                                var indexDay = daysOfWeek.indexOf(oldDay);
+                                console.log(indexDay)
 
-                                    recipes[index][indexDay].splice(indexOfRecipe, 1);
+                                recipes[index][indexDay].splice(indexOfRecipe, 1);
 
-                                    mealPlans[index] = mealPlan;
+                                mealPlans[index] = mealPlan;
 
-                                    if (currentMealPlan == chooseMealPlan) {
-                                        setCurrentMealPlan(mealPlan);
+                                if (currentMealPlan == chooseMealPlan) {
+                                    setCurrentMealPlan(mealPlan);
+                                }
+                                setDeleteOpen(false);
+                                setChooseMealPlan("");
+                                setChooseRecipe("");
+                                setOldDay("");
+                                setIndexOfRecipe(0);
+                            }} 
+                        >
+                            delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={deletePlanOpen}
+                    onClose={handleDeletePlanClose}
+                >
+                    <DialogTitle sx={{color: "black"}}>Delete {chooseMealPlan.name}?</DialogTitle>
+                    <DialogActions>
+                        <Button onClick={handleDeletePlanClose} sx={{color: "gray"}}>Cancel</Button>
+                        <Button
+                            sx={{color: "red"}}
+                            onClick={async () => {
+                                var index = mealPlans.indexOf(chooseMealPlan);
+                                var data = await deleteMealPlan(username, chooseMealPlan.name);
+
+                                if (index == currentMealPlanIndex) {
+                                    if (mealPlans.length != 1) {
+                                        mealPlans.splice(index, 1);
+                                        recipes.splice(index, 1);
+
+                                        updateCurrentMealPlan(username, mealPlans[0].name);
+                                        setCurrentMealPlan(mealPlans[0]);
+                                        var user = JSON.parse(localStorage.getItem('user'));
+                                        localStorage.setItem('user', JSON.stringify({
+                                            ...user,
+                                            "currentMealPlan": mealPlans[0].name
+                                        }));
+                                    } else {
+                                        mealPlans.splice(index, 1);
+                                        recipes.splice(index, 1);
+                                        updateCurrentMealPlan(username, "");
+                                        setCurrentMealPlan("");
+                                        localStorage.setItem('user', JSON.stringify(data));
                                     }
-                                    setDeleteOpen(false);
-                                    setChooseMealPlan("");
-                                    setChooseRecipe("");
-                                    setOldDay("");
-                                    setIndexOfRecipe(0);
-                                }} 
-                            >
-                                delete
-                            </Button>
-                        </DialogActions>
-                    
+                                } else {
+                                    mealPlans.splice(index, 1);
+                                    recipes.splice(index, 1);
+                                    localStorage.setItem('user', JSON.stringify(data));
+                                }
+                                setChooseMealPlan("");
+                                setDeletePlanOpen(false);
+                            }}
+                        >
+                            Delete
+                        </Button>
+                    </DialogActions>
                 </Dialog>
             </Box>
         </>
@@ -537,6 +595,24 @@ export default function MealPlan() {
         console.log(username);
         console.log(mealPlan);
         const res = await fetch('/api/updateCurrentMealPlan', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                mealPlan: mealPlan
+            })
+        })
+        const data = await res.json();
+        return data;
+    }
+
+    async function deleteMealPlan(username, mealPlan) {
+        console.log(username);
+        console.log(mealPlan);
+        const res = await fetch('/api/deleteMealPlan', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

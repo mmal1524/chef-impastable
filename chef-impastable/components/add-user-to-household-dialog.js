@@ -18,14 +18,8 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 export default function AddHouseholdDialog(props) {
 
     const [members, setMembers] = useState([]);
-    const [friends, setFriends] = useState([]);
     const [availFriends, setAvailFriends] = useState([])
     //console.log(props);
-
-    //first render
-    useEffect(() => {
-        setFriends(props.friends); 
-    })
 
     // render for every household
     useEffect(() => {
@@ -36,13 +30,13 @@ export default function AddHouseholdDialog(props) {
 
     const createFriendList = async () => {
         ClearArray(availFriends);
-        for (let i = 0; i < friends.length; i++) {
-            var idx = await indexMatch(members, friends[i]);
-            var idxx = await indexMatch(availFriends, friends[i]);
-            // if (idx == -1 && idxx == -1) {
-            //     //console.log("added")
-            //     setAvailFriends(availFriends => [...availFriends, friends[i]]);
-            // }
+        for (let i = 0; i < props.friends.length; i++) {
+            var idx = await indexMatch(members, props.friends[i]);
+            var idxx = await indexMatch(availFriends, props.friends[i]);
+            if (idx == -1 && idxx == -1) {
+                //console.log("added")
+                setAvailFriends(availFriends => [...availFriends, props.friends[i]]);
+            }
         }
     }
     const deleteByIndex = index => {

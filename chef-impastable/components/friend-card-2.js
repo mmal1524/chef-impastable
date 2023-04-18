@@ -156,7 +156,7 @@ export function friendCardTwo(friend) {
                 />
                 <Button 
                     variant="outlined" 
-                    sx={{color:'gray', borderColor:'gray'}}
+                    sx={{color:'darkorange', borderColor:'darkorange'}}
                     endIcon={<House />}
                     onClick={() => {setOpenAddH(true)}}
                 >

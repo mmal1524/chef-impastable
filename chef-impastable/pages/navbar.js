@@ -14,8 +14,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add } from '@mui/icons-material';
-import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton } from '@mui/material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add, Fullscreen } from '@mui/icons-material';
+import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton, FormControlLabel } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
 import HomeIcon from '@mui/icons-material/Home';
@@ -24,14 +24,16 @@ import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import Checkbox from '@mui/material/Checkbox';
 
 const Navbar = () => {
-
     const [displayName, setDisplayName] = useState("");
     const [avatar, setAvatar] = useState("");
     const [username, setUsername] = useState("");
     const [searchValue, setSearchValue] = useState("");
     const [recipeResults, setRecipeResults] = useState([]);
+    const [tagValue, setUserTags] = useState("");
+    const [checkedItems, setCheckedItems] = useState([]);
 
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
@@ -50,12 +52,19 @@ const Navbar = () => {
                     return this.avatar
                 }
             },
+            getTags: {
+                get() {
+                    return this.dietaryTags
+                },
+            },
         });
 
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
         setUsername(thisUser.username);
+        setUserTags(thisUser.getTags);
     }, []);
+
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -96,9 +105,6 @@ const Navbar = () => {
         setShopListPopup(true);
         setShopListPopupEdit(false);
     }
-    const handleMouseDownSearch = (event) => {
-        event.preventDefault();
-    };
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -109,23 +115,43 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/profile-page", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const recipeTagOptions = [
+        { value: "My Preferences"},
+        { value: "Vegan"},
+        { value: "Vegetarian"},
+        { value: "Keto"},
+        { value: "Kosher"},
+        { value: "Paleo"},
+        { value: "Pescetarian"},
+        { value: "Halal"},
+        { value: "Dairy Free"},
+        { value: "Gluten Free"},
+        { value: "Nut Free"},
+        { value: "Wheat free"},
+        { value: "Fish free"},
+        { value: "Shellfish free"},
+        { value: "Egg free"}]
 
-    const handleSearch = async (searchValue) => {
+    const [openDiet, setDiet] = React.useState(false);
+    const handleClickOpenDiet = () => {
+        setDiet(true);
+    };
+    const handleCloseDiet = () => {
+        setDiet(false);
+    };
+
+    const handleSearch = async (searchValue, byFridge) => {
         try {
-            //const recipes = await SearchRecipe(search);
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue },
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
             });
-            //setRecipeResults(recipes);
-            //console.log(JSON.stringify(recipes));
-
         } catch (error) {
             console.log(error);
         }
     };
-
+ 
     return (
         <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
@@ -165,8 +191,8 @@ const Navbar = () => {
                     <HomeIcon />
                 </IconButton>
             </Grid>
-            
-            {/* Search Bar */}
+
+            {/* Search Bar, npm i react-select */} 
             <Grid xs={8.0}
                 alignContent='center'
                 sx={{
@@ -174,7 +200,7 @@ const Navbar = () => {
                     display: 'inline-block'
                 }}>
                 <TextField
-                    sx={{ minWidth: 800}}
+                    sx={{ minWidth: 800 }}
                     size="small"
                     label="Search"
                     variant="outlined"
@@ -183,19 +209,31 @@ const Navbar = () => {
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
-                                <IconButton aria-label="clear" onClick={async () => {setSearchValue("")}} edge="end">
+                                <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
                                     <ClearIcon />
                                 </IconButton>
-                                
-                                <IconButton aria-label="search" onClick={async () => {handleSearch(searchValue)}} edge="end">
+
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                    <Kitchen />
+                                </IconButton>
+
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
                         )
+                    }} 
+                    />
+                    &nbsp;
+                <Button
+                    type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                    onClick={() => {
+                        handleClickOpenDiet();
                     }}
-                />
+                >Add Dietary Filters
+                </Button>
             </Grid>
-
+            
             <Grid xs={1.5}
                 alignContent='center'
                 sx={{
@@ -283,6 +321,74 @@ const Navbar = () => {
                     </MenuItem>
                 </Menu>
             </Grid>
+
+            {/* Dietary Filters popup */}
+            <Dialog
+                fullScreen={fullScreen}
+                open={openDiet}
+                onClose={handleCloseDiet}
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Filter by Dietary Restrictions"}
+                </DialogTitle>
+                <DialogContent>
+                    <Grid container>
+                        {recipeTagOptions.map((item) => (
+                            <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
+                                             && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                                            onChange={(event) => {
+                                                if (event.target.checked) {
+                                                    if (item.value === "My Preferences") {
+                                                        setCheckedItems([
+                                                            ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
+                                                            ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
+                                                                .map(item => item.value)
+                                                        ]);
+                                                        if (localStorage.getItem("user")) {
+                                                            const dietaryTags = JSON.parse(localStorage.getItem("user")).dietaryTags;
+                                                            if (Array.isArray(dietaryTags) && dietaryTags.length > 0) {
+                                                                setUserTags(dietaryTags);
+                                                                setCheckedItems((prev) => [
+                                                                    ...new Set([...prev, ...dietaryTags]),
+                                                                ]);
+                                                            }
+                                                        }
+                                                    }
+                                                    else {
+                                                        setCheckedItems((prev) => [...new Set([...prev, item.value])]);
+                                                    }
+                                                } else {
+                                                    if (item.value === "My Preferences") {
+                                                        setCheckedItems(
+                                                            checkedItems.filter(item => !tagValue.includes(item) && item !== "My Preferences") // remove selected tags from tagValue and "My Preferences" from the array
+                                                        );
+                                                    } else {
+                                                        setCheckedItems(
+                                                            checkedItems.filter((value) => value !== item.value)
+                                                        );
+                                                    }
+                                                }
+                                            }}
+                                        name={item.value}
+                                        color="primary"
+                                    />
+                                }
+                                label={item.value}
+                            />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDiet} autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Dialog
                 fullScreen={fullScreen}
                 open={openPopup}
@@ -357,23 +463,5 @@ const Navbar = () => {
     );
 }
 export default Navbar;
-async function SearchRecipe(search) {
-    try {
-        const res = await fetch('/api/searchRecipe', {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                search: search
-            })
-        })
-        const data = await res.json();
-        return data;
-    } catch {
-        return error
-    }
-}
 
 

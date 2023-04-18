@@ -10,12 +10,20 @@ const householdSchema = new mongoose.Schema({
     fridge: {
         type:[String]
     },
+    fridge_grouped: {
+        type: Map,
+        of: [String]
+    },
     members: {
         type:[String],
     },
     saved: {
         type:[ObjectID],
     },
+    success: {
+        type:Boolean,
+        required:false
+    }
 });
 
 module.exports = mongoose.models.Household || mongoose.model('Household', householdSchema);

@@ -17,7 +17,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 
 export default function AddHouseholdFriendDialog(props) {
     // array of object ID of houses
-    const [houses, setHouses] = useState([]);
+    //const [houses, setHouses] = useState([]);
     // array of objects of houses
     const [houseArr, setHouseArr] = useState([]);
     // array of object ID of houses that user is not a member
@@ -25,20 +25,14 @@ export default function AddHouseholdFriendDialog(props) {
     // array of object houses that user is not a member
     const [availHouses, setAvailHouses] = useState([]);
     //console.log(props);
-    // after first render
-    const [after, setAfter] = useState(false);
-
-    useEffect(() => {
-        setHouses(props.households); 
-    })
 
     // render for every household
     useEffect(() => {
+        debugger;
         handleGetHouses();
-        console.log(houseArr);
+        // console.log(houseArr);
         if (props.open == true) {
             console.log("opened");
-            console.log(houses);
             //handleGetHouses();
             createHouseList();
         }
@@ -49,33 +43,35 @@ export default function AddHouseholdFriendDialog(props) {
         //createHouseList();
         //console.log(availHouses);
     },[props]);
+    // });
 
     //console.log(availFriends);
 
     const handleGetHouses = async () => {
         //ClearArray(houseArr);
-        for (let i = 0; i < houses.length; i++) {
-            var house = await getHouseholdFromID(houses[i]);
+        for (let i = 0; i < props.households.length; i++) {
+            var house = await getHouseholdFromID(props.households[i]);
             setHouseArr(houseArr => [...houseArr, house]);
         }
         console.log(houseArr);
     }
 
     const createHouseList = async () => {
+        //debugger;
         ClearArray(availHouses);
         ClearArray(availHousesID);
-        console.log(availHouses);
-        console.log(availHousesID);
-        console.log(houseArr)
+        // console.log(availHouses);
+        // console.log(availHousesID);
+        // console.log(houseArr)
         
         for (let i = 0; i < houseArr.length; i++) {
             //console.log(houseArr[i].members);
             var idx = await indexMatch(houseArr[i].members, props.friend);
-            var idxx = await indexMatchNum(availHousesID, houses[i]);
+            var idxx = await indexMatchNum(availHousesID, props.households[i]);
             //console.log(availHousesID);
             if (idx == -1 && idxx == -1) {
                 console.log("added")
-                setAvailHousesID(availHousesID => [...availHousesID, houses[i]])
+                setAvailHousesID(availHousesID => [...availHousesID, props.households[i]])
                 setAvailHouses(availHouses => [...availHouses, houseArr[i]]);
             }
         }

@@ -77,6 +77,10 @@ export default function CreateHouseholdDialog(props) {
             },
             body: JSON.stringify({
                 name: name,
+                fridge: [],
+                fridge_grouped: {"general": []},
+                members: [],
+                saved: [],
             })
         });
         const data = await res.json();

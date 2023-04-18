@@ -21,6 +21,8 @@ import LeaveHouseholdDialog from '../components/leave-household-dialog.js';
 import SavedRecipes from '../components/savedRecipes.js';
 //import clientPromise from '../lib/mongodb_client.js';
 // import Fridge from '../components/fridge.js';
+import clientPromise from '../lib/mongodb_client.js';
+import Fridge from '../components/fridge-house.js';
 
 
 function TabPanel(props) {
@@ -57,7 +59,8 @@ function a11yProps(index) {
 }
 
 export default function Household(props) {
-    var currID = props.id;
+    // var currID = props.id;
+    const [currID, setCurrID] = useState(props.id)
 
     const [username, setUsername] = useState("");
     //local storage household info
@@ -65,8 +68,9 @@ export default function Household(props) {
     const [friends, setFriends] = useState([]);
     const [update, setUpdate] = useState(0);
     useEffect(() => {
+        setCurrID(props.id);
         setUpdate(update + 1);
-    }, [currID])
+    }, [props.id])
     useEffect(() => {
         const thisUser = JSON.parse(localStorage.getItem('user'));
         Object.defineProperties(thisUser, {
@@ -122,13 +126,17 @@ export default function Household(props) {
 
     // Chosen household to display
     const [currHouse, setCurrHouse] = useState();
+    const [currName, setCurrName] = useState("");
     const [currMembers, setCurrMembers] = useState([]);
     const [currFridge, setCurrFridge] = useState([]);
+    const [currFridgeGroup, setCurrFridgeGroup] = useState({});
     const handleDisplayChosen = async () => {
         var house = await getHouseholdFromID(currID);
         setCurrHouse(house);
         setCurrMembers(house.members);
         setCurrFridge(house.fridge);
+        setCurrFridgeGroup(house.fridge_grouped);
+        setCurrName(house.name)
     }
 
     async function getHouseholdFromID(id) {
@@ -155,9 +163,6 @@ export default function Household(props) {
     const handleClickOpenLeave = () => {
         setOpenLeaveConf(true);
     };
-    const handleCloseLeave = () => {
-        setOpenLeaveConf(false);
-    };
     // choose which friends to add
     const [openAddFriend, setOpenAddFriend] = useState(false);
     const handleClickOpenAddF = async () => {
@@ -165,13 +170,17 @@ export default function Household(props) {
         setOpenAddFriend(true);
     };
 
+    // fridge tab
+    const ingredientArr = props.ingredientOptions.map(a => a.ingredient);
+
     return (
         <>
             <div>
                 <Navbar />
             </div>
             <div>
-                <Box sx={{ flexGrow: 1 }}>
+                {displayHouseCards(userHouses)}
+                {/* <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={3} sx={{width: '100vw'}}>
                         {userHouses.map((householdId, index) => (
                             <Grid xs item 
@@ -190,12 +199,15 @@ export default function Household(props) {
                             </Grid>
                         ))}
                     </Grid>
-                </Box>
+                </Box> */}
                 <Grid>
                     <Button onClick={() => {handleClickOpenCreate()}}>
                         Create a New Household
                     </Button>
                 </Grid>
+            </div>
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>
+                <h2>{currName}</h2>
             </div>
             <div>
                 <Grid container sx={{ width: '100%' }}>
@@ -213,7 +225,7 @@ export default function Household(props) {
                         {displayHouseholdMembers(currMembers)}
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        {displayHouseholdFridge(currFridge)}
+                        {displayHouseholdFridge(currID, ingredientArr, currFridge, currFridgeGroup)}
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         {displayHouseholdSaved(currID)}
@@ -245,6 +257,36 @@ export default function Household(props) {
             </div>
         </>
     );
+
+    function displayHouseCards(houses) {
+        console.log(houses);
+        if (houses == null || houses.length == 0) {
+            return (<div style={{display: 'flex',  justifyContent:'center', alignItems:'center' }}>You are not part of any household. Create one!</div>)
+        } else {
+            return (
+                <Box sx={{ flexGrow: 1 }}>
+                    <Grid container spacing={3} sx={{width: '100vw'}}>
+                        {houses.map((householdId, index) => (
+                            <Grid xs item 
+                                //key={recipe._id}
+                                sx={{
+                                    //border: 4,
+                                    //borderColor: householdId == currID ? 'greenyellow' : 'white',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <HouseholdCard
+                                    householdId={householdId}
+                                    index={index}
+                                    update={update}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            );
+        }
+    }
 
     function displayHouseholdMembers(members) {
         if (members == null) {
@@ -283,11 +325,21 @@ export default function Household(props) {
         }
     }
 
-    function displayHouseholdFridge(fridge) {
+    function displayHouseholdFridge(id, ingrArr,fridge, fridge_g) {
         if (fridge == null) {
             return (<div>Choose a household to view</div>)
         } else {
-            return (<div>Something will show up.</div>)
+            return (
+                <>
+                <Fridge 
+                    onSubmit={() =>{setUpdate(update + 1);}}
+                    id={id}
+                    ingr={ingrArr}
+                    fridge={fridge}
+                    fridge_grouped={fridge_g}
+                />
+                </>
+            );
         }
     }
 
@@ -302,12 +354,22 @@ export default function Household(props) {
 
 export async function getServerSideProps(context) {
     console.log(context.query.id)
+
+    const client = await clientPromise;
+        const db = client.db("test");
+        const ingredientOptions = await db
+            .collection("ingredients")
+            .find({})
+            .toArray();
+
     if (context.query.id == null) {
-        return {props: {id: null}}
+        return {
+            props: {id: null, ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))}
+        }
     } else {
         const id = context.query.id;
         return {
-            props: {id: JSON.parse(JSON.stringify(id))}
+            props: {id: JSON.parse(JSON.stringify(id)), ingredientOptions: JSON.parse(JSON.stringify(ingredientOptions))}
         }
     }
 }

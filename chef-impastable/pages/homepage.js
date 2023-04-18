@@ -2,7 +2,7 @@ import Link from 'next/link';
 import RecipeCard from '../components/recipe-card';
 import Grid from '@mui/material/Grid';
 import { ImageList, ImageListItem, Dialog, Button } from '@mui/material'
-import clientPromise from "../lib/mongodb_client";
+// import clientPromise from "../lib/mongodb_client";
 import Navbar from './navbar';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -14,16 +14,23 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+// import ImageList from '@mui/material/ImageList';
+// import ImageListItem from '@mui/material/ImageListItem';
+import Masonry from '@mui/lab/Masonry';
 
 
-export default function HomePage({ recipes }) {
-    const [displayRecipes, setDisplayRecipes] = useState(recipes);
+export default function HomePage({ /*recipes*/ }) {
+    const [displayRecipes, setDisplayRecipes] = useState([]);
     const [showSaveOption, setShowSaveOptions] = useState(false);
     const [recipeID, setRecipeID] = useState("");
     const [folders, setFolders] = useState([]);
     const [folderNames, setFolderNames] = useState([]);
     const [recipeIndex, setRecipeIndex] = useState(-1);
     const router = useRouter();
+    const [recipeResults, setRecipeResults] = useState([]);
+    const [page, setPage] = useState(1);
+    const [pageChanged, setPageChanged] = useState(false);
+    const [next, setNext] = useState(true);
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -36,61 +43,132 @@ export default function HomePage({ recipes }) {
         setOpen(false);
     };
 
+    async function getSavedFolders(recipes) {
+        var f = await getFolders(JSON.parse(localStorage.getItem("user")).username)
+        setFolders(f)
+        var fNames = [];
+        f.forEach(folder => {
+            fNames.push(folder.name);
+        });
+        setFolderNames(fNames);
+        recipes.forEach(recipe => {
+            // console.log(recipe)
+            recipe.saved = false;
+
+            f.forEach(sf => {
+                if (sf.recipes.includes(recipe._id)) {
+                    recipe.saved = true
+                }
+            });
+        });
+        // console.log(recipes);
+        setDisplayRecipes(recipes);
+    }
+
     //api call to get results of search when requested
-    async function fetchdata(searchTerm, filters) {
-        const recipes = await SearchRecipe(searchTerm, filters);
+    async function fetchdata(searchTerm, filters, page) {
+        debugger;
+        const [ recipes, hasNext ] = await SearchRecipe(searchTerm, filters, JSON.parse(localStorage.getItem("user")).username, page, router.query.byFridge);
+        setNext(hasNext)
         if (recipes.length === 0) {
             handleClickOpen();
-            setDisplayRecipes([]);
+            // setDisplayRecipes([]);
+            await getSavedFolders([]);
         }
         else {
-            setDisplayRecipes(recipes);
+            // setDisplayRecipes(recipes);
+            await getSavedFolders(recipes);
         }
+        // await getSavedFolders();
     }
 
     useEffect(() => {
+        debugger;
+        setPageChanged(!pageChanged);
+        setPage(1);
+      }, [router.query.searchTerm, router.query.filters, router.query.byFridge]);
+
+      useEffect(() => {
+        debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
         const searchTerm = router.query.searchTerm;
         const filters = router.query.filters;
         if (searchTerm) {
-            setTimeout(() => {
-                fetchdata(searchTerm, filters);
-            }, 200);
+            // setTimeout(() => {
+            fetchdata(searchTerm, filters, page);
+            // }, 200);
         }
         else {
-            setDisplayRecipes(recipes);
-        }
-      }, [router.query.searchTerm, router.query.filters]);
+            async function getDefaultRecipes() {
+                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
+                // if (defaultRecipes.status != null) {
+                //     setRecipeResults(recipes)
+                //     return;
+                // }
+                // setRecipeResults(defaultRecipes);
+                // setDisplayRecipes(defaultRecipes);
+                await getSavedFolders(defaultRecipes);
+            
+                // var thisUser = JSON.parse(localStorage.getItem("user"))
+                // async function getSavedFolders() {
+                //     var f = await getFolders(thisUser.username)
+                //     setFolders(f)
+                //     var fNames = [];
+                //     f.forEach(folder => {
+                //         fNames.push(folder.name);
+                //     });
+                //     setFolderNames(fNames);
+                //     // console.log(displayRecipes);
+                //     defaultRecipes.forEach(recipe => {
+                //         // console.log(recipe)
+                //         recipe.saved = false;
 
-    useEffect(() => {
-        // debugger;
-        //console.log(recipes)
-        var thisUser = JSON.parse(localStorage.getItem("user"))
-        var saved = thisUser.saved
-        async function getSavedFolders() {
-            var f = await getFolders(thisUser.username)
-            setFolders(f)
-            var fNames = [];
-            f.forEach(folder => {
-                fNames.push(folder.name);
-            });
-            setFolderNames(fNames);
-            displayRecipes.forEach(recipe => {
-                // console.log(recipe)
-                recipe.saved = false;
-
-                f.forEach(sf => {
-                    if (sf.recipes.includes(recipe._id)) {
-                        recipe.saved = true
-                    }
-                });
-            });
-            // console.log(recipes);
-            setDisplayRecipes(recipes);
+                //         f.forEach(sf => {
+                //             if (sf.recipes.includes(recipe._id)) {
+                //                 recipe.saved = true
+                //             }
+                //         });
+                //     });
+                    // console.log(recipes);
+                    
+                // }
+                // getSavedFolders();
+            }
+            getDefaultRecipes();
         }
-        getSavedFolders();
-    }, [])
+      }, [page, pageChanged]);
+
+    // useEffect(() => {
+    //     // debugger;
+    //     //console.log(recipes)
+    //     var thisUser = JSON.parse(localStorage.getItem("user"))
+    //     var saved = thisUser.saved
+    //     async function getSavedFolders() {
+    //         var f = await getFolders(thisUser.username)
+    //         setFolders(f)
+    //         var fNames = [];
+    //         f.forEach(folder => {
+    //             fNames.push(folder.name);
+    //         });
+    //         setFolderNames(fNames);
+    //         displayRecipes.forEach(recipe => {
+    //             // console.log(recipe)
+    //             recipe.saved = false;
+
+    //             f.forEach(sf => {
+    //                 if (sf.recipes.includes(recipe._id)) {
+    //                     recipe.saved = true
+    //                 }
+    //             });
+    //         });
+    //         // console.log(recipes);
+    //         setDisplayRecipes(displayRecipes);
+    //     }
+    //     if (recipes) {
+    //         getSavedFolders();
+    //     }
+    // }, [displayRecipes])
     //  debugger;
     return (
         <>
@@ -118,6 +196,45 @@ export default function HomePage({ recipes }) {
             </div>
             <p></p>
             <div>
+                <Grid container spacing = {3}>
+                    {page != 1 ?
+                        <Grid item key={"back"}>
+                            <Button onClick={() => {setPage(page - 1)}}>
+                                Previous Page
+                            </Button>
+                        </Grid>
+                        : <></>
+                    }
+                    {next ? 
+                    <Grid item key={"next"}>
+                        <Button onClick={() => {setPage(page + 1)}}>
+                            Next Page
+                        </Button>
+                    </Grid>
+                    : <></>
+                    }
+                </Grid>
+                <Masonry>
+                    { displayRecipes && displayRecipes.map((recipe, index) => (
+                            <RecipeCard
+                                recipe={recipe}
+                                index={index}
+                                onSave={() => {
+                                    if (!recipe.saved) {
+                                        setShowSaveOptions(true);
+                                        setRecipeID(recipe._id);
+                                        setRecipeIndex(index);
+                                    }
+                                    else {
+                                        unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
+                                        displayRecipes[index].saved = !displayRecipes[index].saved;
+                                        setDisplayRecipes(displayRecipes);
+                                        setRecipeID(recipe._id);
+                                    }
+                                }}
+                            />
+                    ))}
+                </Masonry>
                 <Grid container spacing={3}>
                     {/* display recipes */}
                     { displayRecipes && displayRecipes.map((recipe, index) => (
@@ -218,35 +335,83 @@ async function unsaveRecipe(username, recipeID) {
 }
 
 
-export async function getServerSideProps() {
-    try {
-        const client = await clientPromise;
-        const db = client.db("test");
-
-        const recipes = await db
-            .collection("recipes")
-            .find({})
-            .limit(20)
-            .toArray();
-        return {
-            props: { recipes: JSON.parse(JSON.stringify(recipes)) },
-        };
-    }
-    catch (e) {
-        console.error(e);
-    }
-}
-async function SearchRecipe(search, filters) {
+// export async function getServerSideProps() {
+//     try {
+//         // const client = await clientPromise;
+//         // const db = client.db("test");
+//         // var recipes = await db.collection('recipes')
+//         //     .aggregate(
+//         //     [
+//         //     {
+//         //         $addFields: {
+//         //             matches: { 
+//         //                 $size: {
+//         //                     $filter: {
+//         //                         input: "$ingredients",
+//         //                         as: "ingredient",
+//         //                         cond: { $in: ["$$ingredient.ingredient", user.fridge]}
+//         //                     }
+//         //                 }
+//         //             }
+//         //         }
+//         //     },
+//         //     {
+//         //         $sort: {matches: -1}
+//         //     }
+//         // ])
+//         // .limit(20);
+//         // const recipes = await db
+//         //     .collection("recipes")
+//         //     .find({
+//         //         // $where: function() {
+//         //         //         return test == "hello";
+//         //         //     },
+//         //         }
+//         //     )
+//         //     .limit(20)
+//         //     .toArray();
+//         return {
+//             props: { recipes: JSON.parse(JSON.stringify(recipes)) },
+//         };
+//     }
+//     catch (e) {
+//         console.error(e);
+//     }
+// }
+async function SearchRecipe(search, filters, username, page, byFridge) {
     try {
         const res = await fetch('/api/searchRecipe', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 search: search,
-                filters: filters
+                filters: filters,
+                username: username,
+                byFridge: byFridge,
+                page: page
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        console.log("error");
+    }
+}
+async function getDefault(username, page) {
+    
+    try {
+        const res = await fetch('/api/getRecipesByFridge', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                page: page
             })
         })
         const data = await res.json();

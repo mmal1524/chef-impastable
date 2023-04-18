@@ -302,6 +302,7 @@ export default function SignUp() {
                 dietaryTags: [], 
                 saved: [],
                 reviewedRecipes: [],
+                households: [],
                 mealPlans: [],
                 currentMealPlan: ""
             })

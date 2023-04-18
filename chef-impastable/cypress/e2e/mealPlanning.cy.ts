@@ -10,5 +10,14 @@ describe('Meal Planning', () => {
         cy.get("[data-test='LoginButton']").click()
     })
 
+    // Clicks on a recipe
+    it("Clicking a recipe", () => {
+        cy.get("[data-test='Recipe-4']", {timeout: 60000}).click()
+    })
+
+    it("Click meal plan button", () => {
+        cy.get("[data-test='MealPlanButton']", {timeout: 60000}).click()
+    })
+
 
 })

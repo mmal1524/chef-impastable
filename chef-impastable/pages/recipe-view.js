@@ -425,7 +425,7 @@ export default function Recipe({ recipe, reviews }) {
                     </IconButton>
 
                     {/* Add to meal plan button */}
-                    <IconButton
+                    <IconButton data-test="MealPlanButton"
                         onClick={handleMealPlanOpen}
                     >
                         <PostAddIcon />

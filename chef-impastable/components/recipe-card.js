@@ -157,7 +157,7 @@ function RecipeCard( props ) {
             </IconButton>
             <IconButton>
                 <HouseOutlined 
-                    onClick={() => props.onSaveHouse()}
+                    onClick={() => {debugger; props.onSaveHouse()}}
                 />
             </IconButton>
 

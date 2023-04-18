@@ -54,16 +54,8 @@ export default function SaveRecipeHouseDialog(props) {
         >
             <DialogTitle>{props.title ? props.title : "Save Recipe to Household"}</DialogTitle>
             <DialogContent>
-                {/* {props.unsave ? 
+                {houses.length > 0 ? 
                 <>
-                    <Button data-test="SaveDialogUnsaveButton" onClick={props.unsave}>
-                        Unsave
-                    </Button>
-                    <Typography>
-                        OR
-                    </Typography>
-                </>
-                : null} */}
                 <FormControl sx = {{m: 1, width:400}}>
                     <InputLabel>Household</InputLabel>
                     <Select
@@ -95,24 +87,7 @@ export default function SaveRecipeHouseDialog(props) {
                             ))}
                         </Select>
                 </FormControl>
-                {/* <Autocomplete
-                    data-test="SaveDialogAuto"
-                    disablePortal
-                    id="combo-box-demo"
-                    freeSolo
-                    options={folders}
-                    //renderOption={(props, option) => <li {...props}>{option.title}</li>}
-                    onInputChange={(e, new_val) => {setHouse(new_val)}}
-                    //sx={{ width: windowSize[0]/3 }}
-                    renderInput={params => (
-                        <TextField 
-                            data-test="SaveDialogTextField"
-                            {...params} 
-                            label="Household Name"
-                            onChange={({ target }) => setHouse(target.value)} 
-                        />
-                    )}
-                    />*/}
+                
                     <Button
                         data-test="SaveHouseDialogSubmit"
                         type="submit" 
@@ -127,6 +102,9 @@ export default function SaveRecipeHouseDialog(props) {
                     >
                         Save
                     </Button>
+                    </>
+                    
+                : <div>Create a household to save this recipe</div>}
             </DialogContent>
         </Dialog>
     );

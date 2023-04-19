@@ -432,19 +432,19 @@ export default function Recipe({ recipe, reviews }) {
                     </IconButton>
 
                     {/* Choose meal plan dialog */}
-                    <Dialog
+                    <Dialog data-test="ChooseMealPlanDialog"
                         open={mealPlanOpen}
                         onClose={handleMealPlanClose}
                     >
                         <Box sx={{backgroundColor: "orange"}}>
-                            <DialogTitle textAlign={"center"}>Choose Meal Plan</DialogTitle>
+                            <DialogTitle data-test="ChooseMealPlan" textAlign={"center"}>Choose Meal Plan</DialogTitle>
                         </Box>
-                        <List sx={{ pt: 0 }}>
+                        <List sx={{ pt: 0 }} data-test="MealPlans">
                             {/* Displaying meal plans */}
-                            {mealPlans && mealPlans.map((mealPlan) => (
+                            {mealPlans && mealPlans.map((mealPlan, x) => (
                                 <ListItem disableGutters>
-                                    <ListItemButton onClick={() => handleChooseMealPlan(mealPlan)} key={mealPlan}>
-                                        <ListItemText primary={mealPlan} sx={{textAlign: "center"}}/>
+                                    <ListItemButton data-test={`MealPlan-${x}`} onClick={() => handleChooseMealPlan(mealPlan)} key={mealPlan}>
+                                        <ListItemText data-test={`MealPlanText-${x}`} primary={mealPlan} sx={{textAlign: "center"}}/>
                                     </ListItemButton>
                                 </ListItem>
                             ))}
@@ -501,19 +501,19 @@ export default function Recipe({ recipe, reviews }) {
                     </Dialog>
                     
                     {/* Choose day of week dialog */}
-                    <Dialog
+                    <Dialog data-test="ChooseDayDialog"
                         open={dayOpen}
                         onClose={handleDayClose}
                     >
                         <Box sx={{width: 300}}>
                             <Box sx={{backgroundColor: "orange"}}>
-                                <DialogTitle>{chosenMealPlan}</DialogTitle>
+                                <DialogTitle data-test='MealPlan'>{chosenMealPlan}</DialogTitle>
                             </Box>
-                            <DialogTitle>Add {recipe.title} to: </DialogTitle>
-                            <List>
-                                {daysOfWeek.map((day) => (
+                            <DialogTitle data-test="Recipe">Add {recipe.title} to: </DialogTitle>
+                            <List data-test="Days">
+                                {daysOfWeek.map((day, x) => (
                                     <ListItem disableGutters>
-                                        <ListItemButton onClick={async () => {
+                                        <ListItemButton data-test={`Day-${x}`} onClick={async () => {
                                             var mealPlan = await addRecipeToMealPlan(username, chosenMealPlan, day, recipe._id);
                                             setDayOpen(false);
                                             setMealPlanOpen(false);

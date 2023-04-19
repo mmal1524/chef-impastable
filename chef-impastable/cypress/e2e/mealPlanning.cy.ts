@@ -2,6 +2,9 @@ import React from "react"
 
 describe('Meal Planning', () => {
 
+    var recipeName: string;
+    var mealPlanName: string;
+
     // Logs in
     it("Logging in", () => {
         cy.visit('/')
@@ -10,14 +13,63 @@ describe('Meal Planning', () => {
         cy.get("[data-test='LoginButton']").click()
     })
 
+    // USER STORY 10
+
     // Clicks on a recipe
     it("Clicking a recipe", () => {
         cy.get("[data-test='Recipe-4']", {timeout: 60000}).click()
     })
 
+    // Clicks on meal plan button
     it("Click meal plan button", () => {
-        cy.get("[data-test='MealPlanButton']", {timeout: 60000}).click()
+        cy.get("[data-test='RecipeTitle']", {timeout: 60000}).then(($recipetitle) => {
+            recipeName = $recipetitle.text()
+        })
+        cy.get("[data-test='MealPlanButton']")
+            .should("exist")
+            .click()
+        
+        cy.get("[data-test='ChooseMealPlanDialog']").should("exist")
     })
 
+    // Chooses a meal plan
+    it("Choose Meal Plan", () => {
+        cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
+        cy.get("[data-test='MealPlan-0']")
+            .should("exist")
+            .find("[data-test='MealPlanText-0']").then(($mealPlan) => {
+                mealPlanName = $mealPlan.text()
+            })
+        cy.get("[data-test='MealPlan-0']").click()
+
+        cy.get("[data-test='ChooseDayDialog']").should("exist")
+    })
+
+    // Chooses day of week
+    it("Choose Day of Week", () => {
+        cy.get("[data-test='MealPlan']")
+            .should("exist")
+            .should("contain", mealPlanName)
+
+        cy.get("[data-test='Recipe']")
+            .should("exist")
+            .should("contain", "Add " + recipeName + " to:")
+
+        cy.get("[data-test='Days']").find("[data-test='Day-0']").should("contain", "Sunday")
+        cy.get("[data-test='Days']").find("[data-test='Day-1']").should("contain", "Monday")
+        cy.get("[data-test='Days']").find("[data-test='Day-2']").should("contain", "Tuesday")
+        cy.get("[data-test='Days']").find("[data-test='Day-3']").should("contain", "Wednesday")
+        cy.get("[data-test='Days']").find("[data-test='Day-4']").should("contain", "Thursday")
+        cy.get("[data-test='Days']").find("[data-test='Day-5']").should("contain", "Friday")
+        cy.get("[data-test='Days']").find("[data-test='Day-6']").should("contain", "Saturday")
+
+        cy.get("[data-test='Day-0']").click()
+
+        cy.get("[data-test='ChooseDayDialog']").should("not.exist")
+        cy.get("[data-test='ChooseMealPlanDialog']").should("not.exist")
+        
+    })
+
+    // USER STORY 11
 
 })

@@ -88,24 +88,46 @@ export default function MealPlan() {
     var [currentMealPlanIndex, setCurrentMealPlanIndex] = useState(0);
     var [recipes, setRecipes] = useState([]);
 
+    function useUnitLower(nutrient, unit) {
+        if (nutrient == "" || isNaN(Number(nutrient))) {
+            return("");
+        }
+        return(unit);
+    }
+    function useUnitUpper(nutrient, unit) {
+        if (nutrient == "" || isNaN(Number(nutrient))) {
+            return("");
+        }
+        return(unit);
+    }
+
     const [calories, setCalories] = useState("");
     const [caloriesWeek, setCaloriesWeek] = useState([]);
+    var caloriesUnit = " kcal";
     const [carbs, setCarbs] = useState("");
     const [carbsWeek, setCarbsWeek] = useState([]);
+    var carbsUnit = " g";
     const [cholesterol, setCholesterol] = useState("");
     const [cholesterolWeek, setCholesterolWeek] = useState([]);
+    var cholesterolUnit = " mg";
     const [fiber, setFiber] = useState("");
     const [fiberWeek, setFiberWeek] = useState([]);
+    var fiberUnit = " g";
     const [protein, setProtein] = useState("");
     const [proteinWeek, setProteinWeek] = useState([]);
+    var proteinUnit = " g";
     const [saturatedFat, setSaturatedFat] = useState("");
     const [saturatedFatWeek, setSatruatedFatWeek] = useState([]);
+    var saturatedFatUnit = " g";
     const [sodium, setSodium] = useState("");
     const [sodiumWeek, setSodiumWeek] = useState([]);
+    var sodiumUnit = " mg";
     const [fat, setFat] = useState("");
     const [fatWeek, setFatWeek] = useState([]);
+    var fatUnit  = " g";
     const [unsaturatedFat, setUnsaturatedFat] = useState("");
     const [unsaturatedFatWeek, setUnsaturatedFatWeek] = useState([]);
+    var unsaturatedFatUnit = " g";
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -411,76 +433,76 @@ export default function MealPlan() {
 
 
     const handleCaloriesTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setCaloriesTempUpper(upperNum)
     }
     const handleCarbsTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setCarbsTempUpper(upperNum)
     }
     const handleCholesterolTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setCholesterolTempUpper(upperNum)
     }
     const handleFiberTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setFiberTempUpper(upperNum)
     }
     const handleProteinTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setProteinTempUpper(upperNum)
     }
     const handleSaturatedFatTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setSaturatedFatTempUpper(upperNum)
     }
     const handleSodiumTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setSodiumTempUpper(upperNum)
     }
     const handleFatTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setFatTempUpper(upperNum)
     }
     const handleUnsaturatedFatTempUpper = e => {
-        var upperNum = Number((e.target.value).split(" ")[0]);
+        var upperNum = (e.target.value).split(" ")[0];
         setUnsaturatedFatTempUpper(upperNum)
     }
 
     const handleCaloriesTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setCaloriesTempLower(lowerNum)
     }
     const handleCarbsTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setCarbsTempLower(lowerNum)
     }
     const handleCholesterolTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setCholesterolTempLower(lowerNum)
     }
     const handleFiberTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setFiberTempLower(lowerNum)
     }
     const handleProteinTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setProteinTempLower(lowerNum)
     }
     const handleSaturatedFatTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setSaturatedFatTempLower(lowerNum)
     }
     const handleSodiumTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setSodiumTempLower(lowerNum)
     }
     const handleFatTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setFatTempLower(lowerNum)
     }
     const handleUnsaturatedFatTempLower = e => {
-        var lowerNum = Number((e.target.value).split(" ")[0]);
+        var lowerNum = (e.target.value).split(" ")[0];
         setUnsaturatedFatTempLower(lowerNum)
     }
     const handleCommentsTemp = e => {
@@ -489,7 +511,6 @@ export default function MealPlan() {
 
     const updateGoals = (newCaloriesL, newCaloriesU, newCarbsL, newCarbsU, newCholesterolL, newCholesterolU, newFiberL, newFiberU , newProteinL, newProteinU, newSaturatedFatL, newSaturatedFatU, newSodiumL, newSodiumU, newFatL, newFatU, newUnsaturatedFatL, newUnsaturatedFatU, newComments) => {
         setCaloriesLower(newCaloriesL);
-        console.log(newCaloriesL)
         setCaloriesUpper(newCaloriesU);
         setCarbsLower(newCarbsL);
         setCarbsUpper(newCarbsU);
@@ -583,6 +604,29 @@ export default function MealPlan() {
     }
     const handleEditGoalsClose = () => {
         setEditGoalsOpen(false);
+    }
+    const handleEditGoalsCancel = () => {
+        setEditGoalsOpen(false);
+
+        setCaloriesTempLower(caloriesLower);
+        setCaloriesTempUpper(caloriesUpper);
+        setCarbsTempLower(carbsLower);
+        setCarbsTempUpper(carbsUpper);
+        setCholesterolTempLower(cholesterolLower);
+        setCholesterolTempUpper(cholesterolUpper);
+        setFiberTempLower(fiberLower);
+        setFiberTempUpper(fiberUpper);
+        setProteinTempLower(proteinLower);
+        setProteinTempUpper(proteinUpper);
+        setSaturatedFatTempLower(saturatedFatLower);
+        setSaturatedFatTempUpper(saturatedFatUpper);
+        setSodiumTempLower(sodiumLower);
+        setSodiumTempUpper(sodiumUpper);
+        setFatTempLower(fatLower);
+        setFatTempUpper(fatUpper);
+        setUnsaturatedFatTempLower(unsaturatedFatLower);
+        setUnsaturatedFatTempUpper(unsaturatedFatUpper);
+        setCommentsTemp(comments);
     }
 
     if (mealPlans.length == 0) {
@@ -723,8 +767,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Calories"}
                                             </TableCell>
-                                            <TableCell data-test="GoalCaloriesLower" align="right">{caloriesLower}</TableCell>
-                                            <TableCell data-test="GoalsCaloriesUpper" align="right">{caloriesUpper}</TableCell>
+                                            <TableCell data-test="GoalCaloriesLower" align="right">{caloriesLower + useUnitLower(caloriesLower, caloriesUnit)}</TableCell>
+                                            <TableCell data-test="GoalsCaloriesUpper" align="right">{caloriesUpper + useUnitUpper(caloriesUpper, caloriesUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(calories, caloriesLower, caloriesUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -740,8 +784,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Carbohydrate Content"}
                                             </TableCell>
-                                            <TableCell align="right">{carbsLower}</TableCell>
-                                            <TableCell align="right">{carbsUpper}</TableCell>
+                                            <TableCell align="right">{carbsLower + useUnitLower(carbsLower, carbsUnit)}</TableCell>
+                                            <TableCell align="right">{carbsUpper + useUnitUpper(carbsUpper, carbsUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(carbs, carbsLower, carbsUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -757,8 +801,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Cholesterol Content"}
                                             </TableCell>
-                                            <TableCell align="right">{cholesterolLower}</TableCell>
-                                            <TableCell align="right">{cholesterolUpper}</TableCell>
+                                            <TableCell align="right">{cholesterolLower + useUnitLower(cholesterolLower, cholesterolUnit)}</TableCell>
+                                            <TableCell align="right">{cholesterolUpper + useUnitUpper(cholesterolUpper, cholesterolUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(cholesterol, cholesterolLower, cholesterolUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -776,8 +820,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Fiber Content"}
                                             </TableCell>
-                                            <TableCell align="right">{fiberLower}</TableCell>
-                                            <TableCell align="right">{fiberUpper}</TableCell>
+                                            <TableCell align="right">{fiberLower + useUnitLower(fiberLower, fiberUnit)}</TableCell>
+                                            <TableCell align="right">{fiberUpper + useUnitUpper(fiberUpper, fiberUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(fiber, fiberLower, fiberUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -793,8 +837,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Protein Content"}
                                             </TableCell>
-                                            <TableCell align="right">{proteinLower}</TableCell>
-                                            <TableCell align="right">{proteinUpper}</TableCell>
+                                            <TableCell align="right">{proteinLower + useUnitLower(proteinLower, proteinUnit)}</TableCell>
+                                            <TableCell align="right">{proteinUpper + useUnitUpper(proteinUpper, proteinUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(protein, proteinLower, proteinUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -810,8 +854,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Saturated Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{saturatedFatLower}</TableCell>
-                                            <TableCell align="right">{saturatedFatUpper}</TableCell>
+                                            <TableCell align="right">{saturatedFatLower + useUnitLower(saturatedFatLower, saturatedFatUnit)}</TableCell>
+                                            <TableCell align="right">{saturatedFatUpper + useUnitUpper(saturatedFatUpper, saturatedFatUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(saturatedFat, saturatedFatLower, saturatedFatUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -827,8 +871,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Sodium Content"}
                                             </TableCell>
-                                            <TableCell align="right">{sodiumLower}</TableCell>
-                                            <TableCell align="right">{sodiumUpper}</TableCell>
+                                            <TableCell align="right">{sodiumLower + useUnitLower(sodiumLower, sodiumUnit)}</TableCell>
+                                            <TableCell align="right">{sodiumUpper + useUnitUpper(sodiumUpper, sodiumUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(sodium, sodiumLower, sodiumUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -844,8 +888,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{fatLower}</TableCell>
-                                            <TableCell align="right">{fatUpper}</TableCell>
+                                            <TableCell align="right">{fatLower + useUnitLower(fatLower, fatUnit)}</TableCell>
+                                            <TableCell align="right">{fatUpper + useUnitUpper(fatUpper, fatUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(fat, fatLower, fatUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -861,8 +905,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Unsaturated Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{unsaturatedFatLower}</TableCell>
-                                            <TableCell align="right">{unsaturatedFatUpper}</TableCell>
+                                            <TableCell align="right">{unsaturatedFatLower + useUnitLower(unsaturatedFatLower, unsaturatedFatUnit)}</TableCell>
+                                            <TableCell align="right">{unsaturatedFatUpper + useUnitUpper(unsaturatedFatUpper, unsaturatedFatUnit)}</TableCell>
                                             <TableCell align="right">{determineStatus(unsaturatedFat, unsaturatedFatLower, unsaturatedFatUpper)}</TableCell>
                                             <TableCell align="right">{<Button 
                                                 sx={{color:'grey'}}
@@ -1052,16 +1096,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {calories} kcal.
-                            {/* {displayGoal(caloriesLower, caloriesUpper)}
-                            Your goal was to have between {caloriesLower} and {caloriesUpper}. */}
-                            <div>Sunday: {caloriesWeek[0] + " kcal"}</div> 
-                            <div>Monday: {caloriesWeek[1] + " kcal"}</div> 
-                            <div>Tuesday: {caloriesWeek[2] + " kcal"}</div> 
-                            <div>Wednesday: {caloriesWeek[3] + " kcal"}</div> 
-                            <div>Thursday: {caloriesWeek[4] + " kcal"}</div> 
-                            <div>Friday: {caloriesWeek[5] + " kcal"}</div> 
-                            <div>Saturday: {caloriesWeek[6] + " kcal"}</div> 
+                            {displayGoal(caloriesLower, caloriesUpper, calories, caloriesUnit)}
+                            {displayTable(caloriesWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1080,15 +1116,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {carbs} g.
-                            Your goal was to have between {carbsLower} and {carbsUpper}
-                            <div>Sunday: {carbsWeek[0] + " g"}</div> 
-                            <div>Monday: {carbsWeek[1] + " g"}</div> 
-                            <div>Tuesday: {carbsWeek[2] + " g"}</div> 
-                            <div>Wednesday: {carbsWeek[3] + " g"}</div> 
-                            <div>Thursday: {carbsWeek[4] + " g"}</div> 
-                            <div>Friday: {carbsWeek[5] + " g"}</div> 
-                            <div>Saturday: {carbsWeek[6] + " g"}</div> 
+                            {displayGoal(carbsLower, carbsUpper, carbs, carbsUnit)}
+                            {displayTable(carbsWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1107,15 +1136,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {cholesterol} mg.
-                            Your goal was to have between {cholesterolLower} and {cholesterolUpper}
-                            <div>Sunday: {cholesterolWeek[0] + " mg"}</div> 
-                            <div>Monday: {cholesterolWeek[1] + " mg"}</div> 
-                            <div>Tuesday: {cholesterolWeek[2] + " mg"}</div> 
-                            <div>Wednesday: {cholesterolWeek[3] + " mg"}</div> 
-                            <div>Thursday: {cholesterolWeek[4] + " mg"}</div> 
-                            <div>Friday: {cholesterolWeek[5] + " mg"}</div> 
-                            <div>Saturday: {cholesterolWeek[6] + " mg"}</div> 
+                            {displayGoal(cholesterolLower, cholesterolUpper, cholesterol, cholesterolUnit)}
+                            {displayTable(cholesterolWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1134,15 +1156,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {fiber} g.
-                            Your goal was to have between {fiberLower} and {fiberUpper}
-                            <div>Sunday: {fiberWeek[0] + " g"}</div> 
-                            <div>Monday: {fiberWeek[1] + " g"}</div> 
-                            <div>Tuesday: {fiberWeek[2] + " g"}</div> 
-                            <div>Wednesday: {fiberWeek[3] + " g"}</div> 
-                            <div>Thursday: {fiberWeek[4] + " g"}</div> 
-                            <div>Friday: {fiberWeek[5] + " g"}</div> 
-                            <div>Saturday: {fiberWeek[6] + " g"}</div> 
+                            {displayGoal(fiberLower, fiberUpper, fiber, fiberUnit)}
+                            {displayTable(fiberWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1161,15 +1176,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {protein} g.
-                            Your goal was to have between {proteinLower} and {proteinUpper}
-                            <div>Sunday: {proteinWeek[0] + " g"}</div> 
-                            <div>Monday: {proteinWeek[1] + " g"}</div> 
-                            <div>Tuesday: {proteinWeek[2] + " g"}</div> 
-                            <div>Wednesday: {proteinWeek[3] + " g"}</div> 
-                            <div>Thursday: {proteinWeek[4] + " g"}</div> 
-                            <div>Friday: {proteinWeek[5] + " g"}</div> 
-                            <div>Saturday: {proteinWeek[6] + " g"}</div> 
+                           {displayGoal(proteinLower, proteinUpper, protein, proteinUnit)}
+                           {displayTable(proteinWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1188,15 +1196,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {saturatedFat} g.
-                            Your goal was to have between {saturatedFatLower} and {saturatedFatUpper}
-                            <div>Sunday: {saturatedFatWeek[0] + " g"}</div> 
-                            <div>Monday: {saturatedFatWeek[1] + " g"}</div> 
-                            <div>Tuesday: {saturatedFatWeek[2] + " g"}</div> 
-                            <div>Wednesday: {saturatedFatWeek[3] + " g"}</div> 
-                            <div>Thursday: {saturatedFatWeek[4] + " g"}</div> 
-                            <div>Friday: {saturatedFatWeek[5] + " g"}</div> 
-                            <div>Saturday: {saturatedFatWeek[6] + " g"}</div> 
+                            {displayGoal(saturatedFatLower, saturatedFatUpper, saturatedFat, saturatedFatUnit)}
+                            {displayTable(saturatedFatWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1215,15 +1216,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {sodium} mg.
-                            Your goal was to have between {sodiumLower} and {sodiumUpper}
-                            <div>Sunday: {sodiumWeek[0] + " mg"}</div> 
-                            <div>Monday: {sodiumWeek[1] + " mg"}</div> 
-                            <div>Tuesday: {sodiumWeek[2] + " mg"}</div> 
-                            <div>Wednesday: {sodiumWeek[3] + " mg"}</div> 
-                            <div>Thursday: {sodiumWeek[4] + " mg"}</div> 
-                            <div>Friday: {sodiumWeek[5] + " mg"}</div> 
-                            <div>Saturday: {sodiumWeek[6] + " mg"}</div> 
+                            {displayGoal(sodiumLower, sodiumUpper, sodium, sodiumUnit)}
+                            {displayTable(sodiumWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1242,31 +1236,9 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {fat} g.
-                            Your goal was to have between {fatLower} and {fatUpper}
-                            <div>Sunday: {fatWeek[0] + " g"}</div> 
-                            <div>Monday: {fatWeek[1] + " g"}</div> 
-                            <div>Tuesday: {fatWeek[2] + " g"}</div> 
-                            <div>Wednesday: {fatWeek[3] + " g"}</div> 
-                            <div>Thursday: {fatWeek[4] + " g"}</div> 
-                            <div>Friday: {fatWeek[5] + " g"}</div> 
-                            <div>Saturday: {fatWeek[6] + " g"}</div> 
+                            {displayGoal(fatLower, fatUpper, fat, fatUnit)}
+                            {displayTable(fatWeek)}
                         </DialogContentText>
-                        <TableContainer component={Paper} sx={{maxWidth: 1163 }}>
-                                <Table sx={{ maxWidth: 1163}} aria-label="simple table">
-                                    <TableBody>
-                                        <TableRow
-                                                key={"monday"}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                            >
-                                            <TableCell component="th" scope="row">
-                                                {"Monday"}
-                                            </TableCell>
-                                            <TableCell align="right">{fat}</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
                     </DialogContent>
                     <DialogActions>
                         <Button  onClick={handleFatMoreClose} autoFocus>
@@ -1284,8 +1256,8 @@ export default function MealPlan() {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            This meal plan contains {unsaturatedFat} g.
-                            Your goal was to have between {unsaturatedFatLower} and {unsaturatedFatUpper}
+                            {displayGoal(unsaturatedFatLower, unsaturatedFatUpper, unsaturatedFat, unsaturatedFatUnit)}
+                            {displayTable(unsaturatedFatWeek)}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
@@ -1314,7 +1286,7 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Comments"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={comments} variant="outlined" onChange={handleCommentsTemp} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={commentsTemp} variant="outlined" label="Edit Comment" onChange={handleCommentsTemp} />}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -1339,8 +1311,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Calories"}
                                             </TableCell>
-                                            <TableCell data-test="GoalCaloriesLower" align="right">{<TextField size="small" id="outlined-basic" label={caloriesLower + " (kcal)"} variant="outlined" onChange={handleCaloriesTempLower} />}</TableCell>
-                                            <TableCell data-test="GoalsCaloriesUpper" align="right">{<TextField size="small" id="outlined-basic" label={caloriesUpper + " (kcal)"} variant="outlined" onChange={handleCaloriesTempUpper} />}</TableCell>
+                                            <TableCell data-test="GoalCaloriesLower" align="right">{<TextField size="small" id="outlined-basic" value={caloriesTempLower} label="(kcal)" variant="outlined" onChange={handleCaloriesTempLower} />}</TableCell>
+                                            <TableCell data-test="GoalsCaloriesUpper" align="right">{<TextField size="small" id="outlined-basic" value={caloriesTempUpper} label="(kcal)" variant="outlined" onChange={handleCaloriesTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Carbohydrate Content"}
@@ -1349,8 +1321,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Carbohydrate Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={carbsLower + " (g)"} variant="outlined" onChange={handleCarbsTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={carbsUpper + " (g)"} variant="outlined" onChange={handleCarbsTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={carbsTempLower} label="(g)" variant="outlined" onChange={handleCarbsTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={carbsTempUpper} label="(g)" variant="outlined" onChange={handleCarbsTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Cholesterol Content"}
@@ -1359,8 +1331,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Cholesterol Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={cholesterolLower + " (mg)"} variant="outlined" onChange={handleCholesterolTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={cholesterolUpper + " (mg)"} variant="outlined" onChange={handleCholesterolTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={cholesterolTempLower} label="(mg)" variant="outlined" onChange={handleCholesterolTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={cholesterolTempUpper} label="(mg)" variant="outlined" onChange={handleCholesterolTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Fiber Content"}
@@ -1369,8 +1341,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Fiber Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={fiberLower + " (g)"} variant="outlined" onChange={handleFiberTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={fiberUpper + " (g)"} variant="outlined" onChange={handleFiberTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value = {fiberTempLower} label="(g)" variant="outlined" onChange={handleFiberTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value = {fiberTempUpper} label="(g)" variant="outlined" onChange={handleFiberTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Protein Content"}
@@ -1379,8 +1351,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Protein Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={proteinLower + " (g)"} variant="outlined" onChange={handleProteinTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={proteinUpper + " (g)"} variant="outlined" onChange={handleProteinTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={proteinTempLower} label="(g)" variant="outlined" onChange={handleProteinTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={proteinTempUpper} label="(g)" variant="outlined" onChange={handleProteinTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Saturated Fat Content"}
@@ -1389,8 +1361,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Saturated Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={saturatedFatLower + " (g)"} variant="outlined" onChange={handleSaturatedFatTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={saturatedFatUpper + " (g)"} variant="outlined" onChange={handleSaturatedFatTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={saturatedFatTempLower} label="(g)" variant="outlined" onChange={handleSaturatedFatTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={saturatedFatTempUpper} label="(g)" variant="outlined" onChange={handleSaturatedFatTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Sodium Content"}
@@ -1399,8 +1371,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Sodium Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={sodiumLower + " (mg)"} variant="outlined" onChange={handleSodiumTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={sodiumUpper + " (mg)"} variant="outlined" onChange={handleSodiumTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={sodiumTempLower} label="(mg)" variant="outlined" onChange={handleSodiumTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={sodiumTempUpper} label="(mg)" variant="outlined" onChange={handleSodiumTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Fat Content"}
@@ -1409,8 +1381,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={fatLower + " (g)"} variant="outlined" onChange={handleFatTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={fatUpper + " (g)"} variant="outlined" onChange={handleFatTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={fatTempLower} label="(g)" variant="outlined" onChange={handleFatTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={fatTempUpper} label="(g)" variant="outlined" onChange={handleFatTempUpper} />}</TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={"Unsaturated Fat Content"}
@@ -1419,8 +1391,8 @@ export default function MealPlan() {
                                             <TableCell component="th" scope="row">
                                                 {"Unsaturated Fat Content"}
                                             </TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={unsaturatedFatLower + " (g)"} variant="outlined" onChange={handleUnsaturatedFatTempLower} />}</TableCell>
-                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" label={unsaturatedFatUpper + " (g)"} variant="outlined" onChange={handleUnsaturatedFatTempUpper} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={unsaturatedTempLower} label="(g)" variant="outlined" onChange={handleUnsaturatedFatTempLower} />}</TableCell>
+                                            <TableCell align="right">{<TextField size="small" id="outlined-basic" value={unsaturatedFatTempUpper} label="(g)" variant="outlined" onChange={handleUnsaturatedFatTempUpper} />}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -1428,7 +1400,7 @@ export default function MealPlan() {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                    <Button sx={{color: "gray"}} onClick={handleEditGoalsClose}>
+                    <Button sx={{color: "gray"}} onClick={handleEditGoalsCancel}>
                             cancel
                         </Button>
                         <Button onClick={()=> updateGoals(caloriesTempLower, caloriesTempUpper, carbsTempLower, carbsTempUpper, cholesterolTempLower, cholesterolTempUpper, fiberTempLower, fiberTempUpper, proteinTempLower, proteinTempUpper, saturatedFatTempLower, saturatedFatTempUpper, sodiumTempLower, sodiumTempUpper, fatTempLower, fatTempUpper, unsaturatedTempLower, unsaturatedFatTempUpper, commentsTemp)} autoFocus>
@@ -1440,11 +1412,158 @@ export default function MealPlan() {
         </>
     );
 
-    function displayGoal(lower, upper) {
+    function displayTable(week) {
+        return (
+            <div>
+                <TableContainer component={Paper} sx={{maxWidth: 1163 }}>
+                    <Table sx={{ maxWidth: 1163}} aria-label="simple table">
+                        <TableBody>
+                            <TableRow
+                                    key={"sunday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row">{"Sunday"}</TableCell>
+                                <TableCell align="right">{week[0]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"monday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row"> {"Monday"} </TableCell>
+                                <TableCell align="right">{week[1]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"tuesday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row">{"Tuesday"}</TableCell>
+                                <TableCell align="right">{week[2]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"wednesday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row"> {"Wednesday"} </TableCell>
+                                <TableCell align="right">{week[3]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"thursday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row">{"Thursday"}</TableCell>
+                                <TableCell align="right">{week[4]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"friday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row"> {"Friday"} </TableCell>
+                                <TableCell align="right">{week[5]}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                    key={"saturday"}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                <TableCell component="th" scope="row">{"Saturday"}</TableCell>
+                                <TableCell align="right">{week[6]}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+        )
+    }
+
+    function displayGoal(lower, upper, actual, unit) {
+        console.log("lower")
+        console.log(lower)
+
+        console.log("upper")
+        console.log(upper)
+
+        console.log("actual")
+        console.log(actual)
         if (lower == "" && upper == "") {
             return (
                 <div>
-                    This goal was not defined.
+                    <div>
+                        No goal has been set.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            )
+        }
+        if (Number(lower) > Number(upper) && upper == "") {
+            return (
+                <div>
+                    <div>
+                        Invalid goal, upper bound is not defined.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            ) 
+        }
+        if (Number(lower) > Number(upper)) {
+            return (
+                <div>
+                    <div>
+                        Invalid goal, lower bound is greater than upper bound.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            )
+        }
+        if (isNaN(Number(lower)) || isNaN(Number(upper))){
+            return(
+                <div>
+                    <div>
+                        Invalid goal, please input only numerical values.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            )
+        }
+        if (Number(actual) >= Number(lower) && Number(actual) <= Number(upper)) {
+            return (
+                <div>
+                    <div> 
+                        Goal has been met
+                    </div>
+                    <div>
+                        This meal plan contains {actual} {unit}, which is between your lower bound of {lower} {unit} and upper bound of {upper} {unit}.
+                    </div>
+                </div>
+            )
+        }
+        if (Number(actual) < Number(lower)) {
+            return (
+                <div>
+                    <div>
+                        Your meal plan is {lower - actual} {unit} short.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            )
+        }
+        if (Number(actual) > Number(upper)) {
+            return(
+                <div>
+                    <div>
+                        Your meal plan is {actual - upper} {unit} over.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
                 </div>
             )
         }
@@ -1461,7 +1580,8 @@ export default function MealPlan() {
                 </div>
             )
         }
-        if (upper < lower) {
+
+        if (Number(upper) < Number(lower) || isNaN(Number(lower)) || isNaN(Number(upper))) {
             return (
                 <div>
                   <PriorityHighIcon
@@ -1471,7 +1591,7 @@ export default function MealPlan() {
                 </div>
             )
         }
-        if (amount >= lower && amount <= upper) {
+        if (Number(amount) >= Number(lower) && Number(amount) <= Number(upper)) {
             return (
                 <div>
                   <CheckIcon
@@ -1481,7 +1601,7 @@ export default function MealPlan() {
                 </div>
             )
         }
-        if (amount < lower || amount > upper) {
+        if (Number(amount) < Number(lower) || Number(amount) > Number(upper)) {
             return (
                 <div>
                     <ClearIcon 

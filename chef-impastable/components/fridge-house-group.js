@@ -39,7 +39,7 @@ function FridgeGroup(props) {
 async function deleteIngredient(id, ingredient, group) {
     try {
         const res = await fetch('/api/deleteIngredientFromHouseholdFridge', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

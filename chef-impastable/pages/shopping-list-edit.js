@@ -43,7 +43,7 @@ export default function ShoppingListEdit() {
                     return this.fridge
                 },
             },
-        });
+        }, []);
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
@@ -80,7 +80,7 @@ export default function ShoppingListEdit() {
                     freeSolo
                     id="for-search"
                     options={ingrArr2}
-                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                    onInputChange={(e, new_val) => {setAddIngr(new_val)}}
                     renderInput={params => (
                         <TextField 
                         {...params}
@@ -202,7 +202,7 @@ async function getIngr() {
 async function DeleteListItem(username, item) {
     try {
         const res = await fetch('/api/deleteShopListItem', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ async function DeleteListItem(username, item) {
 async function ClearList(username) {
     try {
         const res = await fetch('/api/clearShoppingListItems', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

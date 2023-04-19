@@ -139,7 +139,7 @@ export default function MealPlan() {
     }
     useEffect(() => {
         handleAllRecipe();
-    }, [tabs])
+    }, [tabs, currentMealPlan])
 
     const [calories, setCalories] = useState("");
     const [carbs, setCarbs] = useState("");

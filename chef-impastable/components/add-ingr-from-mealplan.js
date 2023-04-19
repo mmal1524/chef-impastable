@@ -11,7 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
 export default function AddToListDialog(props) {
-    console.log(props)
+    //console.log(props)
     //console.log(props.recipe.ingredients)
     const recipeArr = props.recipeObjArr;
     //console.log(recipeArr);
@@ -28,6 +28,8 @@ export default function AddToListDialog(props) {
         }
     }
     var toAdd = [];
+    const [update, setUpdate] = useState(0);
+    const [addArr, setAddArr] = useState([]);
     const [smthToAdd, setSmth] = useState(false);
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -49,18 +51,24 @@ export default function AddToListDialog(props) {
                 },
             },
         });
+        //debugger;
+        if (arrayEq(thisUser.getShoppingList, shoppingList) == false) {
+            console.log("not equal");
+            setUpdate(update + 1);
+        }
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
         handleCreateIngrList();
         handleMakeToAdd();
+        console.log("addARR",addArr);
 
-        if (props.open == true) {
+        if (props.open == false) {
             setExcludeFridge(true)
         }
-    }, [props]);
+    }, [props, excludeFridgeItems, update]);
 
-    console.log("shopping list:", shoppingList)
+    // console.log("shopping list:", shoppingList)
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -73,31 +81,39 @@ export default function AddToListDialog(props) {
             var ingredient = recipeArr[i].ingredients.map(a => a.ingredient);
             console.log(ingredient);
             for (let j = 0; j < ingredient.length; j++) {
-                ingrArr.push(ingredient[j])
+                var idx = indexMatch(ingrArr, ingredient[j]);
+                if (idx == -1) {
+                    // only add if ingredient no already in the list
+                    ingrArr.push(ingredient[j]);
+                }
             }
         }
-        //console.log(ingrArr)
     }
 
     function indexMatch(array, q) {
         return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
     }
-    const handleMakeToAdd = () => {
+    const handleMakeToAdd = async () => {
+        while (addArr.length > 0) {
+            addArr.pop();
+        }
+        setSmth(false);
         for (let i = 0; i < ingrArr.length; i++) {
-            setSmth(false);
             // check if already in shopping list or fridge(for all items)
             var idxSL = indexMatch(shoppingList, ingrArr[i]);
             var idxF = indexMatch(fridge, ingrArr[i]);
-            if (excludeFridgeItems == false) {
-                idxF = -1;
-            }
             if (idxSL == -1 && idxF == -1) {
                 // not found in list, not owned
-                toAdd[i] = 1;
+                addArr.push(1);
                 setSmth(true);
             } else {
                 // found in list, owned
-                toAdd[i] = 0;
+                if (excludeFridgeItems == false && idxSL == -1) {
+                    addArr.push(1);
+                    setSmth(true);
+                } else {
+                    addArr.push(0);
+                }
             }
         }
     }
@@ -108,16 +124,31 @@ export default function AddToListDialog(props) {
 
     const handleAddToList = async () => {
         for (let j = 0; j < ingrArr.length; j++) {
-            if (toAdd[j] == 1) {
-                toAdd[j] = null;
+            if (addArr[j] == 1) {
+                addArr[j] = null;
                 var data = await addIngredient(username, ingrArr[j]);
                 setShoppingList(shoppingList => [...shoppingList, ingrArr[j]]);
                 localStorage.setItem('user', JSON.stringify(data));
             }
         }
 
-        console.log("shoppinglist after add" + shoppingList)
+        //console.log("shoppinglist after add" + shoppingList)
         closeAction();
+    }
+
+    function arrayEq (a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) {
+            return false
+        }
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) {
+                console.log(a[i], b[i]);
+                return false
+            };
+        }
+        return true;
     }
 
     return(
@@ -143,7 +174,7 @@ export default function AddToListDialog(props) {
                             </FormGroup>
                             <Grid container>
                                 <Grid
-                                    sx={{backgroundColor: toAdd[index] === 1 ? 'lightgreen' : 'pink',}}
+                                    sx={{backgroundColor: addArr[index] === 1 ? 'lightgreen' : 'pink',}}
                                 >
                                     <List>
                                         <ListItemText

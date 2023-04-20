@@ -10,8 +10,15 @@ export default async function getSavedFolders(req,res){
     try {
         const username=req.body.user;
         const getRecipeData = req.body.getData;
+        const isHouse = req.body.isHouse;
         console.log(getRecipeData);
-        var folders = await SavedFolder.find({user: username});
+        var folders;
+        if (!isHouse) {
+            folders = await SavedFolder.find({user: username});
+        }
+        else {
+            folders = await SavedFolder.find({household: username})
+        }
         // console.log(folders);
         console.log(typeof(folders));
         if (!folders) {

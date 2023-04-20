@@ -14,6 +14,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { getFolders, saveRecipe, unsaveRecipe } from '../pages/routes/savedRecipeRoutes';
+import SaveRecipeHouseDialog from '../components/saveRecipeHouseDialog';
 // import ImageList from '@mui/material/ImageList';
 // import ImageListItem from '@mui/material/ImageListItem';
 import Masonry from '@mui/lab/Masonry';
@@ -28,6 +30,7 @@ export default function HomePage({ /*recipes*/ }) {
     const [recipeIndex, setRecipeIndex] = useState(-1);
     const router = useRouter();
     const [recipeResults, setRecipeResults] = useState([]);
+    const [showSaveHouse, setShowSaveHouse] = useState(false);
     const [page, setPage] = useState(1);
     const [pageChanged, setPageChanged] = useState(false);
     const [next, setNext] = useState(true);
@@ -102,79 +105,30 @@ export default function HomePage({ /*recipes*/ }) {
         else {
             async function getDefaultRecipes() {
                 const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
-                // if (defaultRecipes.status != null) {
-                //     setRecipeResults(recipes)
-                //     return;
-                // }
-                // setRecipeResults(defaultRecipes);
-                // setDisplayRecipes(defaultRecipes);
                 await getSavedFolders(defaultRecipes);
-            
-                // var thisUser = JSON.parse(localStorage.getItem("user"))
-                // async function getSavedFolders() {
-                //     var f = await getFolders(thisUser.username)
-                //     setFolders(f)
-                //     var fNames = [];
-                //     f.forEach(folder => {
-                //         fNames.push(folder.name);
-                //     });
-                //     setFolderNames(fNames);
-                //     // console.log(displayRecipes);
-                //     defaultRecipes.forEach(recipe => {
-                //         // console.log(recipe)
-                //         recipe.saved = false;
-
-                //         f.forEach(sf => {
-                //             if (sf.recipes.includes(recipe._id)) {
-                //                 recipe.saved = true
-                //             }
-                //         });
-                //     });
-                    // console.log(recipes);
-                    
-                // }
-                // getSavedFolders();
             }
             getDefaultRecipes();
         }
       }, [page, pageChanged]);
 
-    // useEffect(() => {
-    //     // debugger;
-    //     //console.log(recipes)
-    //     var thisUser = JSON.parse(localStorage.getItem("user"))
-    //     var saved = thisUser.saved
-    //     async function getSavedFolders() {
-    //         var f = await getFolders(thisUser.username)
-    //         setFolders(f)
-    //         var fNames = [];
-    //         f.forEach(folder => {
-    //             fNames.push(folder.name);
-    //         });
-    //         setFolderNames(fNames);
-    //         displayRecipes.forEach(recipe => {
-    //             // console.log(recipe)
-    //             recipe.saved = false;
-
-    //             f.forEach(sf => {
-    //                 if (sf.recipes.includes(recipe._id)) {
-    //                     recipe.saved = true
-    //                 }
-    //             });
-    //         });
-    //         // console.log(recipes);
-    //         setDisplayRecipes(displayRecipes);
-    //     }
-    //     if (recipes) {
-    //         getSavedFolders();
-    //     }
-    // }, [displayRecipes])
-    //  debugger;
     return (
         <>
+            <SaveRecipeHouseDialog 
+                show={showSaveHouse}
+                onClose={() => {setShowSaveHouse(false)}}
+                onSubmit = {async (house) => {
+                    console.log(house);
+
+                    setShowSaveHouse(false);
+                    house.forEach(async (h) => {
+                        var data = await saveRecipe(h, "none", recipeID, true);
+                    })
+                    
+                }}
+            />
             <SaveRecipeDialog
                 onSubmit={async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID);
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipeID, false);
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }
@@ -232,33 +186,16 @@ export default function HomePage({ /*recipes*/ }) {
                                         setRecipeID(recipe._id);
                                     }
                                 }}
+                                onSaveHouse={() => {
+                                    debugger;
+                                    setShowSaveHouse(true);
+                                    setRecipeID(recipe._id);
+                                    setRecipeIndex(index);
+                                }}
                             />
                     ))}
                 </Masonry>
-                <Grid container spacing={3}>
-                    {/* display recipes */}
-                    { displayRecipes && displayRecipes.map((recipe, index) => (
-                        <Grid item key={recipe._id}>
-                            <RecipeCard
-                                recipe={recipe}
-                                index={index}
-                                onSave={() => {
-                                    if (!recipe.saved) {
-                                        setShowSaveOptions(true);
-                                        setRecipeID(recipe._id);
-                                        setRecipeIndex(index);
-                                    }
-                                    else {
-                                        unsaveRecipe(JSON.parse(localStorage.getItem("user")).username, recipe._id);
-                                        displayRecipes[index].saved = !displayRecipes[index].saved;
-                                        setDisplayRecipes(displayRecipes);
-                                        setRecipeID(recipe._id);
-                                    }
-                                }}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
+
                 <Dialog
                     fullScreen={fullScreen}
                     open={open}
@@ -284,100 +221,6 @@ export default function HomePage({ /*recipes*/ }) {
     );
 }
 
-async function getFolders(user_id) {
-    const res = await fetch('/api/getSavedRecipes', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            user: user_id,
-            getData: false
-        })
-    })
-    const data = await res.json();
-    return data;
-}
-
-async function saveRecipe(username, folder, recipeID) {
-    const res = await fetch('/api/saveRecipe', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            folder: folder,
-            recipeID: recipeID
-        })
-    })
-    const data = await res.json();
-    return data;
-}
-
-async function unsaveRecipe(username, recipeID) {
-    const res = await fetch('/api/unsaveRecipe', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            username: username,
-            recipeID: recipeID
-        })
-    })
-    const data = await res.json();
-    // console.log(data);
-    return data;
-}
-
-
-// export async function getServerSideProps() {
-//     try {
-//         // const client = await clientPromise;
-//         // const db = client.db("test");
-//         // var recipes = await db.collection('recipes')
-//         //     .aggregate(
-//         //     [
-//         //     {
-//         //         $addFields: {
-//         //             matches: { 
-//         //                 $size: {
-//         //                     $filter: {
-//         //                         input: "$ingredients",
-//         //                         as: "ingredient",
-//         //                         cond: { $in: ["$$ingredient.ingredient", user.fridge]}
-//         //                     }
-//         //                 }
-//         //             }
-//         //         }
-//         //     },
-//         //     {
-//         //         $sort: {matches: -1}
-//         //     }
-//         // ])
-//         // .limit(20);
-//         // const recipes = await db
-//         //     .collection("recipes")
-//         //     .find({
-//         //         // $where: function() {
-//         //         //         return test == "hello";
-//         //         //     },
-//         //         }
-//         //     )
-//         //     .limit(20)
-//         //     .toArray();
-//         return {
-//             props: { recipes: JSON.parse(JSON.stringify(recipes)) },
-//         };
-//     }
-//     catch (e) {
-//         console.error(e);
-//     }
-// }
 async function SearchRecipe(search, filters, username, page, byFridge) {
     try {
         const res = await fetch('/api/searchRecipe', {

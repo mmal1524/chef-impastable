@@ -18,6 +18,9 @@ import HouseholdCard from '../components/household-card.js';
 import CreateHouseholdDialog from '../components/create-household-dialog.js';
 import AddHouseholdDialog from '../components/add-user-to-household-dialog.js';
 import LeaveHouseholdDialog from '../components/leave-household-dialog.js';
+import SavedRecipes from '../components/savedRecipes.js';
+//import clientPromise from '../lib/mongodb_client.js';
+// import Fridge from '../components/fridge.js';
 import clientPromise from '../lib/mongodb_client.js';
 import Fridge from '../components/fridge-house.js';
 
@@ -225,7 +228,7 @@ export default function Household(props) {
                         {displayHouseholdFridge(currID, ingredientArr, currFridge, currFridgeGroup)}
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        {displayHouseholdSaved(currHouse)}
+                        {displayHouseholdSaved(currID)}
                     </TabPanel>
                 </Grid>
             </div>
@@ -344,7 +347,7 @@ export default function Household(props) {
         if (saved == null) {
             return (<div>Choose a household to view</div>)
         } else {
-            return (<div>Something will show up.</div>)
+            return (<SavedRecipes isHouse={true} houseID={currID}/>)
         }
     }
 }

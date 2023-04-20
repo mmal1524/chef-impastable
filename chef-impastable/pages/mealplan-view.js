@@ -636,6 +636,7 @@ export default function MealPlan() {
                             </Button>
                             {console.log(allRecipe)}
                             <Button
+                                data-test='AddToShopList'
                                 variant="contained"
                                 sx={{backgroundColor: "#cc702d", mt: 3, mb: 2, width: 300}}
                                 onClick={handleOpenAddSL}

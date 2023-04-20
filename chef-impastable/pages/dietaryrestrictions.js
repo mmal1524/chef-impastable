@@ -75,7 +75,7 @@ export default function Home() {
                                 <List dense={dense}>
                                     <ListItem
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete" onClick={async () => {
+                                            <IconButton data-test={`RemoveDiet-${index}`} edge="end" aria-label="delete" onClick={async () => {
                                                 deleteByIndex(index);
                                                 var data = await DeleteTag(username, tag);
                                                 localStorage.setItem('user', JSON.stringify(data));
@@ -107,9 +107,6 @@ export default function Home() {
                     label="Dietary Restrictions"
                     data-test='DietSelect'
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
                     <MenuItem value={"Vegan"}>Vegan</MenuItem>
                     <MenuItem value={"Vegetarian"}>Vegetarian</MenuItem>
                     <MenuItem value={"Keto"}>Keto</MenuItem>
@@ -130,10 +127,12 @@ export default function Home() {
             <Button
                 data-test='AddTag' type="AddTag" size="large" variant="contained" sx={{ mt: 3, mb: 2, width: 200, maxHeight: '35px' }}
                 onClick={async () => {
-                    setUserTags(userTags => [...userTags, tagValue]);
-                    var data = await AddTag(username, tagValue);
-                    localStorage.setItem('user', JSON.stringify(data));
-                }}
+                    if (!userTags.includes(tagValue)) {
+                        setUserTags(userTags => [...userTags, tagValue]);
+                        var data = await AddTag(username, tagValue);
+                        localStorage.setItem('user', JSON.stringify(data));
+                    }
+              }}
             >Add Tag
             </Button>
             </div>

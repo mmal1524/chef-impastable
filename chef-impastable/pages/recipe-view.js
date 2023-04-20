@@ -64,6 +64,9 @@ export default function Recipe({ recipe, reviews }) {
 
     const [username, setUsername] = useState("");
     var [mealPlans, setMealPlans] = useState([]);
+    const [ingredientName, setIngredientName] = useState("");
+    const [ingredientQuantity, setIngredientQuantity] = useState("");
+    const [ingredientMeasurement, setIngredientMeasurement] = useState("");
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -552,9 +555,16 @@ export default function Recipe({ recipe, reviews }) {
                         Ingredients
                     </h2>
                     {recipe.ingredients.map(ingredient => (
-                        <ul>
-                            <li>{ingredient.ingredient}, quantity: {ingredient.quantity}, measurement: {ingredient.measurement}</li>
-                        </ul>
+                         
+                         <ul>
+                         {ingredient.ingredient && (
+                           <li>
+                             {ingredient.ingredient}
+                             {ingredient.quantity ? `, quantity: ${ingredient.quantity}` : <span style={{display: 'none'}}>quantity:</span>}
+                             {ingredient.measurement ? `, measurement: ${ingredient.measurement}` : <span style={{display: 'none'}}>measurement:</span>}
+                           </li>
+                         )}
+                       </ul>
                     ))}
                     <h2>
                         Nutrition Facts

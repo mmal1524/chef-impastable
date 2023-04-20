@@ -76,6 +76,7 @@ const Navbar = () => {
         setAnchorEl(null);
     };
     const [openPopup, setOpen] = React.useState(false);
+    const [openPopup2, setOpen2] = React.useState(false);
     const handleClickOpenPopup = () => {
         setOpen(true);
     };
@@ -83,10 +84,10 @@ const Navbar = () => {
         setOpen(false);
     };
     const handleClickSearchError = () => {
-        setOpen(true);
+        setOpen2(true);
     };
     const handleCloseSearchError = () => {
-        setOpen(false);
+        setOpen2(false);
     };
 
     const [shopListPopup, setShopListPopup] = React.useState(false);
@@ -147,11 +148,11 @@ const Navbar = () => {
         setDiet(false);
     };
 
-    const handleSearch = async (searchValue) => {
+    const handleSearch = async (searchValue, byFridge) => {
         try {
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue, filters: checkedItems },
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
             });
         } catch (error) {
             console.log(error);
@@ -220,14 +221,18 @@ const Navbar = () => {
                                     <ClearIcon />
                                 </IconButton>
 
+                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                    <Kitchen />
+                                </IconButton>
+
                                 <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { 
-                                        if (searchValue.length === 0) {
-                                            handleClickSearchError();
-                                        }
-                                        else {
-                                            handleSearch(searchValue)
-                                        }
-                                     }} edge="end">
+                                    if (searchValue.length === 0) {
+                                        handleClickSearchError();
+                                    }
+                                    else {
+                                        handleSearch(searchValue, false);
+                                    }
+                                    }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
@@ -354,11 +359,6 @@ const Navbar = () => {
                                             onChange={(event) => {
                                                 if (event.target.checked) {
                                                     if (item.value === "My Preferences") {
-                                                        setCheckedItems([
-                                                            ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
-                                                            ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
-                                                                .map(item => item.value)
-                                                        ]);
                                                         if (localStorage.getItem("user")) {
                                                             const dietaryTags = JSON.parse(localStorage.getItem("user")).dietaryTags;
                                                             if (Array.isArray(dietaryTags) && dietaryTags.length > 0) {
@@ -367,6 +367,14 @@ const Navbar = () => {
                                                                     ...new Set([...prev, ...dietaryTags]),
                                                                 ]);
                                                             }
+                                                        } else {
+                                                            //else case precautions if for some reason local storage doesn't work
+                                                            //this just means if a tag is added or removed, page needs to be refreshed before its updated in my preferences
+                                                            setCheckedItems([
+                                                                ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
+                                                                ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
+                                                                    .map(item => item.value)
+                                                            ]);
                                                         }
                                                     }
                                                     else {
@@ -425,7 +433,7 @@ const Navbar = () => {
             </Dialog>
             <Dialog
                 fullScreen={fullScreen}
-                open={openPopup}
+                open={openPopup2}
                 onClose={handleCloseSearchError}
                 aria-labelledby="responsive-dialog-title"
             >
@@ -438,7 +446,7 @@ const Navbar = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClosePopup} autoFocus>
+                    <Button onClick={handleCloseSearchError} autoFocus>
                         Ok
                     </Button>
                 </DialogActions>

@@ -236,7 +236,7 @@ export default function HomePage({ /*recipes*/ }) {
                     ))}
                 </Masonry>
                 <Grid container spacing={3}>
-                    {/* display recipes */}
+                    {/* display recipes 
                     { displayRecipes && displayRecipes.map((recipe, index) => (
                         <Grid item key={recipe._id}>
                             <RecipeCard
@@ -257,7 +257,7 @@ export default function HomePage({ /*recipes*/ }) {
                                 }}
                             />
                         </Grid>
-                    ))}
+                    ))}*/}
                 </Grid>
                 <Dialog
                     fullScreen={fullScreen}

@@ -73,23 +73,6 @@ const Navbar = () => {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
     const [notificationList, setNotificationList] = React.useState([]);
 
-    async function findNotifications(username) {
-        const res = await fetch('/api/findNotifications', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                getData: true,
-            })
-        })
-        const data = await res.json();
-        console.log(data);
-        setNotificationList(data);
-        return data;
-    }
-
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };

@@ -291,6 +291,9 @@ function RecipeCard( props ) {
                                     var i = 0;
                                     for (i; i < sendList.length; i++) {
                                         var share = await createShare(props.recipe._id, username, sendList[i])
+                                        var message = username + " has shared a recipe with you!";
+                                        console.log(message)
+                                        var notif = addNewSharedNotif(message, sendList[i]);
                                     }
                                     //router.reload();
                                     handleClose();
@@ -350,7 +353,6 @@ function RecipeCard( props ) {
             sendList.push(friendsList[checked[j]])
         }
 
-        
         if (friendsList.length == 0) {
             return(<>You have no friends :(</>);
         } else {
@@ -389,21 +391,21 @@ function RecipeCard( props ) {
         }
     }
 
-    async function createShare(recipeID, sender, receiver) {
-        const res = await fetch('api/createShare', {
+    async function addNewSharedNotif(sender, receiver) {
+        const res = await fetch('api/addNewSharedNotif', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                recipeID: recipeID,
                 sender: sender,
-                receiver: receiver,
+                receiver: receiver
             })
         });
+    
         const data = await res.json();
-        console.log(data);
+        console.log(data)
         return data;
     }
 
@@ -470,6 +472,23 @@ function RecipeCard( props ) {
         catch (error) {
             return error;
         }
+    }
+    async function createShare(recipeID, sender, receiver) {
+        const res = await fetch('api/createShare', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                sender: sender,
+                receiver: receiver,
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
     }
 }
 

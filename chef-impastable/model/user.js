@@ -56,7 +56,16 @@ const userSchema = new mongoose.Schema({
     currentMealPlan: {
         type: String
     },
-    notifications: {
+    newFriendNotif: {
+        type:[String]
+    },
+    oldFriendNotif: {
+        type:[String]
+    },
+    newSharedNotif: {
+        type:[String]
+    },
+    oldSharedNotif: {
         type:[String]
     },
     success: {

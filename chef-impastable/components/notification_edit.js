@@ -8,13 +8,26 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Autocomplete } from '@mui/material';
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemButton from "@mui/material/ListItemButton";
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import { Delete } from '@mui/icons-material';
+import { useRouter } from "next/router";
 
 export default function NotificationEdit(notificationList) {
 
+    const router = useRouter();
+
     const [username, setUsername] = useState("");
+    const [friends, setFriends] = useState([]);
+    const [newFriendNotif, setNewFriendNotif] = useState([]);
+    const [newSharedNotif, setNewSharedNotif] = useState([]);
+    const [oldFriendNotif, setOldFriendNotif] = useState([]);
+    const [oldSharedNotif, setOldSharedNotif] = useState([]);
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -24,10 +37,52 @@ export default function NotificationEdit(notificationList) {
                     return this.username
                 },
             },
+            getFriends: {
+                get() {
+                    return this.friends
+                },
+            },
+            getNewFriendNotif: {
+                get() {
+                    return this.newFriendNotif
+                },
+            },
+            getNewSharedNotif: {
+                get() {
+                    return this.newSharedNotif
+                },
+            },
+            getOldFriendNotif: {
+                get() {
+                    return this.oldFriendNotif
+                },
+            },
+            getOldSharedNotif: {
+                get() {
+                    return this.oldSharedNotif
+                },
+            }
         });
         setUsername(thisUser.getUsername);
+        setFriends(thisUser.getFriends);
+        setNewFriendNotif(thisUser.getNewFriendNotif);
+        setNewSharedNotif(thisUser.getNewSharedNotif);
+        setOldFriendNotif(thisUser.getOldFriendNotif);
+        setOldSharedNotif(thisUser.getOldSharedNotif);
     }, []);
-    console.log(username)
+    console.log(username);
+    console.log(friends);
+    console.log(newFriendNotif);
+    console.log(newSharedNotif);
+
+    // var i = 0;
+    // for (i = 0; i < newFriendNotif.length; i++) {
+    //     var user = newFriendNotif[i].split(" ")[0];
+    //     console.log(user);
+    //     if (friends.includes(user)) {
+
+    //     }
+    // }
     
     // for messages
     const theme = useTheme();
@@ -53,7 +108,11 @@ export default function NotificationEdit(notificationList) {
                     startIcon={<ClearIcon/>}
                     sx={{width: 110, color:'red', borderColor:'red'}}
                     onClick={async () => {
-                        setNotificationList([]);
+                        setNewFriendNotif([]);
+                        setNewSharedNotif([]);
+                        setOldFriendNotif([]);
+                        setOldSharedNotif([]);
+                        // new one for each field
                         var data = await clearNotifications(username);
                         localStorage.setItem('user', JSON.stringify(data));
                     }}
@@ -61,18 +120,61 @@ export default function NotificationEdit(notificationList) {
                     Clear
                 </Button>
             </Grid>
-            {/* <Grid container id="empty">
-                List is empty.
-            </Grid> */}
             <Grid containter data-test='EditDisplay'>
-                {/* {displayList(shoppingList)} */}
-                {/*notificationList && notificationList.map((item, index) => (
+                <h3 className="h3">New friend requests</h3>
+                <Divider />
+                {newFriendNotif && newFriendNotif.map((item, index) => (
                     <Box>
                         <FormGroup row>
                         </FormGroup>
                         <Grid container id="Item">
                             <Grid>
-                                <List data-test={`ListItem-${index}`}>
+                                <List>
+                                    <ListItem>
+                                    <ListItemText data-test="ListText"
+                                        sx={{display: 'flex', justifyContent: 'left'}}
+                                        primary={item}
+                                    />
+                                    <ListItemButton 
+                                        edge="end"
+                                        aria-label="go-to-page"
+                                        data-test={`DeleteButton-${index}`}
+                                        endIcon={<FullscreenIcon/>}
+                                        onClick={async () => {
+                                            router.push({ pathname: "/profile-page/", query: { username: username } });
+                                        }}
+                                    >
+                                            
+                                    </ListItemButton>
+
+                                    <ListItemIcon edge="end">
+                                        <DeleteIcon
+                                        aria-label="delete"
+                                            data-test={`DeleteButton-${index}`}
+                                            onClick={async () => {
+                                                deleteByIndex(index);
+                                                var data = await DeleteListItem(username, item);
+                                                localStorage.setItem('user', JSON.stringify(data));
+                                            }}
+                                        />       
+                                    </ListItemIcon>
+                                    </ListItem>
+                                </List>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    ))}
+                
+            </Grid>
+                <h3 className="h3">New shared recipes</h3>
+                <Divider />
+                {newSharedNotif && newSharedNotif.map((item, index) => (
+                    <Box>
+                        <FormGroup row>
+                        </FormGroup>
+                        <Grid container id="Item">
+                            <Grid>
+                                <List>
                                     <ListItem 
                                         secondaryAction={
                                             <IconButton edge="end" aria-label="delete"
@@ -88,7 +190,7 @@ export default function NotificationEdit(notificationList) {
                                         }
                                     >
                                         <ListItemText data-test="ListText"
-                                            sx={{display: 'flex', justifyContent: 'center'}}
+                                            sx={{display: 'flex', justifyContent: 'left'}}
                                             primary={item}
                                         />
                                     </ListItem>
@@ -96,9 +198,8 @@ export default function NotificationEdit(notificationList) {
                             </Grid>
                         </Grid>
                     </Box>
-                                    )) */}
+                    ))}
                 
-            </Grid>
         </div>
         </>
     );

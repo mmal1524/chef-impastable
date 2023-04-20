@@ -11,10 +11,16 @@ export default async function handler(req,res){
         // get the users saved folders
         // find the folder with the given recipeid
         // remove the recipe
-        const {username, recipeID}=req.body;
+        const {username, recipeID, isHouse}=req.body;
         // const user = await User.findOne({username: username});
         console.log(username, recipeID);
-        const folder = await SavedFolder.findOne({user: username, recipes: recipeID});
+        var folder
+        if (isHouse) {
+            folder = await SavedFolder.findOne({household: username, recipes: recipeID});
+        } 
+        else {
+            folder = await SavedFolder.findOne({user: username, recipes: recipeID});
+        }
         console.log(folder);
         folder.recipes.pull(recipeID);
         console.log(folder);

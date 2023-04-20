@@ -18,7 +18,7 @@ export default async function handler(req, res) {
             saturatedFatContent: saturatedFat,
             sodiumContent: sodium,
             fatContent: fat,
-            unsaturatedFat: unsaturatedFat
+            unsaturatedFatContent: unsaturatedFat
     };
         const recipe = new Recipe({
             title: title,

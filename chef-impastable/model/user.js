@@ -56,6 +56,9 @@ const userSchema = new mongoose.Schema({
     currentMealPlan: {
         type: String
     },
+    notifications: {
+        type:[String]
+    },
     success: {
         type:Boolean,
         required:false

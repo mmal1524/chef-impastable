@@ -170,53 +170,6 @@ function RecipeCard( props ) {
                 />
             </IconButton>
 
-<<<<<<< HEAD
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button 
-                            onClick={ async () => {
-                                if (sendList.length == 0) {
-                                    handleClickNoFriends();
-                                } else {
-                                    var i = 0;
-                                    for (i; i < sendList.length; i++) {
-                                        var share = await createShare(props.recipe._id, username, sendList[i])
-                                    }
-                                    //router.reload();
-                                    handleClose();
-                                }
-                            }}
-                            > 
-                            Send
-                        </Button>
-                        <Button onClick={handleClose} autoFocus>
-                            Cancel
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <Dialog
-                    //Dialog for when a user is trying to share to no one
-                    open={noFriendsOpen}
-                    onClose={handleCloseNoFriends}
-                    aria-labelledby="responsive-dialog-title"
-                >
-                    <DialogTitle id="responsive-dialog-title">
-                        {"No Friends Selected"}
-                    </DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please select a friend to share this recipe with.
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCloseNoFriends} autoFocus>
-                            OK
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-        </CardActions>
-=======
 
             {/* Choose meal plan dialog */}
             <Dialog
@@ -327,30 +280,52 @@ function RecipeCard( props ) {
                     <DialogContentText id="share-recipe-description">
                         Select friends:
                         {displayFriends(friends)}
-
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button 
-                        onClick={ async () => {
-                            console.log(sendList)
-                            var i = 0;
-                            for (i; i < sendList.length; i++) {
-                                var share = await createShare(props.recipe._id, username, sendList[i])
-                            }
-                            router.reload();
-                        }}
-                        > 
-                        Send
-                    </Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
-    </CardActions>
->>>>>>> bb79b1f8c59503a9be47abe72b247596ee63a284
-    </Card>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                            onClick={ async () => {
+                                if (sendList.length == 0) {
+                                    handleClickNoFriends();
+                                } else {
+                                    var i = 0;
+                                    for (i; i < sendList.length; i++) {
+                                        var share = await createShare(props.recipe._id, username, sendList[i])
+                                    }
+                                    //router.reload();
+                                    handleClose();
+                                }
+                            }}
+                            > 
+                            Send
+                        </Button>
+                        <Button onClick={handleClose} autoFocus>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    //Dialog for when a user is trying to share to no one
+                    open={noFriendsOpen}
+                    onClose={handleCloseNoFriends}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"No Friends Selected"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please select a friend to share this recipe with.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseNoFriends} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>          
+            </CardActions>
+        </Card>
     );
 
     function displayFriends(friendsList) {

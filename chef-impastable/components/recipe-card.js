@@ -70,16 +70,16 @@ function RecipeCard( props ) {
 
     const handleNewMealPlanClose = () => {
         setNewMealPlanOpen(false);
-    }
+    };
 
     const handleNewMealPlanName = e => {
         setNewMealPlanName(e.target.value);
-    }
+    };
 
     const handleChooseMealPlan = (value) => {
         setChosenMealPlan(value);
         setDayOpen(true);
-    }
+    };
 
     const handleDayClose = () => {
         setDayOpen(false);
@@ -114,7 +114,7 @@ function RecipeCard( props ) {
         setUsername(thisUser.getUsername);
         setFriends(thisUser.getFriends);
         setMealPlans(thisUser.getMealPlans);
-    }, [mealPlans]);
+    }, []);
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 

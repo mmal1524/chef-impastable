@@ -25,6 +25,7 @@ import Button from '@mui/material/Button';
 import StarIcon from '@mui/icons-material/Star';
 import ButtonBase from '@mui/material/ButtonBase';
 import Router from "next/router";
+import Stack from '@mui/system/Stack';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -269,8 +270,8 @@ export default function MealPlan() {
 
                     {/* Current meal plan */}
 
-                    <TabPanel value={tabs} index={0} >
-                        <Button></Button>
+                    <TabPanel data-test={`Mealplan-${tabs}`} value={tabs} index={0} >
+                        <h4>{currentMealPlan.name}</h4>
                         <Grid 
                             container 
                             spacing={0}
@@ -279,12 +280,13 @@ export default function MealPlan() {
                             justifyContent="flex-start"
                             alignItems="stretch"
                             sx={{borderRight: 1}}
+                            data-test="Calendar"
                         >
                             {daysOfWeek.map((day, i) => (
                                 <>
                                     <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
                                         <Box sx={{borderBottom: 1, borderColor: 'black'}}>
-                                                <h4 align="center" >{day}</h4>
+                                                <h4 data-test={`Day-${day}`} align="center" >{day}</h4>
                                         </Box>
                                         {recipes && recipes.at(currentMealPlanIndex) && recipes.at(currentMealPlanIndex).at(i) && recipes.at(currentMealPlanIndex).at(i).map((recipe, i) => (
                                             <div>
@@ -325,6 +327,13 @@ export default function MealPlan() {
                     {/* All other meal plans */}
                     {mealPlans.map((mealPlan, index) => (
                         <TabPanel value={tabs} index={index + 1} >
+                            <Stack
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
+                                spacing={2}
+                            >
+                            <h4>{mealPlan.name}</h4>
                             {(index == currentMealPlanIndex) ? 
                                 <IconButton><StarIcon sx={{width: 30, height: 30, padding: 0, color: "orange"}}/></IconButton>
                                 :
@@ -342,6 +351,7 @@ export default function MealPlan() {
                                 >
                                     <StarIcon sx={{width: 30, height: 30, padding: 0}}/>
                                 </IconButton>}
+                            </Stack>
                             <Grid 
                                 container 
                                 spacing={0}

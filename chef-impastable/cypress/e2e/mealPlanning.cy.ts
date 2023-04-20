@@ -76,4 +76,15 @@ describe('Meal Planning', () => {
         cy.get("[data-test='Drawer-4'").click()
     })
 
+    it("Displays Calendar", () => {
+        cy.get("[data-test='Mealplan-0']", {timeout: 60000}).find("[data-test='Calendar']").should("exist")
+        cy.get("[data-test='Day-Sunday']").should("contain", "Sunday")
+        cy.get("[data-test='Day-Monday']").should("contain", "Monday")
+        cy.get("[data-test='Day-Tuesday']").should("contain", "Tuesday")
+        cy.get("[data-test='Day-Wednesday']").should("contain", "Wednesday")
+        cy.get("[data-test='Day-Thursday']").should("contain", "Thursday")
+        cy.get("[data-test='Day-Friday']").should("contain", "Friday")
+        cy.get("[data-test='Day-Saturday']").should("contain", "Saturday")
+    })
+
 })

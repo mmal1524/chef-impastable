@@ -114,7 +114,7 @@ function RecipeCard( props ) {
         setUsername(thisUser.getUsername);
         setFriends(thisUser.getFriends);
         setMealPlans(thisUser.getMealPlans);
-    }, []);
+    }, [mealPlans]);
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -215,11 +215,11 @@ function RecipeCard( props ) {
                         sx={{color: "black"}}
                         onClick={async () => {
                             var data = await createMealPlan(username, newMealPlanName);
-                            var user = await addMealPlanToUser(username, data.name)
+                            var user = await addMealPlanToUser(username, data.name);
                             setMealPlans(user.mealPlans);
                             setNewMealPlanOpen(false);
                             setNewMealPlanName("");
-                            localStorage.setItem('user', JSON.stringify(user))
+                            localStorage.setItem('user', JSON.stringify(user));
                         }}
                     >Create</Button>
                 </DialogActions>

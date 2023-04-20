@@ -147,7 +147,6 @@ export default function MealPlan() {
         });
 
         var goals = thisUser.goals;
-        console.log(goals.caloriesLower)
         setCaloriesLower(goals.caloriesLower);
         setCaloriesUpper(goals.caloriesUpper);
         setCarbsLower(goals.carbsLower);
@@ -289,6 +288,85 @@ export default function MealPlan() {
     
             setCurrentMealPlanIndex(index);
 
+            // Get the nutrition goals for current meal plan
+            if (plans.length > 0) {
+                var sundayRecipeIdsCurr = plans[index].Sunday;
+                var sundayRecipesCurr = new Array(sundayRecipeIdsCurr.length);
+                var mondayRecipeIdsCurr = plans[index].Monday;
+                var mondayRecipesCurr = new Array(mondayRecipeIdsCurr.length);
+                var tuesdayRecipeIdsCurr = plans[index].Tuesday;
+                var tuesdayRecipesCurr = new Array(tuesdayRecipeIdsCurr.length);
+                var wednesdayRecipeIdsCurr = plans[index].Wednesday;
+                var wednesdayRecipesCurr = new Array(wednesdayRecipeIdsCurr.length);
+                var thursdayRecipeIdsCurr = plans[index].Thursday;
+                var thursdayRecipesCurr = new Array(thursdayRecipeIdsCurr.length);
+                var fridayRecipeIdsCurr = plans[index].Friday;
+                var fridayRecipesCurr = new Array(fridayRecipeIdsCurr.length);
+                var saturdayRecipeIdsCurr = plans[index].Saturday;
+                var saturdayRecipesCurr = new Array(saturdayRecipeIdsCurr.length);
+
+                var m = 0;
+                for (m = 0; m < sundayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(sundayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    sundayRecipesCurr[m] = recipe;
+                }
+                calculateDay(sundayRecipesCurr, 0);
+
+                for (m = 0; m < mondayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(mondayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    mondayRecipesCurr[m] = recipe;
+                }
+                calculateDay(mondayRecipesCurr, 1);
+
+                for (m = 0; m < tuesdayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(tuesdayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    tuesdayRecipesCurr[m] = recipe;
+                }
+                calculateDay(tuesdayRecipesCurr, 2);
+
+                for (m = 0; m < wednesdayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(wednesdayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    wednesdayRecipesCurr[m] = recipe;
+                }
+                calculateDay(wednesdayRecipesCurr, 3);
+
+                for (m = 0; m < thursdayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(thursdayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    thursdayRecipesCurr[m] = recipe;
+                }
+                calculateDay(thursdayRecipesCurr, 4);
+
+                for (m = 0; m < fridayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(fridayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    fridayRecipesCurr[m] = recipe;
+                }
+                calculateDay(fridayRecipesCurr, 5);
+
+                for (m = 0; m < saturdayRecipeIdsCurr.length; m++) {
+                    var recipe = await getRecipe(saturdayRecipeIdsCurr[m]);
+                    calculateNutrients(recipe);
+                    saturdayRecipesCurr[m] = recipe;
+                }
+                calculateDay(saturdayRecipesCurr, 6);
+
+                setCalories(currCalories);
+                setCarbs(currCarbs);
+                setCholesterol(currCholesterol);
+                setFiber(currFiber);
+                setProtein(currProtein);
+                setSaturatedFat(currSaturatedFat);
+                setSodium(currSodium);
+                setFat(currFat);
+                setUnsaturatedFat(currUnsaturatedFat);
+            }
+
+            // all of the other meal plans
             var recipeObjects = new Array(plans.length);
 
             var i = 0;
@@ -315,70 +393,48 @@ export default function MealPlan() {
                 var j = 0;
                 for (j = 0; j < sundayRecipeIds.length; j++) {
                     var recipe = await getRecipe(sundayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     sundayRecipes[j] = recipe;
                 }
                 recipeObjects[i][0] = sundayRecipes;
-                calculateDay(sundayRecipes, 0);
 
                 for (j = 0; j < mondayRecipeIds.length; j++) {
                     var recipe = await getRecipe(mondayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     mondayRecipes[j] = recipe;
                 }
                 recipeObjects[i][1] = mondayRecipes;
-                calculateDay(mondayRecipes, 1);
 
                 for (j = 0; j < tuesdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(tuesdayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     tuesdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][2] = tuesdayRecipes;
-                calculateDay(tuesdayRecipes, 2);
 
                 for (j = 0; j < wednesdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(wednesdayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     wednesdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][3] = wednesdayRecipes;
-                calculateDay(wednesdayRecipes, 3);
 
                 for (j = 0; j < thursdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(thursdayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     thursdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][4] = thursdayRecipes;
-                calculateDay(thursdayRecipes, 4);
 
                 for (j = 0; j < fridayRecipeIds.length; j++) {
                     var recipe = await getRecipe(fridayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     fridayRecipes[j] = recipe;
                 }
                 recipeObjects[i][5] = fridayRecipes;
-                calculateDay(fridayRecipes, 5);
 
                 for (j = 0; j < saturdayRecipeIds.length; j++) {
                     var recipe = await getRecipe(saturdayRecipeIds[j]);
-                    calculateNutrients(recipe);
                     saturdayRecipes[j] = recipe;
                 }
                 recipeObjects[i][6] = saturdayRecipes;
-                calculateDay(saturdayRecipes, 6);
-
-                setCalories(currCalories);
-                setCarbs(currCarbs);
-                setCholesterol(currCholesterol);
-                setFiber(currFiber);
-                setProtein(currProtein);
-                setSaturatedFat(currSaturatedFat);
-                setSodium(currSodium);
-                setFat(currFat);
-                setUnsaturatedFat(currUnsaturatedFat);
                 setRecipes(recipeObjects);
+
+                console.log(recipeObjects)
             }
         }
         setUsername(thisUser.getUsername);
@@ -421,9 +477,7 @@ export default function MealPlan() {
     };
 
     const [caloriesUpper, setCaloriesUpper] = useState("");
-    console.log("calories upper")
-    console.log(caloriesUpper);
-    const [caloriesTempUpper, setCaloriesTempUpper] = useState("");
+    const [caloriesTempUpper, setCaloriesTempUpper] = useState("")
     const [carbsUpper, setCarbsUpper] = useState("");
     const [carbsTempUpper, setCarbsTempUpper] = useState("");
     const [cholesterolUpper, setCholesterolUpper] = useState("");
@@ -608,6 +662,26 @@ export default function MealPlan() {
     const [editGoalsOpen, setEditGoalsOpen] = React.useState(false);
 
     const handleEditGoalsOpen = () => {
+        setCaloriesTempLower(caloriesLower);
+        setCaloriesTempUpper(caloriesUpper);
+        setCarbsTempLower(carbsLower);
+        setCarbsTempUpper(carbsUpper);
+        setCholesterolTempLower(cholesterolLower);
+        setCholesterolTempUpper(cholesterolUpper);
+        setFiberTempLower(fiberLower);
+        setFiberTempUpper(fiberUpper);
+        setProteinTempLower(proteinLower);
+        setProteinTempUpper(proteinUpper);
+        setSaturatedFatTempLower(saturatedFatLower);
+        setSaturatedFatTempUpper(saturatedFatUpper);
+        setSodiumTempLower(sodiumLower);
+        setSodiumTempUpper(sodiumUpper);
+        setFatTempLower(fatLower);
+        setFatTempUpper(fatUpper);
+        setUnsaturatedFatTempLower(unsaturatedFatLower);
+        setUnsaturatedFatTempUpper(unsaturatedFatUpper);
+        setCommentsTemp(comments);
+        
         setEditGoalsOpen(true);
     }
     const handleEditGoalsClose = () => {
@@ -1412,7 +1486,35 @@ export default function MealPlan() {
                             cancel
                         </Button>
                         <Button onClick={async ()=> {
-                            updateGoals(username, [caloriesTempLower, caloriesTempUpper, carbsTempLower, carbsTempUpper, cholesterolTempLower, cholesterolTempUpper, fiberTempLower, fiberTempUpper, proteinTempLower, proteinTempUpper, saturatedFatTempLower, saturatedFatTempUpper, sodiumTempLower, sodiumTempUpper, fatTempLower, fatTempUpper, unsaturatedTempLower, unsaturatedFatTempUpper, commentsTemp])
+                            var goals = [caloriesTempLower, caloriesTempUpper, carbsTempLower, carbsTempUpper, cholesterolTempLower, cholesterolTempUpper, fiberTempLower, fiberTempUpper, proteinTempLower, proteinTempUpper, saturatedFatTempLower, saturatedFatTempUpper, sodiumTempLower, sodiumTempUpper, fatTempLower, fatTempUpper, unsaturatedTempLower, unsaturatedFatTempUpper, commentsTemp];
+                            updateGoals(username, goals)
+
+                            setCaloriesLower(goals[0]);
+                            setCaloriesUpper(goals[1]);
+                            setCarbsLower(goals[2]);
+                            setCarbsUpper(goals[3]);
+                            setCholesterolLower(goals[4]);
+                            setCholesterolUpper(goals[5]);
+                            setFiberLower(goals[6]);
+                            setFiberUpper(goals[7]);
+                            setProteinLower(goals[8]);
+                            setProteinUpper(goals[9]);
+                            setSaturatedFatLower(goals[10]);
+                            setSaturatedFatUpper(goals[11]);
+                            setSodiumLower(goals[12]);
+                            setSodiumUpper(goals[13]);
+                            setFatLower(goals[14]);
+                            setFatUpper(goals[15]);
+                            setUnsaturatedFatLower(goals[16]);
+                            setUnsaturatedFatUpper(goals[17]);
+                            setComments(goals[18]);
+                            
+                            var user = JSON.parse(localStorage.getItem('user'));
+                            localStorage.setItem('user', JSON.stringify({
+                                ...user, 
+                                "goals": {"caloriesLower": goals[0], "caloriesUpper": goals[1], "carbsLower": goals[2], "carbsUpper": goals[3], "cholesterolLower": goals[4], "cholesterolUpper": goals[5], "fiberLower": goals[6], "fiberUpper": goals[7], "proteinLower": goals[8], "proteinUpper": goals[9], "saturatedFatLower": goals[10], "saturatedFatUpper": goals[11], "sodiumLower": goals[12], "sodiumUpper": goals[13], "fatLower": goals[14], "fatUpper": goals[15], "unsaturatedFatLower": goals[16], "unsaturatedFatUpper": goals[17], "comments": goals[18]}
+                            }));
+                            console.log(user)
                             handleEditGoalsClose();
                         }}
                          autoFocus>

@@ -114,7 +114,7 @@ function RecipeCard( props ) {
         setUsername(thisUser.getUsername);
         setFriends(thisUser.getFriends);
         setMealPlans(thisUser.getMealPlans);
-    }, []);
+    }, [mealPlans]);
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 

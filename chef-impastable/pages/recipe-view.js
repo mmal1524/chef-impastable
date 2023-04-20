@@ -81,7 +81,7 @@ export default function Recipe({ recipe, reviews }) {
         });
         setUsername(thisUser.getUsername)
         setMealPlans(thisUser.getMealPlans);
-    }, []);
+    }, [mealPlans]);
 
     function createRow(name, value) {
         return { name, value };

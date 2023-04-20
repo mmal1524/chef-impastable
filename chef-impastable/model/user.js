@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
     currentMealPlan: {
         type: String
     },
+    goals: {
+        type: Map,
+        of: String
+    },
     success: {
         type:Boolean,
         required:false

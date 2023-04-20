@@ -38,6 +38,7 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import { getFormGroupUtilityClass } from '@mui/material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -83,6 +84,7 @@ export default function MealPlan() {
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     const [username, setUsername] = useState("");
+    const [goals, setGoals] = useState({});
     var [mealPlans, setMealPlans] = useState([]);
     var [currentMealPlan, setCurrentMealPlan] = useState("");
     var [currentMealPlanIndex, setCurrentMealPlanIndex] = useState(0);
@@ -136,8 +138,35 @@ export default function MealPlan() {
                 get() {
                     return this.username
                 },
+            },
+            getGoals: {
+                get() {
+                    return this.goals
+                }
             }
         });
+
+        var goals = thisUser.goals;
+        console.log(goals.caloriesLower)
+        setCaloriesLower(goals.caloriesLower);
+        setCaloriesUpper(goals.caloriesUpper);
+        setCarbsLower(goals.carbsLower);
+        setCarbsUpper(goals.carbsUpper);
+        setCholesterolLower(goals.cholesterolLower);
+        setCholesterolUpper(goals.cholesterolUpper);
+        setFiberLower(goals.fiberLower);
+        setFiberUpper(goals.fiberUpper);
+        setProteinLower(goals.proteinLower);
+        setProteinUpper(goals.proteinUpper);
+        setSaturatedFatLower(goals.saturatedFatLower);
+        setSaturatedFatUpper(goals.saturatedFatUpper);
+        setSodiumLower(goals.sodiumLower);
+        setSodiumUpper(goals.sodiumUpper);
+        setFatLower(goals.fatLower);
+        setFatUpper(goals.fatUpper);
+        setUnsaturatedFatLower(goals.unsaturatedFatLower);
+        setUnsaturatedFatUpper(goals.unsaturatedFatUpper);
+        setComments(goals.comments);
 
         async function getMealPlans() {
 
@@ -392,6 +421,8 @@ export default function MealPlan() {
     };
 
     const [caloriesUpper, setCaloriesUpper] = useState("");
+    console.log("calories upper")
+    console.log(caloriesUpper);
     const [caloriesTempUpper, setCaloriesTempUpper] = useState("");
     const [carbsUpper, setCarbsUpper] = useState("");
     const [carbsTempUpper, setCarbsTempUpper] = useState("");
@@ -507,29 +538,6 @@ export default function MealPlan() {
     }
     const handleCommentsTemp = e => {
         setCommentsTemp(e.target.value)
-    }
-
-    const updateGoals = (newCaloriesL, newCaloriesU, newCarbsL, newCarbsU, newCholesterolL, newCholesterolU, newFiberL, newFiberU , newProteinL, newProteinU, newSaturatedFatL, newSaturatedFatU, newSodiumL, newSodiumU, newFatL, newFatU, newUnsaturatedFatL, newUnsaturatedFatU, newComments) => {
-        setCaloriesLower(newCaloriesL);
-        setCaloriesUpper(newCaloriesU);
-        setCarbsLower(newCarbsL);
-        setCarbsUpper(newCarbsU);
-        setCholesterolLower(newCholesterolL);
-        setCholesterolUpper(newCholesterolU);
-        setFiberLower(newFiberL);
-        setFiberUpper(newFiberU);
-        setProteinLower(newProteinL);
-        setProteinUpper(newProteinU);
-        setSaturatedFatLower(newSaturatedFatL);
-        setSaturatedFatUpper(newSaturatedFatU);
-        setSodiumLower(newSodiumL);
-        setSodiumUpper(newSaturatedFatU);
-        setFatLower(newFatL);
-        setFatUpper(newFatU);
-        setUnsaturatedFatLower(newUnsaturatedFatL);
-        setUnsaturatedFatUpper(newUnsaturatedFatU);
-        setComments(newComments);
-        handleEditGoalsClose();
     }
 
     const [caloriesMoreOpen, setCaloriesMoreOpen] = React.useState(false);
@@ -1403,7 +1411,11 @@ export default function MealPlan() {
                     <Button sx={{color: "gray"}} onClick={handleEditGoalsCancel}>
                             cancel
                         </Button>
-                        <Button onClick={()=> updateGoals(caloriesTempLower, caloriesTempUpper, carbsTempLower, carbsTempUpper, cholesterolTempLower, cholesterolTempUpper, fiberTempLower, fiberTempUpper, proteinTempLower, proteinTempUpper, saturatedFatTempLower, saturatedFatTempUpper, sodiumTempLower, sodiumTempUpper, fatTempLower, fatTempUpper, unsaturatedTempLower, unsaturatedFatTempUpper, commentsTemp)} autoFocus>
+                        <Button onClick={async ()=> {
+                            updateGoals(username, [caloriesTempLower, caloriesTempUpper, carbsTempLower, carbsTempUpper, cholesterolTempLower, cholesterolTempUpper, fiberTempLower, fiberTempUpper, proteinTempLower, proteinTempUpper, saturatedFatTempLower, saturatedFatTempUpper, sodiumTempLower, sodiumTempUpper, fatTempLower, fatTempUpper, unsaturatedTempLower, unsaturatedFatTempUpper, commentsTemp])
+                            handleEditGoalsClose();
+                        }}
+                         autoFocus>
                             update
                         </Button>
                     </DialogActions>
@@ -1475,14 +1487,6 @@ export default function MealPlan() {
     }
 
     function displayGoal(lower, upper, actual, unit) {
-        console.log("lower")
-        console.log(lower)
-
-        console.log("upper")
-        console.log(upper)
-
-        console.log("actual")
-        console.log(actual)
         if (lower == "" && upper == "") {
             return (
                 <div>
@@ -1495,11 +1499,23 @@ export default function MealPlan() {
                 </div>
             )
         }
-        if (Number(lower) > Number(upper) && upper == "") {
+        if (upper == "") {
             return (
                 <div>
                     <div>
                         Invalid goal, upper bound is not defined.
+                    </div>
+                    <div>   
+                        This meal plan contains {actual} {unit}.
+                    </div>
+                </div>
+            ) 
+        }
+        if (lower == "") {
+            return (
+                <div>
+                    <div>
+                        Invalid goal, lower bound is not defined.
                     </div>
                     <div>   
                         This meal plan contains {actual} {unit}.
@@ -1535,10 +1551,10 @@ export default function MealPlan() {
             return (
                 <div>
                     <div> 
-                        Goal has been met
+                        Your goal has been met!
                     </div>
                     <div>
-                        This meal plan contains {actual} {unit}, which is between your lower bound of {lower} {unit} and upper bound of {upper} {unit}.
+                        This meal plan contains {actual} {unit}, which is within your goal of {lower} {unit} and {upper} {unit}.
                     </div>
                 </div>
             )
@@ -1547,7 +1563,7 @@ export default function MealPlan() {
             return (
                 <div>
                     <div>
-                        Your meal plan is {lower - actual} {unit} short.
+                        Your meal plan is {lower - actual} {unit} under your {lower} {unit} goal.
                     </div>
                     <div>   
                         This meal plan contains {actual} {unit}.
@@ -1559,7 +1575,7 @@ export default function MealPlan() {
             return(
                 <div>
                     <div>
-                        Your meal plan is {actual - upper} {unit} over.
+                        Your meal plan is {actual - upper} {unit} over your {upper} {unit} goal.
                     </div>
                     <div>   
                         This meal plan contains {actual} {unit}.
@@ -1581,7 +1597,7 @@ export default function MealPlan() {
             )
         }
 
-        if (Number(upper) < Number(lower) || isNaN(Number(lower)) || isNaN(Number(upper))) {
+        if (lower == "" || upper == "" || Number(upper) < Number(lower) || isNaN(Number(lower)) || isNaN(Number(upper))) {
             return (
                 <div>
                   <PriorityHighIcon
@@ -1678,6 +1694,46 @@ export default function MealPlan() {
         return data;
     }
 
+}
+//[newCaloriesL, newCaloriesU, newCarbsL, newCarbsU, newCholesterolL, newCholesterolU, newFiberL, newFiberU , newProteinL, newProteinU, newSaturatedFatL, newSaturatedFatU, newSodiumL, newSodiumU, newFatL, newFatU, newUnsaturatedFatL, newUnsaturatedFatU, newComments]
+
+async function updateGoals(username, goals) {
+    const res = await fetch('/api/editGoals', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            goals: goals
+        })
+    })
+    const data = await res.json();
+    console.log("data")
+    console.log(data)
+    return data;
+
+    // setCaloriesLower(newCaloriesL);
+    // setCaloriesUpper(newCaloriesU);
+    // setCarbsLower(newCarbsL);
+    // setCarbsUpper(newCarbsU);
+    // setCholesterolLower(newCholesterolL);
+    // setCholesterolUpper(newCholesterolU);
+    // setFiberLower(newFiberL);
+    // setFiberUpper(newFiberU);
+    // setProteinLower(newProteinL);
+    // setProteinUpper(newProteinU);
+    // setSaturatedFatLower(newSaturatedFatL);
+    // setSaturatedFatUpper(newSaturatedFatU);
+    // setSodiumLower(newSodiumL);
+    // setSodiumUpper(newSaturatedFatU);
+    // setFatLower(newFatL);
+    // setFatUpper(newFatU);
+    // setUnsaturatedFatLower(newUnsaturatedFatL);
+    // setUnsaturatedFatUpper(newUnsaturatedFatU);
+    // setComments(newComments);
+    // handleEditGoalsClose();
 }
 
 async function getCurrentMealPlan(username, mealPlan) {

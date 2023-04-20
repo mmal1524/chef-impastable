@@ -98,26 +98,28 @@ export default function ShoppingListEdit() {
                     variant="contained"
                     sx={{width: 110}}
                     onClick={async () => {
-                        // check if already in shopping list
-                        var idxSL = await indexMatch(shoppingList, addIngr);
-                        if (idxSL == -1) {
-                            // item not found in shopping list
-                            // check if already in fridge
-                            var idxF = await indexMatch(fridge, addIngr);
-                            if (idxF == -1) {
-                                // item not found in fridge
-                                var data = await addIngredient(username, addIngr);
-                                localStorage.setItem('user', JSON.stringify(data));
-                                setShoppingList(shoppingList => [...shoppingList, addIngr]);
-                                setAddIngr("");
-                                console.log("added")
-                                console.log(shoppingList)
-                                // confirmation popup? can tell if added
+                        if (addIngr != "") {
+                            // check if already in shopping list
+                            var idxSL = await indexMatch(shoppingList, addIngr);
+                            if (idxSL == -1) {
+                                // item not found in shopping list
+                                // check if already in fridge
+                                var idxF = await indexMatch(fridge, addIngr);
+                                if (idxF == -1) {
+                                    // item not found in fridge
+                                    var data = await addIngredient(username, addIngr);
+                                    localStorage.setItem('user', JSON.stringify(data));
+                                    setShoppingList(shoppingList => [...shoppingList, addIngr]);
+                                    setAddIngr("");
+                                    console.log("added")
+                                    console.log(shoppingList)
+                                    // confirmation popup? can tell if added
+                                } else {
+                                    // item already owned in fridge, error message?
+                                }
                             } else {
-                                // item already owned in fridge, error message?
+                                // item already in list, error message?
                             }
-                        } else {
-                            // item already in list, error message?
                         }
                     }}
                 >

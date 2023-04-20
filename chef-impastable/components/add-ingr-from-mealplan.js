@@ -82,7 +82,7 @@ export default function AddToListDialog(props) {
             console.log(ingredient);
             for (let j = 0; j < ingredient.length; j++) {
                 var idx = indexMatch(ingrArr, ingredient[j]);
-                if (idx == -1) {
+                if (idx == -1 && ingredient[j] != "\n") {
                     // only add if ingredient no already in the list
                     ingrArr.push(ingredient[j]);
                 }
@@ -125,14 +125,14 @@ export default function AddToListDialog(props) {
     const handleAddToList = async () => {
         for (let j = 0; j < ingrArr.length; j++) {
             if (addArr[j] == 1) {
+                if (addArr[j] != "\n") {
+                    var data = await addIngredient(username, ingrArr[j]);
+                    setShoppingList(shoppingList => [...shoppingList, ingrArr[j]]);
+                    localStorage.setItem('user', JSON.stringify(data));
+                }
                 addArr[j] = null;
-                var data = await addIngredient(username, ingrArr[j]);
-                setShoppingList(shoppingList => [...shoppingList, ingrArr[j]]);
-                localStorage.setItem('user', JSON.stringify(data));
             }
         }
-
-        //console.log("shoppinglist after add" + shoppingList)
         closeAction();
     }
 

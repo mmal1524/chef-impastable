@@ -47,11 +47,19 @@ const userSchema = new mongoose.Schema({
         type:[SchemaTypes.ObjectId],
         required:false
     },
+    households: {
+        type:[ObjectID]
+    },
+    mealPlans: {
+        type:[String]
+    },
+    currentMealPlan: {
+        type: String
+    },
     success: {
         type:Boolean,
         required:false
-    }
-
+    },
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

@@ -33,15 +33,26 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
-import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
+import { Favorite, FavoriteBorderOutlined, HouseOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
 import AddToListDialog from '../components/add-ingredient-from-recipe';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import AddIcon from '@mui/icons-material/Add';
+import SaveRecipeHouseDialog from '../components/saveRecipeHouseDialog';
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
     const [saved, setSaved] = useState(recipe.saved);
     const [showSaveDialog, setShowSaveDialog] = useState(false);
+    const [showSaveHouse, setShowSaveHouse] = useState(false);
 
     const theme = createTheme({
         palette: {
@@ -54,6 +65,7 @@ export default function Recipe({ recipe, reviews }) {
     var recipe1 = recipe;
 
     const [username, setUsername] = useState("");
+    var [mealPlans, setMealPlans] = useState([]);
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -62,14 +74,22 @@ export default function Recipe({ recipe, reviews }) {
                 get() {
                     return this.username
                 },
+            },
+            getMealPlans: {
+                get() {
+                    return this.mealPlans
+                },
             }
         });
         setUsername(thisUser.getUsername)
+        setMealPlans(thisUser.getMealPlans);
     }, []);
 
     function createRow(name, value) {
         return { name, value };
     }
+
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     var [open, setOpen] = useState(false);
     var [description, setDescription] = useState("");
@@ -80,6 +100,14 @@ export default function Recipe({ recipe, reviews }) {
     var [thirdStar, setThirdStar] = useState(false);
     var [fourthStar, setFourthStar] = useState(false);
     var [fifthStar, setFifthStar] = useState(false);
+
+    const [mealPlanOpen, setMealPlanOpen] = React.useState(false);  // dialog for choosing a meal plan
+    var [chosenMealPlan, setChosenMealPlan] = React.useState("");   // which meal plan was clicked
+
+    const [newMealPlanOpen, setNewMealPlanOpen] = React.useState(false); // dialog for creating new meal plan
+    var [newMealPlanName, setNewMealPlanName] = React.useState(""); // text field for new meal plan name
+
+    const [dayOpen, setDayOpen] = React.useState(false);    // dialog for choosing day of week of meal plan
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -162,6 +190,35 @@ export default function Recipe({ recipe, reviews }) {
         // reloading page
         router.reload();
     }
+
+    const handleMealPlanOpen = () => {
+        setMealPlanOpen(true);
+    };
+
+    const handleMealPlanClose = () => {
+        setMealPlanOpen(false);
+    };
+
+    const handleNewMealPlanOpen = () => {
+        setNewMealPlanOpen(true);
+    };
+
+    const handleNewMealPlanClose = () => {
+        setNewMealPlanOpen(false);
+    }
+
+    const handleNewMealPlanName = e => {
+        setNewMealPlanName(e.target.value);
+    }
+
+    const handleChooseMealPlan = (value) => {
+        setChosenMealPlan(value);
+        setDayOpen(true);
+    }
+
+    const handleDayClose = () => {
+        setDayOpen(false);
+    };
 
     async function createReview(recipeID, author, rating, description) {
         const res = await fetch('api/createReview', {
@@ -267,9 +324,22 @@ export default function Recipe({ recipe, reviews }) {
 
     return (
         <>
+            <SaveRecipeHouseDialog 
+                show={showSaveHouse}
+                onClose={() => {setShowSaveHouse(false)}}
+                onSubmit = {async (house) => {
+                    console.log(house);
+
+                    setShowSaveHouse(false);
+                    house.forEach(async (h) => {
+                        var data = await saveRecipe(h, "none", recipe._id, true);
+                    })
+                    
+                }}
+            />
             <SaveRecipeDialog
                 onSubmit = {async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id); 
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id, false); 
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }
@@ -279,6 +349,7 @@ export default function Recipe({ recipe, reviews }) {
                 show = {showSaveDialog}
                 onClose = {() => {setShowSaveDialog(false)}}
             />
+
             <Grid>
                 <div className="App">
                     <Navbar />
@@ -347,7 +418,7 @@ export default function Recipe({ recipe, reviews }) {
                     alignItems="center">
         
                     <CardMedia>
-                        <img data-test="RecipeViewImage" src={recipe.image} alt="image of {props.recipe.title}" width={300} />
+                        <img data-test="RecipeViewImage" src={recipe.image} alt="image of {recipe.title}" width={300} />
                     </CardMedia>
                 </Grid>
                 <Grid container justifyContent="center">
@@ -355,7 +426,7 @@ export default function Recipe({ recipe, reviews }) {
                         data-test="SaveRecipe"
                         onClick={() => {
                             if (saved) {
-                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id, false);
                                 setSaved(false);
                             }
                             else {
@@ -368,6 +439,116 @@ export default function Recipe({ recipe, reviews }) {
                             <Favorite/>
                         : <FavoriteBorderOutlined />}
                     </IconButton>
+
+                    {/* Add to meal plan button */}
+                    <IconButton
+                        onClick={handleMealPlanOpen}
+                    >
+                        <PostAddIcon />
+                    </IconButton>
+
+                    <IconButton
+                        onClick={() => {setShowSaveHouse(true)}}
+                    >
+                        <HouseOutlined/>
+                    </IconButton>
+
+                    {/* Choose meal plan dialog */}
+                    <Dialog
+                        open={mealPlanOpen}
+                        onClose={handleMealPlanClose}
+                    >
+                        <Box sx={{backgroundColor: "orange"}}>
+                            <DialogTitle textAlign={"center"}>Choose Meal Plan</DialogTitle>
+                        </Box>
+                        <List sx={{ pt: 0 }}>
+                            {/* Displaying meal plans */}
+                            {mealPlans && mealPlans.map((mealPlan) => (
+                                <ListItem disableGutters>
+                                    <ListItemButton onClick={() => handleChooseMealPlan(mealPlan)} key={mealPlan}>
+                                        <ListItemText primary={mealPlan} sx={{textAlign: "center"}}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            ))}
+                            { /* Create new meal plan button */ }
+                            <ListItem disableGutters>
+                                <ListItemButton
+                                    autoFocus
+                                    onClick={handleNewMealPlanOpen}
+                                >
+                                    <ListItemAvatar >
+                                        <Avatar sx={{backgroundColor: "orange"}}>
+                                            <AddIcon sx={{color: "black"}}/>
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText primary="Create New Meal Plan" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </Dialog>
+
+                    {/* Create new meal plan dialog */}
+                    <Dialog
+                        open={newMealPlanOpen}
+                        onClose={handleNewMealPlanClose}
+                    >
+                        <DialogTitle>Create New Meal Plan</DialogTitle>
+                        <DialogContent>
+                            <Box sx={{width: 300}}>
+                                <TextField
+                                    required
+                                    id="standard-required"
+                                    label="Name of Meal Plan"
+                                    variant="standard"
+                                    fullWidth
+                                    value={newMealPlanName}
+                                    onChange={handleNewMealPlanName}
+                                />
+                            </Box>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
+                            <Button
+                                sx = {{color: "black"}} 
+                                onClick={async () => {
+                                    var data = await createMealPlan(username, newMealPlanName);
+                                    var user = await addMealPlanToUser(username, data.name)
+                                    setMealPlans(user.mealPlans);
+                                    setNewMealPlanOpen(false);
+                                    setNewMealPlanName("");
+                                    localStorage.setItem('user', JSON.stringify(user))
+                                }}
+                            >Create</Button>
+                        </DialogActions>
+                    </Dialog>
+                    
+                    {/* Choose day of week dialog */}
+                    <Dialog
+                        open={dayOpen}
+                        onClose={handleDayClose}
+                    >
+                        <Box sx={{width: 300}}>
+                            <Box sx={{backgroundColor: "orange"}}>
+                                <DialogTitle>{chosenMealPlan}</DialogTitle>
+                            </Box>
+                            <DialogTitle>Add {recipe.title} to: </DialogTitle>
+                            <List>
+                                {daysOfWeek.map((day) => (
+                                    <ListItem disableGutters>
+                                        <ListItemButton onClick={async () => {
+                                            var mealPlan = await addRecipeToMealPlan(username, chosenMealPlan, day, recipe._id);
+                                            setDayOpen(false);
+                                            setMealPlanOpen(false);
+                                            setChosenMealPlan("");
+                                            setDayOpen("");
+                                        }}>
+                                            <ListItemText primary={day} sx={{textAlign: "center"}}/>
+                                        </ListItemButton>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Box>
+                    </Dialog>
                 </Grid>
 
                 <Grid container
@@ -536,6 +717,71 @@ export default function Recipe({ recipe, reviews }) {
                     <p></p>
                 </>
             )
+        }
+    }
+
+    async function createMealPlan(username, mealPlanName) {
+        try {
+            const res = await fetch('/api/createMealPlan', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: mealPlanName,
+                    user: username
+                })
+            })
+            const data = await res.json();
+            return data;
+        }
+        catch (error) {
+            return error;
+        }
+    }
+
+    async function addMealPlanToUser(username, mealPlanName) {
+        try {
+            const res = await fetch('/api/addMealPlanToUser', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: mealPlanName,
+                    user: username
+                })
+            })
+            const data = await res.json();
+            return data;
+        }
+        catch (error) {
+            return error;
+        }
+    }
+
+    async function addRecipeToMealPlan(username, mealPlan, day, recipeID) {
+        try {
+            const res = await fetch('/api/addRecipeToMealPlan', {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    mealPlan: mealPlan,
+                    day: day,
+                    recipeID: recipeID
+                })
+            })
+            const data = await res.json();
+            return data;
+        }
+        catch (error) {
+            return error;
         }
     }
 }

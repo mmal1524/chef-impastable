@@ -11,6 +11,9 @@ const savedFolderSchema = new mongoose.Schema({
     },
     user: {
         type: String
+    },
+    household: {
+        type: ObjectID
     }
 })
 

@@ -7,7 +7,6 @@ import { Dialog } from '@mui/material';
 import { getFolders } from '../pages/routes/savedRecipeRoutes';
 
 export default function SaveRecipeDialog(props) {
-    console.log(props.options);
     // const folderOptions = [props.options];
     const [folder, setFolder] = useState("none")
     const [folders, setFolders] = useState([]);
@@ -18,12 +17,10 @@ export default function SaveRecipeDialog(props) {
         var thisUser = JSON.parse(localStorage.getItem("user"))
         // var saved = thisUser.saved
         async function getSavedFolders() {
-            var f = await getFolders(thisUser.username)
+            var f = await getFolders(thisUser.username, false, false)
             setFolders(f.map((sf => sf.name)))
         }
         getSavedFolders();
-        
-        console.log(thisUser)
     }, [props.show])
 
     return (
@@ -47,7 +44,7 @@ export default function SaveRecipeDialog(props) {
                     freeSolo
                     options={folders}
                     //renderOption={(props, option) => <li {...props}>{option.title}</li>}
-                    onInputChange={(e, new_val) => {console.log(new_val); setFolder(new_val)}}
+                    onInputChange={(e, new_val) => {setFolder(new_val)}}
                     //sx={{ width: windowSize[0]/3 }}
                     renderInput={params => (
                         <TextField 

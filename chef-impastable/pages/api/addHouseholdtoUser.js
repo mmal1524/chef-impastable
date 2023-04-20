@@ -1,21 +1,24 @@
+import { ObjectId } from "mongodb";
 import connect from "../../lib/mongodb"
 import User from "../../model/user"
 
 let mongoose = require('mongoose')
 mongoose.set('strictQuery', false);
 connect()
+
 export default async function handler(req,res){
     try {
-        const {username, password}=req.body
-        const user = await User.findOne({username, password})
+        const {username, householdID}=req.body
+        const user = await User.findOneAndUpdate({username: username}, {$push: { households: householdID}}, {new: true});
+
         if (!user) {
-            return res.json({success: false});
+            return null;
         }
         else {
             return res.json(user);
         }
     } catch (error) {
-        res.status(400).json({status:'Not able to create a new user.'})
+        res.status(400).json({status:'Not able to update user.'})
         console.log('error');
     }
 }

@@ -302,6 +302,7 @@ export default function SignUp() {
                 dietaryTags: [], 
                 saved: [],
                 reviewedRecipes: [],
+                households: [],
                 mealPlans: [],
                 currentMealPlan: "",
                 goals: {"caloriesLower": "", "caloriesUpper": "", "carbsLower": "", "carbsUpper": "", "cholesterolLower": "", "cholesterolUpper": "", "fiberLower": "", "fiberUpper": "", "proteinLower": "", "proteinUpper": "", "saturatedFatLower": "", "saturatedFatUpper": "", "sodiumLower": "", "sodiumUpper": "", "fatLower": "", "fatUpper": "", "unsaturatedFatLower": "", "unsaturatedFatUpper": "", "comments": ""}

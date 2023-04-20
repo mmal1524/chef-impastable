@@ -200,6 +200,7 @@ const Navbar = () => {
                     display: 'inline-block'
                 }}>
                 <TextField
+                    data-test="SearchBar"
                     sx={{ minWidth: 800 }}
                     size="small"
                     label="Search"
@@ -213,7 +214,7 @@ const Navbar = () => {
                                     <ClearIcon />
                                 </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
                                     <Kitchen />
                                 </IconButton>
 

@@ -1,110 +1,178 @@
 
 describe('Searching for a recipe', () => {
-    // it("Logging in", () => {
-    //   cy.viewport(1280, 720)
-    //   cy.visit('/')
-    //   cy.get("[data-test='UsernameField']").type("carmen")
-    //   cy.get("[data-test='PasswordField']").type("carmen")
-    //   cy.get("[data-test='LoginButton']").click()
-    // })
+
+    it("Logging in", () => {
+      cy.viewport(3072, 1920)
+      cy.visit('/')
+      cy.get("[data-test='UsernameField']").type("carmen")
+      cy.get("[data-test='PasswordField']").type("carmen")
+      cy.get("[data-test='LoginButton']").click()
+    })
 
     it("Default Homepage", () => {
+        var res;
+        cy.viewport(3072, 1920)
+
         cy.request({
             method: 'POST',
             url: '/api/getRecipesByFridge', // baseUrl is prepend to URL
             // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
             body: {
-            username: 'carmen',
-            page: 1,
+                username: 'carmen',
+                page: 1,
             },
         }).then((response) => {
             expect(response.body.length).to.eq(20)
-            for (var i = 0; i < response.body.length - 1; i++) {
-                expect(response.body[i].matches).to.be.gte(response.body[i+1].matches)
-            }
+            cy.get("[data-test='Recipe-0']", {timeout:60000}).should('exist').then(() => {
+                cy.wrap(response.body).each(($recipe, i) => {
+                    cy.get(`[data-test='Recipe-Title-${i}']`).then(($title) => {
+                        console.log("title: " + $title.text)
+                        console.log($recipe)
+                        if (i != 19) {
+                            cy.wrap(response.body).its(i+1).its('matches').should("be.lte", $recipe.matches)
+                        }
+                        // expect($recipe.matches).to.be.gte($recipe.matches)
+                        // console.log("response: " + response.body[0].title)
+                        expect($title.text()).to.eq($recipe.title)
+                    })
+                })
+            })
         })
     })
-/*
-    it("Searching for a recipe", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("brus")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
+
+    it("Searching for a recipe by fridge", () => {
+        cy.viewport(3072, 1920)
+
+        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("chicken")
+        cy.get("[data-test='searchFridge']", { timeout: 15000 }).click()
         cy.wait(5000)
-        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
-        cy.get("[data-test='RecipeTitle']", { timeout: 25000 }).should(($title) => {
-            expect($title.text()).to.match(/brus/i);
-        });
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "chicken",
+                filters: [],
+                username: 'carmen',
+                byFridge: "true",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body.length).to.eq(2)
+            expect(response.body[0].length).to.eq(20)
+            expect(response.body[1]).to.eq(true)
+            cy.get("[data-test='Recipe-0']", {timeout:60000}).should('exist').then(() => {
+                cy.wrap(response.body[0]).each(($recipe, i) => {
+                    cy.get(`[data-test='Recipe-Title-${i}']`).then(($title) => {
+                        console.log("title: " + $title.text)
+                        console.log($recipe)
+                        // expect($recipe.matches).to.be.gte(cy.wrap(response.body[0]).eq(i+1).get('matches'))
+                        // console.log("response: " + response.body[0].title)
+                        if (i != 19) {
+                            cy.wrap(response.body[0]).its(i+1).its('matches').should("be.lte", $recipe.matches)
+                        }
+                        expect($title.text()).to.eq($recipe.title)
+                        expect($recipe.title).to.match((/chicken/i))
+                    })
+                })
+            })
+        })
     })
 
-    it("Searching for a recipe that does not exist", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("fdjasklfjklsdajflsajkflajsodif")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
-        cy.get("[data-test='FailedSearch']", { timeout: 25000 }).should("contain", "No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.")
-        cy.get("[data-test='OkFailedSearch']", { timeout: 15000 }).click()
+    it("API by fridge and not by fridge difference", () => {
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "air",
+                filters: [],
+                username: 'carmen',
+                byFridge: "true",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body.length).to.eq(2)
+            expect(response.body[0].length).to.eq(20)
+            expect(response.body[1]).to.eq(true)
+
+            cy.request({
+                method: 'POST',
+                url: '/api/searchRecipe', // baseUrl is prepend to URL
+                // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+                body: {
+                    search: "air",
+                    filters: [],
+                    username: 'carmen',
+                    byFridge: "false",
+                    page: 1,
+                },
+            }).then((response2) => {
+                expect(response2.body.length).to.eq(2)
+                expect(response2.body[0].length).to.eq(20)
+                expect(response2.body[1]).to.eq(true)
+                expect(response.body[0][0].title).not.to.eq(response2.body[0][0].title)
+            })
+        })
     })
 
-    it("Searching for a recipe based off my dietary preferences, search not on homepage routes to homepage ", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietaryRestrictions']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietSelect']", { timeout: 15000 }).click()
-        cy.get("[data-test='Pescetarian']", { timeout: 15000 }).click()
-        cy.get("[data-test='AddTag']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='checkbox']", { timeout: 15000 }).first().click()
-        cy.get("[data-test='CloseDietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("til")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
-        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
-        cy.get("[data-test='tag-5']", { timeout:  15000 }).should('have.css', 'background-color')
-        .and('eq', 'rgb(255, 193, 7)')
+    it("Searching for a recipe that has no matches", () => {        
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "ice cream",
+                filters: [],
+                username: 'carmen',
+                byFridge: "true",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body.length).to.eq(2)
+            expect(response.body[0].length).to.eq(0)
+            expect(response.body[1]).to.eq(false)
+        })
     })
 
-    it("No search results from my dietary preferences", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='Dropdown']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietaryRestrictions']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietSelect']", { timeout: 15000 }).click()
-        cy.get("[data-test='Halal']", { timeout: 15000 }).click()
-        cy.get("[data-test='AddTag']", { timeout: 15000 }).click()
-        cy.get("[data-test='DietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='checkbox']", { timeout: 15000 }).first().click()
-        cy.get("[data-test='CloseDietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("til")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
-        cy.get("[data-test='FailedSearch']", { timeout: 25000 }).should("contain", "No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.")
-        cy.get("[data-test='OkFailedSearch']", { timeout: 15000 }).click()
+    it("Searching for a recipe with dietary restrictions by fridge", () => {        
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "air",
+                filters: ["Vegetarian"],
+                username: 'carmen',
+                byFridge: "true",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body.length).to.eq(2)
+            // expect(response.body[0].length).to.eq(0)
+            // expect(response.body[1]).to.eq(false)
+            // cy.get("[data-test='Recipe-0']", {timeout:60000}).should('exist').then(() => {
+            cy.wrap(response.body[0]).each(($recipe, i) => {
+                // cy.get(`[data-test='Recipe-Title-${i}']`).then(($title) => {
+                    // console.log("title: " + $title.text)
+                    console.log($recipe)
+                    // expect($recipe.matches).to.be.gte(cy.wrap(response.body[0]).eq(i+1).get('matches'))
+                    // console.log("response: " + response.body[0].title)
+                    if (i != response.body[0].length - 1) {
+                        cy.wrap(response.body[0]).its(i+1).its('matches').should("be.lte", $recipe.matches)
+                    }
+                    // expect($title.text()).to.eq($recipe.title)
+                    expect($recipe.title).to.match((/air/i))
+                // })
+                cy.wrap($recipe.tags).each(($tag) => {
+                    if ($tag.tag == "Vegetarian") {
+                        expect($tag.exists).to.eq(true)
+                    }
+                })
+            })
+            // })
+        })
     })
-
-    it("Search with filters", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='DietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='checkbox']", { timeout: 15000 }).eq(3).click()
-        cy.get("[data-test='CloseDietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("pizza")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
-        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
-        cy.get("[data-test='tag-2']", { timeout:  15000 }).should('have.css', 'background-color')
-        .and('eq', 'rgb(255, 193, 7)')
-    })
-
-    it("Search with filters, no recipe exists", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='DietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='checkbox']", { timeout: 15000 }).eq(14).click()
-        cy.get("[data-test='CloseDietFilters']", { timeout: 15000 }).click()
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("corn")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
-        cy.get("[data-test='FailedSearch']", { timeout: 25000 }).should("contain", "No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.")
-        cy.get("[data-test='OkFailedSearch']", { timeout: 15000 }).click()
-    })
-*/
   })
 
   export {}

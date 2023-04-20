@@ -79,6 +79,7 @@ export default function HomePage({ /*recipes*/ }) {
             await getSavedFolders([]);
         }
         else {
+            console.log("matches: " + recipes[0].matches)
             // setDisplayRecipes(recipes);
             await getSavedFolders(recipes);
         }

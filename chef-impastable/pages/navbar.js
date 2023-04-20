@@ -156,15 +156,15 @@ const Navbar = () => {
         <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
                 <React.Fragment key="left">
-                    <IconButton onClick={() => { setDrawerOpen(true) }}>
+                    <IconButton data-test="DrawerButton" onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
                     </IconButton>
-                    <Drawer anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
+                    <Drawer data-test="Drawer" anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
                         <Box sx={{ width: 250 }}>
                             <List>
                                 {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                     <ListItem key={text}>
-                                        <ListItemButton onClick={() => { router.push(sidebarLinks[index]) }}>
+                                        <ListItemButton data-test={`Drawer-${index}`} onClick={() => { router.push(sidebarLinks[index]) }}>
                                             <ListItemIcon>
                                                 {sidebarIcons[index]}
                                             </ListItemIcon>

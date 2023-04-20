@@ -71,5 +71,9 @@ describe('Meal Planning', () => {
     })
 
     // USER STORY 11
+    it("Go to Meal Plan Page", () => {
+        cy.get("[data-test='Navbar']").find("[data-test='DrawerButton']").click()
+        cy.get("[data-test='Drawer-4'").click()
+    })
 
 })

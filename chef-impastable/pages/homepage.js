@@ -89,24 +89,29 @@ export default function HomePage({ /*recipes*/ }) {
         setPage(1);
       }, [router.query.searchTerm, router.query.filters, router.query.byFridge]);
 
-      useEffect(() => {
+    useEffect(() => {
+        debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
-        const searchTerm = router.query.searchTerm;
-        const filters = router.query.filters;
-        if (searchTerm) {
-            // setTimeout(() => {
-            fetchdata(searchTerm, filters, page);
-            // }, 200);
-        }
-        else {
-            async function getDefaultRecipes() {
-                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
-                await getSavedFolders(defaultRecipes);
+        if (router.isReady) {
+            const searchTerm = router.query.searchTerm;
+            const filters = router.query.filters;
+            if (searchTerm) {
+                // setTimeout(() => {
+                fetchdata(searchTerm, filters, page);
+
             }
-            getDefaultRecipes();
+            else {
+                async function getDefaultRecipes() {
+
+                    const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
+                    console.log("default recipes" + router.query.searchTerm)
+                    await getSavedFolders(defaultRecipes);
+                }
+                getDefaultRecipes();
+           }
         }
-      }, [page, pageChanged]);
+    }, [page, pageChanged, router.isReady]);
 
     return (
         <>
@@ -203,12 +208,12 @@ export default function HomePage({ /*recipes*/ }) {
                         {"No Results Found"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            No recipes that match your search and/or dietary filters were found. Please try a different keyword or filter.
+                        <DialogContentText data-test='FailedSearch'>
+                            No recipes that match your search term and/or dietary filters were found. Please try a different keyword or filter.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} autoFocus>
+                        <Button data-test='OkFailedSearch' onClick={handleClose} autoFocus>
                             OK
                         </Button>
                     </DialogActions>

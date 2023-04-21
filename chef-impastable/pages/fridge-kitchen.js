@@ -118,7 +118,7 @@ export default function FridgeKitchen({ingredientOptions}) {
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
-                        <Fridge ingredientOptions={ingredientOptions}></Fridge>
+                        <Fridge data-test='Fridge' ingredientOptions={ingredientOptions}></Fridge>
                         { /*search bar and enter button at the top*/ }
                     </TabPanel>
                     <TabPanel value={value} index={1}>

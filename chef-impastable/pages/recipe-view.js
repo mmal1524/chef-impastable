@@ -47,6 +47,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import AddIcon from '@mui/icons-material/Add';
 import SaveRecipeHouseDialog from '../components/saveRecipeHouseDialog';
+import { withStyles } from "@material-ui/core/styles";
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
@@ -61,6 +62,24 @@ export default function Recipe({ recipe, reviews }) {
             },
         },
     });
+
+    const GoldTextTypography = withStyles({
+        root: {
+          color: "#ff9800",
+          //textShadow: "1px 1px 1px #000"
+          //textShadow: "1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
+          textShadow: "0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000"
+          
+        }
+    })(Typography);
+
+    const YellowTextTypography = withStyles({
+        root: {
+          color: "#988558",
+          textShadow: "1px 1px 1px #000"
+          //textShadow: "1px 1px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000",
+        }
+    })(Typography);
 
     var recipe1 = recipe;
 
@@ -385,7 +404,7 @@ export default function Recipe({ recipe, reviews }) {
                         //justifyContent="center"
                         //alignItems="center"
                     >
-                        <h1 data-test="RecipeTitle">{recipe.title}</h1>
+                        <GoldTextTypography variant="h3" data-test="RecipeTitle">{recipe.title}</GoldTextTypography>
                     </Grid>
                     <Grid item
                         sx={{
@@ -557,30 +576,36 @@ export default function Recipe({ recipe, reviews }) {
                     alignItems="center">
                     <p>Prep time: {recipe.prep_time} minutes, Cook time: {recipe.cook_time} minutes, Total time: {recipe.total_time} minutes, Yields: {recipe.yields} </p>
                 </Grid>
-                <div>
-                    <h2> 
-                        Description
-                    </h2>
+                <div style={{marginLeft: '20px', marginRight: '20px'}}>
+                    <YellowTextTypography variant="h4" style={{marginBottom: '10px'}}> 
+                        Description:
+                    </YellowTextTypography>
                     {recipe.description}
-                    <h2>
-                        Instructions
-                    </h2>
+                    <YellowTextTypography variant="h4" style={{marginTop: '20px'}}>
+                        Instructions:
+                    </YellowTextTypography>
                     {recipe.instructions_list.map((instruction) => (
                         <ul>
                             <li>{instruction}</li>
                         </ul>
                     ))}
-                    <h2>
-                        Ingredients
-                    </h2>
+                    <YellowTextTypography variant="h4">
+                        Ingredients:
+                    </YellowTextTypography>
                     {recipe.ingredients.map(ingredient => (
-                        <ul>
-                            <li>{ingredient.ingredient}, quantity: {ingredient.quantity}, measurement: {ingredient.measurement}</li>
+                          <ul>
+                          {ingredient.ingredient && !/^\s*$/.test(ingredient.ingredient) && ingredient.ingredient !== "" && (
+                            <li>
+                              {ingredient.ingredient}
+                              {typeof ingredient.quantity !== "undefined" && ingredient.quantity !== "" && !/^\s*$/.test(ingredient.quantity) ? `, quantity: ${ingredient.quantity}` : null}
+                              {typeof ingredient.measurement !== "undefined" && ingredient.measurement !== "" && !/^\s*$/.test(ingredient.measurement) ? ` ${ingredient.measurement}` : null}
+                            </li>
+                          )}
                         </ul>
                     ))}
-                    <h2>
-                        Nutrition Facts
-                    </h2>
+                    <YellowTextTypography variant="h4" style={{marginBottom: '10px'}}>
+                        Nutrition Facts:
+                    </YellowTextTypography>
 
                     <TableContainer component={Paper} sx={{ maxWidth: 800 }}>
                         <Table sx={{ maxWidth: 800 }} aria-label="simple table">
@@ -669,8 +694,10 @@ export default function Recipe({ recipe, reviews }) {
                         <Button data-test="Discard" onClick={handleClose}>Discard</Button>
                     </DialogActions>
                 </Dialog>
+                <div style={{marginLeft: "20px", marginRight: "20px"}}>
                 <h2 data-test="NumReviews" className='reviews'>{reviews.length} Reviews</h2>
                 {averageRating(reviews)}
+                </div>
                 {displayReviews(reviews)}
             </Grid>
 

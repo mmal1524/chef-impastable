@@ -306,9 +306,7 @@ export default function SignUp() {
                 mealPlans: [],
                 currentMealPlan: "",
                 newFriendsNotif: [],
-                newSharedNotif: [], 
-                oldFriendsNotif: [], 
-                oldSharedNotif: []
+                newSharedNotif: []
             })
         })
         const data = await res.json();

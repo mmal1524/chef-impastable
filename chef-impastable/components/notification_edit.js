@@ -18,7 +18,7 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import { Delete } from '@mui/icons-material';
 import { useRouter } from "next/router";
 
-export default function NotificationEdit(notificationList) {
+export default function NotificationEdit(props) {
 
     const router = useRouter();
 
@@ -26,8 +26,6 @@ export default function NotificationEdit(notificationList) {
     const [friends, setFriends] = useState([]);
     const [newFriendNotif, setNewFriendNotif] = useState([]);
     const [newSharedNotif, setNewSharedNotif] = useState([]);
-    const [oldFriendNotif, setOldFriendNotif] = useState([]);
-    const [oldSharedNotif, setOldSharedNotif] = useState([]);
 
     useEffect(() => {
         var thisUser = JSON.parse(localStorage.getItem('user'));
@@ -51,30 +49,38 @@ export default function NotificationEdit(notificationList) {
                 get() {
                     return this.newSharedNotif
                 },
-            },
-            getOldFriendNotif: {
-                get() {
-                    return this.oldFriendNotif
-                },
-            },
-            getOldSharedNotif: {
-                get() {
-                    return this.oldSharedNotif
-                },
             }
         });
         setUsername(thisUser.getUsername);
         setFriends(thisUser.getFriends);
         setNewFriendNotif(thisUser.getNewFriendNotif);
         setNewSharedNotif(thisUser.getNewSharedNotif);
-        setOldFriendNotif(thisUser.getOldFriendNotif);
-        setOldSharedNotif(thisUser.getOldSharedNotif);
     }, []);
     console.log(username);
     console.log(friends);
     console.log(newFriendNotif);
     console.log(newSharedNotif);
 
+    const deleteFriendByIndex = index => {
+        setNewFriendNotif(oldValues => {
+            return oldValues.filter((_, i) => i !== index)
+        })
+    }
+    const deleteSharedByIndex = index => {
+        var sender = newSharedNotif[index];
+        var tempArray = [];
+        var i = 0;
+        for (i; i < newSharedNotif.length; i++) {
+            if (newSharedNotif[i] != sender) {
+                tempArray.push(newSharedNotif[i]);
+            }
+        }
+        setNewSharedNotif(tempArray);
+        // console.log(index);
+        // setNewSharedNotif(oldValues => {
+        //     return oldValues.filter((_, i) => i !== index)
+        // })
+    }
     // var i = 0;
     // for (i = 0; i < newFriendNotif.length; i++) {
     //     var user = newFriendNotif[i].split(" ")[0];
@@ -107,15 +113,15 @@ export default function NotificationEdit(notificationList) {
                     variant="outlined"
                     startIcon={<ClearIcon/>}
                     sx={{width: 110, color:'red', borderColor:'red'}}
-                    onClick={async () => {
+                    onClick={() => {props.onClear()
+                    //     async () => {
                         setNewFriendNotif([]);
-                        setNewSharedNotif([]);
-                        setOldFriendNotif([]);
-                        setOldSharedNotif([]);
-                        // new one for each field
-                        var data = await clearNotifications(username);
-                        localStorage.setItem('user', JSON.stringify(data));
-                    }}
+                        setNewSharedNotif([]);}
+                    //     // new one for each field
+                    //     var data = await clearNotifications(username);
+                    //     localStorage.setItem('user', JSON.stringify(data));
+                    // }
+                    }
                 >
                     Clear
                 </Button>
@@ -131,33 +137,24 @@ export default function NotificationEdit(notificationList) {
                             <Grid>
                                 <List>
                                     <ListItem>
-                                    <ListItemText data-test="ListText"
-                                        sx={{display: 'flex', justifyContent: 'left'}}
-                                        primary={item}
-                                    />
-                                    <ListItemButton 
-                                        edge="end"
-                                        aria-label="go-to-page"
-                                        data-test={`DeleteButton-${index}`}
-                                        endIcon={<FullscreenIcon/>}
-                                        onClick={async () => {
-                                            router.push({ pathname: "/profile-page/", query: { username: username } });
-                                        }}
-                                    >
-                                            
-                                    </ListItemButton>
+                                        <ListItemText data-test="ListText"
+                                            sx={{display: 'flex', justifyContent: 'left'}}
+                                            primary={item}
+                                        />
+                                        
+                                        <ListItemIcon edge="end">
+                                            <FullscreenIcon
+                                            aria-label="delete"
+                                                data-test={`DeleteButton-${index}`}
+                                                onClick={async () => {
+                                                    router.push({ pathname: "/profile-page/", query: { username: username } });
 
-                                    <ListItemIcon edge="end">
-                                        <DeleteIcon
-                                        aria-label="delete"
-                                            data-test={`DeleteButton-${index}`}
-                                            onClick={async () => {
-                                                deleteByIndex(index);
-                                                var data = await DeleteListItem(username, item);
-                                                localStorage.setItem('user', JSON.stringify(data));
-                                            }}
-                                        />       
-                                    </ListItemIcon>
+                                                    deleteFriendByIndex(index);
+                                                    var data = await deleteFriend(username, item);
+                                                    localStorage.setItem('user', JSON.stringify(data));
+                                                }}
+                                            />       
+                                        </ListItemIcon>
                                     </ListItem>
                                 </List>
                             </Grid>
@@ -175,24 +172,25 @@ export default function NotificationEdit(notificationList) {
                         <Grid container id="Item">
                             <Grid>
                                 <List>
-                                    <ListItem 
-                                        secondaryAction={
-                                            <IconButton edge="end" aria-label="delete"
-                                            data-test={`DeleteButton-${index}`}
-                                            onClick={async () => {
-                                                deleteByIndex(index);
-                                                var data = await DeleteListItem(username, item);
-                                                localStorage.setItem('user', JSON.stringify(data));
-                                            }}
-                                            >
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        }
-                                    >
+                                <ListItem>
                                         <ListItemText data-test="ListText"
                                             sx={{display: 'flex', justifyContent: 'left'}}
                                             primary={item}
                                         />
+                                        
+                                        <ListItemIcon edge="end">
+                                            <FullscreenIcon
+                                            aria-label="delete"
+                                                data-test={`DeleteButton-${index}`}
+                                                onClick={async () => {
+                                                    router.push({ pathname: "sharing-page", query: { username: username } });
+
+                                                    deleteSharedByIndex(index);
+                                                    var data = await deleteShare(username, item);
+                                                    localStorage.setItem('user', JSON.stringify(data));
+                                                }}
+                                            />       
+                                        </ListItemIcon>
                                     </ListItem>
                                 </List>
                             </Grid>
@@ -204,26 +202,11 @@ export default function NotificationEdit(notificationList) {
         </>
     );
 }
-async function findNotifications(username) {
-    const res = await fetch('/api/findNotifications', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            receiver: username,
-        })
-    })
-    const data = await res.json();
-    console.log(data);
-    return data;
-}
 
-async function deleteNotifications(username, item) {
+async function deleteFriend(username, item) {
     try {
-        const res = await fetch('/api/deleteShopListItem', {
-            method: 'DELETE',
+        const res = await fetch('/api/deleteFriendNotif', {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -236,14 +219,34 @@ async function deleteNotifications(username, item) {
         const data = await res.json();
         return data;
     } catch {
-        console.error(e);
+        console.error("Could not delete notifications");
+    }
+}
+
+async function deleteShare(username, item) {
+    try {
+        const res = await fetch('/api/deleteShareNotif', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                item: item,
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        console.error("Could not delete notification");
     }
 }
 
 async function clearNotifications(username) {
     try {
-        const res = await fetch('/api/clearShoppingListItems', {
-            method: 'DELETE',
+        const res = await fetch('/api/clearNotifs', {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -255,10 +258,6 @@ async function clearNotifications(username) {
         const data = await res.json();
         return data;
     } catch {
-        console.error(e);
+        console.error("no notifications to clear");
     }
-}
-async function indexMatch(array, q) {
-    //console.log(array);
-    return array ? array.findIndex(item => q.toUpperCase() === item.toUpperCase()) : -1;
 }

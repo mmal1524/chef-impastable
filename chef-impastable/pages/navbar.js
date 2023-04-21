@@ -28,6 +28,7 @@ import NotificationView from '../components/notification_view';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import Checkbox from '@mui/material/Checkbox';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 const Navbar = () => {
     const [displayName, setDisplayName] = useState("");
@@ -37,6 +38,8 @@ const Navbar = () => {
     const [recipeResults, setRecipeResults] = useState([]);
     const [tagValue, setUserTags] = useState("");
     const [checkedItems, setCheckedItems] = useState([]);
+    const [newFriendNotif, setNewFriendNotif] = useState([]);
+    const [newSharedNotif, setNewSharedNotif] = useState([]);
 
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
@@ -60,12 +63,24 @@ const Navbar = () => {
                     return this.dietaryTags
                 },
             },
+            getNewFriendNotif: {
+                get() {
+                    return this.newFriendNotif
+                },
+            },
+            getNewSharedNotif: {
+                get() {
+                    return this.newSharedNotif
+                },
+            }
         });
 
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
         setUsername(thisUser.username);
         setUserTags(thisUser.getTags);
+        setNewFriendNotif(thisUser.getNewFriendNotif);
+        setNewSharedNotif(thisUser.getNewSharedNotif);
     }, []);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -163,6 +178,44 @@ const Navbar = () => {
             console.log(error);
         }
     };
+
+    function displayBell(friends, shares) {
+        if (friends.length == 0 && shares.length == 0) {
+            return (
+                <div>
+                    <Button 
+                        data-test="Notification"
+                        sx={{color: 'gray', ml: 1.5}}
+                        startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
+                        onClick={async ()=> {
+                                //var find = findNotifications(username);
+                                console.log(notificationList);
+                                handleNotifOpen();
+                            }
+                        }
+                    >
+                    </Button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <Button 
+                        data-test="New-Notification"
+                        sx={{color: 'gray', ml: 1.5}}
+                        startIcon={<NotificationsActiveIcon style={{width:'25px', height: "25px"}} />}
+                        onClick={async ()=> {
+                                //var find = findNotifications(username);
+                                console.log(notificationList);
+                                handleNotifOpen();
+                            }
+                        }
+                    >
+                    </Button>
+                </div>
+            )
+        }
+    }
  
     return (
         <Grid data-test="Navbar" container spacing={0} columns={30} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
@@ -266,18 +319,7 @@ const Navbar = () => {
                     pt: 1, 
                 }} 
             >
-                <Button 
-                    data-test="Notification"
-                    sx={{color: 'gray', ml: 1.5}}
-                    startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
-                    onClick={async ()=> {
-                            //var find = findNotifications(username);
-                            console.log(notificationList);
-                            handleNotifOpen();
-                        }
-                    }
-                >
-                </Button>
+                {displayBell(newFriendNotif, newSharedNotif)}
             </Grid>
             <Grid xs={1}>
                 <Button
@@ -499,7 +541,14 @@ const Navbar = () => {
                     {"Notifications"}
                 </DialogTitle>
                 <DialogContent data-test='ViewNotifications'>
-                    <NotificationEdit />
+                    <NotificationEdit 
+                        onClear={async () => {
+                            setNewFriendNotif([]);
+                            setNewSharedNotif([]);
+                            // new one for each field
+                            var data = await clearNotifications(username);
+                            localStorage.setItem('user', JSON.stringify(data))}}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={closeNotif} autoFocus>
@@ -509,6 +558,25 @@ const Navbar = () => {
             </Dialog>
         </Grid>
     );
+}
+
+async function clearNotifications(username) {
+    try {
+        const res = await fetch('/api/clearNotifs', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        console.error("no notifications to clear");
+    }
 }
 
 export default Navbar;

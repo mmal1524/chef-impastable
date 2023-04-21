@@ -59,13 +59,7 @@ const userSchema = new mongoose.Schema({
     newFriendNotif: {
         type:[String]
     },
-    oldFriendNotif: {
-        type:[String]
-    },
     newSharedNotif: {
-        type:[String]
-    },
-    oldSharedNotif: {
         type:[String]
     },
     success: {

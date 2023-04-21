@@ -248,7 +248,7 @@ describe('Meal Planning', () => {
 
         cy.get("[data-test='CurrentTab']").click()
 
-        cy.get("data-test='Mealplan']").should("contain", "High Protein")
+        cy.get("[data-test='Mealplan']").should("contain", "High Protein")
 
         cy.get("[data-test='Tab-2']").click()
     })

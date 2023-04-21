@@ -70,16 +70,16 @@ function RecipeCard( props ) {
 
     const handleNewMealPlanClose = () => {
         setNewMealPlanOpen(false);
-    }
+    };
 
     const handleNewMealPlanName = e => {
         setNewMealPlanName(e.target.value);
-    }
+    };
 
     const handleChooseMealPlan = (value) => {
         setChosenMealPlan(value);
         setDayOpen(true);
-    }
+    };
 
     const handleDayClose = () => {
         setDayOpen(false);
@@ -223,11 +223,11 @@ function RecipeCard( props ) {
                         sx={{color: "black"}}
                         onClick={async () => {
                             var data = await createMealPlan(username, newMealPlanName);
-                            var user = await addMealPlanToUser(username, data.name)
+                            var user = await addMealPlanToUser(username, data.name);
                             setMealPlans(user.mealPlans);
                             setNewMealPlanOpen(false);
                             setNewMealPlanName("");
-                            localStorage.setItem('user', JSON.stringify(user))
+                            localStorage.setItem('user', JSON.stringify(user));
                         }}
                     >Create</Button>
                 </DialogActions>

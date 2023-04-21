@@ -480,7 +480,7 @@ export default function Recipe({ recipe, reviews }) {
                         <Box sx={{backgroundColor: "orange"}}>
                             <DialogTitle data-test="ChooseMealPlan" textAlign={"center"}>Choose Meal Plan</DialogTitle>
                         </Box>
-                        <List sx={{ pt: 0 }}>
+                        <List sx={{ pt: 0 }} data-test="MealPlans">
                             {/* Displaying meal plans */}
                             {mealPlans && mealPlans.map((mealPlan, x) => (
                                 <ListItem disableGutters>
@@ -491,30 +491,30 @@ export default function Recipe({ recipe, reviews }) {
                             ))}
                             { /* Create new meal plan button */ }
                             <ListItem disableGutters>
-                                <ListItemButton
+                                <ListItemButton data-test="CreateButton"
                                     autoFocus
                                     onClick={handleNewMealPlanOpen}
                                 >
-                                    <ListItemAvatar >
+                                    <ListItemAvatar data-test="Avatar">
                                         <Avatar sx={{backgroundColor: "orange"}}>
                                             <AddIcon sx={{color: "black"}}/>
                                         </Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Create New Meal Plan" />
+                                    <ListItemText data-test="CreateText" primary="Create New Meal Plan" />
                                 </ListItemButton>
                             </ListItem>
                         </List>
                     </Dialog>
 
                     {/* Create new meal plan dialog */}
-                    <Dialog
+                    <Dialog data-test="CreateDialog"
                         open={newMealPlanOpen}
                         onClose={handleNewMealPlanClose}
                     >
-                        <DialogTitle>Create New Meal Plan</DialogTitle>
+                        <DialogTitle data-test="CreateText">Create New Meal Plan</DialogTitle>
                         <DialogContent>
                             <Box sx={{width: 300}}>
-                                <TextField
+                                <TextField data-test="NewMealPlanTextField"
                                     required
                                     id="standard-required"
                                     label="Name of Meal Plan"
@@ -526,8 +526,8 @@ export default function Recipe({ recipe, reviews }) {
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
-                            <Button
+                            <Button data-test="Cancel" sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
+                            <Button data-test="Create"
                                 sx = {{color: "black"}} 
                                 onClick={async () => {
                                     var data = await createMealPlan(username, newMealPlanName);

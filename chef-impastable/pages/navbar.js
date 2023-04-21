@@ -224,6 +224,7 @@ const Navbar = () => {
                             variant="outlined"
                             value={searchValue}
                             onChange={handleChangeSearch}
+                            data-test="SearchBar"
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -253,7 +254,7 @@ const Navbar = () => {
                     &nbsp;
                     <Grid xs={2} >
                         <Button
-                            type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                            type="AddTag" data-test="DietFilters" size="small" variant="contained" sx={{ minHeight: '40px' }}
                             onClick={() => {
                                 handleClickOpenDiet();
                             }}

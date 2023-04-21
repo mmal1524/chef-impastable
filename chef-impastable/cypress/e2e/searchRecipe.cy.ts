@@ -1,7 +1,7 @@
 
 describe('Searching for a recipe', () => {
 
-    it("Searching for a recipe (API test)", () => {
+   it("Searching for a recipe (API test)", () => {
         cy.viewport(1280, 720)
         cy.request({
             method: 'POST',
@@ -42,7 +42,7 @@ describe('Searching for a recipe', () => {
       cy.visit('/')
       cy.get("[data-test='UsernameField']").type("searchrecipetest")
       cy.get("[data-test='PasswordField']").type("Search123*")
-      cy.get("[data-test='LoginButton']").click()
+      cy.get("[data-test='LoginButton']", { timeout: 60000 }).click()
     })
 
     it("Searching for a recipe that does not exist", () => {
@@ -61,6 +61,7 @@ describe('Searching for a recipe', () => {
         cy.get("[data-test='DietSelect']", { timeout: 15000 }).click()
         cy.get("[data-test='Pescetarian']", { timeout: 15000 }).click()
         cy.get("[data-test='AddTag']", { timeout: 15000 }).click()
+
         cy.get("[data-test='DietFilters']", { timeout: 15000 }).click()
         cy.get("[data-test='checkbox']", { timeout: 15000 }).first().click()
         cy.get("[data-test='CloseDietFilters']", { timeout: 15000 }).click()

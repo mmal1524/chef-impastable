@@ -36,10 +36,14 @@ export default async function handler(req,res){
             console.log("sf doesn't break?")
         }
         // console.log(user);
+        var isSaved = false;
         console.log(sf);
         if (sf) {
             console.log(recipeID);
-            sf.recipes.push(recipeID);
+            if (!sf.recipes.includes(recipeID)) {
+                sf.recipes.push(recipeID);
+                isSaved = true;
+            }
             sf.save();
         }
         else {
@@ -58,7 +62,10 @@ export default async function handler(req,res){
             return null;
         }
         else {
-            // console.log(user);
+            if (isHouse) {
+                return res.json(isSaved)
+            }
+            // console.log (user);
             return res.json(user);
         }
     } catch (error) {

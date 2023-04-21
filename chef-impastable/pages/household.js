@@ -68,6 +68,7 @@ export default function Household(props) {
     const [friends, setFriends] = useState([]);
     const [update, setUpdate] = useState(0);
     useEffect(() => {
+        debugger;
         setCurrID(props.id);
         setUpdate(update + 1);
     }, [props.id])
@@ -218,7 +219,7 @@ export default function Household(props) {
                         <Tabs value={value} onChange={handleChange} variant="fullWidth">
                             <Tab label="Members" {...a11yProps(0)} />
                             <Tab label="Shared Fridge" {...a11yProps(1)} />
-                            <Tab label="Saved Recipes" {...a11yProps(2)} />
+                            <Tab label="Saved Recipes" {...a11yProps(2)} data-test="SavedRecipesHouse"/>
                         </Tabs>
                     </Grid>
                     <TabPanel value={value} index={0}>
@@ -228,7 +229,7 @@ export default function Household(props) {
                         {displayHouseholdFridge(currID, ingredientArr, currFridge, currFridgeGroup)}
                     </TabPanel>
                     <TabPanel value={value} index={2}>
-                        {displayHouseholdSaved(currID)}
+                        {currID == null ? <div>Choose a household to view</div> : <SavedRecipes isHouse={true} houseID={currID}/>}
                     </TabPanel>
                 </Grid>
             </div>
@@ -344,6 +345,7 @@ export default function Household(props) {
     }
 
     function displayHouseholdSaved(saved) {
+        debugger;
         if (saved == null) {
             return (<div>Choose a household to view</div>)
         } else {

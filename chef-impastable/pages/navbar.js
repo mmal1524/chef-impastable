@@ -185,7 +185,7 @@ const Navbar = () => {
                 <div>
                     <Button 
                         data-test="Notification"
-                        sx={{color: 'gray', ml: 1.5}}
+                        sx={{color: 'gray', ml: 1.0}}
                         startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
                         onClick={async ()=> {
                                 //var find = findNotifications(username);
@@ -266,7 +266,7 @@ const Navbar = () => {
             </Grid>
 
             {/* Search Bar, npm i react-select */} 
-            <Grid xs={8.0}
+            <Grid xs
                 alignContent='center'
                 sx={{
                     pt: 0.5,
@@ -307,7 +307,7 @@ const Navbar = () => {
                 </Button>
             </Grid>
             
-            <Grid xs={1.5}
+            <Grid xs={1}
                 alignContent='center'
                 sx={{
                     pt: 0.5,

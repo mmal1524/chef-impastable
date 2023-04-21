@@ -216,7 +216,6 @@ export default function HomePage({ /*recipes*/ }) {
                             />
                     ))}
                 </Masonry>
-
                 <Dialog
                     fullScreen={fullScreen}
                     open={open}

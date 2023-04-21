@@ -192,6 +192,7 @@ export default function AddToListDialog(props) {
                 <Grid sx={{ml: 2}}>
                     <FormGroup>
                         <FormControlLabel control={<Switch 
+                            data-test='Toggle'
                             onChange={handleSwitch}
                             defaultChecked/>} label="Exclude Items Already in Fridge"/>
                     </FormGroup>

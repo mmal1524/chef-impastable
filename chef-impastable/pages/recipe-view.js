@@ -460,7 +460,7 @@ export default function Recipe({ recipe, reviews }) {
                     </IconButton>
 
                     {/* Add to meal plan button */}
-                    <IconButton
+                    <IconButton data-test="MealPlanButton"
                         onClick={handleMealPlanOpen}
                     >
                         <PostAddIcon />
@@ -473,48 +473,48 @@ export default function Recipe({ recipe, reviews }) {
                     </IconButton>
 
                     {/* Choose meal plan dialog */}
-                    <Dialog
+                    <Dialog data-test="ChooseMealPlanDialog"
                         open={mealPlanOpen}
                         onClose={handleMealPlanClose}
                     >
                         <Box sx={{backgroundColor: "orange"}}>
-                            <DialogTitle textAlign={"center"}>Choose Meal Plan</DialogTitle>
+                            <DialogTitle data-test="ChooseMealPlan" textAlign={"center"}>Choose Meal Plan</DialogTitle>
                         </Box>
-                        <List sx={{ pt: 0 }}>
+                        <List sx={{ pt: 0 }} data-test="MealPlans">
                             {/* Displaying meal plans */}
-                            {mealPlans && mealPlans.map((mealPlan) => (
+                            {mealPlans && mealPlans.map((mealPlan, x) => (
                                 <ListItem disableGutters>
-                                    <ListItemButton onClick={() => handleChooseMealPlan(mealPlan)} key={mealPlan}>
-                                        <ListItemText primary={mealPlan} sx={{textAlign: "center"}}/>
+                                    <ListItemButton data-test={`MealPlan-${x}`} onClick={() => handleChooseMealPlan(mealPlan)} key={mealPlan}>
+                                        <ListItemText data-test={`MealPlanText-${x}`} primary={mealPlan} sx={{textAlign: "center"}}/>
                                     </ListItemButton>
                                 </ListItem>
                             ))}
                             { /* Create new meal plan button */ }
                             <ListItem disableGutters>
-                                <ListItemButton
+                                <ListItemButton data-test="CreateButton"
                                     autoFocus
                                     onClick={handleNewMealPlanOpen}
                                 >
-                                    <ListItemAvatar >
+                                    <ListItemAvatar data-test="Avatar">
                                         <Avatar sx={{backgroundColor: "orange"}}>
                                             <AddIcon sx={{color: "black"}}/>
                                         </Avatar>
                                     </ListItemAvatar>
-                                    <ListItemText primary="Create New Meal Plan" />
+                                    <ListItemText data-test="CreateText" primary="Create New Meal Plan" />
                                 </ListItemButton>
                             </ListItem>
                         </List>
                     </Dialog>
 
                     {/* Create new meal plan dialog */}
-                    <Dialog
+                    <Dialog data-test="CreateDialog"
                         open={newMealPlanOpen}
                         onClose={handleNewMealPlanClose}
                     >
-                        <DialogTitle>Create New Meal Plan</DialogTitle>
+                        <DialogTitle data-test="CreateText">Create New Meal Plan</DialogTitle>
                         <DialogContent>
                             <Box sx={{width: 300}}>
-                                <TextField
+                                <TextField data-test="NewMealPlanTextField"
                                     required
                                     id="standard-required"
                                     label="Name of Meal Plan"
@@ -526,8 +526,8 @@ export default function Recipe({ recipe, reviews }) {
                             </Box>
                         </DialogContent>
                         <DialogActions>
-                            <Button sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
-                            <Button
+                            <Button data-test="Cancel" sx={{color: "gray"}} onClick={handleNewMealPlanClose}>Cancel</Button>
+                            <Button data-test="Create"
                                 sx = {{color: "black"}} 
                                 onClick={async () => {
                                     var data = await createMealPlan(username, newMealPlanName);
@@ -542,19 +542,19 @@ export default function Recipe({ recipe, reviews }) {
                     </Dialog>
                     
                     {/* Choose day of week dialog */}
-                    <Dialog
+                    <Dialog data-test="ChooseDayDialog"
                         open={dayOpen}
                         onClose={handleDayClose}
                     >
                         <Box sx={{width: 300}}>
                             <Box sx={{backgroundColor: "orange"}}>
-                                <DialogTitle>{chosenMealPlan}</DialogTitle>
+                                <DialogTitle data-test='MealPlan'>{chosenMealPlan}</DialogTitle>
                             </Box>
-                            <DialogTitle>Add {recipe.title} to: </DialogTitle>
-                            <List>
-                                {daysOfWeek.map((day) => (
+                            <DialogTitle data-test="Recipe">Add {recipe.title} to: </DialogTitle>
+                            <List data-test="Days">
+                                {daysOfWeek.map((day, x) => (
                                     <ListItem disableGutters>
-                                        <ListItemButton onClick={async () => {
+                                        <ListItemButton data-test={`Day-${x}`} onClick={async () => {
                                             var mealPlan = await addRecipeToMealPlan(username, chosenMealPlan, day, recipe._id);
                                             setDayOpen(false);
                                             setMealPlanOpen(false);

@@ -141,8 +141,8 @@ const Navbar = () => {
     }
     const router = useRouter();
 
-    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarIcons = [<People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
+    const sidebarLinks = [{pathname:"/friends", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
         { value: "My Preferences"},
         { value: "Vegan"},

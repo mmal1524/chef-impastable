@@ -88,56 +88,35 @@ export default function HomePage({ /*recipes*/ }) {
         setPage(1);
       }, [router.query.searchTerm, router.query.filters, router.query.byFridge]);
 
-      useEffect(() => {
+    useEffect(() => {
         debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
-        const searchTerm = router.query.searchTerm;
-        const filters = router.query.filters;
-        if (searchTerm) {
-            // setTimeout(() => {
-            fetchdata(searchTerm, filters, page);
-            // }, 200);
-        }
-        else {
-            async function getDefaultRecipes() {
-                const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
-                // if (defaultRecipes.status != null) {
-                //     setRecipeResults(recipes)
-                //     return;
-                // }
-                // setRecipeResults(defaultRecipes);
-                // setDisplayRecipes(defaultRecipes);
-                await getSavedFolders(defaultRecipes);
-            
-                // var thisUser = JSON.parse(localStorage.getItem("user"))
-                // async function getSavedFolders() {
-                //     var f = await getFolders(thisUser.username)
-                //     setFolders(f)
-                //     var fNames = [];
-                //     f.forEach(folder => {
-                //         fNames.push(folder.name);
-                //     });
-                //     setFolderNames(fNames);
-                //     // console.log(displayRecipes);
-                //     defaultRecipes.forEach(recipe => {
-                //         // console.log(recipe)
-                //         recipe.saved = false;
-
-                //         f.forEach(sf => {
-                //             if (sf.recipes.includes(recipe._id)) {
-                //                 recipe.saved = true
-                //             }
-                //         });
-                //     });
-                    // console.log(recipes);
-                    
-                // }
-                // getSavedFolders();
+        if (router.isReady) {
+            const searchTerm = router.query.searchTerm;
+            const filters = router.query.filters;
+            if (searchTerm) {
+                // setTimeout(() => {
+                fetchdata(searchTerm, filters, page);
+                // }, 200);
             }
-            getDefaultRecipes();
+            else {
+                async function getDefaultRecipes() {
+
+                    const defaultRecipes = await getDefault(JSON.parse(localStorage.getItem("user")).username, page);
+                    console.log("default recipes" + router.query.searchTerm)
+                    // if (defaultRecipes.status != null) {
+                    //     setRecipeResults(recipes)
+                    //     return;
+                    // }
+                    // setRecipeResults(defaultRecipes);
+                    // setDisplayRecipes(defaultRecipes);
+                    await getSavedFolders(defaultRecipes);
+                }
+                getDefaultRecipes();
+            }
         }
-      }, [page, pageChanged]);
+    }, [page, pageChanged, router.isReady]);
 
     // useEffect(() => {
     //     // debugger;

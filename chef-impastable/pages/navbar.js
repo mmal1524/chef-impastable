@@ -160,7 +160,7 @@ const Navbar = () => {
     };
  
     return (
-        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100%', borderBottom: 4, borderColor: 'Orange' }}>
             <Grid xs={0.3}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>

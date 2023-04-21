@@ -1,6 +1,42 @@
 
 describe('Searching for a recipe', () => {
 
+    it("Searching for a recipe (API test)", () => {
+        cy.viewport(1280, 720)
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "brus",
+                filters: [],
+                username: 'carmen',
+                byFridge: "false",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body[0][0].title).to.match(/brus/i);
+        })
+    })
+
+    it("Searching for a recipe that doesn't exist (API test)", () => {
+        cy.viewport(1280, 720)
+        cy.request({
+            method: 'POST',
+            url: '/api/searchRecipe', // baseUrl is prepend to URL
+            // form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+                search: "thisisnotarealrecipehahahaha",
+                filters: [],
+                username: 'carmen',
+                byFridge: "false",
+                page: 1,
+            },
+        }).then((response) => {
+            expect(response.body[0].length).to.eq(0)
+        })
+    })
+
     it("Logging in", () => {
       cy.viewport(1280, 720)
       cy.visit('/')
@@ -9,22 +45,11 @@ describe('Searching for a recipe', () => {
       cy.get("[data-test='LoginButton']").click()
     })
 
-    it("Searching for a recipe", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("brus")
-        cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        //cy.wait(5000)
-        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
-        cy.get("[data-test='RecipeTitle']", { timeout: 25000 }).should(($title) => {
-            expect($title.text()).to.match(/brus/i);
-        });
-    })
-
     it("Searching for a recipe that does not exist", () => {
         cy.viewport(1280, 720)
         cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("fdjasklfjklsdajflsajkflajsodif")
         cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
-        cy.wait(5000)
+        cy.wait(500)
         cy.get("[data-test='FailedSearch']", { timeout: 25000 }).should("contain", "No recipes that match your search term and/or dietary filters were found. Please try a different keyword or filter.")
         cy.get("[data-test='OkFailedSearch']", { timeout: 15000 }).click()
     })

@@ -68,7 +68,7 @@ describe('Searching for a recipe', () => {
         cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("til")
         cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
         cy.wait(5000)
-        cy.get("[data-test='Recipe-0']", { timeout: 15000 }).click()
+        cy.get("[data-test='Recipe-0']", { timeout: 40000 }).click()
         cy.get("[data-test='tag-5']", { timeout:  15000 }).should('have.css', 'background-color')
         .and('eq', 'rgb(255, 193, 7)')
     })

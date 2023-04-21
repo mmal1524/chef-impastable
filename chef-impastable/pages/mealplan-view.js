@@ -41,6 +41,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import { getFormGroupUtilityClass } from '@mui/material';
 
+import AddToListDialog from '../components/add-ingr-from-mealplan';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -90,6 +92,58 @@ export default function MealPlan() {
     var [currentMealPlan, setCurrentMealPlan] = useState("");
     var [currentMealPlanIndex, setCurrentMealPlanIndex] = useState(0);
     var [recipes, setRecipes] = useState([]);
+    const [allRecipe, setAllRecipe] = useState([]);
+    const handleAllRecipe = async () => {
+        var currMeal = await getCurrentMealPlan(username, currentMealPlan);
+        ClearArray(allRecipe);
+        if (currMeal.success != "fail") {
+            console.log(currMeal);
+            for (let i = 0; i < currMeal.Sunday.length; i++) {
+                var recipe = await getRecipe(currMeal.Sunday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Monday.length; i++) {
+                var recipe = await getRecipe(currMeal.Monday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Tuesday.length; i++) {
+                var recipe = await getRecipe(currMeal.Tuesday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Wednesday.length; i++) {
+                var recipe = await getRecipe(currMeal.Wednesday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Thursday.length; i++) {
+                var recipe = await getRecipe(currMeal.Thursday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Friday.length; i++) {
+                var recipe = await getRecipe(currMeal.Friday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+            for (let i = 0; i < currMeal.Saturday.length; i++) {
+                var recipe = await getRecipe(currMeal.Saturday[i]);
+                console.log(recipe);
+                setAllRecipe(allRecipe => [...allRecipe, recipe])
+            }
+        }
+        
+    }
+    function ClearArray(array) {
+        while (array.length > 0) {
+            array.pop();
+        }
+    }
+    useEffect(() => {
+        handleAllRecipe();
+    }, [tabs, currentMealPlan])
 
     function useUnitLower(nutrient, unit) {
         if (nutrient == "" || isNaN(Number(nutrient))) {
@@ -437,9 +491,10 @@ export default function MealPlan() {
 
                 console.log(recipeObjects)
             }
-        }
+        }     
         setUsername(thisUser.getUsername);
         getMealPlans();
+        //handleAllRecipe();
     }, []);
 
     const [changeDayOpen, setChangeDayOpen] = useState(false);
@@ -718,6 +773,11 @@ export default function MealPlan() {
         setCommentsTemp(comments);
     }
 
+    const [addSLDialog, setAddSLDialog] = React.useState(false);
+    const handleOpenAddSL = () => {
+        setAddSLDialog(true);
+    }
+
     if (mealPlans.length == 0) {
         return (
             <>
@@ -812,13 +872,30 @@ export default function MealPlan() {
                             ))}
                         </Grid>
                         &nbsp;
-                        <Grid>
+                        <Grid sx={{
+                            maxWidth: 1200,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}>
                             <Button
                                 variant="contained" 
                                 sx={{ backgroundColor: "#cc702d", mt: 3, mb: 2, width: 200 }}
                                 onClick={handleEditGoalsOpen}
                             >Edit Goals
                             </Button>
+                            {console.log(allRecipe)}
+                            <Button
+                                data-test='AddToShopList'
+                                variant="contained"
+                                sx={{backgroundColor: "#cc702d", mt: 3, mb: 2, width: 300}}
+                                onClick={handleOpenAddSL}
+                            >Add to Shopping List
+                            </Button>
+                            <AddToListDialog
+                                recipeObjArr={allRecipe}
+                                open={addSLDialog}
+                                onClose = {() => {setAddSLDialog(false)}}
+                            />
                         </Grid>
                         &nbsp;
                         <Grid>
@@ -1602,6 +1679,9 @@ export default function MealPlan() {
         </>
     );
 
+    function determineStatus(amount, lower, upper) {
+        //console.log(amount)
+    }    
     function displayTable(week) {
         return (
             <div>
@@ -1909,27 +1989,6 @@ async function updateGoals(username, goals) {
     console.log("data")
     console.log(data)
     return data;
-
-    // setCaloriesLower(newCaloriesL);
-    // setCaloriesUpper(newCaloriesU);
-    // setCarbsLower(newCarbsL);
-    // setCarbsUpper(newCarbsU);
-    // setCholesterolLower(newCholesterolL);
-    // setCholesterolUpper(newCholesterolU);
-    // setFiberLower(newFiberL);
-    // setFiberUpper(newFiberU);
-    // setProteinLower(newProteinL);
-    // setProteinUpper(newProteinU);
-    // setSaturatedFatLower(newSaturatedFatL);
-    // setSaturatedFatUpper(newSaturatedFatU);
-    // setSodiumLower(newSodiumL);
-    // setSodiumUpper(newSaturatedFatU);
-    // setFatLower(newFatL);
-    // setFatUpper(newFatU);
-    // setUnsaturatedFatLower(newUnsaturatedFatL);
-    // setUnsaturatedFatUpper(newUnsaturatedFatU);
-    // setComments(newComments);
-    // handleEditGoalsClose();
 }
 
 async function getCurrentMealPlan(username, mealPlan) {

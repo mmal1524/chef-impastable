@@ -76,11 +76,18 @@ const Navbar = () => {
         setAnchorEl(null);
     };
     const [openPopup, setOpen] = React.useState(false);
+    const [openPopup2, setOpen2] = React.useState(false);
     const handleClickOpenPopup = () => {
         setOpen(true);
     };
     const handleClosePopup = () => {
         setOpen(false);
+    };
+    const handleClickSearchError = () => {
+        setOpen2(true);
+    };
+    const handleCloseSearchError = () => {
+        setOpen2(false);
     };
 
     const [shopListPopup, setShopListPopup] = React.useState(false);
@@ -114,24 +121,24 @@ const Navbar = () => {
     }
     const router = useRouter();
 
-    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarIcons = [<People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
+    const sidebarLinks = [{pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
-        { value: "My Preferences"},
-        { value: "Vegan"},
-        { value: "Vegetarian"},
-        { value: "Keto"},
-        { value: "Kosher"},
-        { value: "Paleo"},
-        { value: "Pescetarian"},
-        { value: "Halal"},
-        { value: "Dairy Free"},
-        { value: "Gluten Free"},
-        { value: "Nut Free"},
-        { value: "Wheat free"},
-        { value: "Fish free"},
-        { value: "Shellfish free"},
-        { value: "Egg free"}]
+        { value: "My Preferences" },
+        { value: "Vegan" },
+        { value: "Vegetarian" },
+        { value: "Keto" },
+        { value: "Kosher" },
+        { value: "Paleo" },
+        { value: "Pescetarian" },
+        { value: "Halal" },
+        { value: "Dairy Free" },
+        { value: "Gluten Free" },
+        { value: "Nut Free" },
+        { value: "Wheat free" },
+        { value: "Fish free" },
+        { value: "Shellfish free" },
+        { value: "Egg free" }]
 
     const [openDiet, setDiet] = React.useState(false);
     const handleClickOpenDiet = () => {
@@ -145,19 +152,19 @@ const Navbar = () => {
         try {
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge },
             });
         } catch (error) {
             console.log(error);
         }
     };
- 
+
     return (
-        <Grid data-test="Navbar" 
-            container 
-            spacing={0} 
-            columns={25} 
-            sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}
+        <Grid data-test="Navbar"
+            container
+            spacing={0}
+            columns={25}
+            sx={{ margin: 0, marginBottom: 3, width: '100%', borderBottom: 4, borderColor: 'Orange' }}
             direction="row"
             justifyContent="space-between"
             alignItems="center"
@@ -170,7 +177,7 @@ const Navbar = () => {
                     <Drawer data-test="Drawer" anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
                         <Box sx={{ width: 250 }}>
                             <List>
-                                {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
+                                {["Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                     <ListItem key={text}>
                                         <ListItemButton data-test={`Drawer-${index}`} onClick={() => { router.push(sidebarLinks[index]) }}>
                                             <ListItemIcon>
@@ -200,7 +207,7 @@ const Navbar = () => {
                 </IconButton>
             </Grid>
 
-            {/* Search Bar, npm i react-select */} 
+            {/* Search Bar, npm i react-select */}
             <Grid xs
                 alignContent='center'
                 sx={{
@@ -217,6 +224,7 @@ const Navbar = () => {
                             variant="outlined"
                             value={searchValue}
                             onChange={handleChangeSearch}
+                            data-test="SearchBar"
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">
@@ -224,32 +232,39 @@ const Navbar = () => {
                                             <ClearIcon />
                                         </IconButton>
 
-                                        <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                        <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
                                             <Kitchen />
                                         </IconButton>
 
-                                        <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
+                                        <IconButton data-test="SearchButton" aria-label="search" onClick={async () => {
+                                            if (searchValue.length === 0) {
+                                                handleClickSearchError();
+                                            }
+                                            else {
+                                                handleSearch(searchValue, false);
+                                            }
+                                        }} edge="end">
                                             <SearchIcon />
                                         </IconButton>
                                     </InputAdornment>
                                 )
-                            }} 
+                            }}
                         />
                     </Grid>
-                        &nbsp;
+                    &nbsp;
                     <Grid xs={2} >
-                    <Button
-                        type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
-                        onClick={() => {
-                            handleClickOpenDiet();
-                        }}
-                    >
-                        Add Dietary Filters
-                    </Button>
+                        <Button
+                            type="AddTag" data-test="DietFilters" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                            onClick={() => {
+                                handleClickOpenDiet();
+                            }}
+                        >
+                            Add Dietary Filters
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
-            
+
             <Grid xs={1}
                 alignContent='center'
                 sx={{
@@ -308,6 +323,7 @@ const Navbar = () => {
                         onClick={() => {
                             router.push("dietaryrestrictions");
                         }}
+                        data-test='DietaryRestrictions'
                     >
                         Dietary Restrictions
                     </MenuItem>
@@ -350,19 +366,14 @@ const Navbar = () => {
                     <Grid container>
                         {recipeTagOptions.map((item) => (
                             <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
-                                             && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox data-test='checkbox'
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && tagValue.length > 0 && Array.isArray(tagValue)
+                                                && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
                                                 if (event.target.checked) {
                                                     if (item.value === "My Preferences") {
-                                                        setCheckedItems([
-                                                            ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
-                                                            ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
-                                                                .map(item => item.value)
-                                                        ]);
                                                         if (localStorage.getItem("user")) {
                                                             const dietaryTags = JSON.parse(localStorage.getItem("user")).dietaryTags;
                                                             if (Array.isArray(dietaryTags) && dietaryTags.length > 0) {
@@ -371,6 +382,14 @@ const Navbar = () => {
                                                                     ...new Set([...prev, ...dietaryTags]),
                                                                 ]);
                                                             }
+                                                        } else {
+                                                            //else case precautions if for some reason local storage doesn't work
+                                                            //this just means if a tag is added or removed, page needs to be refreshed before its updated in my preferences
+                                                            setCheckedItems([
+                                                                ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
+                                                                ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
+                                                                    .map(item => item.value)
+                                                            ]);
                                                         }
                                                     }
                                                     else {
@@ -388,18 +407,18 @@ const Navbar = () => {
                                                     }
                                                 }
                                             }}
-                                        name={item.value}
-                                        color="primary"
-                                    />
-                                }
-                                label={item.value}
-                            />
+                                            name={item.value}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={item.value}
+                                />
                             </Grid>
                         ))}
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDiet} autoFocus>
+                    <Button data-test='CloseDietFilters' onClick={handleCloseDiet} autoFocus>
                         Close
                     </Button>
                 </DialogActions>
@@ -424,6 +443,26 @@ const Navbar = () => {
                     </Button>
                     <Button onClick={handleClosePopup} autoFocus>
                         No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={openPopup2}
+                onClose={handleCloseSearchError}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Invalid Search"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Please type in text before searching
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseSearchError} autoFocus>
+                        Ok
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -43,7 +43,7 @@ export default function ShoppingListEdit() {
                     return this.fridge
                 },
             },
-        });
+        }, []);
         setShoppingList(thisUser.getShoppingList);
         setUsername(thisUser.getUsername);
         setFridge(thisUser.getFridge);
@@ -80,7 +80,7 @@ export default function ShoppingListEdit() {
                     freeSolo
                     id="for-search"
                     options={ingrArr2}
-                    onInputChange={(e, new_val) => {console.log(new_val); setAddIngr(new_val)}}
+                    onInputChange={(e, new_val) => {setAddIngr(new_val)}}
                     renderInput={params => (
                         <TextField 
                         {...params}
@@ -98,26 +98,28 @@ export default function ShoppingListEdit() {
                     variant="contained"
                     sx={{width: 110}}
                     onClick={async () => {
-                        // check if already in shopping list
-                        var idxSL = await indexMatch(shoppingList, addIngr);
-                        if (idxSL == -1) {
-                            // item not found in shopping list
-                            // check if already in fridge
-                            var idxF = await indexMatch(fridge, addIngr);
-                            if (idxF == -1) {
-                                // item not found in fridge
-                                var data = await addIngredient(username, addIngr);
-                                localStorage.setItem('user', JSON.stringify(data));
-                                setShoppingList(shoppingList => [...shoppingList, addIngr]);
-                                setAddIngr("");
-                                console.log("added")
-                                console.log(shoppingList)
-                                // confirmation popup? can tell if added
+                        if (addIngr != "") {
+                            // check if already in shopping list
+                            var idxSL = await indexMatch(shoppingList, addIngr);
+                            if (idxSL == -1) {
+                                // item not found in shopping list
+                                // check if already in fridge
+                                var idxF = await indexMatch(fridge, addIngr);
+                                if (idxF == -1) {
+                                    // item not found in fridge
+                                    var data = await addIngredient(username, addIngr);
+                                    localStorage.setItem('user', JSON.stringify(data));
+                                    setShoppingList(shoppingList => [...shoppingList, addIngr]);
+                                    setAddIngr("");
+                                    console.log("added")
+                                    console.log(shoppingList)
+                                    // confirmation popup? can tell if added
+                                } else {
+                                    // item already owned in fridge, error message?
+                                }
                             } else {
-                                // item already owned in fridge, error message?
+                                // item already in list, error message?
                             }
-                        } else {
-                            // item already in list, error message?
                         }
                     }}
                 >
@@ -202,7 +204,7 @@ async function getIngr() {
 async function DeleteListItem(username, item) {
     try {
         const res = await fetch('/api/deleteShopListItem', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -222,7 +224,7 @@ async function DeleteListItem(username, item) {
 async function ClearList(username) {
     try {
         const res = await fetch('/api/clearShoppingListItems', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',

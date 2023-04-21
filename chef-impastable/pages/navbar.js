@@ -218,7 +218,15 @@ const Navbar = () => {
     }
  
     return (
-        <Grid data-test="Navbar" container spacing={0} columns={30} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
+        <Grid data-test="Navbar"
+            container
+            spacing={0}
+            columns={25}
+            sx={{ margin: 0, marginBottom: 3, width: '100%', borderBottom: 4, borderColor: 'Orange' }}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+        >
             <Grid xs={1}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
@@ -227,7 +235,7 @@ const Navbar = () => {
                     <Drawer anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
                         <Box sx={{ width: 250 }}>
                             <List>
-                                {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
+                                {["Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                     <ListItem key={text}>
                                         <ListItemButton onClick={() => { router.push(sidebarLinks[index]) }}>
                                             <ListItemIcon>

@@ -130,11 +130,13 @@ function RecipeCard( props ) {
     return (
         <Card sx={{width:200}} variant="outlined">
             <CardActionArea data-test={`Recipe-${props.index}`} onClick={() => {Router.push({pathname:"/recipe-view/", query: {id: props.recipe._id, username: JSON.parse(localStorage.getItem("user")).username }})}}>
-                <CardHeader title={props.recipe.title} sx={{fontSize:10}}>
+                <CardHeader data-test={`Recipe-Title-${props.index}`} title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 
-                <CardMedia>
-                    <img src={props.recipe.image} alt="image of {props.recipe.title}" width={300}/> 
+                <CardMedia
+                    sx={{ height: 200 }}
+                    image={props.recipe.image}
+                    title="image of {props.recipe.title}">
                 </CardMedia>           
                 <CardContent sx={{overflow: "auto"}}>
                     {props.recipe.description}
@@ -164,7 +166,7 @@ function RecipeCard( props ) {
                 onClick={handleClickOpen}>
                 <SendIcon />
             </IconButton>
-            <IconButton>
+            <IconButton data-test={`SaveRecipeHouse-${props.index}`}>
                 <HouseOutlined 
                     onClick={() => {debugger; props.onSaveHouse()}}
                 />

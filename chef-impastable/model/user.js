@@ -62,6 +62,10 @@ const userSchema = new mongoose.Schema({
     newSharedNotif: {
         type:[String]
     },
+    goals: {
+        type: Map,
+        of: String
+    },
     success: {
         type:Boolean,
         required:false

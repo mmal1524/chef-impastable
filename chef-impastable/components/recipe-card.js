@@ -39,6 +39,7 @@ function RecipeCard( props ) {
     // const [isSaved, setSaved] = useState(false);
 
     const [open, setOpen] = React.useState(false);
+    const [noFriendsOpen, setNoFriendsOpen] = React.useState(false);
 
     const [mealPlanOpen, setMealPlanOpen] = React.useState(false);  // dialog for choosing a meal plan
     var [chosenMealPlan, setChosenMealPlan] = React.useState("");   // which meal plan was clicked
@@ -55,6 +56,14 @@ function RecipeCard( props ) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const handleClickNoFriends = () => {
+        setNoFriendsOpen(true);
+    }
+
+    const handleCloseNoFriends = () => {
+        setNoFriendsOpen(false);
+    }
 
     const handleMealPlanOpen = () => {
         setMealPlanOpen(true);
@@ -273,29 +282,55 @@ function RecipeCard( props ) {
                     <DialogContentText id="share-recipe-description">
                         Select friends:
                         {displayFriends(friends)}
-
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button 
-                        onClick={ async () => {
-                            console.log(sendList)
-                            var i = 0;
-                            for (i; i < sendList.length; i++) {
-                                var share = await createShare(props.recipe._id, username, sendList[i])
-                            }
-                            router.reload();
-                        }}
-                        > 
-                        Send
-                    </Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
-    </CardActions>
-    </Card>
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button 
+                            onClick={ async () => {
+                                if (sendList.length == 0) {
+                                    handleClickNoFriends();
+                                } else {
+                                    var i = 0;
+                                    for (i; i < sendList.length; i++) {
+                                        var share = await createShare(props.recipe._id, username, sendList[i])
+                                        var message = username + " has shared a recipe with you!";
+                                        console.log(message)
+                                        var notif = addNewSharedNotif(message, sendList[i]);
+                                    }
+                                    //router.reload();
+                                    handleClose();
+                                }
+                            }}
+                            > 
+                            Send
+                        </Button>
+                        <Button onClick={handleClose} autoFocus>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog
+                    //Dialog for when a user is trying to share to no one
+                    open={noFriendsOpen}
+                    onClose={handleCloseNoFriends}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"No Friends Selected"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please select a friend to share this recipe with.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseNoFriends} autoFocus>
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>          
+            </CardActions>
+        </Card>
     );
 
     function displayFriends(friendsList) {
@@ -320,7 +355,6 @@ function RecipeCard( props ) {
             sendList.push(friendsList[checked[j]])
         }
 
-        
         if (friendsList.length == 0) {
             return(<>You have no friends :(</>);
         } else {
@@ -359,21 +393,21 @@ function RecipeCard( props ) {
         }
     }
 
-    async function createShare(recipeID, sender, receiver) {
-        const res = await fetch('api/createShare', {
+    async function addNewSharedNotif(sender, receiver) {
+        const res = await fetch('api/addNewSharedNotif', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                recipeID: recipeID,
                 sender: sender,
-                receiver: receiver,
+                receiver: receiver
             })
         });
+    
         const data = await res.json();
-        console.log(data);
+        console.log(data)
         return data;
     }
 
@@ -440,6 +474,23 @@ function RecipeCard( props ) {
         catch (error) {
             return error;
         }
+    }
+    async function createShare(recipeID, sender, receiver) {
+        const res = await fetch('api/createShare', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                recipeID: recipeID,
+                sender: sender,
+                receiver: receiver,
+            })
+        });
+        const data = await res.json();
+        console.log(data);
+        return data;
     }
 }
 

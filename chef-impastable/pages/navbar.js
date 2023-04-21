@@ -14,7 +14,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add, Fullscreen } from '@mui/icons-material';
+import { MenuSharp, Kitchen, Favorite, People, House, CalendarMonth, Add, Fullscreen, NotificationsNone } from '@mui/icons-material';
 import { Drawer, List, ListItem, ListItemText, ListItemButton, ListItemIcon, Box, TextField, IconButton, FormControlLabel } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import Router from "next/router";
@@ -22,9 +22,13 @@ import HomeIcon from '@mui/icons-material/Home';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ShoppingList from './shopping-list';
 import ShoppingListEdit from './shopping-list-edit';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationEdit from '../components/notification_edit';
+import NotificationView from '../components/notification_view';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import Checkbox from '@mui/material/Checkbox';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 const Navbar = () => {
     const [displayName, setDisplayName] = useState("");
@@ -34,6 +38,8 @@ const Navbar = () => {
     const [recipeResults, setRecipeResults] = useState([]);
     const [tagValue, setUserTags] = useState("");
     const [checkedItems, setCheckedItems] = useState([]);
+    const [newFriendNotif, setNewFriendNotif] = useState([]);
+    const [newSharedNotif, setNewSharedNotif] = useState([]);
 
     const handleChangeSearch = e => {
         setSearchValue(e.target.value)
@@ -57,17 +63,30 @@ const Navbar = () => {
                     return this.dietaryTags
                 },
             },
+            getNewFriendNotif: {
+                get() {
+                    return this.newFriendNotif
+                },
+            },
+            getNewSharedNotif: {
+                get() {
+                    return this.newSharedNotif
+                },
+            }
         });
 
         setDisplayName(thisUser.getDisplayName);
         setAvatar(thisUser.getAvatar);
         setUsername(thisUser.username);
         setUserTags(thisUser.getTags);
+        setNewFriendNotif(thisUser.getNewFriendNotif);
+        setNewSharedNotif(thisUser.getNewSharedNotif);
     }, []);
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openNav = Boolean(anchorEl);
     const [drawerOpen, setDrawerOpen] = React.useState(false);
+    const [notificationList, setNotificationList] = React.useState([]);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -76,18 +95,11 @@ const Navbar = () => {
         setAnchorEl(null);
     };
     const [openPopup, setOpen] = React.useState(false);
-    const [openPopup2, setOpen2] = React.useState(false);
     const handleClickOpenPopup = () => {
         setOpen(true);
     };
     const handleClosePopup = () => {
         setOpen(false);
-    };
-    const handleClickSearchError = () => {
-        setOpen2(true);
-    };
-    const handleCloseSearchError = () => {
-        setOpen2(false);
     };
 
     const [shopListPopup, setShopListPopup] = React.useState(false);
@@ -113,6 +125,14 @@ const Navbar = () => {
         setShopListPopupEdit(false);
     }
 
+    const [notifOpen, setNotifOpen] = React.useState(false);
+    const handleNotifOpen = () => {
+        setNotifOpen(true);
+    }
+    const closeNotif = () => {
+        setNotifOpen(false);
+    }
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const logout = () => {
@@ -122,23 +142,23 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = [{pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = [{pathname:"/friends", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
-        { value: "My Preferences" },
-        { value: "Vegan" },
-        { value: "Vegetarian" },
-        { value: "Keto" },
-        { value: "Kosher" },
-        { value: "Paleo" },
-        { value: "Pescetarian" },
-        { value: "Halal" },
-        { value: "Dairy Free" },
-        { value: "Gluten Free" },
-        { value: "Nut Free" },
-        { value: "Wheat free" },
-        { value: "Fish free" },
-        { value: "Shellfish free" },
-        { value: "Egg free" }]
+        { value: "My Preferences"},
+        { value: "Vegan"},
+        { value: "Vegetarian"},
+        { value: "Keto"},
+        { value: "Kosher"},
+        { value: "Paleo"},
+        { value: "Pescetarian"},
+        { value: "Halal"},
+        { value: "Dairy Free"},
+        { value: "Gluten Free"},
+        { value: "Nut Free"},
+        { value: "Wheat free"},
+        { value: "Fish free"},
+        { value: "Shellfish free"},
+        { value: "Egg free"}]
 
     const [openDiet, setDiet] = React.useState(false);
     const handleClickOpenDiet = () => {
@@ -152,13 +172,51 @@ const Navbar = () => {
         try {
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge },
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
             });
         } catch (error) {
             console.log(error);
         }
     };
 
+    function displayBell(friends, shares) {
+        if (friends.length == 0 && shares.length == 0) {
+            return (
+                <div>
+                    <Button 
+                        data-test="Notification"
+                        sx={{color: 'gray', ml: 1.0}}
+                        startIcon={<NotificationsIcon style={{width:'25px', height: "25px"}} />}
+                        onClick={async ()=> {
+                                //var find = findNotifications(username);
+                                console.log(notificationList);
+                                handleNotifOpen();
+                            }
+                        }
+                    >
+                    </Button>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <Button 
+                        data-test="New-Notification"
+                        sx={{color: 'gray', ml: 1.5}}
+                        startIcon={<NotificationsActiveIcon style={{width:'25px', height: "25px"}} />}
+                        onClick={async ()=> {
+                                //var find = findNotifications(username);
+                                console.log(notificationList);
+                                handleNotifOpen();
+                            }
+                        }
+                    >
+                    </Button>
+                </div>
+            )
+        }
+    }
+ 
     return (
         <Grid data-test="Navbar"
             container
@@ -192,7 +250,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={1}
+            <Grid xs={1.0}
                 sx={{
                     pt: 0.5,
                 }
@@ -207,64 +265,50 @@ const Navbar = () => {
                 </IconButton>
             </Grid>
 
-            {/* Search Bar, npm i react-select */}
+            {/* Search Bar, npm i react-select */} 
             <Grid xs
                 alignContent='center'
                 sx={{
                     pt: 0.5,
                     display: 'inline-block'
-                }}
-            >
-                <Grid container spacing={0} direction="row" justifyContent="space-between" alignItems="center">
-                    <Grid xs>
-                        <TextField
-                            sx={{ width: '100%' }}
-                            size="small"
-                            label="Search"
-                            variant="outlined"
-                            value={searchValue}
-                            onChange={handleChangeSearch}
-                            data-test="SearchBar"
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
-                                            <ClearIcon />
-                                        </IconButton>
+                }}>
+                <TextField
+                    sx={{ minWidth: 800 }}
+                    data-test="SearchBar"
+                    size="small"
+                    label="Search"
+                    variant="outlined"
+                    value={searchValue}
+                    onChange={handleChangeSearch}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
+                                    <ClearIcon />
+                                </IconButton>
 
-                                        <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
-                                            <Kitchen />
-                                        </IconButton>
+                                <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                    <Kitchen />
+                                </IconButton>
 
-                                        <IconButton data-test="SearchButton" aria-label="search" onClick={async () => {
-                                            if (searchValue.length === 0) {
-                                                handleClickSearchError();
-                                            }
-                                            else {
-                                                handleSearch(searchValue, false);
-                                            }
-                                        }} edge="end">
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-                    </Grid>
+                                <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
+                                    <SearchIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }} 
+                    />
                     &nbsp;
-                    <Grid xs={2} >
-                        <Button
-                            type="AddTag" data-test="DietFilters" size="small" variant="contained" sx={{ minHeight: '40px' }}
-                            onClick={() => {
-                                handleClickOpenDiet();
-                            }}
-                        >
-                            Add Dietary Filters
-                        </Button>
-                    </Grid>
-                </Grid>
+                <Button
+                    type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                    onClick={() => {
+                        handleClickOpenDiet();
+                    }}
+                    data-test='DietFilters'
+                >Add Dietary Filters
+                </Button>
             </Grid>
-
+            
             <Grid xs={1}
                 alignContent='center'
                 sx={{
@@ -273,11 +317,19 @@ const Navbar = () => {
             >
                 <Button
                     data-test="ShopList"
-                    sx={{ color: 'gray', ml: 1.5 }}
-                    startIcon={<ShoppingBasketIcon />}
+                    sx={{color: 'gray', ml: 1.5}}
+                    startIcon={<ShoppingBasketIcon style={{width:'25px', height: "25px"}}/>}
                     onClick={handleClickOpenShop}
                 >
                 </Button>
+            </Grid>
+            <Grid xs={1} 
+                alignContent='center'
+                sx={{ 
+                    pt: 1, 
+                }} 
+            >
+                {displayBell(newFriendNotif, newSharedNotif)}
             </Grid>
             <Grid xs={1}>
                 <Button
@@ -320,10 +372,10 @@ const Navbar = () => {
                         Profile
                     </MenuItem>
                     <MenuItem
+                        data-test="DietaryRestrictions"
                         onClick={() => {
                             router.push("dietaryrestrictions");
                         }}
-                        data-test='DietaryRestrictions'
                     >
                         Dietary Restrictions
                     </MenuItem>
@@ -366,14 +418,20 @@ const Navbar = () => {
                     <Grid container>
                         {recipeTagOptions.map((item) => (
                             <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox data-test='checkbox'
-                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && tagValue.length > 0 && Array.isArray(tagValue)
-                                                && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                            data-test='checkbox'
+                                            checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
+                                             && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
                                                 if (event.target.checked) {
                                                     if (item.value === "My Preferences") {
+                                                        setCheckedItems([
+                                                            ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
+                                                            ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
+                                                                .map(item => item.value)
+                                                        ]);
                                                         if (localStorage.getItem("user")) {
                                                             const dietaryTags = JSON.parse(localStorage.getItem("user")).dietaryTags;
                                                             if (Array.isArray(dietaryTags) && dietaryTags.length > 0) {
@@ -382,14 +440,6 @@ const Navbar = () => {
                                                                     ...new Set([...prev, ...dietaryTags]),
                                                                 ]);
                                                             }
-                                                        } else {
-                                                            //else case precautions if for some reason local storage doesn't work
-                                                            //this just means if a tag is added or removed, page needs to be refreshed before its updated in my preferences
-                                                            setCheckedItems([
-                                                                ...checkedItems.filter(item => item !== "My Preferences"), // remove "My Preferences" from the array
-                                                                ...recipeTagOptions.filter(item => item.value !== "My Preferences" && tagValue.includes(item.value)) // add selected tags from tagValue
-                                                                    .map(item => item.value)
-                                                            ]);
                                                         }
                                                     }
                                                     else {
@@ -407,18 +457,19 @@ const Navbar = () => {
                                                     }
                                                 }
                                             }}
-                                            name={item.value}
-                                            color="primary"
-                                        />
-                                    }
-                                    label={item.value}
-                                />
+                                        name={item.value}
+                                        color="primary"
+                                    />
+                                }
+                                label={item.value}
+                            />
                             </Grid>
                         ))}
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button data-test='CloseDietFilters' onClick={handleCloseDiet} autoFocus>
+                    <Button data-test='CloseDietFilters'
+                        onClick={handleCloseDiet} autoFocus>
                         Close
                     </Button>
                 </DialogActions>
@@ -443,26 +494,6 @@ const Navbar = () => {
                     </Button>
                     <Button onClick={handleClosePopup} autoFocus>
                         No
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog
-                fullScreen={fullScreen}
-                open={openPopup2}
-                onClose={handleCloseSearchError}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    {"Invalid Search"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Please type in text before searching
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseSearchError} autoFocus>
-                        Ok
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -513,9 +544,52 @@ const Navbar = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                fullScreen={fullScreen}
+                open={notifOpen}
+                onClose={closeNotif}
+                aria-labelledby="responsive-dialog-title"
+            >
+                <DialogTitle id="responsive-dialog-title">
+                    {"Notifications"}
+                </DialogTitle>
+                <DialogContent data-test='ViewNotifications'>
+                    <NotificationEdit 
+                        onClear={async () => {
+                            setNewFriendNotif([]);
+                            setNewSharedNotif([]);
+                            // new one for each field
+                            var data = await clearNotifications(username);
+                            localStorage.setItem('user', JSON.stringify(data))}}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeNotif} autoFocus>
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 }
+
+async function clearNotifications(username) {
+    try {
+        const res = await fetch('/api/clearNotifs', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
+        const data = await res.json();
+        return data;
+    } catch {
+        console.error("no notifications to clear");
+    }
+}
+
 export default Navbar;
-
-

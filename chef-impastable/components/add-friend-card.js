@@ -61,6 +61,8 @@ export function addFriendCard(friend, username) {
                                 if (alreadyRequested.success) {
                                     swal("", "You have already sent a friend request to this user", "info");
                                 } else {
+                                    var message = username + " has sent you a friend request!";
+                                    var notif = await addNewFriendNotif(friend.username, message);
                                     var currUser = await addFriendRequest(friend.username, username);
                                     swal("", "Friend Request Sent!", "success");
                                 }
@@ -159,4 +161,22 @@ export function addFriendCard(friend, username) {
     const friendJSON = await res.json();
     return friendJSON;
   } 
+
+  async function addNewFriendNotif(receiver, message) {
+    const res = await fetch('api/addNewFriendNotif', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            receiver: receiver,
+            message: message
+        })
+    });
+
+    const data = await res.json();
+    console.log(data)
+    return data;
+    }
 }

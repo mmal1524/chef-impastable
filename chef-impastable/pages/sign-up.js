@@ -305,6 +305,8 @@ export default function SignUp() {
                 households: [],
                 mealPlans: [],
                 currentMealPlan: "",
+                newFriendsNotif: [],
+                newSharedNotif: [],
                 goals: {"caloriesLower": "", "caloriesUpper": "", "carbsLower": "", "carbsUpper": "", "cholesterolLower": "", "cholesterolUpper": "", "fiberLower": "", "fiberUpper": "", "proteinLower": "", "proteinUpper": "", "saturatedFatLower": "", "saturatedFatUpper": "", "sodiumLower": "", "sodiumUpper": "", "fatLower": "", "fatUpper": "", "unsaturatedFatLower": "", "unsaturatedFatUpper": "", "comments": ""}
             })
         })

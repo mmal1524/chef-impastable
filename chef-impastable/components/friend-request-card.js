@@ -118,7 +118,7 @@ export function friendRequestCard(friendRequest) {
 
     async function deleteFriendRequest(username, friendRequest) {
         const res = await fetch('/api/deleteFriendRequest', {
-            method: 'DELETE',
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -131,5 +131,4 @@ export function friendRequestCard(friendRequest) {
         const data = await res.json();
         return data;
     }
-
 }

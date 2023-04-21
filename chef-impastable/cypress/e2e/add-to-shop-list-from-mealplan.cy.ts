@@ -8,7 +8,7 @@ describe('Meal Plan to ShoppingList', () => {
     // Logs in
     it("Logging in", () => {
         cy.visit('/', {timeout: 90000})
-        cy.get("[data-test='UsernameField']").type("testHouse2")
+        cy.get("[data-test='UsernameField']").type("testMeal2")
         cy.get("[data-test='PasswordField']").type("Password!1")
         cy.get("[data-test='LoginButton']").click()
     })

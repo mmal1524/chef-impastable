@@ -5,7 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { Link } from "@mui/material";
-import { Favorite } from "@mui/icons-material";
+import { Favorite, HouseOutlined } from "@mui/icons-material";
 import React from "react";
 import { useRouter } from "next/router";
 import Router from "next/router";
@@ -114,7 +114,7 @@ function RecipeCard( props ) {
         setUsername(thisUser.getUsername);
         setFriends(thisUser.getFriends);
         setMealPlans(thisUser.getMealPlans);
-    }, []);
+    }, [mealPlans]);
 
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -155,6 +155,12 @@ function RecipeCard( props ) {
                 onClick={handleClickOpen}>
                 <SendIcon />
             </IconButton>
+            <IconButton>
+                <HouseOutlined 
+                    onClick={() => {debugger; props.onSaveHouse()}}
+                />
+            </IconButton>
+
 
             {/* Choose meal plan dialog */}
             <Dialog

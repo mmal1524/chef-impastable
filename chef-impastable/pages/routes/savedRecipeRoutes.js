@@ -1,4 +1,4 @@
-export async function getFolders(user_id) {
+export async function getFolders(user_id, getData, isHouse) {
     console.log(user_id);
     const res = await fetch('/api/getSavedRecipes', {
         method: 'POST',
@@ -8,7 +8,8 @@ export async function getFolders(user_id) {
         },
         body: JSON.stringify({
             user: user_id,
-            getData: false
+            getData: getData,
+            isHouse: isHouse
         })
     })
     const data = await res.json();
@@ -16,7 +17,7 @@ export async function getFolders(user_id) {
     return data;
 }
 
-export async function saveRecipe(username, folder, recipeID) {
+export async function saveRecipe(username, folder, recipeID, isHouse) {
     console.log({username, folder, recipeID});
     const res = await fetch('/api/saveRecipe', {
         method: 'POST',
@@ -25,9 +26,10 @@ export async function saveRecipe(username, folder, recipeID) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            username: username,
+            id: username,
             folder: folder,
-            recipeID: recipeID
+            recipeID: recipeID,
+            isHouse: isHouse
         })
     })
     const data = await res.json();
@@ -35,7 +37,7 @@ export async function saveRecipe(username, folder, recipeID) {
     return data;
 }
 
-export async function unsaveRecipe(username, recipeID) {
+export async function unsaveRecipe(username, recipeID, isHouse) {
     console.log({username, recipeID});
     const res = await fetch('/api/unsaveRecipe', {
         method: 'POST',
@@ -45,7 +47,8 @@ export async function unsaveRecipe(username, recipeID) {
         },
         body: JSON.stringify({
             username: username,
-            recipeID: recipeID
+            recipeID: recipeID,
+            isHouse: isHouse
         })
     })
     const data = await res.json();

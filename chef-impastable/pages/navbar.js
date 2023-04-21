@@ -122,23 +122,23 @@ const Navbar = () => {
     const router = useRouter();
 
     const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", {pathname:"/friends/", query: {username: username}}, "/profile-page", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
-        { value: "My Preferences"},
-        { value: "Vegan"},
-        { value: "Vegetarian"},
-        { value: "Keto"},
-        { value: "Kosher"},
-        { value: "Paleo"},
-        { value: "Pescetarian"},
-        { value: "Halal"},
-        { value: "Dairy Free"},
-        { value: "Gluten Free"},
-        { value: "Nut Free"},
-        { value: "Wheat free"},
-        { value: "Fish free"},
-        { value: "Shellfish free"},
-        { value: "Egg free"}]
+        { value: "My Preferences" },
+        { value: "Vegan" },
+        { value: "Vegetarian" },
+        { value: "Keto" },
+        { value: "Kosher" },
+        { value: "Paleo" },
+        { value: "Pescetarian" },
+        { value: "Halal" },
+        { value: "Dairy Free" },
+        { value: "Gluten Free" },
+        { value: "Nut Free" },
+        { value: "Wheat free" },
+        { value: "Fish free" },
+        { value: "Shellfish free" },
+        { value: "Egg free" }]
 
     const [openDiet, setDiet] = React.useState(false);
     const handleClickOpenDiet = () => {
@@ -152,16 +152,24 @@ const Navbar = () => {
         try {
             router.push({
                 pathname: "homepage",
-                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge},
+                query: { searchTerm: searchValue, filters: checkedItems, byFridge: byFridge },
             });
         } catch (error) {
             console.log(error);
         }
     };
- 
+
     return (
-        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100%', borderBottom: 4, borderColor: 'Orange' }}>
-            <Grid xs={0.3}>
+        <Grid data-test="Navbar"
+            container
+            spacing={0}
+            columns={25}
+            sx={{ margin: 0, marginBottom: 3, width: '100%', borderBottom: 4, borderColor: 'Orange' }}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+        >
+            <Grid xs={1}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
@@ -184,7 +192,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={1.0}
+            <Grid xs={1}
                 sx={{
                     pt: 0.5,
                 }
@@ -199,57 +207,64 @@ const Navbar = () => {
                 </IconButton>
             </Grid>
 
-            {/* Search Bar, npm i react-select */} 
-            <Grid xs={8.0}
+            {/* Search Bar, npm i react-select */}
+            <Grid xs
                 alignContent='center'
                 sx={{
                     pt: 0.5,
                     display: 'inline-block'
-                }}>
-                <TextField
-                    sx={{ minWidth: 800 }}
-                    size="small"
-                    label="Search"
-                    variant="outlined"
-                    value={searchValue}
-                    onChange={handleChangeSearch}
-                    data-test="SearchBar"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
-                                    <ClearIcon />
-                                </IconButton>
+                }}
+            >
+                <Grid container spacing={0} direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid xs>
+                        <TextField
+                            sx={{ width: '100%' }}
+                            size="small"
+                            label="Search"
+                            variant="outlined"
+                            value={searchValue}
+                            onChange={handleChangeSearch}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
+                                            <ClearIcon />
+                                        </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
-                                    <Kitchen />
-                                </IconButton>
+                                        <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                            <Kitchen />
+                                        </IconButton>
 
-                                <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { 
-                                    if (searchValue.length === 0) {
-                                        handleClickSearchError();
-                                    }
-                                    else {
-                                        handleSearch(searchValue, false);
-                                    }
-                                    }} edge="end">
-                                    <SearchIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        )
-                    }} 
-                    />
+                                        <IconButton data-test="SearchButton" aria-label="search" onClick={async () => {
+                                            if (searchValue.length === 0) {
+                                                handleClickSearchError();
+                                            }
+                                            else {
+                                                handleSearch(searchValue, false);
+                                            }
+                                        }} edge="end">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </Grid>
                     &nbsp;
-                <Button
-                    data-test='DietFilters' type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
-                    onClick={() => {
-                        handleClickOpenDiet();
-                    }}
-                >Add Dietary Filters
-                </Button>
+                    <Grid xs={2} >
+                        <Button
+                            type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                            onClick={() => {
+                                handleClickOpenDiet();
+                            }}
+                        >
+                            Add Dietary Filters
+                        </Button>
+                    </Grid>
+                </Grid>
             </Grid>
-            
-            <Grid xs={1.5}
+
+            <Grid xs={1}
                 alignContent='center'
                 sx={{
                     pt: 0.5,
@@ -261,7 +276,6 @@ const Navbar = () => {
                     startIcon={<ShoppingBasketIcon />}
                     onClick={handleClickOpenShop}
                 >
-                    Shopping List
                 </Button>
             </Grid>
             <Grid xs={1}>
@@ -351,11 +365,11 @@ const Navbar = () => {
                     <Grid container>
                         {recipeTagOptions.map((item) => (
                             <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox data-test='checkbox'
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox data-test='checkbox'
                                             checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && tagValue.length > 0 && Array.isArray(tagValue)
-                                             && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
+                                                && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
                                                 if (event.target.checked) {
                                                     if (item.value === "My Preferences") {
@@ -392,12 +406,12 @@ const Navbar = () => {
                                                     }
                                                 }
                                             }}
-                                        name={item.value}
-                                        color="primary"
-                                    />
-                                }
-                                label={item.value}
-                            />
+                                            name={item.value}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={item.value}
+                                />
                             </Grid>
                         ))}
                     </Grid>

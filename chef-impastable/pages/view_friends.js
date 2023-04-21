@@ -216,11 +216,11 @@ function displayCreated(privacy, target, myFriends, createdRecipes) {
     }
     if (privacy == "everyone") {
         console.log(target)
-      return (<SavedRecipes user={target} />)
+      return (<SavedRecipes isHouse={false} user={target} />)
     }
     if (privacy == "friends only") {
         if (myFriends.includes(target)) {
-            return (<SavedRecipes user={target} />);
+            return (<SavedRecipes isHouse={false} user={target} />);
         } else {
             console.log(target in myFriends)
             return (<>Become friends to view this user's saved recipes!</>);

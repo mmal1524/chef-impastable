@@ -241,7 +241,7 @@ export default function ProfilePage({besties, futureBesties, reviews, recipes, c
                         }
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        <SavedRecipes></SavedRecipes>
+                        <SavedRecipes isHouse={false}></SavedRecipes>
                     </TabPanel>
                     <TabPanel value={value} index={2}>
                         {displayReviews(reviewsList)}

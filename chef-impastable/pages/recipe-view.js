@@ -33,7 +33,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import { createTheme } from '@mui/material/styles';
-import { Favorite, FavoriteBorderOutlined } from '@mui/icons-material';
+import { Favorite, FavoriteBorderOutlined, HouseOutlined } from '@mui/icons-material';
 import { saveRecipe, unsaveRecipe } from './routes/savedRecipeRoutes';
 import SaveRecipeDialog from '../components/saveRecipeDialog';
 import AddToListDialog from '../components/add-ingredient-from-recipe';
@@ -46,12 +46,14 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import AddIcon from '@mui/icons-material/Add';
+import SaveRecipeHouseDialog from '../components/saveRecipeHouseDialog';
 import { withStyles } from "@material-ui/core/styles";
 
 export default function Recipe({ recipe, reviews }) {
     const router = useRouter();
     const [saved, setSaved] = useState(recipe.saved);
     const [showSaveDialog, setShowSaveDialog] = useState(false);
+    const [showSaveHouse, setShowSaveHouse] = useState(false);
 
     const theme = createTheme({
         palette: {
@@ -100,7 +102,7 @@ export default function Recipe({ recipe, reviews }) {
         });
         setUsername(thisUser.getUsername)
         setMealPlans(thisUser.getMealPlans);
-    }, []);
+    }, [mealPlans]);
 
     function createRow(name, value) {
         return { name, value };
@@ -341,9 +343,22 @@ export default function Recipe({ recipe, reviews }) {
 
     return (
         <>
+            <SaveRecipeHouseDialog 
+                show={showSaveHouse}
+                onClose={() => {setShowSaveHouse(false)}}
+                onSubmit = {async (house) => {
+                    console.log(house);
+
+                    setShowSaveHouse(false);
+                    house.forEach(async (h) => {
+                        var data = await saveRecipe(h, "none", recipe._id, true);
+                    })
+                    
+                }}
+            />
             <SaveRecipeDialog
                 onSubmit = {async (folderName) => {
-                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id); 
+                    var data = await saveRecipe(JSON.parse(localStorage.getItem("user")).username, folderName, recipe._id, false); 
                     if (data) {
                         localStorage.setItem('user', JSON.stringify(data));
                     }
@@ -353,6 +368,7 @@ export default function Recipe({ recipe, reviews }) {
                 show = {showSaveDialog}
                 onClose = {() => {setShowSaveDialog(false)}}
             />
+
             <Grid>
                 <div className="App">
                     <Navbar />
@@ -429,7 +445,7 @@ export default function Recipe({ recipe, reviews }) {
                         data-test="SaveRecipe"
                         onClick={() => {
                             if (saved) {
-                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id);
+                                unsaveRecipe(JSON.parse(localStorage.getItem('user')).username, recipe._id, false);
                                 setSaved(false);
                             }
                             else {
@@ -448,6 +464,12 @@ export default function Recipe({ recipe, reviews }) {
                         onClick={handleMealPlanOpen}
                     >
                         <PostAddIcon />
+                    </IconButton>
+
+                    <IconButton
+                        onClick={() => {setShowSaveHouse(true)}}
+                    >
+                        <HouseOutlined/>
                     </IconButton>
 
                     {/* Choose meal plan dialog */}

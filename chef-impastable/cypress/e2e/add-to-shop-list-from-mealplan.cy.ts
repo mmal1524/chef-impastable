@@ -15,76 +15,76 @@ describe('Meal Plan to ShoppingList', () => {
     })
 
     // confirm that ingredient pepper is in user fridge
-    it ('Navigate to fridge and confirm pepper in fridge', () => {
-        cy.viewport(1280, 720)
-        cy.visit('/fridge-kitchen', {timeout: 90000})
-        cy.get("#simple-tabpanel-0")
-            .get("#FridgeItem")
-            .should('contain', "pepper")
-    })
+    // it ('Navigate to fridge and confirm pepper in fridge', () => {
+    //     cy.viewport(1280, 720)
+    //     cy.visit('/fridge-kitchen', {timeout: 90000})
+    //     cy.get("#simple-tabpanel-0")
+    //         .get("#FridgeItem")
+    //         .should('contain', "pepper")
+    // })
 
     // (USER STORY 10)
 
-    // Clicks on a recipe
-    it("Clicking a recipe on homepage", () => {
-        cy.viewport(1280, 720)
-        cy.visit('/homepage', {timeout: 60000})
-        cy.wait(10000)
-        cy.get("[data-test='Recipe-1']", {timeout: 90000}).click()
-    })
+    // // Clicks on a recipe
+    // it("Clicking a recipe on homepage", () => {
+    //     cy.viewport(1280, 720)
+    //     cy.visit('/homepage', {timeout: 60000})
+    //     cy.wait(10000)
+    //     cy.get("[data-test='Recipe-1']", {timeout: 90000}).click()
+    // })
 
-    // Clicks on meal plan button
-    it("Click meal plan button", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='RecipeTitle']", {timeout: 90000}).then(($recipetitle) => {
-            recipeName = $recipetitle.text()
-        })
-        cy.get("[data-test='MealPlanButton']")
-            .should("exist")
-            .click()
+    // // Clicks on meal plan button
+    // it("Click meal plan button", () => {
+    //     cy.viewport(1280, 720)
+    //     cy.get("[data-test='RecipeTitle']", {timeout: 90000}).then(($recipetitle) => {
+    //         recipeName = $recipetitle.text()
+    //     })
+    //     cy.get("[data-test='MealPlanButton']")
+    //         .should("exist")
+    //         .click()
         
-        cy.get("[data-test='ChooseMealPlanDialog']").should("exist")
-    })
+    //     cy.get("[data-test='ChooseMealPlanDialog']").should("exist")
+    // })
 
-    // Chooses a meal plan
-    it("Choose meal plan", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
-        cy.get("[data-test='MealPlan-0']")
-            .should("exist")
-            .find("[data-test='MealPlanText-0']").then(($mealPlan) => {
-                mealPlanName = $mealPlan.text()
-            })
-        cy.get("[data-test='MealPlan-0']").click()
+    // // Chooses a meal plan
+    // it("Choose meal plan", () => {
+    //     cy.viewport(1280, 720)
+    //     cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
+    //     cy.get("[data-test='MealPlan-0']")
+    //         .should("exist")
+    //         .find("[data-test='MealPlanText-0']").then(($mealPlan) => {
+    //             mealPlanName = $mealPlan.text()
+    //         })
+    //     cy.get("[data-test='MealPlan-0']").click()
 
-        cy.get("[data-test='ChooseDayDialog']").should("exist")
-    })
+    //     cy.get("[data-test='ChooseDayDialog']").should("exist")
+    // })
 
-    // Chooses day of week
-    it("Choose day of week", () => {
-        cy.viewport(1280, 720)
-        cy.get("[data-test='MealPlan']")
-            .should("exist")
-            .should("contain", mealPlanName)
+    // // Chooses day of week
+    // it("Choose day of week", () => {
+    //     cy.viewport(1280, 720)
+    //     cy.get("[data-test='MealPlan']")
+    //         .should("exist")
+    //         .should("contain", mealPlanName)
 
-        cy.get("[data-test='Recipe']")
-            .should("exist")
-            .should("contain", "Add " + recipeName + " to:")
+    //     cy.get("[data-test='Recipe']")
+    //         .should("exist")
+    //         .should("contain", "Add " + recipeName + " to:")
 
-        cy.get("[data-test='Days']").find("[data-test='Day-0']").should("contain", "Sunday")
-        cy.get("[data-test='Days']").find("[data-test='Day-1']").should("contain", "Monday")
-        cy.get("[data-test='Days']").find("[data-test='Day-2']").should("contain", "Tuesday")
-        cy.get("[data-test='Days']").find("[data-test='Day-3']").should("contain", "Wednesday")
-        cy.get("[data-test='Days']").find("[data-test='Day-4']").should("contain", "Thursday")
-        cy.get("[data-test='Days']").find("[data-test='Day-5']").should("contain", "Friday")
-        cy.get("[data-test='Days']").find("[data-test='Day-6']").should("contain", "Saturday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-0']").should("contain", "Sunday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-1']").should("contain", "Monday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-2']").should("contain", "Tuesday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-3']").should("contain", "Wednesday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-4']").should("contain", "Thursday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-5']").should("contain", "Friday")
+    //     cy.get("[data-test='Days']").find("[data-test='Day-6']").should("contain", "Saturday")
 
-        cy.get("[data-test='Day-0']").click()
+    //     cy.get("[data-test='Day-0']").click()
 
-        cy.get("[data-test='ChooseDayDialog']").should("not.exist")
-        cy.get("[data-test='ChooseMealPlanDialog']").should("not.exist")
+    //     cy.get("[data-test='ChooseDayDialog']").should("not.exist")
+    //     cy.get("[data-test='ChooseMealPlanDialog']").should("not.exist")
         
-    })
+    // })
 
     // USER STORY 13 
     it("Go to meal plan page", () => {

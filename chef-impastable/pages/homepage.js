@@ -70,7 +70,6 @@ export default function HomePage({ /*recipes*/ }) {
 
     //api call to get results of search when requested
     async function fetchdata(searchTerm, filters, page) {
-        debugger;
         const [ recipes, hasNext ] = await SearchRecipe(searchTerm, filters, JSON.parse(localStorage.getItem("user")).username, page, router.query.byFridge);
         setNext(hasNext)
         if (recipes.length === 0) {
@@ -86,13 +85,11 @@ export default function HomePage({ /*recipes*/ }) {
     }
 
     useEffect(() => {
-        debugger;
         setPageChanged(!pageChanged);
         setPage(1);
       }, [router.query.searchTerm, router.query.filters, router.query.byFridge]);
 
       useEffect(() => {
-        debugger;
         //if the user searches something, update display with those recipes
         //else, display default recipes.
         const searchTerm = router.query.searchTerm;

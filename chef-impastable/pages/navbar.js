@@ -121,8 +121,8 @@ const Navbar = () => {
     }
     const router = useRouter();
 
-    const sidebarIcons = [<Favorite />, <People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
-    const sidebarLinks = ["/profile-page", { pathname: "/friends/", query: { username: username } }, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
+    const sidebarIcons = [<People />, <House />, <Kitchen />, <CalendarMonth />, <Add />]
+    const sidebarLinks = [{pathname:"/friends/", query: {username: username}}, "/household", "/fridge-kitchen", "/mealplan-view", "/profile-page"]     // todo : change links for sidebar with routing
     const recipeTagOptions = [
         { value: "My Preferences" },
         { value: "Vegan" },
@@ -177,7 +177,7 @@ const Navbar = () => {
                     <Drawer anchor="left" open={drawerOpen} onClose={() => { setDrawerOpen(false) }}>
                         <Box sx={{ width: 250 }}>
                             <List>
-                                {["Saved", "Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
+                                {["Friends", "Household", "Fridge & Kitchen", "Meal Plan", "Add Recipe"].map((text, index) => (
                                     <ListItem key={text}>
                                         <ListItemButton onClick={() => { router.push(sidebarLinks[index]) }}>
                                             <ListItemIcon>
@@ -232,7 +232,7 @@ const Navbar = () => {
                                             <ClearIcon />
                                         </IconButton>
 
-                                        <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                        <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
                                             <Kitchen />
                                         </IconButton>
 

@@ -43,6 +43,11 @@ export default async function handler(req, res) {
                         }            
                     },
                     {
+                        $match: {
+                            matches: { $gt : 0 }
+                        }
+                    },
+                    {
                         $sort: {matches: -1}
                     }
             ])

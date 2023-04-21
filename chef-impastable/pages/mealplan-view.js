@@ -482,7 +482,7 @@ export default function MealPlan() {
     const handleDeletePlanClose = () => {
         setDeletePlanOpen(false);
     };
-    
+
     const [caloriesUpper, setCaloriesUpper] = useState("");
     const [caloriesTempUpper, setCaloriesTempUpper] = useState("")
     const [carbsUpper, setCarbsUpper] = useState("");
@@ -737,7 +737,7 @@ export default function MealPlan() {
             <Box
                 sx={{display: 'flex', width: '100%'}}
             >
-                <Tabs
+                <Tabs data-test="Tabs"
                     orientation="vertical"
                     variant="scrollable"
                     value={tabs}
@@ -745,12 +745,12 @@ export default function MealPlan() {
                     aria-label="Vertical tabs example"
                     sx={{ borderRight: 1, borderColor: 'divider', width: 150 }}
                 >
-                    <Tab icon={<StarIcon sx={{color: "orange"}} />} label="Current Meal Plan" {...a11yProps(0)} />
+                    <Tab data-test="CurrentTab" icon={<StarIcon sx={{color: "orange"}} />} label="Current Meal Plan" {...a11yProps(0)} />
                     {mealPlans.map((mealPlan, index) => (
                         index == currentMealPlanIndex ? 
-                            <Tab icon={<StarIcon sx={{width: 10, height: 10}} />} iconPosition="start" label={mealPlan.name} {...a11yProps(index + 1)}/> 
+                            <Tab data-test={`Tab-${index + 1}`} icon={<StarIcon sx={{width: 10, height: 10}} />} iconPosition="start" label={mealPlan.name} {...a11yProps(index + 1)}/> 
                             : 
-                            <Tab label={mealPlan.name} {...a11yProps(index + 1)}/>
+                            <Tab data-test={`Tab-${index + 1}`} label={mealPlan.name} {...a11yProps(index + 1)}/>
                     ))}
                 </Tabs>
                 <Box sx={{width: '100%'}}>
@@ -758,7 +758,7 @@ export default function MealPlan() {
                     {/* Current meal plan */}
 
                     <TabPanel data-test={`Mealplan-${tabs}`} value={tabs} index={0} >
-                        <h4>{currentMealPlan.name}</h4>
+                        <h4 data-test="Mealplan">{currentMealPlan.name}</h4>
                         <Grid 
                             container 
                             spacing={0}
@@ -771,13 +771,14 @@ export default function MealPlan() {
                         >
                             {daysOfWeek.map((day, i) => (
                                 <>
-                                    <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
+                                    <Grid data-test={day} item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
                                         <Box sx={{borderBottom: 1, borderColor: 'black'}}>
                                                 <h4 data-test={`Day-${day}`} align="center" >{day}</h4>
                                         </Box>
+                                        <div data-test={`${day}-Recipes`}>
                                         {recipes && recipes.at(currentMealPlanIndex) && recipes.at(currentMealPlanIndex).at(i) && recipes.at(currentMealPlanIndex).at(i).map((recipe, i) => (
-                                            <div>
-                                                <ButtonBase
+                                            <div data-test={`${day}-${i}`}>
+                                                <ButtonBase data-test="RecipeName"
                                                     onClick={() => {
                                                         Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: username}})
                                                     }}
@@ -785,13 +786,13 @@ export default function MealPlan() {
                                                     <p className='name'>{recipe.title}</p>
                                                 </ButtonBase>
                                                 <Divider textAlign='right'>
-                                                    <IconButton 
+                                                    <IconButton data-test="SwitchButton" 
                                                         sx={{padding: 1}}
                                                         onClick={() => handleChangeDayOpen(currentMealPlan, recipe, i, day)}
                                                     >
                                                         <SyncAltIcon sx={{fontSize: 20, color: blue[400]}}/>
                                                     </IconButton>
-                                                    <IconButton 
+                                                    <IconButton data-test="DeleteButton"
                                                         sx={{padding: 1}}
                                                         onClick={() => handleDeleteOpen(currentMealPlan, recipe, i, day)}
                                                     >
@@ -805,6 +806,7 @@ export default function MealPlan() {
                                                 `}</style>
                                             </div>
                                         ))}
+                                        </div>
                                     </Grid>
                                 </>
                             ))}
@@ -1013,18 +1015,18 @@ export default function MealPlan() {
 
                     {/* All other meal plans */}
                     {mealPlans.map((mealPlan, index) => (
-                        <TabPanel value={tabs} index={index + 1} >
+                        <TabPanel data-test={`Mealplan-${tabs}`} value={tabs} index={index + 1} >
                             <Stack
                                 direction="row"
                                 justifyContent="flex-start"
                                 alignItems="center"
                                 spacing={2}
                             >
-                            <h4>{mealPlan.name}</h4>
+                            <h4 data-test="Mealplan">{mealPlan.name}</h4>
                             {(index == currentMealPlanIndex) ? 
-                                <IconButton><StarIcon sx={{width: 30, height: 30, padding: 0, color: "orange"}}/></IconButton>
+                                <IconButton data-test="Star"><StarIcon sx={{width: 30, height: 30, padding: 0, color: "orange"}}/></IconButton>
                                 :
-                                <IconButton
+                                <IconButton data-test="Star"
                                     onClick={async () => {
                                         updateCurrentMealPlan(username, mealPlan);
                                         setCurrentMealPlan(mealPlan);
@@ -1047,16 +1049,18 @@ export default function MealPlan() {
                                 justifyContent="flex-start"
                                 alignItems="stretch"
                                 sx={{borderRight: 1}}
+                                data-test="Calendar"
                             >
                                 {daysOfWeek.map((day, i) => (
                                     <>
-                                        <Grid item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
+                                        <Grid data-test={day} item xs={2} sx={{border: 1, borderRight: 0, padding: 1, height: 450}}>
                                             <Box sx={{borderBottom: 1, borderColor: 'black'}}>
-                                                <h4 align="center" >{day}</h4>
+                                                <h4 data-test={`Day-${day}`} align="center" >{day}</h4>
                                             </Box>
+                                            <div data-test={`${day}-Recipes`}>
                                             {recipes && recipes.at(index) && recipes.at(index).at(i) && recipes.at(index).at(i).map((recipe, i) => (
-                                                <div>
-                                                    <ButtonBase
+                                                <div data-test={`${day}-${i}`}>
+                                                    <ButtonBase data-test="RecipeName"
                                                         onClick={() => {
                                                             Router.push({pathname:"/recipe-view/", query: {id: recipe._id, username: username}})
                                                         }}
@@ -1064,13 +1068,13 @@ export default function MealPlan() {
                                                         <p className='name'>{recipe.title}</p>
                                                     </ButtonBase>
                                                     <Divider textAlign='right'>
-                                                        <IconButton 
+                                                        <IconButton data-test="SwitchButton"
                                                             sx={{padding: 1}}
                                                             onClick={() => handleChangeDayOpen(mealPlan, recipe, i, day)}
                                                         >
                                                             <SyncAltIcon sx={{fontSize: 20, color: blue[400]}}/>
                                                         </IconButton>
-                                                        <IconButton 
+                                                        <IconButton data-test="DeleteButton"
                                                             sx={{padding: 1}}
                                                             onClick={() => handleDeleteOpen(mealPlan, recipe, i, day)}
                                                         >
@@ -1084,10 +1088,11 @@ export default function MealPlan() {
                                                     `}</style>
                                                 </div>
                                             ))}
+                                            </div>
                                         </Grid>
                                     </>
                                 ))}
-                                <Button 
+                                <Button data-test="DeleteMealPlanButton"
                                     startIcon={<DeleteIcon sx={{color: "red"}}/>}
                                     sx={{margin: 4, color: 'black'}}
                                     onClick={() => handleDeletePlanOpen(mealPlan)}
@@ -1102,18 +1107,19 @@ export default function MealPlan() {
                 </Box>
 
                 <Dialog
+                    data-test="ChooseDayDialog"
                     open={changeDayOpen}
                     onClose={handleChangeDayClose}
                 >
                     <Box sx={{width: 300}}>
                         <Box sx={{backgroundColor: "orange"}}>
-                            <DialogTitle>{chooseMealPlan.name}</DialogTitle>
+                            <DialogTitle data-test="DialogTitle">{chooseMealPlan.name}</DialogTitle>
                         </Box>
-                        <DialogTitle>Switch {chooseRecipe.title} to: </DialogTitle>
-                        <List>
-                            {daysOfWeek.map((day) => (
+                        <DialogTitle data-test="RecipeTitle">Switch {chooseRecipe.title} to: </DialogTitle>
+                        <List data-test="Days">
+                            {daysOfWeek.map((day, x) => (
                                 <ListItem disableGutters>
-                                    <ListItemButton onClick={async () => {
+                                    <ListItemButton data-test={`Day-${x}`} onClick={async () => {
                                         var index = mealPlans.indexOf(chooseMealPlan);
                                         console.log(username);
                                         console.log(chooseMealPlan);
@@ -1152,18 +1158,20 @@ export default function MealPlan() {
                 </Dialog>
 
                 <Dialog
+                    data-test="DeleteDialog"
                     open={deleteOpen}
                     onClose={handleDeleteClose}
                 >
                     <Box sx={{backgroundColor: "orange"}}>
-                        <DialogTitle>{chooseMealPlan.name}</DialogTitle>
+                        <DialogTitle data-test="DialogTitle">{chooseMealPlan.name}</DialogTitle>
                     </Box>
                     <DialogContent>
-                        <DialogContentText>Delete {chooseRecipe.title}?</DialogContentText>
+                        <DialogContentText data-test="DeleteText">Delete {chooseRecipe.title}?</DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleDeleteClose} sx={{color: "gray"}}>Cancel</Button>
+                        <Button data-test="CancelButton" onClick={handleDeleteClose} sx={{color: "gray"}}>Cancel</Button>
                         <Button 
+                            data-test="DeleteButton"
                             sx={{color: "red"}}
                             onClick={async () => {
                                 var index = mealPlans.indexOf(chooseMealPlan);
@@ -1192,14 +1200,14 @@ export default function MealPlan() {
                     </DialogActions>
                 </Dialog>
 
-                <Dialog
+                <Dialog data-test="DeletePlanDialog"
                     open={deletePlanOpen}
                     onClose={handleDeletePlanClose}
                 >
                     <DialogTitle sx={{color: "black"}}>Delete {chooseMealPlan.name}?</DialogTitle>
                     <DialogActions>
                         <Button onClick={handleDeletePlanClose} sx={{color: "gray"}}>Cancel</Button>
-                        <Button
+                        <Button data-test="Delete"
                             sx={{color: "red"}}
                             onClick={async () => {
                                 var index = mealPlans.indexOf(chooseMealPlan);

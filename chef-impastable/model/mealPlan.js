@@ -28,7 +28,7 @@ const mealPlanSchema = new mongoose.Schema({
     },
     Saturday: {
         type: [SchemaTypes.ObjectId],
-    }
+    },
 });
 
 module.exports = mongoose.models.MealPlan || mongoose.model('MealPlan', mealPlanSchema);

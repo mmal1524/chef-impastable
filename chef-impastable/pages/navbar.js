@@ -153,8 +153,16 @@ const Navbar = () => {
     };
  
     return (
-        <Grid data-test="Navbar" container spacing={0} sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}>
-            <Grid xs={0.3}>
+        <Grid data-test="Navbar" 
+            container 
+            spacing={0} 
+            columns={25} 
+            sx={{ margin: 0, marginBottom: 3, width: '100vw', borderBottom: 4, borderColor: 'Orange' }}
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+        >
+            <Grid xs={1}>
                 <React.Fragment key="left">
                     <IconButton onClick={() => { setDrawerOpen(true) }}>
                         <MenuSharp />
@@ -177,7 +185,7 @@ const Navbar = () => {
                     </Drawer>
                 </React.Fragment>
             </Grid>
-            <Grid xs={1.0}
+            <Grid xs={1}
                 sx={{
                     pt: 0.5,
                 }
@@ -193,49 +201,56 @@ const Navbar = () => {
             </Grid>
 
             {/* Search Bar, npm i react-select */} 
-            <Grid xs={8.0}
+            <Grid xs
                 alignContent='center'
                 sx={{
                     pt: 0.5,
                     display: 'inline-block'
-                }}>
-                <TextField
-                    data-test="SearchBar"
-                    sx={{ minWidth: 800 }}
-                    size="small"
-                    label="Search"
-                    variant="outlined"
-                    value={searchValue}
-                    onChange={handleChangeSearch}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
-                                    <ClearIcon />
-                                </IconButton>
+                }}
+            >
+                <Grid container spacing={0} direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid xs>
+                        <TextField
+                            sx={{ width: '100%' }}
+                            size="small"
+                            label="Search"
+                            variant="outlined"
+                            value={searchValue}
+                            onChange={handleChangeSearch}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton aria-label="clear" onClick={async () => { setSearchValue("") }} edge="end">
+                                            <ClearIcon />
+                                        </IconButton>
 
-                                <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
-                                    <Kitchen />
-                                </IconButton>
+                                        <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                            <Kitchen />
+                                        </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
-                                    <SearchIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        )
-                    }} 
-                    />
-                    &nbsp;
-                <Button
-                    type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
-                    onClick={() => {
-                        handleClickOpenDiet();
-                    }}
-                >Add Dietary Filters
-                </Button>
+                                        <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }} 
+                        />
+                    </Grid>
+                        &nbsp;
+                    <Grid xs={2} >
+                    <Button
+                        type="AddTag" size="small" variant="contained" sx={{ minHeight: '40px' }}
+                        onClick={() => {
+                            handleClickOpenDiet();
+                        }}
+                    >
+                        Add Dietary Filters
+                    </Button>
+                    </Grid>
+                </Grid>
             </Grid>
             
-            <Grid xs={1.5}
+            <Grid xs={1}
                 alignContent='center'
                 sx={{
                     pt: 0.5,
@@ -247,7 +262,6 @@ const Navbar = () => {
                     startIcon={<ShoppingBasketIcon />}
                     onClick={handleClickOpenShop}
                 >
-                    Shopping List
                 </Button>
             </Grid>
             <Grid xs={1}>

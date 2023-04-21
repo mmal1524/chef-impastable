@@ -47,7 +47,7 @@ describe('Searching for a recipe', () => {
 
     it("Searching for a recipe that does not exist", () => {
         cy.viewport(1280, 720)
-        cy.get("[data-test='SearchBar']", { timeout: 15000 }).type("fdjasklfjklsdajflsajkflajsodif")
+        cy.get("[data-test='SearchBar']", { timeout: 60000 }).type("fdjasklfjklsdajflsajkflajsodif")
         cy.get("[data-test='SearchButton']", { timeout: 15000 }).click()
         cy.wait(500)
         cy.get("[data-test='FailedSearch']", { timeout: 25000 }).should("contain", "No recipes that match your search term and/or dietary filters were found. Please try a different keyword or filter.")

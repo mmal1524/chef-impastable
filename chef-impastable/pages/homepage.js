@@ -19,6 +19,8 @@ import SaveRecipeHouseDialog from '../components/saveRecipeHouseDialog';
 // import ImageList from '@mui/material/ImageList';
 // import ImageListItem from '@mui/material/ImageListItem';
 import Masonry from '@mui/lab/Masonry';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+
 
 
 export default function HomePage({ /*recipes*/ }) {
@@ -34,6 +36,7 @@ export default function HomePage({ /*recipes*/ }) {
     const [page, setPage] = useState(1);
     const [pageChanged, setPageChanged] = useState(false);
     const [next, setNext] = useState(true);
+    // const {enqueueSnackbar} = useSnackbar();
 
     //dialog handlers for when there are no results from a search
     const theme = useTheme();
@@ -45,6 +48,13 @@ export default function HomePage({ /*recipes*/ }) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    // const showSuccess = (house) => {
+    //     enqueueSnackbar('hi')
+    // }
+    // const showFail = (house) => {
+    //     enqueueSnackbar(`Recipe already in ${house}`)
+    // }
 
     async function getSavedFolders(recipes) {
         var f = await getFolders(JSON.parse(localStorage.getItem("user")).username)
@@ -114,15 +124,23 @@ export default function HomePage({ /*recipes*/ }) {
 
     return (
         <>
+            <SnackbarProvider maxSnack={3}/>
             <SaveRecipeHouseDialog 
                 show={showSaveHouse}
                 onClose={() => {setShowSaveHouse(false)}}
                 onSubmit = {async (house) => {
                     console.log(house);
-
+                    debugger;
                     setShowSaveHouse(false);
                     house.forEach(async (h) => {
                         var data = await saveRecipe(h, "none", recipeID, true);
+                        console.log(data);
+                        if (data) {
+                            enqueueSnackbar(`Recipe saved to ${h}`, {variant: "success"})
+                        }
+                        else {
+                            enqueueSnackbar(`Recipe already in ${h}`, { variant: 'error' })
+                        }
                     })
                     
                 }}

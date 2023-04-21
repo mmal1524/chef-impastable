@@ -124,8 +124,10 @@ function RecipeCard( props ) {
                 <CardHeader data-test={`Recipe-Title-${props.index}`} title={props.recipe.title} sx={{fontSize:10}}>
                 </CardHeader>
                 
-                <CardMedia>
-                    <img src={props.recipe.image} alt="image of {props.recipe.title}" width={300}/> 
+                <CardMedia
+                    sx={{ height: 200 }}
+                    image={props.recipe.image}
+                    title="image of {props.recipe.title}">
                 </CardMedia>           
                 <CardContent sx={{overflow: "auto"}}>
                     {props.recipe.description}
@@ -155,7 +157,7 @@ function RecipeCard( props ) {
                 onClick={handleClickOpen}>
                 <SendIcon />
             </IconButton>
-            <IconButton>
+            <IconButton data-test={`SaveRecipeHouse-${props.index}`}>
                 <HouseOutlined 
                     onClick={() => {debugger; props.onSaveHouse()}}
                 />

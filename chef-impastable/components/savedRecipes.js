@@ -56,7 +56,7 @@ export default function SavedRecipes(props) {
             });
         }
         getSavedFolders();
-    }, [update])
+    }, [update, props.houseID])
 
     return (
         <>
@@ -75,7 +75,7 @@ export default function SavedRecipes(props) {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={async () => {await unsaveRecipe(props.houseID, recipeID, true); setUpdate(update + 1); setShowConfirmUnsave(false)}} autoFocus>
+                <Button data-test="UnsaveHouseConfirm" onClick={async () => {await unsaveRecipe(props.houseID, recipeID, true); setUpdate(update + 1); setShowConfirmUnsave(false)}} autoFocus>
                     Yes
                 </Button>
                 <Button onClick={() => {setShowConfirmUnsave(false)}} autoFocus>

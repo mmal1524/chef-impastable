@@ -30,9 +30,10 @@ export default function SaveRecipeHouseDialog(props) {
                 h.push(await getHouse(thisUser.households[i]))
             }
             setHouses(h);
+            // console.log(`${h[0].name}: ${h[0].members.toString()}`);
+            setHouse(h && h.length == 1 ? [`${h[0].name}: ${h[0].members.toString()}`] : [])
         }
         getHouses();
-        setHouse([]);
     }, [props.show])
 
     // useEffect(() => {
@@ -56,7 +57,8 @@ export default function SaveRecipeHouseDialog(props) {
             <DialogContent>
                 {houses.length > 0 ? 
                 <>
-                <FormControl sx = {{m: 1, width:400}}>
+                {houses.length != 1 ? 
+                <FormControl data-test="SaveHouseSelect" sx = {{m: 1, width:400}}>
                     <InputLabel>Household</InputLabel>
                     <Select
                         //chip design: https://mui.com/material-ui/react-select/
@@ -87,7 +89,7 @@ export default function SaveRecipeHouseDialog(props) {
                             ))}
                         </Select>
                 </FormControl>
-                
+                : <></>}
                     <Button
                         data-test="SaveHouseDialogSubmit"
                         type="submit" 
@@ -100,7 +102,7 @@ export default function SaveRecipeHouseDialog(props) {
                         }}
                         onClick={() => props.onSubmit(house)}
                     >
-                        Save
+                        Save {houses.length == 1 ? ` to house: "${house[0]}"`: ""}
                     </Button>
                     </>
                     

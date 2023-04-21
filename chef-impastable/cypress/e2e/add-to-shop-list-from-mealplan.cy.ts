@@ -7,6 +7,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // Logs in
     it("Logging in", () => {
+        cy.viewport(1280, 720)
         cy.visit('/', {timeout: 90000})
         cy.get("[data-test='UsernameField']").type("testMeal2")
         cy.get("[data-test='PasswordField']").type("Password!1")
@@ -15,6 +16,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // confirm that ingredient pepper is in user fridge
     it ('Navigate to fridge and confirm pepper in fridge', () => {
+        cy.viewport(1280, 720)
         cy.visit('/fridge-kitchen', {timeout: 90000})
         cy.get("#simple-tabpanel-0")
             .get("#FridgeItem")
@@ -25,6 +27,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // Clicks on a recipe
     it("Clicking a recipe on homepage", () => {
+        cy.viewport(1280, 720)
         cy.visit('/homepage', {timeout: 60000})
         cy.wait(10000)
         cy.get("[data-test='Recipe-1']", {timeout: 90000}).click()
@@ -32,6 +35,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // Clicks on meal plan button
     it("Click meal plan button", () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='RecipeTitle']", {timeout: 90000}).then(($recipetitle) => {
             recipeName = $recipetitle.text()
         })
@@ -44,6 +48,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // Chooses a meal plan
     it("Choose meal plan", () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
         cy.get("[data-test='MealPlan-0']")
             .should("exist")
@@ -57,6 +62,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // Chooses day of week
     it("Choose day of week", () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='MealPlan']")
             .should("exist")
             .should("contain", mealPlanName)
@@ -82,12 +88,14 @@ describe('Meal Plan to ShoppingList', () => {
 
     // USER STORY 13 
     it("Go to meal plan page", () => {
+        cy.viewport(1280, 720)
         cy.visit('/mealplan-view', {timeout: 60000})
         cy.wait(5000)
     })
 
     // clear shopping list
     it ('Clear shopping list', () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='ShopList']", {timeout: 60000}).click()
         cy.get("[data-test='EditList']").click()
         cy.get("[data-test='ClearItem']").click()
@@ -100,9 +108,9 @@ describe('Meal Plan to ShoppingList', () => {
 
     // add ingredients from recipe, confirm didn't add item in fridge
     it ('Add from Meal Plan and Confirm Accuracy (exclude fridge items)', () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='AddToShopList']", {timeout: 30000}).click()
         cy.get("[data-test='ConfirmAddButton']", {timeout: 30000}).click()
-        cy.wait(5000)
         cy.get("[data-test='ShopList']").click()
         cy.get("[data-test='ViewList']")
             .get("#ViewDisplay")
@@ -112,6 +120,7 @@ describe('Meal Plan to ShoppingList', () => {
 
     // clear shopping list
     it ('Clear shopping list', () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='EditList']").click()
         cy.get("[data-test='ClearItem']").click()
         cy.wait(2000)
@@ -123,10 +132,10 @@ describe('Meal Plan to ShoppingList', () => {
 
     // add ingredients from recipe, confirm added item in fridge after toggle switch
     it ('Add from Meal Plan and Confirm Accuracy (include fridge items)', () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='AddToShopList']", {timeout: 30000}).click()
         cy.get("[data-test='Toggle']", {timeout: 30000}).click()
         cy.get("[data-test='ConfirmAddButton']", {timeout: 30000}).click()
-        cy.wait(5000)
         cy.get("[data-test='ShopList']").click()
         cy.get("[data-test='ViewList']")
             .get("#ViewDisplay")
@@ -137,16 +146,10 @@ describe('Meal Plan to ShoppingList', () => {
 
     // attempt add ingredients when its already in the shopping list
     it ('Add from Meal Plan and Confirm Accuracy (include fridge items)', () => {
+        cy.viewport(1280, 720)
         cy.get("[data-test='AddToShopList']", {timeout: 30000}).click()
         cy.get("[data-test='Toggle']", {timeout: 30000}).click()
         cy.get("[data-test='ConfirmAddButton']", {timeout: 30000}).should('be.disabled')
-        // cy.wait(5000)
-        // cy.get("[data-test='ShopList']").click()
-        // cy.get("[data-test='ViewList']")
-        //     .get("#ViewDisplay")
-        //     .get("#PopulatedList").find('div.MuiBox-root.css-0').its('length').should('eq', 6)
-        // //cy.wait(10000)
-        // cy.get("[data-test='CloseView']", {timeout: 10000}).click()
     })
 
 

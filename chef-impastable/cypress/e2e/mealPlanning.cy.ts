@@ -37,7 +37,7 @@ describe('Meal Planning', () => {
 
     // Chooses a meal plan
     it("Choose Meal Plan", () => {
-        cy.get("[data-test='ChooseMealPlanTitle']").should("contain", "Choose Meal Plan")
+        cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
         cy.get("[data-test='MealPlan-0']")
             .should("exist")
             .find("[data-test='MealPlanText-0']").then(($mealPlan) => {
@@ -80,7 +80,7 @@ describe('Meal Planning', () => {
     // Go to meal plans page
     it("Go to Meal Plan Page", () => {
         cy.get("[data-test='Navbar']").find("[data-test='DrawerButton']").click()
-        cy.get("[data-test='Drawer-4'").click()
+        cy.get("[data-test='Drawer-3'").click()
     })
 
     // Calendar is seen
@@ -170,7 +170,7 @@ describe('Meal Planning', () => {
 
     // Create New Meal Plan
     it("Create New Meal Plan", () => {
-        cy.get("[data-test='ChooseMealPlanTitle']").should("contain", "Choose Meal Plan")
+        cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
         cy.get("[data-test='CreateButton']")
             .should("exist")
             .find("[data-test='Avatar']").should("exist")
@@ -187,12 +187,12 @@ describe('Meal Planning', () => {
         cy.get("[data-test='Cancel']").should("exist")
         cy.get("[data-test='Create']").should("exist").click()
 
-        cy.get("[data-test='ChooseMealPlan']").should("not.exist")
+        cy.get("[data-test='CreateDialog']").should("not.exist")
     })
 
     // Chooses a meal plan
     it("Choose New Meal Plan", () => {
-        cy.get("[data-test='ChooseMealPlanTitle']").should("contain", "Choose Meal Plan")
+        cy.get("[data-test='ChooseMealPlan']").should("contain", "Choose Meal Plan")
         cy.get("[data-test='MealPlan-1']")
             .should("exist")
             .find("[data-test='MealPlanText-1']").should("contain", "High Protein")
@@ -228,7 +228,7 @@ describe('Meal Planning', () => {
     // Go to meal plans page
     it("Go to Meal Plan Page", () => {
         cy.get("[data-test='Navbar']").find("[data-test='DrawerButton']").click()
-        cy.get("[data-test='Drawer-4'").click()
+        cy.get("[data-test='Drawer-3'").click()
     })
 
     // New meal plan listed

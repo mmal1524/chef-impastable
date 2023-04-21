@@ -274,6 +274,7 @@ const Navbar = () => {
                 }}>
                 <TextField
                     sx={{ minWidth: 800 }}
+                    data-test="SearchBar"
                     size="small"
                     label="Search"
                     variant="outlined"
@@ -286,11 +287,11 @@ const Navbar = () => {
                                     <ClearIcon />
                                 </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
+                                <IconButton data-test="searchFridge" aria-label="search" onClick={async () => { handleSearch(searchValue, true) }} edge="end">
                                     <Kitchen />
                                 </IconButton>
 
-                                <IconButton aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
+                                <IconButton data-test="SearchButton" aria-label="search" onClick={async () => { handleSearch(searchValue, false) }} edge="end">
                                     <SearchIcon />
                                 </IconButton>
                             </InputAdornment>
@@ -303,6 +304,7 @@ const Navbar = () => {
                     onClick={() => {
                         handleClickOpenDiet();
                     }}
+                    data-test='DietFilters'
                 >Add Dietary Filters
                 </Button>
             </Grid>
@@ -370,6 +372,7 @@ const Navbar = () => {
                         Profile
                     </MenuItem>
                     <MenuItem
+                        data-test="DietaryRestrictions"
                         onClick={() => {
                             router.push("dietaryrestrictions");
                         }}
@@ -418,6 +421,7 @@ const Navbar = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
+                                            data-test='checkbox'
                                             checked={checkedItems.includes(item.value) || (item.value === "My Preferences" && Array.isArray(tagValue)
                                              && tagValue.every(tag => recipeTagOptions.filter(opt => opt.value !== "My Preferences").find(opt => opt.value === tag) && checkedItems.includes(tag)))}
                                             onChange={(event) => {
@@ -464,7 +468,8 @@ const Navbar = () => {
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseDiet} autoFocus>
+                    <Button data-test='CloseDietFilters'
+                        onClick={handleCloseDiet} autoFocus>
                         Close
                     </Button>
                 </DialogActions>
